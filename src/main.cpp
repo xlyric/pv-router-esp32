@@ -20,6 +20,8 @@
 #include "tasks/measure-electricity.h"
 #include "tasks/mqtt-home-assistant.h"
 
+#include "functions/otaFunctions.h"
+
 //***********************************
 //************* Afficheur Oled
 //***********************************
@@ -166,9 +168,18 @@ void setup()
     );
   #endif
 #endif
+
+while ( gDisplayValues.currentState != UP )
+{
+  delay (500); 
+}
+OTA_init();
+
+
 }
 
 void loop()
 {
+  ArduinoOTA.handle();
   vTaskDelay(10000 / portTICK_PERIOD_MS);
 }

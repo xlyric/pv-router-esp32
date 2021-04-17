@@ -22,6 +22,9 @@ struct DisplayValues {
   String IP;
   String time;
   bool injection; 
+  int dimmer;
+  int security; 
+  int change;
 };
 
 #if DEBUG == true

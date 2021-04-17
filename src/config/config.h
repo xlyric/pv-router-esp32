@@ -10,7 +10,7 @@
  * The name of this device (as defined in the AWS IOT console).
  * Also used to set the hostname on the network
  */
-#define DEVICE_NAME "test"
+#define DEVICE_NAME "Pv routeur ESP32"
 
 /**
  * ADC input pin that is used to read out the CT sensor
@@ -48,7 +48,7 @@
 /**
  * Dimensions of the OLED display attached to the ESP
  */
-#define OLED_ON false
+#define OLED_ON true
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 

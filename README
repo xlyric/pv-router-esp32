@@ -1,0 +1,45 @@
+Version Alpha en cours de developpement
+
+
+branchements : 
+
+OLED  : 
+
+3.3V 
+GND 
+21 SCL
+22 SDA 
+
+SCT013 
+pont diviseur R/R  entre 3.3V et GND
+SCT013  Branché entre milieu pont diviseur et D24 ( --> Linky )
+condensateur 470uf entre GND et D24  /// filtre bruit
+
+
+State : 
+*********** OK **************
+
+OLED
+Wifi
+SENS courant 
+Prise Puissance
+OTA
+
+********** A faire ************
+
+MQTT
+Site internet
+Gestion puissance dimmer
+
+
+****** affichage OLED *****
+
+Puissance : ok 
+Heure : ok 
+IP: ok
+
+mode : todo
+Puissance dimmer: todo
+
+
+
