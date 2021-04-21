@@ -15,7 +15,8 @@ extern DisplayValues gDisplayValues;
  */
 void updateDisplay(void * parameter){
   for (;;){
-    serial_println(F("[LCD] Updating..."));
+    serial_println(F("lcd task"));
+    //serial_println(F("[LCD] Updating..."));
     display.clear();
 
 #if WIFI_ACTIVE == true
@@ -31,8 +32,8 @@ void updateDisplay(void * parameter){
 
     display.display();
 
-    // Sleep for 2 seconds, then update display again!
-    vTaskDelay(2000 / portTICK_PERIOD_MS);
+    // Sleep for 5 seconds, then update display again!
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
   }
 }
 

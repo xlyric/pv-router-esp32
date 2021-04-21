@@ -19,6 +19,7 @@
 
     void fetchTimeFromNTP(void * parameter){
         for(;;){
+            gDisplayValues.task = true;
             if(!WiFi.isConnected()){
                 vTaskDelay(10*1000 / portTICK_PERIOD_MS);
                 continue;
@@ -32,7 +33,7 @@
             gDisplayValues.time = timestring.substring(tIndex + 1, timestring.length() -3);
             
             serial_println("[NTP] Done");
-
+            gDisplayValues.task = false;
             // Sleep for a minute before checking again
             vTaskDelay(NTP_UPDATE_INTERVAL_MS / portTICK_PERIOD_MS);
         }

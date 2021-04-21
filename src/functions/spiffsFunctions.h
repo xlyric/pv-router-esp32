@@ -43,7 +43,7 @@ struct Config {
 };
 
 const char *filename_conf = "/config.json";
-Config config; 
+extern Config config; 
 
 //***********************************
 //************* Gestion de la configuration - Lecture du fichier de configuration
@@ -62,7 +62,7 @@ void loadConfiguration(const char *filename, Config &config) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read file, using default configuration in function loadConfiguration"));
-    logs += "Failed to read file, using default configuration in function loadConfiguration/r/n";
+
 
   }
 
@@ -79,8 +79,8 @@ void loadConfiguration(const char *filename, Config &config) {
       
   config.UseDomoticz = doc["UseDomoticz"] | false; 
   config.UseJeedom = doc["UseJeedom"] | false; 
-  config.IDX = doc["IDX"] | 62; 
-  config.IDXdimmer = doc["IDXdimmer"] | 60; 
+  config.IDX = doc["IDX"] | 100; 
+  config.IDXdimmer = doc["IDXdimmer"] | 110; 
   
   strlcpy(config.otapassword,                  // <- destination
           doc["otapassword"] | "Pvrouteur2", // <- source
@@ -95,9 +95,9 @@ void loadConfiguration(const char *filename, Config &config) {
   config.cycle = doc["cycle"] | 25;
   config.tmax = doc["tmax"] | 65;
   config.resistance = doc["resistance"] | 1000;
-  config.sending = doc["sending"] | false;
+  config.sending = doc["sending"] | true;
   config.autonome = doc["autonome"] | true;
-  config.mqtt = doc["mqtt"] | false;
+  config.mqtt = doc["mqtt"] | true;
   config.dimmerlocal = doc["dimmerlocal"] | false;
   strlcpy(config.dimmer,                  // <- destination
           doc["dimmer"] | "192.168.1.20", // <- source
@@ -120,14 +120,14 @@ void saveConfiguration(const char *filename, const Config &config) {
    File configFile = SPIFFS.open(filename_conf, "w");
   if (!configFile) {
     Serial.println(F("Failed to open config file for writing in function Save configuration"));
-    logs += "Failed to open config file for writing in function Save configuration/r/n";
+    
     return;
   }
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonDocument<512> doc;
+  StaticJsonDocument<1024> doc;
 
   // Set the values in the document
   doc["hostname"] = config.hostname;
@@ -157,7 +157,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
-    logs += "Failed to write to file in function Save configuration:r/n";
+    
   }
 
   // Close the file

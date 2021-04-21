@@ -5,6 +5,7 @@
 #include "config/config.h"
 #include "config/enums.h"
 
+
 // File System
 #include <fs.h>
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
@@ -16,11 +17,15 @@
 #include "tasks/fetch-time-from-ntp.h"
 #include "tasks/mqtt-aws.h"
 #include "tasks/wifi-connection.h"
-#include "tasks/wifi-update-signalstrength.h"
+//#include "tasks/wifi-update-signalstrength.h"
 #include "tasks/measure-electricity.h"
-#include "tasks/mqtt-home-assistant.h"
+//#include "tasks/mqtt-home-assistant.h"
+//#include "tasks/Dimmer.h"
 
-#include "functions/otaFunctions.h"
+//#include "functions/otaFunctions.h"
+#include "functions/spiffsFunctions.h"
+//#include "functions/Mqtt_http_Functions.h"
+//#include "functions/webFunctions.h"
 
 //***********************************
 //************* Afficheur Oled
@@ -30,6 +35,8 @@ SSD1306Wire  display(0x3c, SDA, SCL); // pin 21 SDA - 22 SCL
 
 DisplayValues gDisplayValues;
 EnergyMonitor emon1;
+Config config; 
+
 
 // Place to store local measurements before sending them off to AWS
 unsigned short measurements[LOCAL_MEASUREMENTS];
@@ -45,6 +52,45 @@ void setup()
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
   analogReadResolution(ADC_BITS);
   pinMode(ADC_INPUT, INPUT);
+
+#if WIFI_ACTIVE == true
+  WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  serial_println("WiFi connected");
+  serial_println("IP address: ");
+  serial_println(WiFi.localIP());
+  gDisplayValues.currentState = UP;
+  gDisplayValues.IP = String(WiFi.localIP().toString());
+#endif
+
+
+  //démarrage file system
+  Serial.println("start SPIFFS");
+  SPIFFS.begin();
+
+   // vérification de la présence d'index.html
+  if(!SPIFFS.exists("/index.html")){
+    Serial.println("Attention fichiers SPIFFS non chargé sur l'ESP, ça ne fonctionnera pas.");  
+  }
+
+  if(!SPIFFS.exists(filename_conf)){
+    Serial.println("Attention problème avec fichier de conf");  
+  }
+
+     //***********************************
+    //************* Setup -  récupération du fichier de configuration
+    //***********************************
+  
+  // Should load default config if run for the first time
+  Serial.println(F("Loading configuration..."));
+  loadConfiguration(filename_conf, config);
+
+  // Create configuration file
+  //Serial.println(F("Saving configuration..."));
+  //saveConfiguration(filename_conf, config);
 
 
   #if OLED_ON == true
@@ -62,19 +108,31 @@ void setup()
   // Initialize emon library
   emon1.current(ADC_INPUT, 30);
 
+  // Initialize Dimmer State 
+  gDisplayValues.dimmer = 0;
+
+#if WIFI_ACTIVE == true
+  #if WEBSSERVER == true
+  //***********************************
+	//************* Setup -  demarrage du webserver et affichage de l'oled
+	//***********************************
+   Serial.println("start Web server");
+   call_pages();
+  #endif
+
   // ----------------------------------------------------------------
   // TASK: Connect to WiFi & keep the connection alive.
   // ----------------------------------------------------------------
-  #if WIFI_ACTIVE == true
+  /*
   xTaskCreatePinnedToCore(
     keepWiFiAlive,
     "keepWiFiAlive",  // Task name
     5000,            // Stack size (bytes)
     NULL,             // Parameter
-    1,                // Task priority
-    NULL,             // Task handle
+    5,                // Task priority
+    NULL    ,      // Task handle
     ARDUINO_RUNNING_CORE
-  );
+  );*/
   #endif
 
   // ----------------------------------------------------------------
@@ -102,7 +160,7 @@ void setup()
     "UpdateDisplay",  // Task name
     10000,            // Stack size (bytes)
     NULL,             // Parameter
-    3,                // Task priority
+    4,                // Task priority
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
   );
@@ -117,9 +175,27 @@ void setup()
     "Measure electricity",  // Task name
     5000,                  // Stack size (bytes)
     NULL,                   // Parameter
+    25,                      // Task priority
+    NULL                    // Task handle
+  
+  );
+
+#if WIFI_ACTIVE == true
+  #if DIMMER == true
+  // ----------------------------------------------------------------
+  // Task: Update Dimmer power
+  // ----------------------------------------------------------------
+  xTaskCreate(
+    updateDimmer,
+    "Update Dimmer",  // Task name
+    5000,                  // Stack size (bytes)
+    NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
   );
+  #endif
+#endif
+
 
   // ----------------------------------------------------------------
   // TASK: update time from NTP server.
@@ -131,15 +207,15 @@ void setup()
       "Update NTP time",
       5000,            // Stack size (bytes)
       NULL,             // Parameter
-      1,                // Task priority
+      2,                // Task priority
       NULL              // Task handle
     );
-  #endif
+#endif
 
   // ----------------------------------------------------------------
   // TASK: update WiFi signal strength
   // ----------------------------------------------------------------
-  xTaskCreate(
+ /* xTaskCreate(
     updateWiFiSignalStrength,
     "Update WiFi strength",
     1000,             // Stack size (bytes)
@@ -147,7 +223,7 @@ void setup()
     2,                // Task priority
     NULL              // Task handle
   );
-
+*/
   #if HA_ENABLED == true
     xTaskCreate(
       HADiscovery,
@@ -169,17 +245,41 @@ void setup()
   #endif
 #endif
 
-while ( gDisplayValues.currentState != UP )
-{
-  delay (500); 
-}
-OTA_init();
+#if WIFI_ACTIVE == true
+  #if OTA == true
+    while ( gDisplayValues.currentState != UP )
+    {
+      delay (500); 
+    }
+    OTA_init();
+  #endif
 
+  #if WEBSSERVER == true
+  server.begin(); 
+  #endif
+
+  if ( config.mqtt == true ) {
+    Mqtt_init();
+  }
+#endif
 
 }
 
 void loop()
 {
-  ArduinoOTA.handle();
+serial_println(F("loop")); 
+
+#if WIFI_ACTIVE == true
+    #if OTA == true
+    ArduinoOTA.handle();
+    #endif
+
+    #if MQTT_CLIENT == true
+    if (!client.connected()) {
+    reconnect();
+    }
+    #endif
+#endif
+
   vTaskDelay(10000 / portTICK_PERIOD_MS);
 }

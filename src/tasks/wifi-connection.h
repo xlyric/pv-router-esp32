@@ -22,6 +22,7 @@ extern void goToDeepSleep();
  */
 void keepWiFiAlive(void * parameter){
     for(;;){
+        serial_println(F("Wifi task"));
         if(WiFi.status() == WL_CONNECTED){
             vTaskDelay(30000 / portTICK_PERIOD_MS);
             continue;

@@ -25,6 +25,7 @@ struct DisplayValues {
   int dimmer;
   int security; 
   int change;
+  bool task;
 };
 
 #if DEBUG == true

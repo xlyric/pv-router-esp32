@@ -1,0 +1,549 @@
+
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Pv router - Configuration</title>
+
+  <!-- Custom fonts for this template-->
+ <link href="all.min.css" rel="stylesheet" type="text/css"> 
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Pv router</div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item active">
+        <a class="nav-link" href="/">
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span><br>
+		<span id="version">%Domoticz%</span></a>
+		  
+      </li>
+
+
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Interface
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+	  <li class="nav-item active">
+        <a class="nav-link" href="/">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>retour conso</span></a>
+      </li>
+
+ 
+	  
+
+
+  
+
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+          <!-- Sidebar Toggle (Topbar) -->
+   <!--       <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+
+
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+
+              </div>
+            </li>
+
+            <!-- Nav Item - Alerts -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Transmission mode <i class="fas fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-danger badge-counter"><span id="sendmode2" onclick="sendmode(this.innerHTML);" >%SENDMODE%</span></span>
+              </a>
+              
+            </li>
+
+            
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+        
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+		  <h1 class="h3 mb-2 text-gray-800">Configuration</h1>
+          <p class="mb-4">Page de configuration de votre pv routeur, pensez à sauvegarder votre configuration sur la flash après l'avoir appliqué.</p>
+		  <p class="mb-4">page rapide d'aide : <a href="doc.txt" target="_blank"> ici </a></p>
+  
+
+          <!-- Content Row -->
+          <div class="row">
+
+<!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">State</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state">%STATE%</span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Sigma</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma">%SIGMA%</span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+			
+
+
+
+          </div>
+		  
+		            <!-- Content Row -->
+          <div class="row">
+
+<!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sauvegarder sur la flash</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="save"   ><a href="#">SAUVEGARDER</a></span><br><span id="savemsg"></span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-download fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+		 </div>
+
+
+		<div class="col-lg-6">
+
+              <div class="card position-relative">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Configuration</h6>
+				  <span id="saveform"></span>
+                </div>
+                <div class="card-body">
+                  <div class="col-lg-12">
+            <div class="p-5">
+
+              <form class="user" id="formulaire" method="post" action=""  >
+			    <div class="form-group row">
+			  	<div class="col-sm-6" >Serveur</div>
+				 <div class="col-sm-3">Port</div>
+				 <div class="col-sm-3">IDX</div>
+				</div>
+				 
+                <div class="form-group row">
+
+                  <div class="col-sm-6">
+                    <input type="text" class="form-control form-control-user" id="hostname" placeholder="%HOSTNAME%">
+                  </div>
+                  <div class="col-sm-3">
+                   <input type="text" class="form-control form-control-user" id="port" placeholder="%PORT%">
+                  </div>
+				  <div class="col-sm-3">
+                   <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
+                  </div>
+				</div>
+
+                <div class="form-group">
+                 APIKey : <input type="text" class="form-control form-control-user" id="apiKey" placeholder="%APIKEY%">
+                </div>
+				<div class="form-group">
+                 Dimmer :<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
+                </div>
+
+				<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="UseDomoticz">
+                        <label class="custom-control-label" for="UseDomoticz" onclick="sendservermode(this.innerHTML);" >Domoticz</label>
+                      </div>
+                </div>
+
+				<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+						<input type="checkbox" class="custom-control-input" id="UseJeedom">
+                        <label class="custom-control-label" for="UseJeedom" onclick="sendservermode(this.innerHTML);">Jeedom</label>
+                      </div>
+                </div>
+
+				<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+						<input type="checkbox" class="custom-control-input" id="autonome">
+                        <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
+                      </div>
+                </div>
+				
+				<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+						<input type="checkbox" class="custom-control-input" id="Usemqtt">
+                        <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
+                      </div>
+                </div
+				<div class="form-group">
+                 MQTT :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
+                </div>			
+
+
+				
+				<div class="form-group row">
+				 <div class="col-sm-3">Limite Consommation (Delta) </div>
+				  <div class="col-sm-3">Limite Injection (deltaneg) </div>
+				  <div class="col-sm-3">Charge connectée/W </div>
+				 
+
+				</div>
+				
+                <div class="form-group row">
+                  <div class="col-sm-3">
+				  <input type="text" class="form-control form-control-user" id="delta" placeholder="%DELTA%">
+                  </div>
+				  <div class="col-sm-3">
+				  <input type="text" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%">
+                  </div>
+				  <div class="col-sm-3">
+				  <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
+                  </div>
+				  
+				  
+		        </div>
+				
+				<div class="form-group row">
+				 <div class="col-sm-3">Cosphi</div>
+				 <div class="col-sm-3">Facteur de correction</div>
+				</div>
+				<div class="form-group row">
+                  <div class="col-sm-3">
+                   <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
+                  </div>
+				<div class="col-sm-3">
+					<input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
+                </div>
+                </div>
+
+				<div class="form-group row">
+				 <div class="col-sm-3">Dimmer Local</div>
+				</div>
+				<div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+						<input type="checkbox" class="custom-control-input" id="dimmerlocal">
+                        <label class="custom-control-label" for="dimmerlocal" onclick="sendservermode(this.innerHTML);" >Dimmer local</label>
+                      </div>
+                </div>
+				  
+
+				
+	
+				
+				<input type="submit" value=" Application des parametres" class="btn btn-primary btn-user btn-block">
+				
+                <hr>
+
+              </form>
+
+
+
+
+
+
+              <hr>
+            </div>
+          </div>
+                </div>
+              </div>
+
+            </div>
+
+
+          <!-- Content Row -->
+
+
+   			
+				
+				  <script type='text/javascript'> 
+setInterval(function refreshsend( ) {
+var xhttpstate = $.get ({
+		url : '/state',
+		type : 'GET',
+		dataType: "text",
+		success: function ( result ) { 
+		var config = result.split(";");
+		
+		document.getElementById("state").innerHTML = config[0];
+		document.getElementById("sigma").innerHTML = config[1];
+		
+		
+	
+		},
+		async: true });
+  }, 5000 ) ;
+
+
+	
+function sendmode (mode) {
+
+		$.get( "/get", { send: 	mode } )
+		.done(function(data) {
+		document.getElementById("sendmode").innerHTML = "Request sent";
+		document.getElementById("sendmode2").innerHTML = "Request sent";
+		});
+
+
+}
+
+function sendservermode (mode) {
+
+		$.get( "/get", { servermode: mode } )
+		.done(function(data) { 
+		$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+		var config = data.split(";");
+		document.getElementById("autonome").value = config[12];
+		document.getElementById("UseDomoticz").value = config[10];
+		document.getElementById("UseJeedom").value = config[11];
+		document.getElementById("dimmerlocal").value = config[14];
+		document.getElementById("Usemqtt").value = config[16];
+		}); 
+
+
+}
+
+
+function save () {				  
+  		$.get( "/get", { save: "yes" } )
+		.done(function(data) {
+		
+		});		
+
+
+}
+
+		
+		</script >
+           
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script>
+
+
+<!--- sauvegarde de la configuration --> 
+$( "#save" ).click(function() {
+
+  
+  		$.get( "/get", { save: "yes" } )
+		.done(function(data) {
+		$( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
+		});	
+		
+
+});
+
+$( "#formulaire" ).submit(function() {
+
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(),	 'cosphi':$('#cosphi').val(), 'readtime':$('#readtime').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'resistance':$('#resistance').val() } 
+
+
+		
+		
+        $.ajax({
+            type: "GET",
+            data: data,
+            url: "get",
+
+            success: function(retour){
+                $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+                     
+            }
+        });
+  return false;
+});
+
+
+
+
+var recupconfig = $.get ({
+		url : '/config',
+		type : 'GET',
+		dataType: "text",
+		async: false }).responseText; 
+				  
+        var config = recupconfig.split(";");
+
+		document.getElementById("hostname").value = config[0];
+		document.getElementById("port").value = config[1];	  
+		document.getElementById("IDX").value = config[2];
+		document.getElementById("version").innerHTML = config[3];
+		document.getElementById("delta").value = config[5];
+		document.getElementById("deltaneg").value = config[18];
+		document.getElementById("dimmer").value = config[7];
+		document.getElementById("cosphi").value = config[8];
+		
+		document.getElementById("UseDomoticz").checked = config[10];
+		document.getElementById("UseJeedom").checked = config[11];
+		document.getElementById("autonome").checked = config[12];
+		document.getElementById("UseDomoticz").value = config[10];
+		document.getElementById("UseJeedom").value = config[11];
+		document.getElementById("autonome").value = config[12];
+		document.getElementById("apiKey").value = config[13];
+		document.getElementById("dimmerlocal").checked = config[14];
+		document.getElementById("dimmerlocal").value = config[14];
+		document.getElementById("facteur").value = config[15];
+		document.getElementById("mqttserver").value = config[17];
+		document.getElementById("Usemqtt").checked = config[16];
+		document.getElementById("Usemqtt").value = config[16];
+		document.getElementById("resistance").value = config[19];
+	
+
+
+
+</script>
+
+
+            
+				  
+
+				  
+                  
+
+				   
+				  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>https://github.com/xlyric/  - 2020</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+
+
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="sb-admin-2.js"></script>
+ <script>
+
+
+
+
+</script>
+
+</body>
+
+</html>

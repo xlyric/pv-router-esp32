@@ -87,15 +87,16 @@ void injection(){
    rt_loop( startMillis, wait_time*loop ) ; 
   }
 
-  unsigned long endtMillis;
-  endtMillis = micros();
-  serial_println (endtMillis -startMillis  ) ;
+  //unsigned long endtMillis;
+  //endtMillis = micros();
+ // serial_println ("loop time ");
+ // serial_println (endtMillis -startMillis  ) ;
 
   injection = sigma_read / (loop  ); 
   if (injection >= ADC_MIDDLE ) {gDisplayValues.injection = false ; }
   else {gDisplayValues.injection = true ; }
-  serial_print(porteuse) ; serial_print("  ") ; 
-  serial_println (injection) ;
+ // serial_print(porteuse) ; serial_print("  ") ; 
+  //serial_println (injection) ;
 }
 
 
