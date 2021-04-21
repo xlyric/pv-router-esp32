@@ -5,6 +5,8 @@
  * Set this to false to disable Serial logging
  */
 #define DEBUG true
+//#define configMAX_PRIORITIES 1024
+
 
 /**
  * The name of this device (as defined in the AWS IOT console).
@@ -28,9 +30,13 @@
 /**
  * WiFi credentials
  */
+#define WEBSSERVER false
 #define WIFI_ACTIVE true
-#define WIFI_NETWORK "FreeLyric"
-#define WIFI_PASSWORD "Eurosport2007obeoes"
+#define MQTT_CLIENT false
+#define OTA false
+#define DIMMER false
+#define WIFI_NETWORK "xxx"
+#define WIFI_PASSWORD "xxx"
 
 /**
  * Timeout for the WiFi connection. When this is reached,
@@ -48,7 +54,7 @@
 /**
  * Dimensions of the OLED display attached to the ESP
  */
-#define OLED_ON true
+#define OLED_ON false
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
@@ -79,7 +85,7 @@
 /**
  * Syncing time with an NTP server
  */
-#define NTP_TIME_SYNC_ENABLED true
+#define NTP_TIME_SYNC_ENABLED false
 #define NTP_SERVER "europe.pool.ntp.org"
 #define NTP_OFFSET_SECONDS 3600
 #define NTP_UPDATE_INTERVAL_MS 60000

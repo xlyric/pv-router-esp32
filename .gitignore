@@ -53,3 +53,9 @@ dkms.conf
 test/*
 .pio/*
 .vscode/*
+.pio/build/esp32doit-devkit-v1/.sconsign37.dblite
+.pio/build/esp32doit-devkit-v1/firmware.bin
+.pio/build/project.checksum
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.pio/build/esp32doit-devkit-v1/.sconsign37.dblite
