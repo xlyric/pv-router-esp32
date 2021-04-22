@@ -15,17 +15,17 @@
 
 #include "tasks/updateDisplay.h"
 #include "tasks/fetch-time-from-ntp.h"
-#include "tasks/mqtt-aws.h"
+//#include "tasks/mqtt-aws.h"
 #include "tasks/wifi-connection.h"
 //#include "tasks/wifi-update-signalstrength.h"
 #include "tasks/measure-electricity.h"
 //#include "tasks/mqtt-home-assistant.h"
-//#include "tasks/Dimmer.h"
+#include "tasks/Dimmer.h"
 
-//#include "functions/otaFunctions.h"
+#include "functions/otaFunctions.h"
 #include "functions/spiffsFunctions.h"
-//#include "functions/Mqtt_http_Functions.h"
-//#include "functions/webFunctions.h"
+#include "functions/Mqtt_http_Functions.h"
+#include "functions/webFunctions.h"
 
 //***********************************
 //************* Afficheur Oled
@@ -64,6 +64,7 @@ void setup()
   serial_println(WiFi.localIP());
   gDisplayValues.currentState = UP;
   gDisplayValues.IP = String(WiFi.localIP().toString());
+  btStop();
 #endif
 
 
@@ -267,7 +268,7 @@ void setup()
 
 void loop()
 {
-serial_println(F("loop")); 
+//serial_println(F("loop")); 
 
 #if WIFI_ACTIVE == true
     #if OTA == true

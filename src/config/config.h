@@ -30,11 +30,12 @@
 /**
  * WiFi credentials
  */
-#define WEBSSERVER false
-#define WIFI_ACTIVE true
-#define MQTT_CLIENT false
-#define OTA false
-#define DIMMER false
+#define WEBSSERVER true
+#define WIFI_ACTIVE  true
+
+#define MQTT_CLIENT true
+#define OTA true
+#define DIMMER true
 #define WIFI_NETWORK "xxx"
 #define WIFI_PASSWORD "xxx"
 
@@ -54,7 +55,7 @@
 /**
  * Dimensions of the OLED display attached to the ESP
  */
-#define OLED_ON false
+#define OLED_ON true
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 

@@ -25,14 +25,30 @@ void measureElectricity(void * parameter)
        /// vérification qu'une autre task ne va pas fausser les valeurs
       long start = millis();
 
-     
-      double amps = emon1.calcIrms(1480);
+     /*
+      //double amps = emon1.calcIrms(1480);
+      double amps = emon1.calcIrms(740);
+      delay ( 20 ) ; 
+      double amps2 = emon1.calcIrms(740);
+
+      if ( amps != false && amps2 != false ) { // si les 2 mesures sont ok
+      if ( amps > amps2 ) { amps = amps2 ;} /// on prends la plus petite valeur des 2 
       double watts = amps * HOME_VOLTAGE;
+      gDisplayValues.watt = watts;*/
+
+            injection();
+      //if ( gDisplayValues.injection == true ) { serial_print("-") ; }
+          
+      //}
 
       //injection();
       //if ( gDisplayValues.injection == true ) { serial_print("-") ; }
-      gDisplayValues.watt = watts;
-      serial_println(int(watts)) ;
+      
+      serial_println(int(gDisplayValues.watt)) ;
+      //serial_print(int(amps* HOME_VOLTAGE)) ;
+      //serial_print(" ") ;
+      //serial_println(int(amps2* HOME_VOLTAGE)) ;
+      
 
       //serial_println(gDisplayValues.injection) ;
      

@@ -48,6 +48,8 @@ while ( micros() <=  ( startmicro + timer ) )
 // ***********************************
 // recherche d'un niveau d'injection
 // ***********************************
+int middle = 0;
+int middle_count = 0; 
 
 void injection(){
   int injection = 0; 
@@ -55,9 +57,12 @@ void injection(){
   int temp_read , temp_porteuse ;
   int sigma_read = 0 ; 
   String porteuse = "" ;
+  double zero =0; 
+  double positive = 0 ; 
+  int zero_count = 0; 
   int loop = 0; 
-  int freqmesure = 15;  // 18 mesure pour la 1/2 ondulation
-  int wait_time = 555 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
+  int freqmesure = 144;  // 18 mesure pour la 1/2 ondulation
+  int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
   unsigned long startMillis;
   
   front();  ///synchro porteuse.
@@ -68,8 +73,22 @@ void injection(){
     temp_read =  analogRead(ADC_INPUT);
     temp_porteuse =  analogRead(ADC_PORTEUSE);
     sigma_read += temp_read; 
-    porteuse += String(temp_porteuse) + " " ; 
 
+    if (temp_porteuse == 0 ) {
+      zero += temp_read * temp_read ; 
+      zero_count ++; 
+      injection = 1 ;
+    }
+    else {
+      if ( injection == 1 ) { injection =2 ; break ; }
+      positive += temp_read * temp_read ;
+
+    }
+
+
+
+    //porteuse += String(temp_porteuse) + " " +  String(temp_read) + "-"; 
+ 
       //filtre bruit de fond 
    /* if ( temp_read > middle + BRUIT || temp_read < middle - BRUIT ) {
       if ( temp_read > middle )  { margin += ( temp_read - middle ) ; } 
@@ -81,23 +100,24 @@ void injection(){
    /* if ( temp_tension == 0 )  {  
      injection += temp - middle ;
     }*/
-
+   if ( injection == 2  || loop > 500) { break ; }
    loop ++; 
  
    rt_loop( startMillis, wait_time*loop ) ; 
   }
 
-  //unsigned long endtMillis;
-  //endtMillis = micros();
- // serial_println ("loop time ");
- // serial_println (endtMillis -startMillis  ) ;
-
-  injection = sigma_read / (loop  ); 
-  if (injection >= ADC_MIDDLE ) {gDisplayValues.injection = false ; }
-  else {gDisplayValues.injection = true ; }
- // serial_print(porteuse) ; serial_print("  ") ; 
-  //serial_println (injection) ;
+  zero = sqrt(zero / float(zero_count)); 
+  positive = sqrt(positive / float( loop - zero_count )) ; 
+  //serial_print(positive) ; serial_print("  ") ; serial_print (zero) ; serial_print("  ") ; serial_println ( (zero + positive) /2  ) ;
+  gDisplayValues.watt = int(( positive - zero)*3.2) ; 
+  //injection = sigma_read / (loop  ); 
+  //if (injection >= ADC_MIDDLE ) 
+  //if (positive >= zero ) {gDisplayValues.injection = false ; }
+  //else {gDisplayValues.injection = true ;  serial_print(porteuse) ; serial_print("  ") ; serial_print (injection) ; serial_print("  ") ; serial_println (loop) ;}
+ 
+  
 }
+
 
 
 #endif
