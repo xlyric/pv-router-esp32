@@ -122,7 +122,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = config.IDXdimmer + ";" +  config.port + ";"  + config.IDX + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+";"+config.deltaneg+";"+config.resistance;
+  configweb = config.IDXdimmer + ";" +  config.num_fuse + ";"  + config.IDX + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+";"+config.deltaneg+";"+config.resistance;
   return String(configweb);
 }
 //***********************************
@@ -220,4 +220,13 @@ String injection_type() {
       return (state);
 }
 
+/*
+*  récupération de la température sur le dimmer 
+*/
+String Dimmer_temp() {
+  String temperature ;
+
+  return ("0");
+   
+}
 #endif

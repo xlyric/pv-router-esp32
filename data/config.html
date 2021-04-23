@@ -216,12 +216,18 @@
                 </div>
                 <div class="card-body">
                   <div class="col-lg-12">
-            <div class="p-5">
+           
 
               <form class="user" id="formulaire" method="post" action=""  >
 			  
           
-          
+        <div class="form-group">
+                  <div class="custom-control custom-checkbox small">
+                    <input type="checkbox" class="custom-control-input" id="Usemqtt">
+                    <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
+                  </div>
+        </div>
+
         <div class="form-group">
             MQTT Serveur :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
         </div>
@@ -235,35 +241,30 @@
           </div>
         </div>
         
+        <div class="form-group">
+          <div class="col-sm-3">
+            <div class="custom-control custom-checkbox small">
+                    <input type="checkbox" class="custom-control-input" id="autonome">
+                    <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
+            </div>
+          </div>
+        </div>  
         <div class="form-group row">
           <div class="col-sm-6">
-              Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
+                    Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
           </div>
         </div>
-
-				<div class="form-group">
-                <div class="custom-control custom-checkbox small">
-						            <input type="checkbox" class="custom-control-input" id="autonome">
-                        <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
-                </div>
-            
-
-        </div>
+      
 				
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="Usemqtt">
-                        <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
-                      </div>
-                </div
+
 							
 
 
-        </div>
+        
 				<div class="form-group row">
 				 <div class="col-sm-3">Limite Consommation (Delta) </div>
 				  <div class="col-sm-3">Limite Injection (deltaneg) </div>
-				  <div class="col-sm-3">Charge connectée/W </div>
+				  
 				 
 
 				</div>
@@ -275,9 +276,7 @@
 				  <div class="col-sm-3">
 				  <input type="text" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%">
                   </div>
-				  <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
-                  </div>
+
 				  
 				  
 		        </div>
@@ -285,7 +284,7 @@
 				<div class="form-group row">
 				 <div class="col-sm-3">Cosphi</div>
 				 <div class="col-sm-3">Facteur de correction</div>
-         <div class="col-sm-3">dispo</div>
+         
 				</div>
 				<div class="form-group row">
                   <div class="col-sm-3">
@@ -294,21 +293,22 @@
 				          <div class="col-sm-3">
 					          <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
                   </div>
-                  <div class="col-sm-3">
-                     <input type="text" class="form-control form-control-user" id="dispo" placeholder="%dispo%">
-                  </div>
+
         </div>
 
-			<div class="form-group row">
-				<!--	 <div class="col-sm-3">Dimmer Local</div>
-				</div>
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="dimmerlocal">
-                        <label class="custom-control-label" for="dimmerlocal" onclick="sendservermode(this.innerHTML);" >Dimmer local</label>
-                      </div>
-                </div>
-                -->
+      <div class="form-group row">
+        <div class="col-sm-3">Charge connectée/W </div>
+        <div class="col-sm-3">limiteur en %</div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3">
+				  <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
+        </div>
+			  <div class="col-sm-3">
+          <input type="text" class="form-control form-control-user" id="Fusible" placeholder="%FUSE%">
+        </div>
+      </div>
+
 				  
 
 				
@@ -419,7 +419,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'readtime':$('#readtime').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'resistance':$('#resistance').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'resistance':$('#resistance').val() } 
 
 
 		
@@ -449,7 +449,7 @@ var recupconfig = $.get ({
         var config = recupconfig.split(";");
 
 		document.getElementById("IDXDIMMER").value = config[0];
-//		document.getElementById("port").value = config[1];	  
+		document.getElementById("Fusible").value = config[1];	  
 		document.getElementById("IDX").value = config[2];
 		document.getElementById("version").innerHTML = config[3];
 		document.getElementById("delta").value = config[5];
