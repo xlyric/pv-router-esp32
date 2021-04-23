@@ -1,8 +1,11 @@
 #ifndef APPWEB_FUNCTIONS
 #define APPWEB_FUNCTIONS
 
+#include "energyFunctions.h"
+
 String configweb; 
 extern DisplayValues gDisplayValues;
+extern Config config; 
 
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
 const char* PARAM_INPUT_2 = "cycle"; /// paramettre de retour cycle
@@ -24,6 +27,46 @@ const char* PARAM_INPUT_facteur = "facteur"; /// paramettre retour delta
 const char* PARAM_INPUT_tmax = "tmax"; /// paramettre retour delta
 const char* PARAM_INPUT_mqttserver = "mqttserver"; /// paramettre retour mqttserver
 const char* PARAM_INPUT_reset = "reset"; /// paramettre retour mqttserver
+
+
+//***********************************
+//** Oscillo mode creation du tableau de mesure pour le graph
+//***********************************
+
+String oscilloscope() {
+
+ // int starttime,endtime; 
+  int timer = 0; 
+  int temp, signe, moyenne; 
+  int freqmesure = 40; 
+  int middle = 1800;
+  String retour = "[[";
+  
+  front();
+  
+  delayMicroseconds (config.cosphi*config.readtime); // correction décalage
+  while ( timer < ( freqmesure ) )
+  {
+
+  
+  temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+  moyenne = middle  + signe/50; 
+  //moyenne = moyenne + abs(temp - middle) ;
+  /// mode oscillo graph 
+
+  
+  retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "],[" ; 
+  timer ++ ;
+  delayMicroseconds (config.readtime);
+  } 
+  
+  temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+  moyenne = middle  + signe/50; 
+  retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
+ 
+return ( retour ); 
+  
+}
 
 
 //***********************************
@@ -79,13 +122,13 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.hostname) + ";" +  config.port + ";"  + config.IDX + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+";"+config.deltaneg+";"+config.resistance;
+  configweb = config.IDXdimmer + ";" +  config.port + ";"  + config.IDX + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+";"+config.deltaneg+";"+config.resistance;
   return String(configweb);
 }
 //***********************************
 String getchart() {
   String retour ="" ;
-//    oscilloscope() ;
+    retour = oscilloscope() ;
       return String(retour);
 }
 //***********************************
@@ -167,5 +210,14 @@ String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  
   client.publish("domoticz/in", String(message).c_str(), true);
   
 }*/
+
+
+String injection_type() {
+      String state ; 
+      if (gDisplayValues.watt > config.delta ) {   state = "Linky"; }
+      if (gDisplayValues.watt < config.deltaneg ) {   state = "Injection"; }
+      else  {   state = "Stabilise"; } 
+      return (state);
+}
 
 #endif

@@ -12,15 +12,12 @@
     extern void reconnectWifiIfNeeded();
     extern DisplayValues gDisplayValues;
 
-    WiFiUDP ntpUDP;
-
-    // TODO: this does not take timezones into account! Only UTC for now.
-    NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
+    extern NTPClient timeClient;
 
     void fetchTimeFromNTP(void * parameter){
         for(;;){
-            gDisplayValues.task = true;
-            if(!WiFi.isConnected()){
+            
+            if(!WiFi.isConnected()){   /// si pas de connexion Wifi test dans 10 s 
                 vTaskDelay(10*1000 / portTICK_PERIOD_MS);
                 continue;
             }
@@ -28,15 +25,16 @@
             serial_println("[NTP] Updating...");
             timeClient.update();
 
-            String timestring = timeClient.getFormattedTime();
-            short tIndex = timestring.indexOf("T");
-            gDisplayValues.time = timestring.substring(tIndex + 1, timestring.length() -3);
+            //String timestring = timeClient.getFormattedTime();
+            //short tIndex = timestring.indexOf("T");
+           // gDisplayValues.time = timestring.substring(tIndex + 1, timestring.length() -3);
             
             serial_println("[NTP] Done");
-            gDisplayValues.task = false;
+            
             // Sleep for a minute before checking again
             vTaskDelay(NTP_UPDATE_INTERVAL_MS / portTICK_PERIOD_MS);
         }
     }
+
 #endif
 #endif

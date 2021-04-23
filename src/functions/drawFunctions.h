@@ -3,23 +3,28 @@
 
 #include <WiFi.h>
 #include "SSD1306Wire.h"
+#include <NTPClient.h>
 #include "../config/enums.h"
 #include "../config/config.h"
+
 
 extern SSD1306Wire display;
 extern DisplayValues gDisplayValues;
 extern unsigned char measureIndex;
+extern NTPClient timeClient;
 
 void drawTime(){
   display.setTextAlignment(TEXT_ALIGN_LEFT);
   display.setFont(ArialMT_Plain_10);
-  display.drawString(0, 0,gDisplayValues.time);
+  //display.drawString(0, 0,gDisplayValues.time);
+  display.drawString(0, 0,timeClient.getFormattedTime());
 }
 
 void drawIP(){
-  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
   display.setFont(ArialMT_Plain_10);
-  display.drawString(63, 0,gDisplayValues.IP);
+  display.drawString(64, 0,gDisplayValues.IP);
+  
 }
 
 void drawSignalStrength(){
@@ -86,10 +91,11 @@ void drawBootscreen(){
     
   }
 }
-
+ 
 /**
  * Draw the current amps & watts in the middle of the display.
  */
+/*
 void drawAmpsWatts(){
   const int width = 85 ; 
   const int height = 30 ; 
@@ -111,5 +117,72 @@ void drawAmpsWatts(){
   display.setFont(ArialMT_Plain_16);
   display.drawString(width,height, String(watts) + " W"); 
 }
+*/
+/**
+ * Draw the current amps & watts in the middle of the display.
+ */
+/*
+void drawDimmer(){
+  const int width = 85 ; 
+  const int height = 50 ; 
+  const int startY = 18;
+
+  String watts = String(gDisplayValues.dimmer);
+  
+  // Calculate how wide (pixels) the text will be once rendered.
+  // Each character = 6 pixels, with font size 2, that is 12 pixels.
+  // -1 because of the spacing between letters (last one doesn't)
+  int widthWatts = watts.length() * 12 - 1;
+  /// clean rect
+  display.setColor(BLACK);
+  display.fillRect(width, height, widthWatts, startY);
+  /// write Data
+  display.setColor(WHITE);
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_16);
+  display.drawString(width,height, String(watts) ); 
+}
+*/
+
+/**
+ * Affichage de texte de format 16 
+ */
+
+void drawtext16(int width,int height, String text ){
+  const int startY = 18;
+    
+  // Calculate how wide (pixels) the text will be once rendered.
+  // Each character = 6 pixels, with font size 2, that is 12 pixels.
+  // -1 because of the spacing between letters (last one doesn't)
+  int widthtext = text.length() * 12 - 1;
+  /// clean rect
+  display.setColor(BLACK);
+  display.fillRect(width, height, widthtext, startY);
+  /// write Data
+  display.setColor(WHITE);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.setFont(ArialMT_Plain_16);
+  display.drawString(width,height, String(text) ); 
+  
+}
+
+void drawtext10(int width,int height, String text ){
+  const int startY = 12;
+    
+  // Calculate how wide (pixels) the text will be once rendered.
+  // Each character = 6 pixels, with font size 2, that is 12 pixels.
+  // -1 because of the spacing between letters (last one doesn't)
+  int widthtext = text.length() * 6 - 1;
+  /// clean rect
+  display.setColor(BLACK);
+  display.fillRect(width, height, widthtext, startY);
+  /// write Data
+  display.setColor(WHITE);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.setFont(ArialMT_Plain_10);
+  display.drawString(width,height, String(text) ); 
+  
+}
+
 
 #endif

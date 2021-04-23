@@ -219,43 +219,36 @@
             <div class="p-5">
 
               <form class="user" id="formulaire" method="post" action=""  >
-			    <div class="form-group row">
 			  
-				 
-				 <div class="col-sm-3">IDX MQTT </div>
-				</div>
-				 
-                <div class="form-group row">
+          
+          
+        <div class="form-group">
+            MQTT Serveur :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
+        </div>
 
+        <div class="form-group row">
 				  <div class="col-sm-3">
-                   <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
-                  </div>
-				</div>
+                  IDX Power: <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
+          </div>
+				  <div class="col-sm-3">
+                  IDX Dimmer: <input type="text" class="form-control form-control-user" id="IDXDIMMER" placeholder="%IDXDIMMER%">
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <div class="col-sm-6">
+              Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
+          </div>
+        </div>
 
 				<div class="form-group">
-                 Dimmer :<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
-                </div>
-
-		<!--	<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-                        <input type="checkbox" class="custom-control-input" id="UseDomoticz">
-                        <label class="custom-control-label" for="UseDomoticz" onclick="sendservermode(this.innerHTML);" >Domoticz</label>
-                      </div>
-                </div>
-
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="UseJeedom">
-                        <label class="custom-control-label" for="UseJeedom" onclick="sendservermode(this.innerHTML);">Jeedom</label>
-                      </div>
-                </div>-->	
-
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="autonome">
+                <div class="custom-control custom-checkbox small">
+						            <input type="checkbox" class="custom-control-input" id="autonome">
                         <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
-                      </div>
                 </div>
+            
+
+        </div>
 				
 				<div class="form-group">
                       <div class="custom-control custom-checkbox small">
@@ -263,12 +256,10 @@
                         <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
                       </div>
                 </div
-				<div class="form-group">
-                 MQTT Serveur :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
-                </div>			
+							
 
 
-				
+        </div>
 				<div class="form-group row">
 				 <div class="col-sm-3">Limite Consommation (Delta) </div>
 				  <div class="col-sm-3">Limite Injection (deltaneg) </div>
@@ -294,15 +285,19 @@
 				<div class="form-group row">
 				 <div class="col-sm-3">Cosphi</div>
 				 <div class="col-sm-3">Facteur de correction</div>
+         <div class="col-sm-3">dispo</div>
 				</div>
 				<div class="form-group row">
                   <div class="col-sm-3">
-                   <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
+                    <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
                   </div>
-				<div class="col-sm-3">
-					<input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
-                </div>
-                </div>
+				          <div class="col-sm-3">
+					          <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
+                  </div>
+                  <div class="col-sm-3">
+                     <input type="text" class="form-control form-control-user" id="dispo" placeholder="%dispo%">
+                  </div>
+        </div>
 
 			<div class="form-group row">
 				<!--	 <div class="col-sm-3">Dimmer Local</div>
@@ -424,7 +419,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(),	 'cosphi':$('#cosphi').val(), 'readtime':$('#readtime').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'resistance':$('#resistance').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'readtime':$('#readtime').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'resistance':$('#resistance').val() } 
 
 
 		
@@ -453,7 +448,7 @@ var recupconfig = $.get ({
 				  
         var config = recupconfig.split(";");
 
-	//	document.getElementById("hostname").value = config[0];
+		document.getElementById("IDXDIMMER").value = config[0];
 //		document.getElementById("port").value = config[1];	  
 		document.getElementById("IDX").value = config[2];
 		document.getElementById("version").innerHTML = config[3];

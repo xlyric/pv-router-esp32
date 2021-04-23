@@ -1,4 +1,3 @@
-//#pragma once
 //***********************************
 //************* SPIFFS 
 //***********************************
@@ -10,12 +9,13 @@
 #ifdef ESP32
 #include <FS.h>
 #include "SPIFFS.h"
+#include "config/enums.h"
 #endif
 
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
 
-
+/*
 struct Config {
   char hostname[15];
   int port;
@@ -41,6 +41,7 @@ struct Config {
   int tmax;
   int resistance;
 };
+*/
 
 const char *filename_conf = "/config.json";
 extern Config config; 

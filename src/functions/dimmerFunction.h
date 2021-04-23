@@ -11,6 +11,29 @@ extern DisplayValues gDisplayValues;
 
 HTTPClient http;
 
+/*
+*   fonction d'envoie de commande au dimmer
+*/
+
+void dimmer_change(char dimmerurl[15], String dimmerIDX, int dimmervalue) {
+    /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
+    #if WIFI_ACTIVE == true
+    String baseurl; 
+      baseurl = "/?POWER=" + String(dimmervalue) ; 
+      http.begin(dimmerurl,80,baseurl);   
+      http.GET();
+      http.end(); 
+
+    #if MQTT_CLIENT == true 
+    /// A vérifier que c'est necessaire ( envoie double ? )
+      Mqtt_send(dimmerIDX, String(dimmervalue));  
+    #endif
+    
+    delay (2000); // delay de transmission réseau dimmer et application de la charge
+    #endif
+}
+
+
 //***********************************
 //************* Fonction aservissement autonome
 //***********************************
@@ -39,7 +62,6 @@ gDisplayValues.change = 0;
     gDisplayValues.change = 1; 
     }  
   
-
     // injection 
     /// si grosse injection on augmente la puissance par extrapolation
   else if ( gDisplayValues.watt <= (config.deltaneg-30) ) {   
@@ -68,24 +90,20 @@ gDisplayValues.change = 0;
     gDisplayValues.security ++ ;
 
    //// envoie d'un Zero au dimmer de temps en temps pour des raisons de sécurité
-    if ( gDisplayValues.security >= 5 ) { if ( gDisplayValues.dimmer <= 0 ) {gDisplayValues.dimmer = 0; gDisplayValues.change = 1 ; gDisplayValues.security = 0;  }} 
+    if ( gDisplayValues.security >= 5 ) { 
+      if ( gDisplayValues.dimmer <= 0 ) {
+        gDisplayValues.dimmer = 0; 
+        gDisplayValues.change = 1 ; 
+        gDisplayValues.security = 0;  
+      }
+    } 
 
+  if  (gDisplayValues.change == 1 )  {
+    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
+  }
 }
 
-void dimmer_change() {
-    /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
-    String baseurl; 
-      baseurl = "/?POWER=" + String(gDisplayValues.dimmer) ; 
-      http.begin(config.dimmer,80,baseurl);   
-      http.GET();
-      http.end(); 
 
-    if ( config.mqtt == 1 ) { 
-      Mqtt_send(config.IDXdimmer, String(gDisplayValues.dimmer));  
-    }
-    
-    delay (2000); // delay de transmission réseau dimmer et application de la charge
-}
 
 
 #endif

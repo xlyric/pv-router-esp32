@@ -5,6 +5,7 @@
 #include "../config/config.h"
 
 extern DisplayValues gDisplayValues;
+//extern Config
 
 // ***********************************
 // ** recherche du point 0. temps 20 ms max ... 
@@ -117,6 +118,7 @@ void injection(){
  
   
 }
+
 
 
 

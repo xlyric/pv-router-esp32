@@ -32,12 +32,12 @@
  */
 #define WEBSSERVER true
 #define WIFI_ACTIVE  true
-
 #define MQTT_CLIENT true
 #define OTA true
 #define DIMMER true
 #define WIFI_NETWORK "xxx"
 #define WIFI_PASSWORD "xxx"
+
 
 /**
  * Timeout for the WiFi connection. When this is reached,
@@ -72,6 +72,23 @@
 
 
 /**
+ * Syncing time with an NTP server
+ */
+#define NTP_TIME_SYNC_ENABLED true
+#define NTP_SERVER "europe.pool.ntp.org"
+#define NTP_OFFSET_SECONDS 3600
+#define NTP_UPDATE_INTERVAL_MS 3600000 /// synch de l'heure toute les heures
+
+/**
+ * Wether or not you want to enable Home Assistant integration
+ */
+#define HA_ENABLED false
+#define HA_ADDRESS "*** YOUR HOME ASSISTANT IP ADDRESSS ***"
+#define HA_PORT 8883
+#define HA_USER ""
+#define HA_PASSWORD ""
+
+/**
  * The MQTT endpoint of the service we should connect to and receive messages
  * from.
  */
@@ -83,23 +100,6 @@
 #define MQTT_CONNECT_TIMEOUT 20000 // 20 seconds
 
 
-/**
- * Syncing time with an NTP server
- */
-#define NTP_TIME_SYNC_ENABLED false
-#define NTP_SERVER "europe.pool.ntp.org"
-#define NTP_OFFSET_SECONDS 3600
-#define NTP_UPDATE_INTERVAL_MS 60000
-
-/**
- * Wether or not you want to enable Home Assistant integration
- */
-#define HA_ENABLED false
-#define HA_ADDRESS "*** YOUR HOME ASSISTANT IP ADDRESSS ***"
-#define HA_PORT 8883
-#define HA_USER ""
-#define HA_PASSWORD ""
-
 // Check which core Arduino is running on. This is done because updating the 
 // display only works from the Arduino core.
 #if CONFIG_FREERTOS_UNICORE
@@ -107,5 +107,7 @@
 #else
 #define ARDUINO_RUNNING_CORE 1
 #endif
+
+
 
 #endif

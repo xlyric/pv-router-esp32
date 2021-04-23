@@ -4,6 +4,7 @@
 #include <driver/adc.h>
 #include "config/config.h"
 #include "config/enums.h"
+#include <NTPClient.h>
 
 
 // File System
@@ -37,6 +38,8 @@ DisplayValues gDisplayValues;
 EnergyMonitor emon1;
 Config config; 
 
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
 
 // Place to store local measurements before sending them off to AWS
 unsigned short measurements[LOCAL_MEASUREMENTS];
@@ -100,9 +103,9 @@ void setup()
     display.init();
     display.flipScreenVertically();
     display.clear();
-    display.setFont(ArialMT_Plain_16);
-    display.drawString(30,30," Starting..."); 
-    display.display();
+    //display.setFont(ArialMT_Plain_16);
+    //display.drawString(30,30," Starting..."); 
+    //display.display();
     
   #endif
 
@@ -165,6 +168,8 @@ void setup()
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
   );
+
+
   #endif
 
 
@@ -253,16 +258,27 @@ void setup()
       delay (500); 
     }
     OTA_init();
+    timeClient.begin();
   #endif
 
   #if WEBSSERVER == true
-  server.begin(); 
+    server.begin(); 
   #endif
 
   if ( config.mqtt == true ) {
     Mqtt_init();
   }
+
+  if ( config.autonome == true ) {
+    gDisplayValues.dimmer = 0; 
+    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
+  }
+
 #endif
+
+  #if OLED_ON == true
+    display.clear();
+  #endif
 
 }
 

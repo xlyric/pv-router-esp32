@@ -20,15 +20,15 @@ void updateDimmer(void * parameter){
   for (;;){
   gDisplayValues.task = true;
 #if WIFI_ACTIVE == true
-       
     dimmer();
     
+    /*
     /// si changement à faire
     if  (gDisplayValues.change != 0 ) {
         Serial.println(F("changement des valeurs dimmer-MQTT"));
         // envoie de l'information au dimmer et au serveur MQTT ( mosquito ou autre )
         dimmer_change(); 
-    }
+    }*/ 
    
 #endif
     gDisplayValues.task = false;

@@ -8,16 +8,14 @@
     #include <PubSubClient.h>
     #include <WiFi.h>
     #include "HTTPClient.h"
-    
-    
+        
     WiFiClient espClient;
     PubSubClient client(espClient);
 
-extern DisplayValues gDisplayValues;
+    extern DisplayValues gDisplayValues;
 
 /***
- *  envoie de l 'information vers le serveur MQTT
- * 
+ *  reconnexion au serveur MQTT
  */
 
 void reconnect() {
@@ -37,19 +35,21 @@ void reconnect() {
   }
 }
 
+/*
+*    Fonction d'envoie info MQTT vers domoticz
+*/
 
 void Mqtt_send ( String idx, String value ) {
- 
-
-
+  
   String nvalue = "0" ; 
-  if ( value != "0" ) { nvalue = "2" ; }
-String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
-
+  
+  if ( value != "0" ) { 
+      nvalue = "2" ; 
+      }
+  
+  String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
   client.loop();
   client.publish("domoticz/in", String(message).c_str(), true);
-  
-
 
 }
 
@@ -64,10 +64,5 @@ void Mqtt_init() {
   Mqtt_send(config.IDXdimmer,"0");   
 
 }
-
-
-
-
-
 
 #endif
