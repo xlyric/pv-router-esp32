@@ -16,7 +16,6 @@ SCT013  Branché entre milieu pont diviseur et D24 ( --> Linky )
 condensateur 470uf entre GND et D24  /// filtre bruit
 
 
-State : 
 *********** OK **************
 
 OLED
@@ -24,12 +23,18 @@ Wifi
 SENS courant 
 Prise Puissance
 OTA
+SPIFFS
+MQTT 
+Gestion puissance dimmer : ok
+transmission Dimmer : ok
+IDX dimmer dans site internet : ok
 
 ********** A faire ************
 
-Gestion puissance dimmer
-Site internet
-MQTT
+
+Site internet : à améliorer
+
+MQTT topic de destination dans fichier json
 
 ****** affichage OLED *****
 
@@ -37,8 +42,5 @@ Puissance : ok
 Heure : ok 
 IP: ok
 
-mode : todo
-Puissance dimmer: todo
-
-
-
+mode : a vérifier
+Puissance dimmer: ok
