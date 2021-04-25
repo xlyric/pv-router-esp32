@@ -36,8 +36,9 @@ void updateDisplay(void * parameter){
       drawtext10(64,16, injection_type() );
       
       // Affichage des infos de puissance ( sans les virgules )
-      if ( gDisplayValues.watt > 15000) { 
+      if ( gDisplayValues.porteuse == false) { 
       drawtext16(64,30, String("abs porteuse"));
+      gDisplayValues.dimmer = 0 ; /// mise à zero du dimmer par sécurité 
       }
       else  {
       drawtext16(64 ,30, String(gDisplayValues.watt,0) + " W");

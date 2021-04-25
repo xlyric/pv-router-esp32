@@ -6,6 +6,7 @@
 String configweb; 
 extern DisplayValues gDisplayValues;
 extern Config config; 
+int middleoscillo = 1800;
 
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
 const char* PARAM_INPUT_2 = "cycle"; /// paramettre de retour cycle
@@ -39,7 +40,7 @@ String oscilloscope() {
   int timer = 0; 
   int temp, signe, moyenne; 
   int freqmesure = 40; 
-  int middle = 1800;
+  int sigma = 0;
   String retour = "[[";
   
   front();
@@ -50,7 +51,8 @@ String oscilloscope() {
 
   
   temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
-  moyenne = middle  + signe/50; 
+  moyenne = middleoscillo  + signe/50; 
+  sigma += temp;
   //moyenne = moyenne + abs(temp - middle) ;
   /// mode oscillo graph 
 
@@ -61,9 +63,10 @@ String oscilloscope() {
   } 
   
   temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
-  moyenne = middle  + signe/50; 
+  moyenne = middleoscillo  + signe/50; 
   retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
- 
+  middleoscillo = sigma / freqmesure ;
+
 return ( retour ); 
   
 }
@@ -223,10 +226,25 @@ String injection_type() {
 /*
 *  récupération de la température sur le dimmer 
 */
-String Dimmer_temp() {
-  String temperature ;
+String Dimmer_temp(char* host) {
+WiFiClient client;
+  
+  String url = "/state";
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" +
+               "User-Agent: BuildFailureDetectorESP8266\r\n" +
+               "Connection: close\r\n\r\n");
+  
+  while (client.connected()) {
+    String line = client.readStringUntil('\n');
+    if (line == "\r") {
+      Serial.println("headers received");
+      break;
+    }
+  }
+  String line = client.readStringUntil('OK');
 
-  return ("0");
+  return (line);
    
 }
 #endif

@@ -26,6 +26,7 @@ struct DisplayValues {
   int security; 
   int change;
   bool task;
+  bool porteuse; 
 };
 
 struct Config {

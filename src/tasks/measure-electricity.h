@@ -37,6 +37,7 @@ void measureElectricity(void * parameter)
       gDisplayValues.watt = watts;*/
 
             injection();
+            if ( gDisplayValues.porteuse == false ) {gDisplayValues.watt =0 ; }
       //if ( gDisplayValues.injection == true ) { serial_print("-") ; }
           
       //}

@@ -12,13 +12,14 @@ extern DisplayValues gDisplayValues;
 // ***********************************
 void front() {
   int Watchdog=0 ;  
-  
+  gDisplayValues.porteuse = true; 
   int margin = 0; /// 0 marge de bruit de fond  en lecture ( si pb ) 
   // recherche demi ondulation
   while ( analogRead(ADC_PORTEUSE) > margin  ) { 
-	delayMicroseconds (25);
+  	delayMicroseconds (25);
     Watchdog++;
-    if ( Watchdog > 500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ? "); break; } 
+    if ( Watchdog > 500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ? "); gDisplayValues.porteuse = false; break; } 
+
 	}
 
   Watchdog=0 ; 
@@ -26,7 +27,7 @@ void front() {
   while ( analogRead(ADC_PORTEUSE) == margin  ) {
 	delayMicroseconds (5);
     Watchdog++;
-    if ( Watchdog > 1500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ou inversée ? "); break;}  
+    if ( Watchdog > 1500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ou inversée ? "); gDisplayValues.porteuse = false ; break;}  
 	}
     
 }
@@ -117,6 +118,8 @@ void injection(){
   //else {gDisplayValues.injection = true ;  serial_print(porteuse) ; serial_print("  ") ; serial_print (injection) ; serial_print("  ") ; serial_println (loop) ;}
  
   
+
+
 }
 
 
