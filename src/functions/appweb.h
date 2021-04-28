@@ -104,7 +104,7 @@ String getServermode(String Servermode) {
   if ( Servermode == "Autonome" ) {   config.autonome = !config.autonome; }
   if ( Servermode == "Dimmer local" ) {   config.dimmerlocal = !config.dimmerlocal; }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
-  if ( Servermode == "polarity" ) {   config.polarity = !config.polarity; }
+  if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; }
 
 return String(Servermode);
 }
