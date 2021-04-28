@@ -100,6 +100,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.autonome = doc["autonome"] | true;
   config.mqtt = doc["mqtt"] | true;
   config.dimmerlocal = doc["dimmerlocal"] | false;
+  config.polarity = doc["polarity"] | false;
   strlcpy(config.dimmer,                  // <- destination
           doc["dimmer"] | "192.168.1.20", // <- source
           sizeof(config.dimmer));         // <- destination's capacity
@@ -154,6 +155,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["mqttserver"] = config.mqttserver;  
   doc["tmax"] = config.tmax;
   doc["resistance"] = config.resistance;
+  doc["polarity"] = config.polarity; 
 
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {

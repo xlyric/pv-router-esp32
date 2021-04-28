@@ -18,7 +18,7 @@ extern DisplayValues gDisplayValues;
 void updateDisplay(void * parameter){
   for (;;){
     serial_println(F("lcd task"));
-    //display.clear();
+    display.clear();
 
 
 #if WIFI_ACTIVE == true

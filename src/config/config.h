@@ -28,13 +28,24 @@
 #define HOME_VOLTAGE 225.0
 
 /**
+ *  Dimmer 
+ */
+
+#define DIMMER true
+#define DIMMERLOCAL false
+
+#if DIMMERLOCAL 
+#define outputPin  18 
+#define zerocross  19 // for boards with CHANGEBLE input pins
+#endif
+
+/**
  * WiFi credentials
  */
 #define WEBSSERVER true
 #define WIFI_ACTIVE  true
 #define MQTT_CLIENT true
 #define OTA true
-#define DIMMER true
 #define WIFI_NETWORK "xxx"
 #define WIFI_PASSWORD "xxx"
 

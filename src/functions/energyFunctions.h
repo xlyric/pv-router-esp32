@@ -5,7 +5,7 @@
 #include "../config/config.h"
 
 extern DisplayValues gDisplayValues;
-//extern Config
+extern Config config; 
 
 // ***********************************
 // ** recherche du point 0. temps 20 ms max ... 
@@ -112,6 +112,9 @@ void injection(){
   positive = sqrt(positive / float( loop - zero_count )) ; 
   //serial_print(positive) ; serial_print("  ") ; serial_print (zero) ; serial_print("  ") ; serial_println ( (zero + positive) /2  ) ;
   gDisplayValues.watt = int(( positive - zero)*3.2) ; 
+  if ( config.polarity == true ) { gDisplayValues.watt = - gDisplayValues.watt ; }
+  
+
   //injection = sigma_read / (loop  ); 
   //if (injection >= ADC_MIDDLE ) 
   //if (positive >= zero ) {gDisplayValues.injection = false ; }

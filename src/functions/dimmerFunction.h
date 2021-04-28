@@ -7,6 +7,22 @@
 #include "../functions/spiffsFunctions.h"
 #include "../functions/Mqtt_http_Functions.h"
 
+#if DIMMERLOCAL 
+// Dimmer librairy 
+#include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
+
+//***********************************
+//************* dimmer
+//***********************************
+
+
+dimmerLamp dimmer_hard(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
+int dimmer_security = 60;  // coupe le dimmer toute les X minutes en cas de probleme externe. 
+int dimmer_security_count = 0; 
+
+#endif
+
+
 extern DisplayValues gDisplayValues;
 
 HTTPClient http;
@@ -100,10 +116,23 @@ gDisplayValues.change = 0;
 
   if  (gDisplayValues.change == 1 )  {
     dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
+
+    #if DIMMERLOCAL 
+    dimmer_hard.setPower(gDisplayValues.dimmer);
+    #endif
+
   }
 }
 
+#if DIMMERLOCAL 
+void Dimmer_setup() {
+  // configuration dimmer
+  dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
+  dimmer_hard.setPower(0); 
+  serial_println("Dimmer started...");
 
+}
+#endif
 
 
 #endif

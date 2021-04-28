@@ -104,6 +104,7 @@ String getServermode(String Servermode) {
   if ( Servermode == "Autonome" ) {   config.autonome = !config.autonome; }
   if ( Servermode == "Dimmer local" ) {   config.dimmerlocal = !config.dimmerlocal; }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
+  if ( Servermode == "polarity" ) {   config.polarity = !config.polarity; }
 
 return String(Servermode);
 }
@@ -125,7 +126,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = config.IDXdimmer + ";" +  config.num_fuse + ";"  + config.IDX + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+";"+config.deltaneg+";"+config.resistance;
+  configweb = config.IDXdimmer + ";" +  config.num_fuse + ";"  + config.IDX + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+";"+config.deltaneg+";"+config.resistance+";"+config.polarity;
   return String(configweb);
 }
 //***********************************

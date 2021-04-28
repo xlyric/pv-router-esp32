@@ -28,6 +28,12 @@
 #include "functions/Mqtt_http_Functions.h"
 #include "functions/webFunctions.h"
 
+#if DIMMERLOCAL 
+#include "functions/dimmerFunction.h"
+#endif
+
+
+
 //***********************************
 //************* Afficheur Oled
 //***********************************
@@ -70,6 +76,9 @@ void setup()
   btStop();
 #endif
 
+#if DIMMERLOCAL 
+Dimmer_setup();
+#endif
 
   //démarrage file system
   Serial.println("start SPIFFS");

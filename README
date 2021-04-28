@@ -31,16 +31,15 @@ IDX dimmer dans site internet : ok
 
 ********** A faire ************
 
-
+Bug affichage heure --> corrigé, à vérifier
 Site internet : à améliorer
-
 MQTT topic de destination dans fichier json
+mode dimmer local 
+Bouton inversion de polarité sonde --> à tester
 
 ****** affichage OLED *****
 
 Puissance : ok 
 Heure : ok 
 IP: ok
-
 mode : a vérifier
-Puissance dimmer: ok

@@ -53,6 +53,7 @@ struct Config {
   String IDXdimmer;
   int tmax;
   int resistance;
+  bool polarity; 
 };
 
 
