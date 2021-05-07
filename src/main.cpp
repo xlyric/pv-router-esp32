@@ -8,7 +8,7 @@
 
 
 // File System
-#include <fs.h>
+#include <FS.h>
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
 // Oled
