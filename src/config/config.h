@@ -17,8 +17,18 @@
 /**
  * ADC input pin that is used to read out the CT sensor
  */
+
+#ifdef  DEVKIT1
 #define ADC_INPUT 34 // linky
 #define ADC_PORTEUSE 35 // porteuse
+#endif
+
+#ifdef  TTGO
+#define ADC_INPUT 32 // linky
+#define ADC_PORTEUSE 33 // porteuse
+#endif
+
+
 #define ADC_MIDDLE 1893  /// en dessous laquelle on considère une valeur négative
 
 /**

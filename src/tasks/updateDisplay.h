@@ -2,12 +2,20 @@
 #define TASK_UPDATE_DISPLAY
 
 #include <Arduino.h>
-#include "SSD1306Wire.h"
 #include "functions/drawFunctions.h"
 #include "functions/appweb.h"
 #include "../config/config.h"
 
+#ifdef  DEVKIT1
+#include "SSD1306Wire.h"
 extern SSD1306Wire display;
+#endif
+
+#ifdef  TTGO
+#include <TFT_eSPI.h>
+extern TFT_eSPI display;
+#endif
+
 extern DisplayValues gDisplayValues;
 
 
@@ -18,7 +26,9 @@ extern DisplayValues gDisplayValues;
 void updateDisplay(void * parameter){
   for (;;){
     serial_println(F("lcd task"));
-    display.clear();
+    #ifdef  DEVKIT1
+      display.clear();
+    #endif
 
 
 #if WIFI_ACTIVE == true
@@ -33,23 +43,43 @@ void updateDisplay(void * parameter){
 #endif
 
       // Affichage de l'état de la régulation
-      drawtext10(64,16, injection_type() );
-      
+      #ifdef  DEVKIT1
+        drawtext10(64,16, injection_type() );
+      #endif
+      #ifdef  TTGO
+        drawtext10(0,16, injection_type() );
+      #endif
+
       // Affichage des infos de puissance ( sans les virgules )
       if ( gDisplayValues.porteuse == false) { 
-      drawtext16(64,30, String("abs porteuse"));
+      #ifdef  DEVKIT1
+        drawtext16(64,30, String("abs porteuse"));
+      #endif
+      #ifdef  TTGO
+        drawtext16(90,16, String("No-Sin") );
+      #endif
+
       gDisplayValues.dimmer = 0 ; /// mise à zero du dimmer par sécurité 
       }
       else  {
-      drawtext16(64 ,30, String(gDisplayValues.watt,0) + " W");
+      #ifdef  DEVKIT1
+        drawtext16(64 ,30, String(gDisplayValues.watt,0) + " W");
+      #endif
+      #ifdef  TTGO
+        drawtext16(120,70, String(gDisplayValues.watt,0) + " W" );
+      #endif
       }
 
       // Affichage des infos du dimmer
-      drawtext16(64,48, String(gDisplayValues.dimmer) + " %");
+      //drawtext16(64,48, String(gDisplayValues.dimmer) + " %");
       
 
-
-    display.display();
+    #ifdef  DEVKIT1
+    // Affichage des infos du dimmer
+      drawtext16(64,48, String(gDisplayValues.dimmer) + " %");
+      display.display();
+    #endif
+    
 
     // Sleep for 5 seconds, then update display again!
     vTaskDelay(5000 / portTICK_PERIOD_MS);

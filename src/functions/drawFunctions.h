@@ -2,32 +2,55 @@
 #define DRAW_FUNCTIONS
 
 #include <WiFi.h>
-#include "SSD1306Wire.h"
+
 #include <NTPClient.h>
 #include "../config/enums.h"
 #include "../config/config.h"
 
-
+#ifdef  DEVKIT1
+#include "SSD1306Wire.h"
 extern SSD1306Wire display;
+#endif
+
+#ifdef  TTGO
+#include <TFT_eSPI.h>
+extern TFT_eSPI display;
+#endif
+
+
+
 extern DisplayValues gDisplayValues;
 extern unsigned char measureIndex;
 extern NTPClient timeClient;
 
 void drawTime(){
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_10);
-  //display.drawString(0, 0,gDisplayValues.time);
-  display.drawString(0, 0,timeClient.getFormattedTime());
+  #ifdef  DEVKIT1
+    display.setTextAlignment(TEXT_ALIGN_LEFT);
+    display.setFont(ArialMT_Plain_10);
+    display.drawString(0, 0,timeClient.getFormattedTime());
+  #endif
+  #ifdef  TTGO
+    display.setCursor(0, 0, 2);
+    display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
+    display.println(timeClient.getFormattedTime());
+  #endif
 }
 
 void drawIP(){
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_10);
-  display.drawString(64, 0,gDisplayValues.IP);
-  
+  #ifdef  DEVKIT1
+    display.setTextAlignment(TEXT_ALIGN_LEFT);
+    display.setFont(ArialMT_Plain_10);
+    display.drawString(64, 0,gDisplayValues.IP);
+  #endif
+  #ifdef  TTGO
+    display.setCursor(120, 0, 2);
+    display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
+    display.println(gDisplayValues.IP);
+  #endif
 }
 
 void drawSignalStrength(){
+  #ifdef  DEVKIT1
   const byte X = 51;
   const byte X_SPACING = 2;
 
@@ -52,11 +75,14 @@ void drawSignalStrength(){
   if(gDisplayValues.wifi_strength >= -50){
     display.fillRect(X+X_SPACING*3, 8-8, 1, 8);
   }
+  #endif
 }
 
 void drawMeasurementProgress(){
+  #ifdef  DEVKIT1
   const byte Y = SCREEN_WIDTH - 20;
   display.drawRect(0, Y, measureIndex*2, 2);
+  #endif
 }
 
 /**
@@ -64,6 +90,7 @@ void drawMeasurementProgress(){
  * and is connecting to WiFi & AWS.
  */
 void drawBootscreen(){
+  #ifdef  DEVKIT1
   byte X = 14;
   byte Y = 70;
   byte WIDTH = 6;
@@ -90,6 +117,8 @@ void drawBootscreen(){
     display.drawString(0, Y + MAX_HEIGHT / 2 ,"   AWS" );
     
   }
+ #endif
+
 }
  
 /**
@@ -149,39 +178,57 @@ void drawDimmer(){
  */
 
 void drawtext16(int width,int height, String text ){
+  
+  #ifdef  DEVKIT1  
   const int startY = 18;
-    
   // Calculate how wide (pixels) the text will be once rendered.
   // Each character = 6 pixels, with font size 2, that is 12 pixels.
   // -1 because of the spacing between letters (last one doesn't)
-  int widthtext = text.length() * 12 - 1;
+    int widthtext = text.length() * 12 - 1;
   /// clean rect
-  display.setColor(BLACK);
-  display.fillRect(width, height, widthtext, startY);
+    display.setColor(BLACK);
+    display.fillRect(width, height, widthtext, startY);
   /// write Data
-  display.setColor(WHITE);
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_16);
-  display.drawString(width,height, String(text) ); 
+    display.setColor(WHITE);
+    display.setTextAlignment(TEXT_ALIGN_LEFT);
+    display.setFont(ArialMT_Plain_16);
+    display.drawString(width,height, String(text) ); 
+  #endif
   
+  #ifdef  TTGO
+    display.setCursor(width, height, 2); display.setTextSize(1);
+    display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(7);
+    display.print(String(text));
+  #endif
+
 }
 
 void drawtext10(int width,int height, String text ){
-  const int startY = 12;
+
+  #ifdef  DEVKIT1
+    const int startY = 12;
     
   // Calculate how wide (pixels) the text will be once rendered.
   // Each character = 6 pixels, with font size 2, that is 12 pixels.
   // -1 because of the spacing between letters (last one doesn't)
-  int widthtext = text.length() * 6 - 1;
+    int widthtext = text.length() * 6 - 1;
   /// clean rect
-  display.setColor(BLACK);
-  display.fillRect(width, height, widthtext, startY);
+    display.setColor(BLACK);
+    display.fillRect(width, height, widthtext, startY);
   /// write Data
-  display.setColor(WHITE);
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_10);
-  display.drawString(width,height, String(text) ); 
-  
+    display.setColor(WHITE);
+    display.setTextAlignment(TEXT_ALIGN_LEFT);
+    display.setFont(ArialMT_Plain_10);
+    display.drawString(width,height, String(text) ); 
+  #endif
+
+  #ifdef  TTGO
+    display.setTextFont(1);
+    display.setCursor(width, height, 2);
+    display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(2);
+    display.print(String(text));
+  #endif
+
 }
 
 

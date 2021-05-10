@@ -11,8 +11,6 @@
 #include <FS.h>
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
-// Oled
-#include "SSD1306Wire.h" /// Oled ( https://github.com/ThingPulse/esp8266-oled-ssd1306 ) 
 
 #include "tasks/updateDisplay.h"
 #include "tasks/fetch-time-from-ntp.h"
@@ -37,8 +35,19 @@
 //***********************************
 //************* Afficheur Oled
 //***********************************
+#ifdef  DEVKIT1
+// Oled
+#include "SSD1306Wire.h" /// Oled ( https://github.com/ThingPulse/esp8266-oled-ssd1306 ) 
 const int I2C_DISPLAY_ADDRESS = 0x3c;
 SSD1306Wire  display(0x3c, SDA, SCL); // pin 21 SDA - 22 SCL
+#endif
+
+#ifdef  TTGO
+#include <TFT_eSPI.h>
+#include <SPI.h>
+TFT_eSPI display = TFT_eSPI();   // Invoke library
+#endif
+
 
 DisplayValues gDisplayValues;
 EnergyMonitor emon1;
@@ -61,6 +70,29 @@ void setup()
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
   analogReadResolution(ADC_BITS);
   pinMode(ADC_INPUT, INPUT);
+
+  #if OLED_ON == true
+    Serial.println("start Oled");
+    // Initialising OLED
+    #ifdef  DEVKIT1
+      display.init();
+      display.flipScreenVertically();
+      display.clear();
+    #endif
+    
+    #ifdef TTGO
+        display.init();
+        display.setRotation(1);
+        //display.begin();               // Initialise the display
+        display.fillScreen(TFT_BLACK); // Black screen fill
+        display.setCursor(0, 0, 2);
+        display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
+        display.println("Booting");
+    #endif
+
+#endif
+
+
 
 #if WIFI_ACTIVE == true
   WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD);
@@ -106,17 +138,9 @@ Dimmer_setup();
   //saveConfiguration(filename_conf, config);
 
 
-  #if OLED_ON == true
-    Serial.println("start Oled");
-    // Initialising OLED
-    display.init();
-    display.flipScreenVertically();
-    display.clear();
-    //display.setFont(ArialMT_Plain_16);
-    //display.drawString(30,30," Starting..."); 
-    //display.display();
-    
-  #endif
+
+
+
 
   // Initialize emon library
   emon1.current(ADC_INPUT, 30);
@@ -286,7 +310,9 @@ Dimmer_setup();
 #endif
 
   #if OLED_ON == true
-    display.clear();
+    #ifdef  DEVKIT1
+      display.clear();
+    #endif
   #endif
 
 }
