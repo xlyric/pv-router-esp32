@@ -1,8 +1,8 @@
-Version Alpha en cours de developpement
+Version 1 pour ESP32 ou TTGO T display
 
 
 branchements : 
-
+** ESP32  ** 
 OLED  : 
 
 3.3V 
@@ -12,34 +12,24 @@ GND
 
 SCT013 
 pont diviseur R/R  entre 3.3V et GND
-SCT013  Branché entre milieu pont diviseur et D24 ( --> Linky )
-condensateur 470uf entre GND et D24  /// filtre bruit
+SCT013  Branché entre milieu pont diviseur et pin 34 ( --> Linky )
+condensateur 470uf entre GND et milieu pont diviseur /// filtre bruit
+
+** TTGO ** 
+
+pin 32 Linky
+pin 33 porteuse
+
+******** 
+
+la porteuse est faite avec une alimentation 12v à transformateur. 
+le pont redresseur est retiré et est gardé la partie ondulée
+il y a un pont diviseur pour ne pas depasser 3.3V  et une diode pour une demi alternance. 
 
 
-*********** OK **************
+l'ensemble du montage remontera la puissance et le sens du courant.
+comme la version 8266 , il peux se connecter directement au dimmer Wifi pour controler la puissance. 
+--> https://github.com/xlyric/Pv-router
 
-OLED
-Wifi
-SENS courant 
-Prise Puissance
-OTA
-SPIFFS
-MQTT 
-Gestion puissance dimmer : ok
-transmission Dimmer : ok
-IDX dimmer dans site internet : ok
 
-********** A faire ************
 
-Bug affichage heure --> corrigé, à vérifier
-Site internet : à améliorer
-MQTT topic de destination dans fichier json
-mode dimmer local 
-Bouton inversion de polarité sonde --> à tester
-
-****** affichage OLED *****
-
-Puissance : ok 
-Heure : ok 
-IP: ok
-mode : a vérifier
