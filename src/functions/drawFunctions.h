@@ -48,7 +48,7 @@ void drawIP(){
     display.println(gDisplayValues.IP);
   #endif
 }
-
+/*
 void drawSignalStrength(){
   #ifdef  DEVKIT1
   const byte X = 51;
@@ -84,7 +84,7 @@ void drawMeasurementProgress(){
   display.drawRect(0, Y, measureIndex*2, 2);
   #endif
 }
-
+*/
 /**
  * The screen that is displayed when the ESP has just booted
  * and is connecting to WiFi & AWS.
@@ -196,8 +196,8 @@ void drawtext16(int width,int height, String text ){
   #endif
   
   #ifdef  TTGO
-    display.setCursor(width, height, 2); display.setTextSize(1);
-    display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(7);
+    display.setCursor(width, height, 2); display.setTextSize(2);
+    display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(2);
     display.print(String(text));
   #endif
 
@@ -223,11 +223,19 @@ void drawtext10(int width,int height, String text ){
   #endif
 
   #ifdef  TTGO
-    display.setTextFont(1);
+    display.setTextFont(3);
     display.setCursor(width, height, 2);
     display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(2);
     display.print(String(text));
   #endif
+
+}
+
+void drawtext16TTGO(int width,int height, String text, int color ){
+  
+    display.setCursor(width, height, 2); display.setTextSize(2);
+    display.setTextColor(color,TFT_BLACK);  display.setTextFont(4);
+    display.print(String(text));
 
 }
 

@@ -29,6 +29,9 @@ void updateDisplay(void * parameter){
     #ifdef  DEVKIT1
       display.clear();
     #endif
+    #ifdef  TTGO
+     display.fillScreen(0);
+    #endif
 
 
 #if WIFI_ACTIVE == true
@@ -47,7 +50,12 @@ void updateDisplay(void * parameter){
         drawtext10(64,16, injection_type() );
       #endif
       #ifdef  TTGO
-        drawtext10(0,16, injection_type() );
+        drawtext10(60,16, injection_type() );
+         display.setTextSize(1);
+          display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(4);
+          display.setCursor(30, 48, 2);  display.print("Dimmer");
+          display.setCursor(150, 48, 2);  display.print("Puissance");
+
       #endif
 
       // Affichage des infos de puissance ( sans les virgules )
@@ -56,7 +64,7 @@ void updateDisplay(void * parameter){
         drawtext16(64,30, String("abs porteuse"));
       #endif
       #ifdef  TTGO
-        drawtext16(90,16, String("No-Sin") );
+        drawtext16(120,70, String("No-Sin") );
       #endif
 
       gDisplayValues.dimmer = 0 ; /// mise à zero du dimmer par sécurité 
@@ -66,7 +74,11 @@ void updateDisplay(void * parameter){
         drawtext16(64 ,30, String(gDisplayValues.watt,0) + " W");
       #endif
       #ifdef  TTGO
-        drawtext16(120,70, String(gDisplayValues.watt,0) + " W" );
+        
+        String affiche = String(gDisplayValues.watt,0) ;
+        if ( gDisplayValues.watt > config.delta ) { drawtext16TTGO(120,70, affiche,TFT_RED );}
+        else if ( gDisplayValues.watt < config.deltaneg ) { drawtext16TTGO(120,70, affiche,TFT_BLUE );}
+        else { drawtext16TTGO(120,70, affiche,TFT_GREEN );}
       #endif
       }
 
@@ -79,7 +91,9 @@ void updateDisplay(void * parameter){
       drawtext16(64,48, String(gDisplayValues.dimmer) + " %");
       display.display();
     #endif
-    
+    #ifdef  TTGO
+      drawtext16TTGO(0,70, String(gDisplayValues.dimmer),TFT_GREEN );
+    #endif
 
     // Sleep for 5 seconds, then update display again!
     vTaskDelay(5000 / portTICK_PERIOD_MS);

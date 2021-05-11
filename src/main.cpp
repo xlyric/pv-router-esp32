@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "EmonLib.h"
+//#include "EmonLib.h"
 #include "WiFi.h"
 #include <driver/adc.h>
 #include "config/config.h"
