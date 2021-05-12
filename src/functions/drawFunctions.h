@@ -232,11 +232,11 @@ void drawtext10(int width,int height, String text ){
 }
 
 void drawtext16TTGO(int width,int height, String text, int color ){
-  
+#ifdef  TTGO  
     display.setCursor(width, height, 2); display.setTextSize(2);
     display.setTextColor(color,TFT_BLACK);  display.setTextFont(4);
     display.print(String(text));
-
+#endif
 }
 
 
