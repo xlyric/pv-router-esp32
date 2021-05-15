@@ -59,7 +59,7 @@ void measureElectricity(void * parameter)
 #if WIFI_ACTIVE == true
       Pow_mqtt_send ++ ;
       if ( Pow_mqtt_send > 10 ) {
-        Mqtt_send(config.IDX, String(int(gDisplayValues.watt)));  
+        Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
         Pow_mqtt_send = 0 ;
       }
 #endif

@@ -31,7 +31,7 @@ HTTPClient http;
 *   fonction d'envoie de commande au dimmer
 */
 
-void dimmer_change(char dimmerurl[15], String dimmerIDX, int dimmervalue) {
+void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
     #if WIFI_ACTIVE == true
     String baseurl; 
@@ -42,7 +42,7 @@ void dimmer_change(char dimmerurl[15], String dimmerIDX, int dimmervalue) {
 
     #if MQTT_CLIENT == true 
     /// A vérifier que c'est necessaire ( envoie double ? )
-      Mqtt_send(dimmerIDX, String(dimmervalue));  
+      Mqtt_send(String(dimmerIDX), String(dimmervalue));  
     #endif
     
     delay (2000); // delay de transmission réseau dimmer et application de la charge

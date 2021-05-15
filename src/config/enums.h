@@ -35,7 +35,7 @@ struct Config {
   char apiKey[64];
   bool UseDomoticz;
   bool UseJeedom;
-  String IDX;
+  int IDX;
   char otapassword[64];
   int delta;
   int deltaneg;
@@ -50,7 +50,7 @@ struct Config {
   int num_fuse;
   bool mqtt;
   char mqttserver[15];
-  String IDXdimmer;
+  int IDXdimmer;
   int tmax;
   int resistance;
   bool polarity; 
