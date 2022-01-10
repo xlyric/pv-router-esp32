@@ -2,7 +2,7 @@
 #define TASK_MEASURE_ELECTRICITY
 
 #include <Arduino.h>
-#include "EmonLib.h"
+//#include "EmonLib.h"
 
 #include "../config/config.h"
 #include "../config/enums.h"
@@ -13,7 +13,7 @@
 #include "functions/drawFunctions.h"
 
 extern DisplayValues gDisplayValues;
-extern EnergyMonitor emon1;
+//extern EnergyMonitor emon1;
 
 
 int Pow_mqtt_send = 0;
