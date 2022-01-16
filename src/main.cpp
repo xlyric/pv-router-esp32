@@ -88,6 +88,8 @@ void setup()
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
         display.println("Booting");
+        if  (WIFI_PASSWORD == "xxx") { display.println("Wifi not configured"); } 
+        else display.println("Connecting to " WIFI_NETWORK);
     #endif
 
 #endif
@@ -96,6 +98,7 @@ void setup()
 
 #if WIFI_ACTIVE == true
   WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD);
+  
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");

@@ -77,11 +77,11 @@ return ( retour );
 //***********************************
 
 String getState() {
-  String state ; 
-  if (gDisplayValues.watt > config.delta  ) {   state = "Linky"; }
-  if (gDisplayValues.watt < config.deltaneg ) {   state = "Injection"; }
-  else  {   state = "Stabilise"; }
-  state = state + ";" + int(gDisplayValues.watt) + ";" + gDisplayValues.dimmer ;
+  String state="Stabilise"; 
+  if (gDisplayValues.watt >= config.delta  ) {   state = "Linky"; }
+  if (gDisplayValues.watt <= config.deltaneg ) {   state = "Injection"; }
+  
+  state = state + ";" + int(gDisplayValues.watt) + ";" + gDisplayValues.dimmer + ";" + config.delta + ";" + config.deltaneg;
   return String(state);
 }
 
@@ -217,10 +217,10 @@ String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  
 
 
 String injection_type() {
-      String state ; 
-      if (gDisplayValues.watt > config.delta ) {   state = "Linky"; }
-      if (gDisplayValues.watt < config.deltaneg ) {   state = "Injection"; }
-      else  {   state = "Stabilise"; } 
+      String state = "Stabilise"; 
+      if (gDisplayValues.watt >= config.delta ) {   state = "Linky"; }
+      if (gDisplayValues.watt <= config.deltaneg ) {   state = "Injection"; }
+      
       return (state);
 }
 
