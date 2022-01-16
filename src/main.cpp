@@ -88,7 +88,7 @@ void setup()
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
         display.println("Booting");
-        if  (WIFI_PASSWORD == "xxx") { display.println("Wifi not configured"); } 
+        if  (strcmp(WIFI_PASSWORD,"xxx") == 0) { display.println("Wifi not configured"); } 
         else display.println("Connecting to " WIFI_NETWORK);
     #endif
 
