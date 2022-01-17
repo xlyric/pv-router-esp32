@@ -36,7 +36,7 @@ void call_pages() {
       if(SPIFFS.exists("/index.html")){
      request->send(SPIFFS, "/index.html", "text/html");
     }
-    else {request->send_P(200, "text/plain", "fichiers SPIFFS non présent sur l ESP. " ); }
+    else {request->send_P(200, "text/plain", SPIFFSNO ); }
   });
 
     server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){

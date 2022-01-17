@@ -4,6 +4,7 @@
 #include <driver/adc.h>
 #include "config/config.h"
 #include "config/enums.h"
+#include "config/traduction.h"
 #include <NTPClient.h>
 
 
@@ -72,7 +73,7 @@ void setup()
   pinMode(ADC_INPUT, INPUT);
 
   #if OLED_ON == true
-    Serial.println("start Oled");
+    Serial.println(OLEDSTART);
     // Initialising OLED
     #ifdef  DEVKIT1
       display.init();
@@ -87,9 +88,9 @@ void setup()
         display.fillScreen(TFT_BLACK); // Black screen fill
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
-        display.println("Booting");
-        if  (strcmp(WIFI_PASSWORD,"xxx") == 0) { display.println("Wifi not configured"); } 
-        else display.println("Connecting to " WIFI_NETWORK);
+        display.println(BOOTING);
+        if  (strcmp(WIFI_PASSWORD,"xxx") == 0) { display.println(WIFINO); } 
+        else display.println(WIFICONNECT WIFI_NETWORK);
     #endif
 
 #endif
@@ -121,11 +122,11 @@ Dimmer_setup();
 
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html")){
-    Serial.println("Attention fichiers SPIFFS non chargé sur l'ESP, ça ne fonctionnera pas.");  
+    Serial.println(SPIFFSNO);  
   }
 
   if(!SPIFFS.exists(filename_conf)){
-    Serial.println("Attention problème avec fichier de conf");  
+    Serial.println(CONFNO);  
   }
 
      //***********************************

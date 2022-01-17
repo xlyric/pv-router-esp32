@@ -54,17 +54,17 @@ void updateDisplay(void * parameter){
          display.setTextSize(1);
           display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(4);
           display.setCursor(30, 48, 2);  display.print("Dimmer (%)");
-          display.setCursor(150, 48, 2);  display.print("Puissance (W)");
+          display.setCursor(150, 48, 2);  display.print(OLEDPOW);
 
       #endif
 
       // Affichage des infos de puissance ( sans les virgules )
       if ( gDisplayValues.porteuse == false) { 
       #ifdef  DEVKIT1
-        drawtext16(64,30, String("abs porteuse"));
+        drawtext16(64,30, String(OLEDNOSIN));
       #endif
       #ifdef  TTGO
-        drawtext16(120,70, String("No-Sin") );
+        drawtext16(120,70, String(OLEDNOSIN) );
       #endif
 
       gDisplayValues.dimmer = 0 ; /// mise à zero du dimmer par sécurité 

@@ -2,6 +2,17 @@
 #define CONFIG
 
 /**
+ * WiFi credentials
+ */
+#define WEBSSERVER true
+#define WIFI_ACTIVE  true
+#define MQTT_CLIENT true
+#define OTA true
+#define WIFI_NETWORK "xxx"
+#define WIFI_PASSWORD "xxx"
+
+
+/**
  * Set this to false to disable Serial logging
  */
 #define DEBUG true
@@ -12,7 +23,7 @@
  * The name of this device (as defined in the AWS IOT console).
  * Also used to set the hostname on the network
  */
-#define DEVICE_NAME "Pv routeur ESP32"
+#define DEVICE_NAME "Pv router ESP32"
 
 /**
  * ADC input pin that is used to read out the CT sensor
@@ -49,15 +60,7 @@
 #define zerocross  19 // for boards with CHANGEBLE input pins
 #endif
 
-/**
- * WiFi credentials
- */
-#define WEBSSERVER true
-#define WIFI_ACTIVE  true
-#define MQTT_CLIENT true
-#define OTA true
-#define WIFI_NETWORK "xxx"
-#define WIFI_PASSWORD "xxx"
+
 
 
 /**
