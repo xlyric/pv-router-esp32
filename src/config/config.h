@@ -11,6 +11,9 @@
 #define WIFI_NETWORK "xxx"
 #define WIFI_PASSWORD "xxx"
 
+#define MQTT_USER ""
+#define MQTT_PASSWORD ""
+
 
 /**
  * Set this to false to disable Serial logging
