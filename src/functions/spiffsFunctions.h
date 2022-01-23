@@ -108,6 +108,9 @@ void loadConfiguration(const char *filename, Config &config) {
    strlcpy(config.mqttserver,                  // <- destination
           doc["mqttserver"] | "192.168.1.20", // <- source
           sizeof(config.mqttserver));         // <- destination's capacity
+   strlcpy(config.Publish,                  // <- destination
+          doc["Publish"] | "domoticz/in", // <- source
+          sizeof(config.Publish));         // <- destination's mqtt
   configFile.close();
       
 }
@@ -156,6 +159,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["tmax"] = config.tmax;
   doc["resistance"] = config.resistance;
   doc["polarity"] = config.polarity; 
+  doc["Publish"] = config.Publish;
 
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {

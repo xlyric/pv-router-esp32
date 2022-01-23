@@ -54,6 +54,7 @@ struct Config {
   int tmax;
   int resistance;
   bool polarity; 
+  char Publish[100];
 };
 
 

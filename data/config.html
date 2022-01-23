@@ -232,6 +232,10 @@
             MQTT Serveur :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
         </div>
 
+        <div class="form-group">
+          MQTT Publish :<input type="text" class="form-control form-control-user" id="publish" placeholder="%PUBLISH%">
+        </div>
+
         <div class="form-group row">
 				  <div class="col-sm-3">
                   IDX Power: <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
@@ -426,7 +430,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'resistance':$('#resistance').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val() } 
 
 
 		
@@ -454,33 +458,41 @@ var recupconfig = $.get ({
 		async: false }).responseText; 
 				  
         var config = recupconfig.split(";");
+    i=0;
+		document.getElementById("IDXDIMMER").value = config[i];
+    i++;
+		document.getElementById("Fusible").value = config[i];	  
+    i++;
+		document.getElementById("IDX").value = config[i];
+    i++;
+		document.getElementById("version").innerHTML = config[i];
 
-		document.getElementById("IDXDIMMER").value = config[0];
-		document.getElementById("Fusible").value = config[1];	  
-		document.getElementById("IDX").value = config[2];
-		document.getElementById("version").innerHTML = config[3];
 		document.getElementById("delta").value = config[5];
-		document.getElementById("deltaneg").value = config[18];
+		
 		document.getElementById("dimmer").value = config[7];
 		document.getElementById("cosphi").value = config[8];
 		
-	//	document.getElementById("UseDomoticz").checked = config[10];
-	//	document.getElementById("UseJeedom").checked = config[11];
 		document.getElementById("autonome").checked = config[12];
-		// document.getElementById("UseDomoticz").value = config[10];
-		//document.getElementById("UseJeedom").value = config[11];
 		document.getElementById("autonome").value = config[12];
-		// document.getElementById("apiKey").value = config[13];
 		//document.getElementById("dimmerlocal").checked = config[14];
 		//document.getElementById("dimmerlocal").value = config[14];
-		document.getElementById("facteur").value = config[15];
-		document.getElementById("mqttserver").value = config[17];
-		document.getElementById("Usemqtt").checked = config[16];
-		document.getElementById("Usemqtt").value = config[16];
-		document.getElementById("resistance").value = config[19];
-    document.getElementById("polarity").checked = config[20];
-		document.getElementById("polarity").value = config[20];
-	
+    i=15;
+		document.getElementById("facteur").value = config[i];
+    i++;
+		document.getElementById("Usemqtt").checked = config[i];
+		document.getElementById("Usemqtt").value = config[i];
+    i++;
+    document.getElementById("mqttserver").value = config[i];
+    i++;
+    document.getElementById("publish").value = config[i];
+    i++;
+    document.getElementById("deltaneg").value = config[i];
+    i++;
+		document.getElementById("resistance").value = config[i];
+    i++;
+    document.getElementById("polarity").checked = config[i];
+		document.getElementById("polarity").value = config[i];
+	  
 
 
 

@@ -48,8 +48,12 @@ void Mqtt_send ( String idx, String value ) {
       }
   
   String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
+
+  String jdompub = String(config.Publish) + "/"+idx ;
+
   client.loop();
-  client.publish("domoticz/in", String(message).c_str(), true);
+  client.publish(config.Publish, String(message).c_str(), true);
+  client.publish(jdompub.c_str() , value.c_str(), true);
 
 }
 

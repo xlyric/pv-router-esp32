@@ -28,6 +28,7 @@ const char* PARAM_INPUT_facteur = "facteur"; /// paramettre retour delta
 const char* PARAM_INPUT_tmax = "tmax"; /// paramettre retour delta
 const char* PARAM_INPUT_mqttserver = "mqttserver"; /// paramettre retour mqttserver
 const char* PARAM_INPUT_reset = "reset"; /// paramettre retour mqttserver
+const char* PARAM_INPUT_publish = "publish"; /// paramettre retour mqttserver
 
 
 //***********************************
@@ -126,7 +127,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+";"+config.deltaneg+";"+config.resistance+";"+config.polarity;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";'"  +  "VERSION" +"';" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity;
   return String(configweb);
 }
 //***********************************
