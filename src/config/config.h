@@ -7,7 +7,7 @@
 #define WEBSSERVER true
 #define WIFI_ACTIVE  true
 #define MQTT_CLIENT true
-#define OTA true
+
 #define WIFI_NETWORK "xxx"
 #define WIFI_PASSWORD "xxx"
 
@@ -103,26 +103,28 @@
 #define NTP_OFFSET_SECONDS 3600
 #define NTP_UPDATE_INTERVAL_MS 3600000 /// synch de l'heure toute les heures
 
+
+//*************not implemented /tested **********
 /**
  * Wether or not you want to enable Home Assistant integration
  */
-#define HA_ENABLED false
-#define HA_ADDRESS "*** YOUR HOME ASSISTANT IP ADDRESSS ***"
-#define HA_PORT 8883
-#define HA_USER ""
-#define HA_PASSWORD ""
-
+//#define HA_ENABLED false
+//#define HA_ADDRESS "*** YOUR HOME ASSISTANT IP ADDRESSS ***"
+//#define HA_PORT 8883
+//#define HA_USER ""
+//#define HA_PASSWORD ""
+//*************not implemented /tested **********
 /**
  * The MQTT endpoint of the service we should connect to and receive messages
  * from.
  */
-#define AWS_ENABLED false
-#define AWS_IOT_ENDPOINT "**** YOUR AWS IOT ENDPOINT ****"
-#define AWS_IOT_TOPIC "**** YOUR AWS IOT RULE ARN ****"
+//#define AWS_ENABLED false
+//#define AWS_IOT_ENDPOINT "**** YOUR AWS IOT ENDPOINT ****"
+//#define AWS_IOT_TOPIC "**** YOUR AWS IOT RULE ARN ****"
 
-#define MQTT_CONNECT_DELAY 200
-#define MQTT_CONNECT_TIMEOUT 20000 // 20 seconds
-
+//#define MQTT_CONNECT_DELAY 200
+//#define MQTT_CONNECT_TIMEOUT 20000 // 20 seconds
+//*************END not implemented /tested **********
 
 // Check which core Arduino is running on. This is done because updating the 
 // display only works from the Arduino core.
@@ -132,6 +134,6 @@
 #define ARDUINO_RUNNING_CORE 1
 #endif
 
-
+#define VERSION "version 3.2"
 
 #endif
