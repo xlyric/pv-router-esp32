@@ -257,18 +257,7 @@ Dimmer_setup();
     );
 #endif
 
-  // ----------------------------------------------------------------
-  // TASK: update WiFi signal strength
-  // ----------------------------------------------------------------
- /* xTaskCreate(
-    updateWiFiSignalStrength,
-    "Update WiFi strength",
-    1000,             // Stack size (bytes)
-    NULL,             // Parameter
-    2,                // Task priority
-    NULL              // Task handle
-  );
-*/
+
   #if HA_ENABLED == true
     xTaskCreate(
       HADiscovery,
@@ -291,23 +280,16 @@ Dimmer_setup();
 #endif
 
 #if WIFI_ACTIVE == true
-  #if OTA == true
-    while ( gDisplayValues.currentState != UP )
-    {
-      delay (500); 
-    }
-    OTA_init();
-    timeClient.begin();
-  #endif
+
 
   #if WEBSSERVER == true
     AsyncElegantOTA.begin(&server);
     server.begin(); 
   #endif
 
-  if ( config.mqtt == true ) {
+  #if MQTT_CLIENT == true
     Mqtt_init();
-  }
+  #endif
 
   if ( config.autonome == true ) {
     gDisplayValues.dimmer = 0; 
@@ -329,9 +311,6 @@ void loop()
 //serial_println(F("loop")); 
 
 #if WIFI_ACTIVE == true
-    #if OTA == true
-    ArduinoOTA.handle();
-    #endif
 
     #if MQTT_CLIENT == true
     if (!client.connected()) {
