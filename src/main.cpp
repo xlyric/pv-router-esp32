@@ -6,6 +6,8 @@
 #include "config/enums.h"
 #include "config/traduction.h"
 #include <NTPClient.h>
+#include <AsyncElegantOTA.h>
+
 
 
 // File System
@@ -299,6 +301,7 @@ Dimmer_setup();
   #endif
 
   #if WEBSSERVER == true
+    AsyncElegantOTA.begin(&server);
     server.begin(); 
   #endif
 
