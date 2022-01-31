@@ -36,7 +36,8 @@ void measureElectricity(void * parameter)
       double watts = amps * HOME_VOLTAGE;
       gDisplayValues.watt = watts;*/
 
-            injection();
+            //injection();
+            injection2();
             if ( gDisplayValues.porteuse == false ) {gDisplayValues.watt =0 ; }
       //if ( gDisplayValues.injection == true ) { serial_print("-") ; }
           
