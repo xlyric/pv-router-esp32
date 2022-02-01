@@ -100,7 +100,7 @@
  * Local measurements
  */
 #define LOCAL_MEASUREMENTS 30
-
+#define FACTEURPUISSANCE 10.50
 
 /**
  * Syncing time with an NTP server

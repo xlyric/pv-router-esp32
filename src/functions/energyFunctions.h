@@ -223,7 +223,7 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
   }
 }
 
-positive = positive / ( 11 * nombre_cycle ) ; 
+positive = positive / ( FACTEURPUISSANCE * nombre_cycle ) ; 
 
 
 
