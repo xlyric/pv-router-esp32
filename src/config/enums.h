@@ -57,6 +57,11 @@ struct Config {
   char Publish[100];
 };
 
+struct Configwifi {
+  char SID[32];
+  char passwd[64];
+};
+
 
 #if DEBUG == true
   #define serial_print(x)  Serial.print (x)

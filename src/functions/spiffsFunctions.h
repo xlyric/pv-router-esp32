@@ -127,7 +127,7 @@ void saveConfiguration(const char *filename, const Config &config) {
     Serial.println(F("Failed to open config file for writing in function Save configuration"));
     
     return;
-  }
+  } 
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
@@ -160,7 +160,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["resistance"] = config.resistance;
   doc["polarity"] = config.polarity; 
   doc["Publish"] = config.Publish;
-
+  
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
@@ -170,6 +170,43 @@ void saveConfiguration(const char *filename, const Config &config) {
   // Close the file
   configFile.close();
 }
+
+///// config Wifi 
+
+const char *wifi_conf = "/wifi.json";
+extern Configwifi configwifi; 
+
+void loadwifi(const char *filename, Configwifi &configwifi) {
+  // Open file for reading
+  File configFile = SPIFFS.open(wifi_conf, "r");
+
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
+  StaticJsonDocument<512> doc;
+
+  // Deserialize the JSON document
+  DeserializationError error = deserializeJson(doc, configFile);
+  if (error) {
+    Serial.println(F("Failed to read wifi config, using default configuration in function config.h"));
+  }
+
+  
+  // Copy values from the JsonDocument to the Config
+  
+  strlcpy(configwifi.SID,                  // <- destination
+          doc["SID"] | "xxx", // <- source
+          sizeof(configwifi.SID));         // <- destination's capacity
+  
+  strlcpy(configwifi.passwd,                  // <- destination
+          doc["passwd"] | "xxx", // <- source
+          sizeof(configwifi.passwd));         // <- destination's capacity
+  configFile.close();
+      
+}
+
+
+
 
 
 #endif
