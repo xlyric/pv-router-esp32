@@ -57,12 +57,16 @@
 
 #define DIMMER true
 #define DIMMERLOCAL false
+#define DALLAS false
 
 #if DIMMERLOCAL 
-#define outputPin  18 
-#define zerocross  19 // for boards with CHANGEBLE input pins
+#define outputPin  26 
+#define zerocross  27 // for boards with CHANGEBLE input pins
 #endif
 
+#if DALLAS
+#define dallaspin  37
+#endif
 
 
 
@@ -137,6 +141,6 @@
 #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.2"
+#define VERSION "version 3.3"
 
 #endif

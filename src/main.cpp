@@ -55,6 +55,8 @@ TFT_eSPI display = TFT_eSPI();   // Invoke library
 DisplayValues gDisplayValues;
 //EnergyMonitor emon1;
 Config config; 
+Configwifi configwifi; 
+
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
@@ -68,6 +70,12 @@ void setup()
   #if DEBUG == true
     Serial.begin(115200);
   #endif 
+
+  //démarrage file system
+  Serial.println("start SPIFFS");
+  SPIFFS.begin();
+  loadwifi(wifi_conf, configwifi);
+
 
   // Setup the ADC
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
@@ -91,16 +99,23 @@ void setup()
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
         display.println(BOOTING);
-        if  (strcmp(WIFI_PASSWORD,"xxx") == 0) { display.println(WIFINO); } 
+          if  (strcmp(WIFI_PASSWORD,"xxx") == 0) { 
+            if  (strcmp(configwifi.SID,"xxx") == 0) {
+            display.println(WIFINO); 
+            }
+          else { 
+            display.println(WIFICONNECT + String(configwifi.SID));
+          }
+        } 
         else display.println(WIFICONNECT WIFI_NETWORK);
     #endif
-
 #endif
 
 
 
 #if WIFI_ACTIVE == true
-  WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD);
+  if ( strcmp(WIFI_PASSWORD,"xxx") == 0 ) { WiFi.begin(configwifi.SID, configwifi.passwd); }
+  else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
   
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -118,9 +133,6 @@ void setup()
 Dimmer_setup();
 #endif
 
-  //démarrage file system
-  Serial.println("start SPIFFS");
-  SPIFFS.begin();
 
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html")){
