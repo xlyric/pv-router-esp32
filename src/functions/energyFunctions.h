@@ -205,6 +205,9 @@ for(int i = 0; i < loop; i++)
 }
 
 int phi = config.cosphi ;
+if (phi > start ) { phi = start ; }
+
+
 for (int j = 0 ; j < nombre_cycle   ; j++) 
 {
   for(int i = (start - phi ) ; i < ( start + nbmesure - phi )  ; i++)
