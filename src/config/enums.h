@@ -27,6 +27,7 @@ struct DisplayValues {
   int change;
   bool task;
   bool porteuse; 
+  bool screenstate; 
 };
 
 struct Config {

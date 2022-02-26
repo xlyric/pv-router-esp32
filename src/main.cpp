@@ -16,6 +16,7 @@
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
 
 #include "tasks/updateDisplay.h"
+#include "tasks/switchDisplay.h"
 #include "tasks/fetch-time-from-ntp.h"
 //#include "tasks/mqtt-aws.h"
 #include "tasks/wifi-connection.h"
@@ -92,7 +93,11 @@ void setup()
     #endif
     
     #ifdef TTGO
+
+        pinMode(SWITCH,INPUT);
+
         display.init();
+        //digitalWrite(TFT_BL, HIGH);
         display.setRotation(1);
         //display.begin();               // Initialise the display
         display.fillScreen(TFT_BLACK); // Black screen fill
@@ -219,9 +224,23 @@ Dimmer_setup();
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
   );
-
-
   #endif
+
+
+#ifdef  TTGO
+  // ----------------------------------------------------------------
+  // Task: Update Dimmer power
+  // ----------------------------------------------------------------
+  xTaskCreate(
+    switchDisplay,
+    "Swith Oled",  // Task name
+    1000,                  // Stack size (bytes)
+    NULL,                   // Parameter
+    2,                      // Task priority
+    NULL                    // Task handle
+  );
+ #endif
+
 
 
   // ----------------------------------------------------------------
@@ -330,6 +349,8 @@ void loop()
     }
     #endif
 #endif
+
+
 
   vTaskDelay(10000 / portTICK_PERIOD_MS);
 }
