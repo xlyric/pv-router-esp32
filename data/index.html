@@ -202,23 +202,21 @@
               </div>
             </div>
 			
-			<!-- Earnings (Monthly) Card Example -->
-        <!--    <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Transmission Mode</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><a><span id="sendmode" onclick="sendmode(this.innerHTML);">%SENDMODE%</span></a></div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Switch Screen</div>
+                      <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled </button>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                      <i class="fas fa-display fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          --> 
+            </div> 
 
 
           </div>
@@ -442,7 +440,7 @@
 		//document.getElementById("port").innerHTML = config[1];	  
 		//document.getElementById("idx").innerHTML = config[2];
 		document.getElementById("version").innerHTML = config[3];
-	
+    document.getElementById("screentime").value = config[21];	
 	
 				  
 <!-- récupération onclick sur send mode -->
@@ -485,7 +483,16 @@ function sendmode (mode) {
 }
 
 				  
-		
+function sendservermode (mode) {
+
+$.get( "/get", { servermode: mode } )
+.done(function(data) { 
+
+var config = data.split(";");
+document.getElementById("screen").value = config[21];
+}); 
+
+}
 
 
 		

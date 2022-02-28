@@ -28,6 +28,7 @@ struct DisplayValues {
   bool task;
   bool porteuse; 
   bool screenstate; 
+  String temperature;
 };
 
 struct Config {
@@ -56,6 +57,7 @@ struct Config {
   int resistance;
   bool polarity; 
   char Publish[100];
+  int  ScreenTime;
 };
 
 struct Configwifi {

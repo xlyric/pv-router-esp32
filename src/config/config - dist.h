@@ -11,11 +11,23 @@
 #define WIFI_NETWORK "xxx"
 #define WIFI_PASSWORD "xxx"
 
+/**
+ * MQTT credentials
+ */
 #define MQTT_USER ""
 #define MQTT_PASSWORD ""
 
+/**
+ * Switch Screnn button and time on
+ */
 #define SWITCH 35
-#define SWITCHTIMER 0   // 0 : always ON  / other : time in sec 
+//#define SWITCHTIMER 0   // 0 : always ON  / other : time in sec 
+
+/**
+ * Time between 2 mesure of dimmer temp
+ */
+#define GETTEMPREFRESH 30
+
 
 /**
  * Set this to false to disable Serial logging

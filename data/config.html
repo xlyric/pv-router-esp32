@@ -319,6 +319,20 @@
         </div>
       </div>
 
+      <div class="form-group row">
+        <div class="col-sm-3">Screen switch off (0: unlimited)</div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3">
+				  <input type="text" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
+        </div>
+        <div class="col-sm-3">
+          <div class="custom-control custom-checkbox small">
+            <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
+         <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
+          </div>
+        </div>
+      </div> 
 				  
 
 				
@@ -392,6 +406,7 @@ function sendservermode (mode) {
 		document.getElementById("dimmerlocal").value = config[14];
 		//document.getElementById("Usemqtt").value = config[16];
     document.getElementById("polarity").value = config[20];
+    document.getElementById("screen").value = config[21];
 		}); 
 
 
@@ -430,10 +445,8 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val() } 
 
-
-		
 		
         $.ajax({
             type: "GET",
@@ -492,7 +505,8 @@ var recupconfig = $.get ({
     i++;
     document.getElementById("polarity").checked = config[i];
 		document.getElementById("polarity").value = config[i];
-	  
+    i++;
+		document.getElementById("screentime").value = config[i];	  
 
 
 

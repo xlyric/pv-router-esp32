@@ -15,33 +15,7 @@
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
 
-/*
-struct Config {
-  char hostname[15];
-  int port;
-  char apiKey[64];
-  bool UseDomoticz;
-  bool UseJeedom;
-  String IDX;
-  char otapassword[64];
-  int delta;
-  int deltaneg;
-  int cosphi;
-  int readtime;
-  int cycle;
-  bool sending;
-  bool autonome;
-  char dimmer[15];
-  bool dimmerlocal;
-  float facteur;
-  int num_fuse;
-  bool mqtt;
-  char mqttserver[15];
-  String IDXdimmer;
-  int tmax;
-  int resistance;
-};
-*/
+
 
 const char *filename_conf = "/config.json";
 extern Config config; 
@@ -111,6 +85,7 @@ void loadConfiguration(const char *filename, Config &config) {
    strlcpy(config.Publish,                  // <- destination
           doc["Publish"] | "domoticz/in", // <- source
           sizeof(config.Publish));         // <- destination's mqtt
+  config.ScreenTime = doc["screentime"] | 0 ; // timer to switch of screen
   configFile.close();
       
 }
@@ -160,7 +135,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["resistance"] = config.resistance;
   doc["polarity"] = config.polarity; 
   doc["Publish"] = config.Publish;
-  
+  doc["screentime"] = config.ScreenTime; 
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
