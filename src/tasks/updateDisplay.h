@@ -59,8 +59,10 @@ void updateDisplay(void * parameter){
 
       // affichage de la température du dimmer
       #ifdef  TTGO
-        if ( gDisplayValues.temperature != 0 ) {
-        drawtext10(150,16,  gDisplayValues.temperature );
+        if ( gDisplayValues.temperature.toInt() != 0 ) {
+            if ( gDisplayValues.temperature.toInt() > 40 ) { drawtext10TTGO(150,16,  gDisplayValues.temperature, TFT_GREEN );}  
+            else if ( gDisplayValues.temperature.toInt() < 25 )  { drawtext10TTGO(150,16,  gDisplayValues.temperature, TFT_BLUE );} 
+            else { drawtext10TTGO(150,16,  gDisplayValues.temperature, TFT_WHITE ); } 
         }
       #endif
 

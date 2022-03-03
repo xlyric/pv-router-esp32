@@ -203,7 +203,7 @@ void drawtext16(int width,int height, String text ){
 
 }
 
-void drawtext10(int width,int height, String text ){
+void drawtext10(int width,int height, String text  ){
 
   #ifdef  DEVKIT1
     const int startY = 12;
@@ -239,5 +239,12 @@ void drawtext16TTGO(int width,int height, String text, int color ){
 #endif
 }
 
+void drawtext10TTGO(int width,int height, String text, int color ){
+#ifdef  TTGO  
+    display.setCursor(width, height, 2); 
+    display.setTextColor(color,TFT_BLACK);    display.setTextSize(2);
+    display.print(String(text));
+#endif
+}
 
 #endif
