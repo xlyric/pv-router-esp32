@@ -1,5 +1,5 @@
 #include <Arduino.h>
-//#include "EmonLib.h"
+
 #include "WiFi.h"
 #include <driver/adc.h>
 #include "config/config.h"
@@ -24,6 +24,7 @@
 #include "tasks/measure-electricity.h"
 //#include "tasks/mqtt-home-assistant.h"
 #include "tasks/Dimmer.h"
+#include "tasks/gettemp.h"
 
 #include "functions/otaFunctions.h"
 #include "functions/spiffsFunctions.h"
@@ -269,7 +270,18 @@ Dimmer_setup();
     4,                      // Task priority
     NULL                    // Task handle
   );
+  
+
+    xTaskCreate(
+    GetDImmerTemp,
+    "Update temp",  // Task name
+    5000,                  // Stack size (bytes)
+    NULL,                   // Parameter
+    4,                      // Task priority
+    NULL                    // Task handle
+  );
   #endif
+
 #endif
 
 

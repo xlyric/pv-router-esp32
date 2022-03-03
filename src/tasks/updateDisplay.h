@@ -50,13 +50,20 @@ void updateDisplay(void * parameter){
         drawtext10(64,16, injection_type() );
       #endif
       #ifdef  TTGO
-        drawtext10(60,16, injection_type() );
+        drawtext10(50,16, injection_type() );
          display.setTextSize(1);
           display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(4);
           display.setCursor(30, 48, 2);  display.print("Dimmer (%)");
           display.setCursor(150, 48, 2);  display.print(OLEDPOW);
-
       #endif
+
+      // affichage de la température du dimmer
+      #ifdef  TTGO
+        if ( gDisplayValues.temperature != 0 ) {
+        drawtext10(150,16,  gDisplayValues.temperature );
+        }
+      #endif
+
 
       // Affichage des infos de puissance ( sans les virgules )
       if ( gDisplayValues.porteuse == false) { 
@@ -95,9 +102,13 @@ void updateDisplay(void * parameter){
       drawtext16TTGO(0,70, String(gDisplayValues.dimmer),TFT_GREEN );
     #endif
 
+
+
+
     // Sleep for 5 seconds, then update display again!
     vTaskDelay(5000 / portTICK_PERIOD_MS);
   }
+
 }
 
 
@@ -118,4 +129,7 @@ void updateTimeDisplay(void * parameter){
   }
 }
 */
+
+
+
 #endif
