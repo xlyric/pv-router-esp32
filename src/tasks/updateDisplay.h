@@ -50,7 +50,7 @@ void updateDisplay(void * parameter){
         drawtext10(64,16, injection_type() );
       #endif
       #ifdef  TTGO
-        drawtext10(50,16, injection_type() );
+        drawtext10(30,16, injection_type() );
          display.setTextSize(1);
           display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(4);
           display.setCursor(30, 48, 2);  display.print("Dimmer (%)");
