@@ -22,7 +22,9 @@ For packaging, I use the box that comes with the TTGO.
 
 # Installation : 
 ## Configure Wifi 
-Rename the file wifi.json.ori to wifi.json and change SID 
+Rename the file wifi.json.ori to wifi.json and change SID <br>
+Rename the file config.json.ori to config.json 
+
 ## Upload
 If you know your configuration you can change it on config.json<br>
 Upload the firmware and filesystem. the system will start and working<br>
