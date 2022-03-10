@@ -1,7 +1,7 @@
 # Pv router Version 1.3 for ESP32 or TTGO T display 
 
 ## TTGO version 
-<img src="./images/routeur.jpg" align="up" height="300"  >
+<img src="./img/routeur.jpg" align="up" height="300"  >
 I created this pv router to separate the power part of the analysis part. 
 After 2 years of working with an ESP8266, I made evolutions to upgrade to an ESP32. ( and visual Studio Code )
 first time I use Oled display and I migrate to a TTGO tdisplay, for an easyer intregration. 
@@ -18,13 +18,6 @@ You only need to by separatly :
 
 For packaging, I use the box that comes with the TTGO.
 
-# Prerequiement : 
-A circuit board has been created and is available ( tips ) 
-<img src="https://nsa40.casimages.com/img/2019/09/05/190905103700235594.png">
-
-<img src="https://nsa40.casimages.com/img/2019/08/22/190822020621726681.jpg">
-                                                                           
-<img src="https://nsa40.casimages.com/img/2019/08/22/190822020621896704.png">
 
 # Installation : 
 ## configure Wifi 
