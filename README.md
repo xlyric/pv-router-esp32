@@ -26,7 +26,7 @@ Rename the file wifi.json.ori to wifi.json and change SID
 ## Upload
 If you know your configuration you can change it on config.json<br>
 Upload the firmware and filesystem. the system will start and working
-A complete documentation (in French ) is a href="./Doc%20installation.pdf"> here </a>
+A complete documentation (in French ) is <a href="./Doc%20installation.pdf"> here </a>
 
 ## OTA UPload 
 You can use OTA upload by the web page /update <br>
