@@ -18,7 +18,7 @@ You only need to by separatly : <br>
 
 For packaging, I use the box that comes with the TTGO.
 
-
+<img src="./img/index.png" align="down" height="300"  > 
 # Installation : 
 ## Configure Wifi 
 Rename the file wifi.json.ori to wifi.json and change SID 
@@ -35,6 +35,8 @@ Under the /setup.html page you can configure information for connecting to the M
 Enter the information of the dimmer, the max limit percent power you want to send, the slot between the dimmer work ( low and high )<br>
 If you want to swith off oled after a limited time ( button right for swith / or website )<br>
 ...<br>
+
+<img src="./img/setup.png" align="down" height="300"  >
 
 ## ESP32 Version or DIY version
 connections : 
@@ -64,7 +66,7 @@ The assembly as a whole will raise the power and the direction of the current.<b
 Like the ESP8266 version, it can connect directly to the Wifi dimmer to control the power.<br>
 <a href="https://github.com/xlyric/PV-discharge-Dimmer-AC-Dimmer-KIT-Robotdyn">github Project</a><br>
 
-# preparing power: 
+# Preparing power: 
 Open the transformer and remove the diode bridge
 
 <img src ="https://nsa40.casimages.com/img/2019/06/14/190614104905615784.jpg">
@@ -72,5 +74,9 @@ Open the transformer and remove the diode bridge
 Close the transformer and verify the voltage. ~12V AC ( 9-16v ) and adjust the divider bridge if needed ( output 3.3V max )
 
 
+## Debug
+
+you can show the signal with the oscillo on the main page
+<img src="./img/oscillo.png" align="down" height="300"  >
 
 
