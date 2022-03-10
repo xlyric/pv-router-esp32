@@ -11,18 +11,18 @@ The project can reproduce easily for the electronic board.
 however I made an industrial version of it to make things easier.
 <a href="https://www.helloasso.com/associations/apper/formulaires/4">The board was sold by a French Association ( APPER ) </a>
 
-You only need to by separatly :
- . A <a href="https://amzn.to/3hVCLpf">TTGO-Tdisplay</a>
- . A <a href="https://amzn.to/3CtCHqi">SCT-013-30</a>
- . And an 12V - AC power supply ( Sinus ) you can made it with a modified old 12DC coil transformer. ( see below )
+You only need to by separatly : <br>
+ . A <a href="https://amzn.to/3hVCLpf">TTGO-Tdisplay</a><br>
+ . A <a href="https://amzn.to/3CtCHqi">SCT-013-30</a><br>
+ . And an 12V - AC power supply ( Sinus ) you can made it with a modified old 12DC coil transformer. ( see below )<br>
 
 For packaging, I use the box that comes with the TTGO.
 
 
 # Installation : 
-## configure Wifi 
+## Configure Wifi 
 rename the file wifi.json.ori to wifi.json and change SID 
-## upload
+## Upload
 if you know your configuration you can change it on config.json
 
 Upload the firmware and filesystem. the system will start and working
@@ -37,23 +37,23 @@ Build firmware of filesystem with VS and upload the .bin
 
 ## ESP32 Version or DIY version
 connections : 
-** ESP32  ** 
-OLED  : 
-3.3V 
-GND 
-21 SCL
-22 SDA 
+### ESP32  
+OLED  : <br>
+3.3V <br>
+GND <br>
+21 SCL<br>
+22 SDA <br>
 
-SCT013 
-div bridge R/R  between  3.3V and GND
-SCT013  connected at the middle of div bridge and pin 34 ( --> Linky )
-condensator 470uf between GND and the middle of div bridge. ( filter )
-***********
+SCT013 wbr
+div bridge R/R  between  3.3V and GND<br>
+SCT013  connected at the middle of div bridge and pin 34 ( --> Linky )<br>
+condensator 470uf between GND and the middle of div bridge. ( filter )<br>
 
-** TTGO ** 
-pin 32 GRID
-pin 33 SCT013
-******** 
+
+### TTGO 
+pin 32 GRID <br>
+pin 33 SCT013 <br>
+
 
 The carrier is made with a 12v transformer power supply.
 The bridge rectifier is removed and the wavy part is kept
