@@ -19,12 +19,14 @@ You only need to by separatly : <br>
 For packaging, I use the box that comes with the TTGO.
 
 <img src="./img/index.png" align="down" height="300"  > 
+
 # Installation : 
 ## Configure Wifi 
 Rename the file wifi.json.ori to wifi.json and change SID 
 ## Upload
 If you know your configuration you can change it on config.json<br>
 Upload the firmware and filesystem. the system will start and working
+A complete documentation (in French ) is a href="./Doc%20installation.pdf"> here </a>
 
 ## OTA UPload 
 You can use OTA upload by the web page /update <br>
@@ -37,6 +39,13 @@ If you want to swith off oled after a limited time ( button right for swith / or
 ...<br>
 
 <img src="./img/setup.png" align="down" height="300"  >
+
+### Case of multi dimmers
+
+In case you use multi dimmers, you need to calculate the max % needed for all dimmers, <br>
+For example if 1st dimmer is 80% max and 2nd dimmer is 40% max, you need to configure the power limit to 120 <br>
+( and configure all dimmers directly with the limit )
+
 
 ## ESP32 Version or DIY version
 connections : 
