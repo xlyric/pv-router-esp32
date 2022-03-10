@@ -21,9 +21,9 @@ For packaging, I use the box that comes with the TTGO.
 
 # Installation : 
 ## Configure Wifi 
-rename the file wifi.json.ori to wifi.json and change SID 
+Rename the file wifi.json.ori to wifi.json and change SID 
 ## Upload
-if you know your configuration you can change it on config.json
+If you know your configuration you can change it on config.json
 
 Upload the firmware and filesystem. the system will start and working
 
@@ -31,8 +31,11 @@ Upload the firmware and filesystem. the system will start and working
 You can use OTA upload by the web page /update 
 Build firmware of filesystem with VS and upload the .bin
 
-
-
+## Main Configuration 
+Under the /setup.html page you can configure information for connecting to the MQTT server ( support domoticz or Jeedom ).
+Enter the information of the dimmer, the max limit percent power you want to send, the slot between the dimmer work ( low and high )
+If you want to swith off oled after a limited time ( button right for swith / or website )
+...
 
 
 ## ESP32 Version or DIY version
@@ -47,7 +50,7 @@ GND <br>
 SCT013 wbr
 div bridge R/R  between  3.3V and GND<br>
 SCT013  connected at the middle of div bridge and pin 34 ( --> Linky )<br>
-condensator 470uf between GND and the middle of div bridge. ( filter )<br>
+Condensator 470uf between GND and the middle of div bridge. ( filter )<br>
 
 
 ### TTGO 
