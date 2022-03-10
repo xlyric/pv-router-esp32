@@ -23,20 +23,18 @@ For packaging, I use the box that comes with the TTGO.
 ## Configure Wifi 
 Rename the file wifi.json.ori to wifi.json and change SID 
 ## Upload
-If you know your configuration you can change it on config.json
-
+If you know your configuration you can change it on config.json<br>
 Upload the firmware and filesystem. the system will start and working
 
 ## OTA UPload 
-You can use OTA upload by the web page /update 
+You can use OTA upload by the web page /update <br>
 Build firmware of filesystem with VS and upload the .bin
 
 ## Main Configuration 
-Under the /setup.html page you can configure information for connecting to the MQTT server ( support domoticz or Jeedom ).
-Enter the information of the dimmer, the max limit percent power you want to send, the slot between the dimmer work ( low and high )
-If you want to swith off oled after a limited time ( button right for swith / or website )
-...
-
+Under the /setup.html page you can configure information for connecting to the MQTT server ( support domoticz or Jeedom ).<br>
+Enter the information of the dimmer, the max limit percent power you want to send, the slot between the dimmer work ( low and high )<br>
+If you want to swith off oled after a limited time ( button right for swith / or website )<br>
+...<br>
 
 ## ESP32 Version or DIY version
 connections : 
@@ -58,13 +56,13 @@ pin 32 GRID <br>
 pin 33 SCT013 <br>
 
 
-The carrier is made with a 12v transformer power supply.
-The bridge rectifier is removed and the wavy part is kept
-There is a divider bridge not to exceed 3.3V and a diode for half alternation.
+The carrier is made with a 12v transformer power supply.<br>
+The bridge rectifier is removed and the wavy part is kept<br>
+There is a divider bridge not to exceed 3.3V and a diode for half alternation.<br>
 
-The assembly as a whole will raise the power and the direction of the current.
-Like the ESP8266 version, it can connect directly to the Wifi dimmer to control the power.
-<a href="https://github.com/xlyric/PV-discharge-Dimmer-AC-Dimmer-KIT-Robotdyn">github Project</a>
+The assembly as a whole will raise the power and the direction of the current.<br>
+Like the ESP8266 version, it can connect directly to the Wifi dimmer to control the power.<br>
+<a href="https://github.com/xlyric/PV-discharge-Dimmer-AC-Dimmer-KIT-Robotdyn">github Project</a><br>
 
 # preparing power: 
 Open the transformer and remove the diode bridge
