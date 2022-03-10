@@ -2,13 +2,13 @@
 
 ## TTGO version 
 <img src="./img/routeur.jpg" align="up" height="300"  >
-I created this pv router to separate the power part of the analysis part. 
-After 2 years of working with an ESP8266, I made evolutions to upgrade to an ESP32. ( and visual Studio Code )
-first time I use Oled display and I migrate to a TTGO tdisplay, for an easyer intregration. 
+I created this pv router to separate the power part of the analysis part. <br>
+After 2 years of working with an ESP8266, I made evolutions to upgrade to an ESP32. ( and visual Studio Code )<br>
+first time I use Oled display and I migrate to a TTGO tdisplay, for an easyer intregration. <br>
 
-this router use a very simple tech by using phase differences.
-The project can reproduce easily for the electronic board.
-however I made an industrial version of it to make things easier.
+this router use a very simple tech by using phase differences.<br>
+The project can reproduce easily for the electronic board.<br>
+however I made an industrial version of it to make things easier.<br>
 <a href="https://www.helloasso.com/associations/apper/formulaires/4">The board was sold by a French Association ( APPER ) </a>
 
 You only need to by separatly : <br>
@@ -25,12 +25,12 @@ For packaging, I use the box that comes with the TTGO.
 Rename the file wifi.json.ori to wifi.json and change SID 
 ## Upload
 If you know your configuration you can change it on config.json<br>
-Upload the firmware and filesystem. the system will start and working
+Upload the firmware and filesystem. the system will start and working<br>
 A complete documentation (in French ) is <a href="./Doc%20installation.pdf"> here </a>
 
 ## OTA UPload 
 You can use OTA upload by the web page /update <br>
-Build firmware of filesystem with VS and upload the .bin
+Build firmware of filesystem with VS and upload the .bin<br>
 
 ## Main Configuration 
 Under the /setup.html page you can configure information for connecting to the MQTT server ( support domoticz or Jeedom ).<br>
@@ -44,7 +44,7 @@ If you want to swith off oled after a limited time ( button right for swith / or
 
 In case you use multi dimmers, you need to calculate the max % needed for all dimmers, <br>
 For example if 1st dimmer is 80% max and 2nd dimmer is 40% max, you need to configure the power limit to 120 <br>
-( and configure all dimmers directly with the limit )
+( and configure all dimmers directly with the limit )<br>
 
 
 ## ESP32 Version or DIY version
