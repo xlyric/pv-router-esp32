@@ -184,16 +184,16 @@ Dimmer_setup();
   // ----------------------------------------------------------------
   // TASK: Connect to WiFi & keep the connection alive.
   // ----------------------------------------------------------------
-  /*
-  xTaskCreatePinnedToCore(
+  
+  xTaskCreate(
     keepWiFiAlive,
     "keepWiFiAlive",  // Task name
     5000,            // Stack size (bytes)
     NULL,             // Parameter
     5,                // Task priority
-    NULL    ,      // Task handle
-    ARDUINO_RUNNING_CORE
-  );*/
+    NULL          // Task handle
+    
+  );
   #endif
 
   // ----------------------------------------------------------------
