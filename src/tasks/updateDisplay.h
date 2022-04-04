@@ -5,6 +5,7 @@
 #include "functions/drawFunctions.h"
 #include "functions/appweb.h"
 #include "../config/config.h"
+#include "functions/froniusFunction.h"
 
 #ifdef  DEVKIT1
 #include "SSD1306Wire.h"
@@ -17,7 +18,7 @@ extern TFT_eSPI display;
 #endif
 
 extern DisplayValues gDisplayValues;
-
+extern bool Fronius_present;
 
 /**
  * Metafunction that takes care of drawing all the different
@@ -104,7 +105,30 @@ void updateDisplay(void * parameter){
       drawtext16TTGO(0,70, String(gDisplayValues.dimmer),TFT_GREEN );
     #endif
 
+    // display Fronius
+    if (Fronius_present) {
 
+    #ifdef  DEVKIT1
+      display.setTextAlignment(TEXT_ALIGN_LEFT);
+      display.setFont(ArialMT_Plain_10);
+      display.drawString(0, 63,String(gDisplayValues.Fronius_prod));
+      display.drawString(60, 63,String(gDisplayValues.Fronius_conso));
+    #endif 
+    #ifdef  TTGO
+      display.setCursor(0, 120, 2);
+      display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
+      display.print("Prod : ");
+      display.println(String(gDisplayValues.Fronius_prod,0) + "W");
+
+      if (gDisplayValues.watt < 0) { display.setTextColor(TFT_GREEN,TFT_BLACK);  display.setTextSize(1); }
+      else {display.setTextColor(TFT_RED,TFT_BLACK);  display.setTextSize(1);}
+
+      display.setCursor(110, 120, 2);
+      display.print("conso : ");
+      display.println(String(gDisplayValues.Fronius_prod + gDisplayValues.Fronius_conso,0) + "W");
+    #endif
+
+    }        
 
 
     // Sleep for 5 seconds, then update display again!

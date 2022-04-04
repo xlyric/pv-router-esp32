@@ -30,6 +30,7 @@
            // gDisplayValues.time = timestring.substring(tIndex + 1, timestring.length() -3);
             
             serial_println("[NTP] Done");
+
             
             // Sleep for a minute before checking again
             vTaskDelay(NTP_UPDATE_INTERVAL_MS / portTICK_PERIOD_MS);

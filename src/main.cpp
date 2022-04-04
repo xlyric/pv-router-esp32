@@ -31,6 +31,8 @@
 #include "functions/Mqtt_http_Functions.h"
 #include "functions/webFunctions.h"
 
+#include "functions/froniusFunction.h"
+
 #if DIMMERLOCAL 
 #include "functions/dimmerFunction.h"
 #endif
@@ -77,6 +79,9 @@ void setup()
   Serial.println("start SPIFFS");
   SPIFFS.begin();
   loadwifi(wifi_conf, configwifi);
+
+  // test if Fronius is present ( and load conf )
+  loadfronius(fronius_conf);
 
 
   // Setup the ADC
@@ -161,7 +166,7 @@ Dimmer_setup();
   //Serial.println(F("Saving configuration..."));
   //saveConfiguration(filename_conf, config);
 
-
+  
 
 
 

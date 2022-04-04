@@ -29,6 +29,8 @@ struct DisplayValues {
   bool porteuse; 
   bool screenstate; 
   String temperature;
+  int Fronius_conso; 
+  int Fronius_prod; 
 };
 
 struct Config {
