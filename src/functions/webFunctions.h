@@ -30,17 +30,22 @@ void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
 }
 
+
 void call_pages() {
 
   server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
-      if(SPIFFS.exists("/index.html")){
+    if(SPIFFS.exists("/index.html")){
      request->send(SPIFFS, "/index.html", "text/html");
     }
     else {request->send_P(200, "text/plain", SPIFFSNO ); }
   });
 
-    server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/config.html", "text/html");
+  server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(SPIFFS.exists("/config.html")){
+      request->send(SPIFFS, "/config.html", "text/html");
+    }
+    else {request->send_P(200, "text/plain", SPIFFSNO ); }
+
   });
 
   server.on("/all.min.css",  HTTP_GET, [](AsyncWebServerRequest *request){
@@ -152,8 +157,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt();}
    //reset
    if (request->hasParam(PARAM_INPUT_reset)) {Serial.println("Resetting ESP");  ESP.restart();}
-   
-   
+      
    if (request->hasParam(PARAM_INPUT_servermode)) { inputMessage = request->getParam( PARAM_INPUT_servermode)->value();
                                             getServermode(inputMessage);
                                             request->send(200, "text/html", getconfig().c_str());
