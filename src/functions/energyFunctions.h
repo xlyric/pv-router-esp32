@@ -39,7 +39,7 @@ void front() {
 void rt_loop (unsigned long startmicro, unsigned long timer )
 {
 
-while ( micros() <=  ( startmicro + timer ) )
+while ( micros() <=  ( startmicro + timer ) )  /// a vérifier si < permetrait encore d'affiner la mesure 
     {
     delayMicroseconds(1);
     }
@@ -126,6 +126,14 @@ void injection(){
 
 }
 
+const int nbmesure = 72 ; /// nombre de mesure par ondulation
+const int nombre_cycle  = 4 ; /// nombre de cycle pour affiner la mesure
+const int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
+int tableau[freqmesure];
+int porteuse[freqmesure];
+int middle_debug ;  
+
+
 
 void injection2(){ 
 
@@ -140,17 +148,16 @@ int temp_read , temp_porteuse ;
   int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
   unsigned long startMillis,stopMillis;
   int injection = 0; 
-  int nbmesure=72 ;  /// nombre de mesure par ondulation
-  int nombre_cycle = 4 ;  /// nombre de cycle pour affiner la mesure
-  int freqmesure = nbmesure*(nombre_cycle+1) ;  // 18 mesure pour la 1/2 ondulation
-  int tableau[freqmesure];
-  int porteuse[freqmesure];
+ // int nbmesure=72 ;  /// nombre de mesure par ondulation
+ // int nombre_cycle = 4 ;  
+ // int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
+
 
 front();  ///synchro porteuse.
 delay (15);
 startMillis = micros();   // 0ms 
 
-
+///// construction du tableau de mesures  /////
 while (loop < freqmesure ) {
     tableau[loop] =  analogRead(ADC_INPUT);
     porteuse[loop] =  analogRead(ADC_PORTEUSE);
@@ -183,11 +190,14 @@ while (loop < freqmesure ) {
    rt_loop( startMillis, wait_time*loop ) ; // attend le prochain top temps de mesure ( 277us * loop )
    
   }
-// 20ms total 72 mesures 
+  ///// fin  construction du tableau de mesures  /////
+
+// 20ms * nombre de cycles -> total 72 mesures * nb cycles
 stopMillis = micros();  
 
 // début des calculs 
-sigma_read = ( sigma_read / ( loop +1 ) ) ; 
+
+sigma_read = ( sigma_read / ( loop +1 ) ) ;  /// calcul du sigma ( la valeur moyenne ), ne marche bien que dans le cas d'une ondulation symétrique. A voir si nouvelle méthode de calcul. ( valeur théorique : 2047 -> vcc/2)
 int start=0; 
 
 //Serial.println("tableau");
@@ -236,12 +246,16 @@ Serial.println(inter*wait_time);
 Serial.println("middle");
 Serial.println(loop);
 Serial.println(sigma_read);
+middle_debug= sigma_read; 
 Serial.println(start);
 //zero = sqrt(zero / float(zero_count)); 
 // positive = sqrt(positive / float( loop - zero_count )) ;
 Serial.println(int(positive)) ;
 gDisplayValues.watt = int(( positive )) ; 
 if ( config.polarity == true ) { gDisplayValues.watt = - gDisplayValues.watt ; }
+
+
+
 
 }
 

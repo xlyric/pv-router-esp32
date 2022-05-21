@@ -138,9 +138,21 @@ String getchart() {
       return String(retour);
 }
 //***********************************
+
 String getdebug() {
-  //configweb = String(ESP.getFreeHeap())+ ";" + String(laststartvalue)  + ";" +  String(middle) + ";" +  phi +";"+ config.resistance ;
-  configweb = String(ESP.getFreeHeap())+ ";"+ config.resistance ;
+  configweb = "";
+  configweb += "middle:" + String(middle_debug); 
+  //// calcul du cos phi par recherche milieu de demi onde positive 
+  int start=0;int end=0;int half=0  ;
+    for ( int i=0; i < 72; i ++ )
+    {
+      if ( porteuse[i] !=0  && start == 0 ) {start = i ;}
+      if ( porteuse[i] ==0 && start != 0) {end = i ; break;}
+    }
+    half = 36 - ( end - start ); 
+    configweb += "  cosphi :" + String(half) + "  end  :" + String(end ) +"  start :" + String(start)  ; 
+
+
     return String(configweb);
 }
 //***********************************
