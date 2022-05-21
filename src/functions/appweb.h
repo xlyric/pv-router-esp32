@@ -141,13 +141,14 @@ String getchart() {
 
 String getdebug() {
   configweb = "";
-  configweb += "middle:" + String(middle_debug); 
+  configweb += "middle:" + String(middle_debug) + "\r\n" ; 
   //// calcul du cos phi par recherche milieu de demi onde positive 
   int start=0;int end=0;int half=0  ;
     for ( int i=0; i < 72; i ++ )
     {
       if ( porteuse[i] !=0  && start == 0 ) {start = i ;}
-      if ( porteuse[i] ==0 && start != 0) {end = i ; break;}
+      if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i ;}
+	  configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
     }
     half = 36 - ( end - start ); 
     configweb += "  cosphi :" + String(half) + "  end  :" + String(end ) +"  start :" + String(start)  ; 
