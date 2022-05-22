@@ -32,6 +32,7 @@
 #include "functions/webFunctions.h"
 
 #include "functions/froniusFunction.h"
+#include "functions/enphaseFunction.h"
 
 #if DIMMERLOCAL 
 #include "functions/dimmerFunction.h"
@@ -83,6 +84,8 @@ void setup()
   // test if Fronius is present ( and load conf )
   loadfronius(fronius_conf);
 
+  // test if Enphase is present ( and load conf )
+  loadenphase(enphase_conf);
 
   // Setup the ADC
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
