@@ -87,7 +87,14 @@ void updateDisplay(void * parameter){
         
         String affiche = String(gDisplayValues.watt,0) ;
         if ( gDisplayValues.watt > config.delta ) { drawtext16TTGO(120,70, affiche,TFT_RED );}
-        else if ( gDisplayValues.watt < config.deltaneg ) { drawtext16TTGO(120,70, affiche,TFT_BLUE );}
+        else if ( gDisplayValues.watt < config.deltaneg ) { 
+          if ( gDisplayValues.watt < -999 ) 
+            /// correction dépassement de ligne pour les injections < -1000 
+            { drawtext16TTGO(100,70, affiche,TFT_BLUE ); }
+          else
+            { drawtext16TTGO(120,70, affiche,TFT_BLUE ); }
+          
+          }
         else { drawtext16TTGO(120,70, affiche,TFT_GREEN );}
       #endif
       }
