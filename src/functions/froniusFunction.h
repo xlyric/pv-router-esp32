@@ -81,7 +81,7 @@ Serial.println(httpResponseCode);
 httpfronius.end();
 
 HTTPClient http2;
-httpfronius.begin(String(IP_FRONIUS),80,url);
+httpfronius.begin(String(IP_FRONIUS),80,url2);
 httpResponseCode = httpfronius.GET();
 #if(httpResponseCode == HTTP_CODE_OK)
 
