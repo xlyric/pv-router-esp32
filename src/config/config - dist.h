@@ -157,4 +157,7 @@
 
 #define VERSION "version 3.4"
 
+#define EnvoyR "/api/v1/production"
+#define EnvoyS "/production.json"
+
 #endif

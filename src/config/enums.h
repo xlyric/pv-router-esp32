@@ -70,7 +70,8 @@ struct Configwifi {
 struct Configmodule {
   char hostname[15];
   bool enphase_present; 
-  bool Fronius_present; 
+  bool Fronius_present;
+  char envoy[1];
 };
 
 #if DEBUG == true

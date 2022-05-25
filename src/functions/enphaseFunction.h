@@ -45,11 +45,15 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   strlcpy(configmodule.hostname,                  // <- destination
           doc["IP_ENPHASE"] | "192.168.0.200", // <- source
           sizeof(configmodule.hostname));         // <- destination's capacity
+  strlcpy(configmodule.envoy,                  // <- destination
+          doc["Type"] | "R", // <- source
+          sizeof(configmodule.envoy));         // <- destination's capacity
   
   configFile.close();
 
 
 Serial.println(" enphase config : " + String(configmodule.hostname));
+Serial.println(" enphase mode  " + String(configmodule.envoy));
 return true;
 }
 
@@ -57,7 +61,10 @@ return true;
 
 void Enphase_get(void) {
 
-String url = "/api/v1/production.json";
+String url = "/404.html";
+Serial.print(configmodule.envoy );
+if ( String(configmodule.envoy) == "R" ) { url = String(EnvoyR) ; Serial.print("type R" ); Serial.print(url);}
+if ( String(configmodule.envoy) == "S" ) { url = String(EnvoyS) ; Serial.print("type S" ); Serial.print(url);}
 
 httpenphase.begin(String(configmodule.hostname),80,url);
 int httpResponseCode = httpenphase.GET();
@@ -73,19 +80,24 @@ Serial.println(httpResponseCode);
     DynamicJsonDocument doc(2048);
     DeserializationError error = deserializeJson(doc, payload);
 
-    int generatedPower = int(doc["production"][0]["wNow"]);
-    gDisplayValues.Fronius_prod = generatedPower;
-    int Powertoday = int(doc["consumption"][1]["wNow"]) ;
-    gDisplayValues.Fronius_conso = Powertoday; 
 
+    if ( String(configmodule.envoy) == "R" ) { 
+    gDisplayValues.Fronius_prod= int(doc["wattsNow"]); 
+    gDisplayValues.Fronius_conso = 0 ;
+    }
+    else  { 
+    gDisplayValues.Fronius_prod = int(doc["production"][0]["wNow"]); 
+    gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]) ;
+    }
+    
     String test = doc["consumption"][0];
 #endif
 
 httpenphase.end();
 
 //debug
-//Serial.print("prod: " + String(gDisplayValues.Fronius_prod));
-//Serial.print(" conso: "+ String(gDisplayValues.Fronius_conso) );
+Serial.print("prod: " + String(gDisplayValues.Fronius_prod));
+Serial.print(" conso: "+ String(gDisplayValues.Fronius_conso) );
 
 }
 
