@@ -134,7 +134,7 @@ void updateDisplay(void * parameter){
       display.println(String(gDisplayValues.Fronius_prod,0) + "W");
 
       display.setCursor(110, 120, 2);
-      display.print("conso : ");
+      display.print("Conso : ");
       display.println(String(gDisplayValues.Fronius_prod + gDisplayValues.Fronius_conso,0) + "W");
     #endif
 
@@ -157,8 +157,14 @@ void updateDisplay(void * parameter){
       display.println(String(gDisplayValues.Fronius_prod) + "W");
 
       display.setCursor(110, 120, 2);
-      display.print("Today : ");
-      display.println(String(gDisplayValues.Fronius_conso) + "W");
+      if ( String(configmodule.envoy) == "R" ) { 
+        display.print("Today : ");
+        display.println(String(gDisplayValues.Fronius_conso) + "Wh");
+      }
+      else {
+        display.print("Grid : ");
+        display.println(String(gDisplayValues.Fronius_conso) + "W"); 
+      }
     #endif
 
     }  
