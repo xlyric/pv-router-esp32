@@ -11,8 +11,11 @@
 #include "functions/energyFunctions.h"
 #include "functions/dimmerFunction.h"
 #include "functions/drawFunctions.h"
+#include "functions/enphaseFunction.h"
+#include "functions/froniusFunction.h"
 
 extern DisplayValues gDisplayValues;
+extern Configmodule configmodule; 
 //extern EnergyMonitor emon1;
 
 
@@ -65,7 +68,13 @@ void measureElectricity(void * parameter)
       }
 #endif
         
-  
+if (configmodule.enphase_present ) {
+      Enphase_get();
+      }
+
+if (configmodule.Fronius_present ){
+      Fronius_get();
+      }           
 
 
       // Schedule the task to run again in 1 second (while

@@ -67,6 +67,11 @@ struct Configwifi {
   char passwd[64];
 };
 
+struct Configmodule {
+  char hostname[15];
+  bool enphase_present; 
+  bool Fronius_present; 
+};
 
 #if DEBUG == true
   #define serial_print(x)  Serial.print (x)

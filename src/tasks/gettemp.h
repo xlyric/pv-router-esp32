@@ -44,9 +44,9 @@ gDisplayValues.temperature = dimmerstate;
 
 
       /// get fronuis information
-            if (Fronius_present) {
-                Fronius_get();
-            }
+    //        if (Fronius_present) {
+      //          Fronius_get();
+        //    }
 
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(GETTEMPREFRESH * 1000 / portTICK_PERIOD_MS);

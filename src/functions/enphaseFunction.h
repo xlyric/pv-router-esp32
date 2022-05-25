@@ -13,18 +13,16 @@
 HTTPClient httpenphase;  
 
 const char *enphase_conf = "/enphase.json";
-bool enphase_present = false;
-int enphase_prod = 0;
-int enphase_conso = 0 ; 
-char *IP_ENPHASE; 
+extern Configmodule configmodule; 
 
 void enphase_get(void);
 
-bool loadenphase(const char *filename) {
+bool loadenphase(const char *filename, Configmodule &configmodule) {
   // Open file for reading
-  File configFile = SPIFFS.open(filename, "r");
+  File configFile = SPIFFS.open(enphase_conf, "r");
   if (!configFile) {
     Serial.println(F("No Enphase used"));
+    
     return false;
     }
 
@@ -37,21 +35,21 @@ bool loadenphase(const char *filename) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read Enphase config"));
-    enphase_present = false;
+    
     return false;
   }
 
   
   // Copy values from the JsonDocument to the Config
   
-  strlcpy(IP_ENPHASE,                  // <- destination
-          doc["IP_ENPHASE"] | "", // <- source
-          sizeof(IP_ENPHASE));         // <- destination's capacity
+  strlcpy(configmodule.hostname,                  // <- destination
+          doc["IP_ENPHASE"] | "192.168.0.200", // <- source
+          sizeof(configmodule.hostname));         // <- destination's capacity
   
   configFile.close();
 
-enphase_present = true;
-Serial.println(" enphase config : " + String(IP_ENPHASE));
+
+Serial.println(" enphase config : " + String(configmodule.hostname));
 return true;
 }
 
@@ -59,9 +57,9 @@ return true;
 
 void Enphase_get(void) {
 
-String url = "/api/v1/production";
+String url = "/api/v1/production.json";
 
-httpenphase.begin(String(IP_ENPHASE),80,url);
+httpenphase.begin(String(configmodule.hostname),80,url);
 int httpResponseCode = httpenphase.GET();
 // start connection and send HTTP header
 
@@ -82,9 +80,8 @@ Serial.println(httpResponseCode);
 
 httpenphase.end();
 
-Serial.print("gDisplayValues.production / fonction mesure: " + String(gDisplayValues.Fronius_prod));
-Serial.print("gDisplayValues.watt / fonction mesure: " + String(gDisplayValues.watt));
-Serial.print("gDisplayValues.enphaseup / fonction mesure: : "+ String(gDisplayValues.Fronius_conso) );
+Serial.print("E prod: " + String(gDisplayValues.Fronius_prod));
+Serial.print("E daily: "+ String(gDisplayValues.Fronius_conso) );
 
 
 }

@@ -13,19 +13,16 @@
 HTTPClient httpfronius;  
 
 const char *fronius_conf = "/fronius.json";
-bool Fronius_present = false;
-int Fronius_prod = 0;
-int Fronius_conso = 0 ; 
-char *IP_FRONIUS; 
+extern Configmodule configmodule; 
 
 void Fronius_get(void);
 
-bool loadfronius(const char *filename) {
+bool loadfronius(const char *filename, Configmodule &configmodule) {
   // Open file for reading
-  File configFile = SPIFFS.open(filename, "r");
+  File configFile = SPIFFS.open(fronius_conf, "r");
   if (!configFile) {
     Serial.println(F("No Fronius used"));
-    return false;
+      return false;
     }
 
   // Allocate a temporary JsonDocument
@@ -37,20 +34,19 @@ bool loadfronius(const char *filename) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read Fronius config"));
-    Fronius_present = false;
     return false;
   }
 
   
   // Copy values from the JsonDocument to the Config
   
-  strlcpy(IP_FRONIUS,                  // <- destination
+  strlcpy(configmodule.hostname,                  // <- destination
           doc["IP_FRONIUS"] | "", // <- source
-          sizeof(IP_FRONIUS));         // <- destination's capacity
+          sizeof(configmodule.hostname));         // <- destination's capacity
   
   configFile.close();
 
-Serial.println(" Fronius config : " + String(IP_FRONIUS));
+Serial.println(" Fronius config : " + String(configmodule.hostname));
 return true;
 }
 
@@ -60,7 +56,7 @@ void Fronius_get(void) {
 
 String url = "/solar_api/v1/GetInverterRealtimeData.cgi?Scope=System";
 String url2 = "/solar_api/v1/GetMeterRealtimeData.cgi?Scope=System";
-httpfronius.begin(String(IP_FRONIUS),80,url);
+httpfronius.begin(String(configmodule.hostname),80,url);
 int httpResponseCode = httpfronius.GET();
 // start connection and send HTTP header
 
@@ -81,7 +77,7 @@ Serial.println(httpResponseCode);
 httpfronius.end();
 
 HTTPClient http2;
-httpfronius.begin(String(IP_FRONIUS),80,url2);
+httpfronius.begin(String(configmodule.hostname),80,url2);
 httpResponseCode = httpfronius.GET();
 #if(httpResponseCode == HTTP_CODE_OK)
 
@@ -96,9 +92,8 @@ httpResponseCode = httpfronius.GET();
 
 httpfronius.end();
 
-Serial.print("gDisplayValues.production / fonction mesure: " + String(gDisplayValues.Fronius_prod));
-Serial.print("gDisplayValues.watt / fonction mesure: " + String(gDisplayValues.watt));
-Serial.print("gDisplayValues.froniusup / fonction mesure: : "+ String(gDisplayValues.Fronius_conso) );
+Serial.print("prod : " + String(gDisplayValues.Fronius_prod));
+Serial.print("conso: : "+ String(gDisplayValues.Fronius_conso) );
 
 
 }

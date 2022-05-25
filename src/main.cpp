@@ -61,6 +61,7 @@ DisplayValues gDisplayValues;
 //EnergyMonitor emon1;
 Config config; 
 Configwifi configwifi; 
+Configmodule configmodule; 
 
 
 WiFiUDP ntpUDP;
@@ -82,10 +83,10 @@ void setup()
   loadwifi(wifi_conf, configwifi);
 
   // test if Fronius is present ( and load conf )
-  loadfronius(fronius_conf);
+  configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
 
   // test if Enphase is present ( and load conf )
-  loadenphase(enphase_conf);
+  configmodule.enphase_present = loadenphase(enphase_conf, configmodule);
 
   // Setup the ADC
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);

@@ -19,7 +19,8 @@ extern TFT_eSPI display;
 #endif
 
 extern DisplayValues gDisplayValues;
-extern bool Fronius_present;
+extern Configmodule configmodule; 
+
 
 /**
  * Metafunction that takes care of drawing all the different
@@ -117,8 +118,9 @@ void updateDisplay(void * parameter){
     #endif
 
     // display Fronius
-    if (Fronius_present) {
+    if (configmodule.Fronius_present) {
 
+      
     #ifdef  DEVKIT1
       display.setTextAlignment(TEXT_ALIGN_LEFT);
       display.setFont(ArialMT_Plain_10);
@@ -130,9 +132,6 @@ void updateDisplay(void * parameter){
       display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
       display.print("Prod : ");
       display.println(String(gDisplayValues.Fronius_prod,0) + "W");
-
-      if (gDisplayValues.watt < 0) { display.setTextColor(TFT_GREEN,TFT_BLACK);  display.setTextSize(1); }
-      else {display.setTextColor(TFT_RED,TFT_BLACK);  display.setTextSize(1);}
 
       display.setCursor(110, 120, 2);
       display.print("conso : ");
@@ -142,8 +141,9 @@ void updateDisplay(void * parameter){
     }        
 
     // display Enphase
-    if (enphase_present) {
+    if (configmodule.enphase_present) {
 
+ 
     #ifdef  DEVKIT1
       display.setTextAlignment(TEXT_ALIGN_LEFT);
       display.setFont(ArialMT_Plain_10);
@@ -154,14 +154,11 @@ void updateDisplay(void * parameter){
       display.setCursor(0, 120, 2);
       display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
       display.print("Prod : ");
-      display.println(String(gDisplayValues.Fronius_prod,0) + "W");
-
-      if (gDisplayValues.watt < 0) { display.setTextColor(TFT_GREEN,TFT_BLACK);  display.setTextSize(1); }
-      else {display.setTextColor(TFT_RED,TFT_BLACK);  display.setTextSize(1);}
+      display.println(String(gDisplayValues.Fronius_prod) + "W");
 
       display.setCursor(110, 120, 2);
       display.print("Today : ");
-      display.println(String(gDisplayValues.Fronius_prod + gDisplayValues.Fronius_conso,0) + "W");
+      display.println(String(gDisplayValues.Fronius_conso) + "W");
     #endif
 
     }  
