@@ -69,20 +69,23 @@ Serial.println(httpResponseCode);
 #if(httpResponseCode == HTTP_CODE_OK)
 
     String payload = httpenphase.getString();
-    DynamicJsonDocument doc(900);
+    
+    DynamicJsonDocument doc(2048);
     DeserializationError error = deserializeJson(doc, payload);
 
-    long generatedPower = doc["wattsNow"];
+    int generatedPower = int(doc["production"][0]["wNow"]);
     gDisplayValues.Fronius_prod = generatedPower;
-    long Powertoday = doc["wattHoursToday"];
+    int Powertoday = int(doc["consumption"][1]["wNow"]) ;
     gDisplayValues.Fronius_conso = Powertoday; 
+
+    String test = doc["consumption"][0];
 #endif
 
 httpenphase.end();
 
-Serial.print("E prod: " + String(gDisplayValues.Fronius_prod));
-Serial.print("E daily: "+ String(gDisplayValues.Fronius_conso) );
-
+//debug
+//Serial.print("prod: " + String(gDisplayValues.Fronius_prod));
+//Serial.print(" conso: "+ String(gDisplayValues.Fronius_conso) );
 
 }
 

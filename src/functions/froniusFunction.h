@@ -69,7 +69,7 @@ Serial.println(httpResponseCode);
     DynamicJsonDocument doc(900);
     DeserializationError error = deserializeJson(doc, payload);
 
-    long generatedPower = doc["Body"]["Data"]["PAC"]["Values"]["1"];
+    int generatedPower = int(doc["Body"]["Data"]["PAC"]["Values"]["1"]);
     gDisplayValues.Fronius_prod = generatedPower;
 
 #endif
@@ -83,17 +83,18 @@ httpResponseCode = httpfronius.GET();
 
 
     payload = http2.getString();
-    DynamicJsonDocument doc2(1500);
+    DynamicJsonDocument doc2(2048);
     error = deserializeJson(doc2, payload);
-    long generatedPower2 = doc2["Body"]["Data"]["0"]["PowerReal_P_Sum"];
+    int generatedPower2 = int(doc2["Body"]["Data"]["0"]["PowerReal_P_Sum"]);
     gDisplayValues.Fronius_conso = generatedPower2;
 
 #endif
 
 httpfronius.end();
 
-Serial.print("prod : " + String(gDisplayValues.Fronius_prod));
-Serial.print("conso: : "+ String(gDisplayValues.Fronius_conso) );
+//debug
+//Serial.print("prod : " + String(gDisplayValues.Fronius_prod));
+//Serial.print("conso: : "+ String(gDisplayValues.Fronius_conso) );
 
 
 }
