@@ -71,7 +71,7 @@ struct Configmodule {
   char hostname[15];
   bool enphase_present; 
   bool Fronius_present;
-  char envoy[1];
+  char envoy[5];
 };
 
 #if DEBUG == true
