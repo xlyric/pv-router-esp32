@@ -31,10 +31,11 @@ struct DisplayValues {
   String temperature;
   int Fronius_conso; 
   int Fronius_prod; 
+  float celsius;
 };
 
 struct Config {
-  char hostname[15];
+  char hostname[16];
   int port;
   char apiKey[64];
   bool UseDomoticz;
@@ -48,12 +49,12 @@ struct Config {
   int cycle;
   bool sending;
   bool autonome;
-  char dimmer[15];
+  char dimmer[16];
   bool dimmerlocal;
   float facteur;
   int num_fuse;
   bool mqtt;
-  char mqttserver[15];
+  char mqttserver[16];
   int IDXdimmer;
   int tmax;
   int resistance;
@@ -68,10 +69,11 @@ struct Configwifi {
 };
 
 struct Configmodule {
-  char hostname[15];
+  char hostname[16];
   bool enphase_present; 
   bool Fronius_present;
   char envoy[5];
+  bool pilote; 
 };
 
 #if DEBUG == true
@@ -81,5 +83,15 @@ struct Configmodule {
   #define serial_print(x)
   #define serial_println(x)
 #endif
+
+struct Dallas{
+  byte i;
+  byte present = 0;
+  byte type_s;
+  byte data[12];
+  byte addr[8];
+  float celsius = 0.00 ;
+  byte security = 0;
+};
 
 #endif

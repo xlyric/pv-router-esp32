@@ -28,36 +28,10 @@ void measureElectricity(void * parameter)
        /// vérification qu'une autre task ne va pas fausser les valeurs
       long start = millis();
 
-     /*
-      //double amps = emon1.calcIrms(1480);
-      double amps = emon1.calcIrms(740);
-      delay ( 20 ) ; 
-      double amps2 = emon1.calcIrms(740);
-
-      if ( amps != false && amps2 != false ) { // si les 2 mesures sont ok
-      if ( amps > amps2 ) { amps = amps2 ;} /// on prends la plus petite valeur des 2 
-      double watts = amps * HOME_VOLTAGE;
-      gDisplayValues.watt = watts;*/
-
-            //injection();
+      
             injection2();
             if ( gDisplayValues.porteuse == false ) {gDisplayValues.watt =0 ; }
-      //if ( gDisplayValues.injection == true ) { serial_print("-") ; }
-          
-      //}
-
-      //injection();
-      //if ( gDisplayValues.injection == true ) { serial_print("-") ; }
-      
-      serial_println(int(gDisplayValues.watt)) ;
-      //serial_print(int(amps* HOME_VOLTAGE)) ;
-      //serial_print(" ") ;
-      //serial_println(int(amps2* HOME_VOLTAGE)) ;
-      
-
-      //serial_println(gDisplayValues.injection) ;
-     
-     
+            serial_println(int(gDisplayValues.watt)) ;
       
      
 #if WIFI_ACTIVE == true
@@ -70,6 +44,12 @@ void measureElectricity(void * parameter)
         
 if (configmodule.enphase_present ) {
       Enphase_get();
+      if ( configmodule.pilote ) { 
+            //// inversion des valeurs pour enphase piloteur
+            int tempo = gDisplayValues.watt; 
+            gDisplayValues.watt = gDisplayValues.Fronius_conso ;
+            gDisplayValues.Fronius_conso = tempo; 
+            }
       }
 
 if (configmodule.Fronius_present ){

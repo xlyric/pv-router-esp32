@@ -15,8 +15,6 @@ HTTPClient httpenphase;
 const char *enphase_conf = "/enphase.json";
 extern Configmodule configmodule; 
 
-void enphase_get(void);
-
 bool loadenphase(const char *filename, Configmodule &configmodule) {
   // Open file for reading
   File configFile = SPIFFS.open(enphase_conf, "r");
@@ -48,12 +46,13 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   strlcpy(configmodule.envoy,                  // <- destination
           doc["Type"] | "R", // <- source
           sizeof(configmodule.envoy));         // <- destination's capacity
-  
+  configmodule.pilote = doc["Pilote"] | true;
+
   configFile.close();
 
 
 Serial.println(" enphase config : " + String(configmodule.hostname));
-Serial.println(" enphase mode  " + String(configmodule.envoy));
+Serial.println(" enphase mode : " + String(configmodule.envoy));
 return true;
 }
 
@@ -78,12 +77,12 @@ Serial.println(httpResponseCode);
     String payload = httpenphase.getString();
     
     DynamicJsonDocument doc(2048);
-    DeserializationError error = deserializeJson(doc, payload);
-
+    deserializeJson(doc, payload);
+   
 
     if ( String(configmodule.envoy) == "R" ) { 
     gDisplayValues.Fronius_prod= int(doc["wattsNow"]); 
-    gDisplayValues.Fronius_conso = 0 ;
+    gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]) ; 
     }
     else  { 
     gDisplayValues.Fronius_prod = int(doc["production"][0]["wNow"]); 

@@ -79,7 +79,9 @@
 #endif
 
 #if DALLAS
-#define dallaspin  37
+#define ONE_WIRE_BUS  37
+#define TEMPERATURE_PRECISION 10
+#define TRIGGER 10   
 #endif
 
 

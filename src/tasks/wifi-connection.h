@@ -53,6 +53,7 @@ void keepWiFiAlive(void * parameter){
         serial_println(WiFi.localIP());
         gDisplayValues.currentState = UP;
         gDisplayValues.IP = String(WiFi.localIP().toString());
+        btStop();
     }
 }
 

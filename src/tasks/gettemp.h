@@ -7,9 +7,11 @@
 #include "../config/enums.h"
 #include "../functions/Mqtt_http_Functions.h"
 
+
 HTTPClient httpdimmer;
 
 extern DisplayValues gDisplayValues;
+extern Config config; 
 
 void GetDImmerTemp(void * parameter){
  for (;;){ 
@@ -42,11 +44,11 @@ dimmerstate = dimmerstate.substring(starttemp+1);
 gDisplayValues.temperature = dimmerstate; 
  Serial.println("temperature " + dimmerstate);
 
+if ( config.dimmerlocal ){
 
-      /// get fronuis information
-    //        if (Fronius_present) {
-      //          Fronius_get();
-        //    }
+}
+
+
 
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(GETTEMPREFRESH * 1000 / portTICK_PERIOD_MS);

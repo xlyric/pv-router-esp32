@@ -20,8 +20,10 @@
 dimmerLamp dimmer_hard(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 int dimmer_security = 60;  // coupe le dimmer toute les X minutes en cas de probleme externe. 
 int dimmer_security_count = 0; 
+bool security=false;
 
 #endif
+
 
 
 extern DisplayValues gDisplayValues;
@@ -35,7 +37,7 @@ HTTPClient http;
 void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
     if ( config.dimmerlocal ) {
-     // dimmerinterne.setPower(dimmervalue); 
+     // dimmerinterne.setPower(dimmervalue);  //// en prévision 
     }
     else {
       #if WIFI_ACTIVE == true
@@ -123,10 +125,26 @@ gDisplayValues.change = 0;
   if  (gDisplayValues.change == 1 )  {
     dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
 
-    #if DIMMERLOCAL 
-    dimmer_hard.setPower(gDisplayValues.dimmer);
-    #endif
+  #if DIMMERLOCAL 
+    if (security) {
+       if ( gDisplayValues.celsius <= (config.max - (config.max*TRIGGER/100)) ) {  
+       security = false ; // retrait securité si inférieur au trigger
+       gDisplayValues.dimmer = 0 ; 
+      }
+    }
+    else { 
+      if ( gDisplayValues.celsius >= config.tmax ) {
+        dimmer_hard.setPower(0); 
+        security = true ;   /// mise en place sécurité thermique
+      }
+      else {
+        dimmer_hard.setPower(gDisplayValues.dimmer);
+      }
+    }
 
+  #endif
+
+  
   }
 }
 

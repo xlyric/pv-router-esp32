@@ -8,8 +8,6 @@
 #include <NTPClient.h>
 #include <AsyncElegantOTA.h>
 
-
-
 // File System
 #include <FS.h>
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
@@ -33,6 +31,12 @@
 
 #include "functions/froniusFunction.h"
 #include "functions/enphaseFunction.h"
+
+#if DALLAS
+// Dallas 18b20
+#include "tasks/dallas.h"
+#include "functions/dallasfunction.h"
+#endif
 
 #if DIMMERLOCAL 
 #include "functions/dimmerFunction.h"
@@ -71,6 +75,15 @@ NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL
 unsigned short measurements[LOCAL_MEASUREMENTS];
 unsigned char measureIndex = 0;
 
+//***********************************
+//************* Dallas
+//***********************************
+#if DALLAS
+
+Dallas dallas; 
+#endif
+
+
 void setup()
 {
   #if DEBUG == true
@@ -87,6 +100,11 @@ void setup()
 
   // test if Enphase is present ( and load conf )
   configmodule.enphase_present = loadenphase(enphase_conf, configmodule);
+
+  /// recherche d'une sonde dallas
+  #if DALLAS
+  dallaspresent();
+  #endif
 
   // Setup the ADC
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
@@ -236,6 +254,19 @@ Dimmer_setup();
   );
   #endif
 
+#if DALLAS
+  // ----------------------------------------------------------------
+  // Task: Read Dallas Temp
+  // ----------------------------------------------------------------
+  xTaskCreate(
+    dallasread,
+    "Dallas temp",  // Task name
+    1000,                  // Stack size (bytes)
+    NULL,                   // Parameter
+    2,                      // Task priority
+    NULL                    // Task handle
+  );
+#endif
 
 #ifdef  TTGO
   // ----------------------------------------------------------------
