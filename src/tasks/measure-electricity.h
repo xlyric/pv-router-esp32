@@ -58,7 +58,7 @@ void measureElectricity(void * parameter)
       //serial_println(gDisplayValues.injection) ;
      
      
-      long end = millis();
+      
      
 #if WIFI_ACTIVE == true
       Pow_mqtt_send ++ ;
@@ -76,6 +76,7 @@ if (configmodule.Fronius_present ){
       Fronius_get();
       }           
 
+long end = millis();
 
       // Schedule the task to run again in 1 second (while
       // taking into account how long measurement took)

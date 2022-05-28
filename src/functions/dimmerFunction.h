@@ -6,6 +6,7 @@
 #include "../config/config.h"
 #include "../functions/spiffsFunctions.h"
 #include "../functions/Mqtt_http_Functions.h"
+#include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
 
 #if DIMMERLOCAL 
 // Dimmer librairy 
@@ -24,7 +25,7 @@ int dimmer_security_count = 0;
 
 
 extern DisplayValues gDisplayValues;
-
+extern Config config; 
 HTTPClient http;
 
 /*
@@ -33,19 +34,24 @@ HTTPClient http;
 
 void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
-    #if WIFI_ACTIVE == true
-    String baseurl; 
-      baseurl = "/?POWER=" + String(dimmervalue) ; 
-      http.begin(dimmerurl,80,baseurl);   
-      http.GET();
-      http.end(); 
+    if ( config.dimmerlocal ) {
+     // dimmerinterne.setPower(dimmervalue); 
+    }
+    else {
+      #if WIFI_ACTIVE == true
+      String baseurl; 
+        baseurl = "/?POWER=" + String(dimmervalue) ; 
+        http.begin(dimmerurl,80,baseurl);   
+        http.GET();
+        http.end(); 
 
-    #if MQTT_CLIENT == true 
-    /// A vérifier que c'est necessaire ( envoie double ? )
-      Mqtt_send(String(dimmerIDX), String(dimmervalue));  
-    #endif
-    
-    delay (2000); // delay de transmission réseau dimmer et application de la charge
+      #if MQTT_CLIENT == true 
+      /// A vérifier que c'est necessaire ( envoie double ? )
+        Mqtt_send(String(dimmerIDX), String(dimmervalue));  
+      #endif
+      
+      delay (2000); // delay de transmission réseau dimmer et application de la charge }
+    }
     #endif
 }
 
