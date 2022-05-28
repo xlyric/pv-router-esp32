@@ -8,6 +8,8 @@
     #include <WiFiUdp.h>
     #include <NTPClient.h>
     #include "../config/enums.h"
+    #include <TimeLib.h> 
+
 
     extern void reconnectWifiIfNeeded();
     extern DisplayValues gDisplayValues;
@@ -21,6 +23,24 @@
                 vTaskDelay(10*1000 / portTICK_PERIOD_MS);
                 continue;
             }
+
+            //detection été /hiver
+            unsigned long unix_epoch = timeClient.getEpochTime();
+            int Mois, jour ; 
+            jour   = day(unix_epoch);
+            Mois  = month(unix_epoch);
+
+            if (Mois > 10 || Mois < 3 
+            || (Mois == 10 && (jour) > 22) 
+            || (Mois == 3 && (jour)<24)){
+                //C'est l'hiver
+            timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
+             }
+            else{
+             //C'est l'été
+             timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
+            }
+
 
             serial_println("[NTP] Updating...");
             timeClient.update();
