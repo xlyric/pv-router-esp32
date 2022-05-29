@@ -91,3 +91,5 @@ you can show the signal with the oscillo on the main page
 <img src="./img/oscillo.png" align="down" height="300"  >
 
 
+###BUG DALLAS
+Onboard Dallas not working on GPIO 37 on TTGO --> connect Dallas Data on GPIO 25
