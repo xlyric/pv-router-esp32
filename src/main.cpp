@@ -34,11 +34,14 @@
 
 #if DALLAS
 // Dallas 18b20
+#include <OneWire.h>
+#include <DallasTemperature.h>
 #include "tasks/dallas.h"
 #include "functions/dallasfunction.h"
 #endif
 
 #if DIMMERLOCAL 
+#include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
 #include "functions/dimmerFunction.h"
 #endif
 
@@ -80,10 +83,15 @@ unsigned char measureIndex = 0;
 //************* Dallas
 //***********************************
 #if DALLAS
-
 Dallas dallas; 
 #endif
 
+/***************************
+ *  Dimmer init
+ **************************/
+#if DIMMERLOCAL
+dimmerLamp dimmer_hard(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
+#endif
 
 void setup()
 {
@@ -96,6 +104,16 @@ void setup()
   SPIFFS.begin();
   loadwifi(wifi_conf, configwifi);
 
+  #if DIMMERLOCAL
+    /// Correction issue full power at start
+  pinMode(outputPin, OUTPUT); 
+  digitalWrite(outputPin, LOW);
+    // configuration dimmer
+  dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
+  dimmer_hard.setPower(0); 
+  serial_println("local dimmer mode ");
+  #endif
+
   // test if Fronius is present ( and load conf )
   configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
 
@@ -104,6 +122,9 @@ void setup()
 
   /// recherche d'une sonde dallas
   #if DALLAS
+  Serial.println("start 18b20");
+  sensors.begin();
+  /// recherche d'une sonde dallas
   dallaspresent();
   #endif
 

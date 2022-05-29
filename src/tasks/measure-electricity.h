@@ -2,7 +2,6 @@
 #define TASK_MEASURE_ELECTRICITY
 
 #include <Arduino.h>
-//#include "EmonLib.h"
 
 #include "../config/config.h"
 #include "../config/enums.h"
@@ -54,6 +53,7 @@ if (configmodule.enphase_present ) {
 
 if (configmodule.Fronius_present ){
       Fronius_get();
+      
       }           
 
 long end = millis();

@@ -73,13 +73,16 @@
 #define DIMMERLOCAL false
 #define DALLAS false
 
+///// PVROUTER false dans le cas d'un enphase en pilote full 
+#define PVROUTER true
+
 #if DIMMERLOCAL 
 #define outputPin  26 
 #define zerocross  27 // for boards with CHANGEBLE input pins
 #endif
 
 #if DALLAS
-#define ONE_WIRE_BUS  37
+#define ONE_WIRE_BUS  25  /// Need to conbect pin 37 to 25 ( pin 37 not working with Dallas )
 #define TEMPERATURE_PRECISION 10
 #define TRIGGER 10   
 #endif

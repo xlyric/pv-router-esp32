@@ -16,6 +16,8 @@ extern Config config;
 void GetDImmerTemp(void * parameter){
  for (;;){ 
 // create get request 
+
+if ( DALLAS == false) {
     String baseurl; 
       baseurl = "/state" ; 
       httpdimmer.begin(String(config.dimmer),80,baseurl);   
@@ -44,11 +46,7 @@ dimmerstate = dimmerstate.substring(starttemp+1);
 gDisplayValues.temperature = dimmerstate; 
  Serial.println("temperature " + dimmerstate);
 
-if ( config.dimmerlocal ){
-
 }
-
-
 
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(GETTEMPREFRESH * 1000 / portTICK_PERIOD_MS);

@@ -6,29 +6,28 @@
 #include "../config/config.h"
 #include "../functions/spiffsFunctions.h"
 #include "../functions/Mqtt_http_Functions.h"
-#include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
+#include <RBDdimmer.h>
 
 #if DIMMERLOCAL 
-// Dimmer librairy 
-#include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
-
-//***********************************
-//************* dimmer
-//***********************************
 
 
-dimmerLamp dimmer_hard(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
-int dimmer_security = 60;  // coupe le dimmer toute les X minutes en cas de probleme externe. 
-int dimmer_security_count = 0; 
-bool security=false;
+    //***********************************
+    //************* dimmer
+    //***********************************
+
+    int dimmer_security = 60;  // coupe le dimmer toute les X minutes en cas de probleme externe. 
+    int dimmer_security_count = 0; 
+    bool security=false;
+
+
+
+
+    extern DisplayValues gDisplayValues;
+    extern Config config; 
+    HTTPClient http;
+    extern dimmerLamp dimmer_hard; 
 
 #endif
-
-
-
-extern DisplayValues gDisplayValues;
-extern Config config; 
-HTTPClient http;
 
 /*
 *   fonction d'envoie de commande au dimmer
@@ -127,7 +126,7 @@ gDisplayValues.change = 0;
 
   #if DIMMERLOCAL 
     if (security) {
-       if ( gDisplayValues.celsius <= (config.max - (config.max*TRIGGER/100)) ) {  
+       if ( gDisplayValues.celsius <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
        security = false ; // retrait securité si inférieur au trigger
        gDisplayValues.dimmer = 0 ; 
       }
@@ -149,13 +148,39 @@ gDisplayValues.change = 0;
 }
 
 #if DIMMERLOCAL 
-void Dimmer_setup() {
-  // configuration dimmer
-  dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
-  dimmer_hard.setPower(0); 
-  serial_println("Dimmer started...");
+    void Dimmer_setup() {
+      // configuration dimmer
+      dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
+      dimmer_hard.setPower(0); 
+      serial_println("Dimmer started...");
 
-}
+    }
+
+    /// fonction pour mettre en pause ou allumer le dimmer 
+    void dimmer_on()
+    {
+      if (dimmer_hard.getState()==0) {
+        dimmer_hard.setState(ON);
+        delay(50);
+        }
+    }
+
+    void dimmer_off()
+    {
+      if (dimmer_hard.getState()==1) {
+        dimmer_hard.setPower(0);
+        dimmer_hard.setState(OFF);
+        delay(50);
+        }
+    }
+
+    String dimmergetState() {
+      String state; 
+      int pow=dimmer_hard.getPower(); 
+      state = String(pow) + ";" + String(gDisplayValues.celsius) ; 
+      return String(state);
+    }
+
 #endif
 
 
