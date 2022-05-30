@@ -28,18 +28,18 @@ void measureElectricity(void * parameter)
       long start = millis();
 
       
+      if ( PVROUTER ) {
             injection2();
-            if ( gDisplayValues.porteuse == false ) {gDisplayValues.watt =0 ; }
+            if ( gDisplayValues.porteuse == false ) {
+                  gDisplayValues.watt =0 ; 
+            }
             serial_println(int(gDisplayValues.watt)) ;
-      
-     
-#if WIFI_ACTIVE == true
-      Pow_mqtt_send ++ ;
-      if ( Pow_mqtt_send > 10 ) {
-        Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
-        Pow_mqtt_send = 0 ;
       }
-#endif
+      else{
+            gDisplayValues.porteuse = true;
+      }
+     
+
         
 if (configmodule.enphase_present ) {
       Enphase_get();
@@ -53,8 +53,15 @@ if (configmodule.enphase_present ) {
 
 if (configmodule.Fronius_present ){
       Fronius_get();
-      
       }           
+
+#if WIFI_ACTIVE == true
+      Pow_mqtt_send ++ ;
+      if ( Pow_mqtt_send > 10 ) {
+        Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
+        Pow_mqtt_send = 0 ;
+      }
+#endif
 
 long end = millis();
 

@@ -19,7 +19,7 @@
     int dimmer_security_count = 0; 
     bool security=false;
 
-
+#endif
 
 
     extern DisplayValues gDisplayValues;
@@ -27,7 +27,7 @@
     HTTPClient http;
     extern dimmerLamp dimmer_hard; 
 
-#endif
+
 
 /*
 *   fonction d'envoie de commande au dimmer
@@ -51,7 +51,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         Mqtt_send(String(dimmerIDX), String(dimmervalue));  
       #endif
       
-      delay (2000); // delay de transmission réseau dimmer et application de la charge }
+      delay (1500); // delay de transmission réseau dimmer et application de la charge }
     }
     #endif
 }

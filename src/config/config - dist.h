@@ -69,12 +69,12 @@
  *  Dimmer 
  */
 
-#define DIMMER true
-#define DIMMERLOCAL false
-#define DALLAS false
+#define DIMMER true /// Use distant Dimmer 
+#define DIMMERLOCAL false /// Use local Dimmer 
+#define DALLAS false  //// Use local Dallas ( GPIO 25 )
 
-///// PVROUTER false dans le cas d'un enphase en pilote full 
-#define PVROUTER true
+///// PVROUTER false if you use Enphase Envoy S switch ( default : true )
+#define PVROUTER true 
 
 #if DIMMERLOCAL 
 #define outputPin  26 
@@ -83,8 +83,8 @@
 
 #if DALLAS
 #define ONE_WIRE_BUS  25  /// Need to conbect pin 37 to 25 ( pin 37 not working with Dallas )
-#define TEMPERATURE_PRECISION 10
-#define TRIGGER 10   
+#define TEMPERATURE_PRECISION 10  
+#define TRIGGER 10   /// Trigger % for max temp protection. max temp configuration is in config.json 
 #endif
 
 
@@ -112,7 +112,7 @@
 /**
  * Force Emonlib to assume a 3.3V supply to the CT sensor
  */
-#define emonTxV3 1
+// #define emonTxV3 1   /// not used 
 
 
 /**
