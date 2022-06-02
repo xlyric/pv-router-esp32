@@ -72,7 +72,7 @@ int httpResponseCode = httpenphase.GET();
 Serial.print(" httpcode/ fonction mesure: ");
 Serial.println(httpResponseCode);
 
-#if(httpResponseCode == HTTP_CODE_OK)
+if(httpResponseCode == HTTP_CODE_OK) {
 
     String payload = httpenphase.getString();
     
@@ -90,7 +90,12 @@ Serial.println(httpResponseCode);
     }
     
     String test = doc["consumption"][0];
-#endif
+}
+else {
+  Serial.println("timeout");
+}
+
+
 
 httpenphase.end();
 
