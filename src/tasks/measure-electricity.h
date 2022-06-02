@@ -28,7 +28,7 @@ void measureElectricity(void * parameter)
       long start = millis();
 
       
-      if ( PVROUTER ) {
+      if ( configmodule.pilote == false ) {
             injection2();
             if ( gDisplayValues.porteuse == false ) {
                   gDisplayValues.watt =0 ; 
@@ -67,7 +67,14 @@ long end = millis();
 
       // Schedule the task to run again in 1 second (while
       // taking into account how long measurement took)
-      vTaskDelay((1000-(end-start)) / portTICK_PERIOD_MS);
+      if (configmodule.enphase_present || configmodule.pilote) {
+            vTaskDelay(3000 / portTICK_PERIOD_MS);
+      }
+      else
+      {      
+            vTaskDelay((1000-(end-start)) / portTICK_PERIOD_MS);
+      }
+
     }    
 }
 
