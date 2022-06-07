@@ -52,6 +52,26 @@ void call_pages() {
     request->send(SPIFFS, "/all.min.css", "text/css");
   });
 
+server.on("/loader.js",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/loader.js", "text/css");
+  });
+
+server.on("/jquery-3.4.1.js",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/jquery-3.4.1.js", "text/css");
+  });
+
+server.on("/jquery.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/jquery.min.js", "text/css");
+  });
+
+server.on("/jquery.easing.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/jquery.easing.min.js", "text/css");
+  });
+
+server.on("/bootstrap.bundle.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/bootstrap.bundle.min.js", "text/css");
+  });
+
     server.on("/favicon.ico",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/favicon.ico", "image/png");
   });

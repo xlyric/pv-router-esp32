@@ -40,7 +40,7 @@ void measureElectricity(void * parameter)
       }
      
 
-        
+#ifndef AP      
 if (configmodule.enphase_present ) {
       Enphase_get();
       if ( configmodule.pilote ) { 
@@ -55,12 +55,14 @@ if (configmodule.Fronius_present ){
       Fronius_get();
       }           
 
-#if WIFI_ACTIVE == true
-      Pow_mqtt_send ++ ;
-      if ( Pow_mqtt_send > 10 ) {
-        Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
-        Pow_mqtt_send = 0 ;
-      }
+
+      #if WIFI_ACTIVE == true
+            Pow_mqtt_send ++ ;
+            if ( Pow_mqtt_send > 10 ) {
+            Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
+            Pow_mqtt_send = 0 ;
+            }
+      #endif
 #endif
 
 long end = millis();

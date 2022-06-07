@@ -1,9 +1,14 @@
 #ifndef TASK_HOME_ASSISTANT
 #define TASK_HOME_ASSISTANT
 
+#include <Arduino.h>
+#include <WiFiClientSecure.h>
+
+    #ifndef AP
+
 #if HA_ENABLED == true
 
-    #include <Arduino.h>
+
     #include <WiFiClientSecure.h>
     #include <MQTTClient.h>
     #include "../config/config.h"
@@ -107,5 +112,7 @@
         // Task is done!
         vTaskDelete(NULL);
     }
-#endif
+
+        #endif
+    #endif
 #endif

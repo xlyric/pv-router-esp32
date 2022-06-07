@@ -1,6 +1,7 @@
 #ifndef TASK_FETCH_TIME_NTP
 #define TASK_FETCH_TIME_NTP
-
+    #ifndef AP
+    
 #if NTP_TIME_SYNC_ENABLED == true
     #include <Arduino.h>
     #include <WiFi.h>
@@ -57,5 +58,6 @@
         }
     }
 
-#endif
+        #endif
+    #endif
 #endif

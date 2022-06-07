@@ -57,8 +57,8 @@ return true;
 }
 
 
-
-void Enphase_get(void) {
+#ifndef AP
+  void Enphase_get(void) {
 
 String url = "/404.html";
 Serial.print(configmodule.envoy );
@@ -104,7 +104,7 @@ Serial.print("prod: " + String(gDisplayValues.Fronius_prod));
 Serial.print(" conso: "+ String(gDisplayValues.Fronius_conso) );
 
 }
-
+#endif
 
 
 

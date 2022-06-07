@@ -236,7 +236,8 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 positive = positive / ( FACTEURPUISSANCE * nombre_cycle ) ; 
 
 
-
+bool nolog =false; 
+if (nolog) {
 Serial.println("fin tableau");
 Serial.println("temp");
 Serial.println(wait_time*loop);
@@ -246,11 +247,14 @@ Serial.println(inter*wait_time);
 Serial.println("middle");
 Serial.println(loop);
 Serial.println(sigma_read);
-middle_debug= sigma_read; 
 Serial.println(start);
+Serial.println(int(positive)) ;
+}
+middle_debug= sigma_read; 
+
 //zero = sqrt(zero / float(zero_count)); 
 // positive = sqrt(positive / float( loop - zero_count )) ;
-Serial.println(int(positive)) ;
+
 gDisplayValues.watt = int(( positive )) ; 
 if ( config.polarity == true ) { gDisplayValues.watt = - gDisplayValues.watt ; }
 

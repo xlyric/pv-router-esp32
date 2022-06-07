@@ -1,9 +1,13 @@
 #ifndef TASK_MQTT_AWS
 #define TASK_MQTT_AWS
 
+#include <Arduino.h>
+#include <WiFiClientSecure.h>
+
+    #ifndef AP
+
 #if AWS_ENABLED == true
-    #include <Arduino.h>
-    #include <WiFiClientSecure.h>
+
     #include <MQTTClient.h>
     #include "../config/config.h"
 
@@ -89,5 +93,6 @@
         // Task is done!
         vTaskDelete(NULL);
     }
-#endif
+        #endif
+    #endif
 #endif

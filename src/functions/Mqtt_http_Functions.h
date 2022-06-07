@@ -1,6 +1,6 @@
 #ifndef MQTT_FUNCTIONS
 #define MQTT_FUNCTIONS
-
+  #ifndef AP
     #include <Arduino.h>
     #include "../config/config.h"
     #include "../config/enums.h"
@@ -54,6 +54,7 @@ void Mqtt_send ( String idx, String value ) {
   client.loop();
   client.publish(config.Publish, String(message).c_str(), true);
   client.publish(jdompub.c_str() , value.c_str(), true);
+  Serial.println("MQTT sent ");
 
 }
 
@@ -69,4 +70,5 @@ void Mqtt_init() {
 
 }
 
+  #endif
 #endif

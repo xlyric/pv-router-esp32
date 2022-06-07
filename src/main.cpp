@@ -5,7 +5,10 @@
 #include "config/config.h"
 #include "config/enums.h"
 #include "config/traduction.h"
-#include <NTPClient.h>
+#ifndef AP
+  #include <NTPClient.h>
+#endif
+
 #include <AsyncElegantOTA.h>
 
 // File System
@@ -31,6 +34,7 @@
 
 #include "functions/froniusFunction.h"
 #include "functions/enphaseFunction.h"
+#include "functions/WifiFunctions.h"
 
 #if DALLAS
 // Dallas 18b20
@@ -70,10 +74,10 @@ Config config;
 Configwifi configwifi; 
 Configmodule configmodule; 
 
-
+#ifndef AP
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
-
+#endif
 
 // Place to store local measurements before sending them off to AWS
 unsigned short measurements[LOCAL_MEASUREMENTS];
@@ -102,7 +106,10 @@ void setup()
   //démarrage file system
   Serial.println("start SPIFFS");
   SPIFFS.begin();
+
+  #ifndef AP
   loadwifi(wifi_conf, configwifi);
+  #endif
 
   #if DIMMERLOCAL
     /// Correction issue full power at start
@@ -133,7 +140,34 @@ void setup()
   //analogReadResolution(ADC_BITS);
   pinMode(ADC_INPUT, INPUT);
 
-  #if OLED_ON == true
+
+///  WIFI INIT
+#ifndef AP
+  #if WIFI_ACTIVE == true
+    if ( strcmp(WIFI_PASSWORD,"xxx") == 0 ) { WiFi.begin(configwifi.SID, configwifi.passwd); }
+    else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
+    
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+    serial_println("WiFi connected");
+    serial_println("IP address: ");
+    serial_println(WiFi.localIP());
+    gDisplayValues.currentState = UP;
+    gDisplayValues.IP = String(WiFi.localIP().toString());
+    btStop();
+  #endif
+#endif
+///// AP WIFI INIT 
+#if AP
+  APConnect(); 
+    gDisplayValues.currentState = UP;
+    gDisplayValues.IP = String(WiFi.softAPIP().toString());
+    btStop();
+#endif
+
+#if OLED_ON == true
     Serial.println(OLEDSTART);
     // Initialising OLED
     #ifdef  DEVKIT1
@@ -167,22 +201,6 @@ void setup()
 #endif
 
 
-
-#if WIFI_ACTIVE == true
-  if ( strcmp(WIFI_PASSWORD,"xxx") == 0 ) { WiFi.begin(configwifi.SID, configwifi.passwd); }
-  else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
-  
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  serial_println("WiFi connected");
-  serial_println("IP address: ");
-  serial_println(WiFi.localIP());
-  gDisplayValues.currentState = UP;
-  gDisplayValues.IP = String(WiFi.localIP().toString());
-  btStop();
-#endif
 
 #if DIMMERLOCAL 
 Dimmer_setup();
@@ -233,16 +251,17 @@ Dimmer_setup();
   // ----------------------------------------------------------------
   // TASK: Connect to WiFi & keep the connection alive.
   // ----------------------------------------------------------------
-  
-  xTaskCreate(
-    keepWiFiAlive,
-    "keepWiFiAlive",  // Task name
-    5000,            // Stack size (bytes)
-    NULL,             // Parameter
-    5,                // Task priority
-    NULL          // Task handle
-    
-  );
+  #ifndef AP
+    xTaskCreate(
+      keepWiFiAlive,
+      "keepWiFiAlive",  // Task name
+      5000,            // Stack size (bytes)
+      NULL,             // Parameter
+      5,                // Task priority
+      NULL          // Task handle
+      
+    );
+    #endif
   #endif
 
   // ----------------------------------------------------------------
@@ -351,17 +370,18 @@ Dimmer_setup();
   // TASK: update time from NTP server.
   // ----------------------------------------------------------------
 #if WIFI_ACTIVE == true
-  #if NTP_TIME_SYNC_ENABLED == true
-    xTaskCreate(
-      fetchTimeFromNTP,
-      "Update NTP time",
-      5000,            // Stack size (bytes)
-      NULL,             // Parameter
-      2,                // Task priority
-      NULL              // Task handle
-    );
-#endif
-
+  #ifndef AP
+    #if NTP_TIME_SYNC_ENABLED == true
+      xTaskCreate(
+        fetchTimeFromNTP,
+        "Update NTP time",
+        5000,            // Stack size (bytes)
+        NULL,             // Parameter
+        2,                // Task priority
+        NULL              // Task handle
+      );
+    #endif
+  #endif
 
   #if HA_ENABLED == true
     xTaskCreate(
@@ -387,14 +407,16 @@ Dimmer_setup();
 #if WIFI_ACTIVE == true
 
 
-  #if WEBSSERVER == true
-    AsyncElegantOTA.begin(&server);
-    server.begin(); 
-  #endif
+      #if WEBSSERVER == true
+        AsyncElegantOTA.begin(&server);
+        server.begin(); 
+      #endif
 
-  #if MQTT_CLIENT == true
-    Mqtt_init();
-  #endif
+#ifndef AP
+    #if MQTT_CLIENT == true
+      Mqtt_init();
+    #endif
+#endif
 
   if ( config.autonome == true ) {
     gDisplayValues.dimmer = 0; 
@@ -415,14 +437,16 @@ void loop()
 {
 //serial_println(F("loop")); 
 
-#if WIFI_ACTIVE == true
+  #ifndef AP
+    #if WIFI_ACTIVE == true
 
-    #if MQTT_CLIENT == true
-    if (!client.connected()) {
-    reconnect();
-    }
+        #if MQTT_CLIENT == true
+        if (!client.connected()) {
+        reconnect();
+        }
+        #endif
     #endif
-#endif
+  #endif
 
 
 

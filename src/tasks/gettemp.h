@@ -6,7 +6,7 @@
 #include "../config/config.h"
 #include "../config/enums.h"
 #include "../functions/Mqtt_http_Functions.h"
-
+#include "httpclient.h"
 
 HTTPClient httpdimmer;
 
@@ -27,7 +27,7 @@ if ( DALLAS == false) {
 
 //  read request return
   if (httpResponseCode>0) {
-    Serial.print("HTTP Response code: ");
+    Serial.print("gettemp HTTP Response code: ");
     Serial.println(httpResponseCode);
     dimmerstate = httpdimmer.getString();
   }

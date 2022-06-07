@@ -7,6 +7,7 @@
 #include "../functions/spiffsFunctions.h"
 #include "../functions/Mqtt_http_Functions.h"
 #include <RBDdimmer.h>
+#include "httpclient.h"
 
 #if DIMMERLOCAL 
 
@@ -45,11 +46,14 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         http.begin(dimmerurl,80,baseurl);   
         http.GET();
         http.end(); 
+        Serial.println("Power command sent "+ String(dimmervalue));
 
+  #ifndef AP
       #if MQTT_CLIENT == true 
       /// A vérifier que c'est necessaire ( envoie double ? )
         Mqtt_send(String(dimmerIDX), String(dimmervalue));  
       #endif
+  #endif
       
       delay (1500); // delay de transmission réseau dimmer et application de la charge }
     }

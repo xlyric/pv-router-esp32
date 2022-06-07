@@ -9,6 +9,7 @@
 #include <FS.h>
 #include "SPIFFS.h"
 #include "config/enums.h"
+#include "httpclient.h"
 
 HTTPClient httpfronius;  
 

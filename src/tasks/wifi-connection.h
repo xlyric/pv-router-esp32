@@ -1,10 +1,12 @@
 #ifndef TASK_WIFI_CONNECTION
 #define TASK_WIFI_CONNECTION
+    #ifndef AP
 
 #include <Arduino.h>
 #include "WiFi.h"
 #include "../config/enums.h"
 #include "../config/config.h"
+
 
 
 
@@ -57,4 +59,5 @@ void keepWiFiAlive(void * parameter){
     }
 }
 
+    #endif
 #endif

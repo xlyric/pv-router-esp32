@@ -3,7 +3,10 @@
 
 #include <WiFi.h>
 
+#ifndef AP
 #include <NTPClient.h>
+#endif
+
 #include "../config/enums.h"
 #include "../config/config.h"
 
@@ -21,20 +24,28 @@ extern TFT_eSPI display;
 
 extern DisplayValues gDisplayValues;
 extern unsigned char measureIndex;
-extern NTPClient timeClient;
+#ifndef AP
+  extern NTPClient timeClient;
+#endif
 
-void drawTime(){
-  #ifdef  DEVKIT1
-    display.setTextAlignment(TEXT_ALIGN_LEFT);
-    display.setFont(ArialMT_Plain_10);
-    display.drawString(0, 0,timeClient.getFormattedTime());
-  #endif
-  #ifdef  TTGO
-    display.setCursor(0, 0, 2);
-    display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
-    display.println(timeClient.getFormattedTime());
-  #endif
-}
+
+  void drawTime(){
+    #ifdef  DEVKIT1
+      #ifndef AP
+        display.setTextAlignment(TEXT_ALIGN_LEFT);
+        display.setFont(ArialMT_Plain_10);
+        display.drawString(0, 0,timeClient.getFormattedTime());
+      #endif
+      #ifdef  TTGO
+        display.setCursor(0, 0, 2);
+        display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
+        
+          display.println(timeClient.getFormattedTime());
+
+      #endif
+    #endif
+  }
+
 
 void drawIP(){
   #ifdef  DEVKIT1
