@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 #include "WiFi.h"
-#include "httpclient.h"
+#include "HTTPClient.h"
 
 #include "../config/enums.h"
 #include "../config/config.h"
