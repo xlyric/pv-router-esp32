@@ -7,11 +7,11 @@
 #include "../config/enums.h"
 #include "mqtt-aws.h"
 #include "mqtt-home-assistant.h"
-#include "functions/energyFunctions.h"
-#include "functions/dimmerFunction.h"
-#include "functions/drawFunctions.h"
-#include "functions/enphaseFunction.h"
-#include "functions/froniusFunction.h"
+#include "functions\energyFunctions.h"
+#include "functions\dimmerFunction.h"
+#include "functions\drawFunctions.h"
+#include "functions\enphaseFunction.h"
+#include "functions\froniusFunction.h"
 
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 

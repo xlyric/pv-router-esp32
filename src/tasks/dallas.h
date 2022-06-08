@@ -4,7 +4,7 @@
     #include <Arduino.h>
     #include "../config/config.h"
     #include "../config/enums.h"
-    #include "../functions/dallasFunction.h"
+    #include "../functions\dallasFunction.h"
 
 extern DisplayValues gDisplayValues;
 extern Dallas dallas ;

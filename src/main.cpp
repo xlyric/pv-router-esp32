@@ -1,10 +1,12 @@
 #include <Arduino.h>
 
 #include "WiFi.h"
-#include <driver/adc.h>
-#include "config/config.h"
-#include "config/enums.h"
-#include "config/traduction.h"
+
+  #include <driver\adc.h>
+  #include "config\config.h"
+  #include "config\enums.h"
+  #include "config\traduction.h"
+
 #ifndef AP
   #include <NTPClient.h>
 #endif
@@ -16,37 +18,38 @@
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
 
-#include "tasks/updateDisplay.h"
-#include "tasks/switchDisplay.h"
-#include "tasks/fetch-time-from-ntp.h"
-//#include "tasks/mqtt-aws.h"
-#include "tasks/wifi-connection.h"
-//#include "tasks/wifi-update-signalstrength.h"
-#include "tasks/measure-electricity.h"
-//#include "tasks/mqtt-home-assistant.h"
-#include "tasks/Dimmer.h"
-#include "tasks/gettemp.h"
+  #include "tasks\updateDisplay.h"
+  #include "tasks\switchDisplay.h"
+  #include "tasks\fetch-time-from-ntp.h"
+  //#include "tasks\mqtt-aws.h"
+  #include "tasks\wifi-connection.h"
+  //#include "tasks\wifi-update-signalstrength.h"
+  #include "tasks\measure-electricity.h"
+  //#include "tasks\mqtt-home-assistant.h"
+  #include "tasks\Dimmer.h"
+  #include "tasks\gettemp.h"
 
-#include "functions/otaFunctions.h"
-#include "functions/spiffsFunctions.h"
-#include "functions/Mqtt_http_Functions.h"
-#include "functions/webFunctions.h"
+  #include "functions\otaFunctions.h"
+  #include "functions\spiffsFunctions.h"
+  #include "functions\Mqtt_http_Functions.h"
+  #include "functions\webFunctions.h"
 
-#include "functions/froniusFunction.h"
-#include "functions/enphaseFunction.h"
-#include "functions/WifiFunctions.h"
+  #include "functions\froniusFunction.h"
+  #include "functions\enphaseFunction.h"
+  #include "functions\WifiFunctions.h"
+
 
 #if DALLAS
 // Dallas 18b20
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include "tasks/dallas.h"
-#include "functions/dallasfunction.h"
+#include "tasks\dallas.h"
+#include "functions\dallasfunction.h"
 #endif
 
 #if DIMMERLOCAL 
 #include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
-#include "functions/dimmerFunction.h"
+#include "functions\dimmerFunction.h"
 #endif
 
 

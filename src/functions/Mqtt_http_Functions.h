@@ -4,7 +4,7 @@
     #include <Arduino.h>
     #include "../config/config.h"
     #include "../config/enums.h"
-    #include "functions/spiffsFunctions.h"
+    #include "functions\spiffsFunctions.h"
     #include <PubSubClient.h>
     #include <WiFi.h>
     #include "HTTPClient.h"
