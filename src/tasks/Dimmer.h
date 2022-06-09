@@ -4,7 +4,7 @@
     #include <Arduino.h>
     #include "../config/config.h"
     #include "../config/enums.h"
-    #include "../functions\dimmerFunction.h"
+    #include "../functions/dimmerFunction.h"
 
 
 

@@ -2,11 +2,11 @@
 #define TASK_UPDATE_DISPLAY
 
 #include <Arduino.h>
-#include "functions\drawFunctions.h"
-#include "functions\appweb.h"
+#include "functions/drawFunctions.h"
+#include "functions/appweb.h"
 #include "../config/config.h"
-#include "functions\froniusFunction.h"
-#include "functions\enphaseFunction.h"
+#include "functions/froniusFunction.h"
+#include "functions/enphaseFunction.h"
 
 #ifdef  DEVKIT1
 #include "SSD1306Wire.h"

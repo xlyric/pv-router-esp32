@@ -5,8 +5,8 @@
 
 #include "../config/config.h"
 #include "../config/enums.h"
-#include "../functions\Mqtt_http_Functions.h"
-#include "httpclient.h"
+#include "../functions/Mqtt_http_Functions.h"
+#include "HTTPClient.h"
 
 HTTPClient httpdimmer;
 
