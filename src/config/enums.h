@@ -55,6 +55,7 @@ struct Config {
   int num_fuse;
   bool mqtt;
   char mqttserver[16];
+  int mqttport; 
   int IDXdimmer;
   int tmax;
   int resistance;

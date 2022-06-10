@@ -73,6 +73,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.sending = doc["sending"] | true;
   config.autonome = doc["autonome"] | true;
   config.mqtt = doc["mqtt"] | true;
+  config.mqttport = doc["mqttport"] | 1883;
   config.dimmerlocal = doc["dimmerlocal"] | false;
   config.polarity = doc["polarity"] | false;
   strlcpy(config.dimmer,                  // <- destination
@@ -130,7 +131,8 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["facteur"] = config.facteur;
   doc["fuse"] = config.num_fuse;
   doc["mqtt"] = config.mqtt;
-  doc["mqttserver"] = config.mqttserver;  
+  doc["mqttserver"] = config.mqttserver; 
+  doc["mqttport"] = config.port; 
   doc["tmax"] = config.tmax;
   doc["resistance"] = config.resistance;
   doc["polarity"] = config.polarity; 

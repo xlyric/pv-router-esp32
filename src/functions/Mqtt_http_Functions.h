@@ -65,7 +65,7 @@ void Mqtt_send ( String idx, String value ) {
 void Mqtt_init() {
 
   client.connect("pvrouter");
-  client.setServer(config.mqttserver, 1883);
+  client.setServer(config.mqttserver, config.mqttport);
   Mqtt_send(String(config.IDXdimmer),"0");   
 
 }
