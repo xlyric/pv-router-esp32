@@ -37,7 +37,7 @@ void loadConfiguration(const char *filename, Config &config) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read file, using default configuration in function loadConfiguration"));
-
+ 
 
   }
 
@@ -88,7 +88,7 @@ void loadConfiguration(const char *filename, Config &config) {
           sizeof(config.Publish));         // <- destination's mqtt
   config.ScreenTime = doc["screentime"] | 0 ; // timer to switch of screen
   configFile.close();
-      
+
 }
 
 //***********************************
@@ -153,7 +153,7 @@ void saveConfiguration(const char *filename, const Config &config) {
 const char *wifi_conf = "/wifi.json";
 extern Configwifi configwifi; 
 
-void loadwifi(const char *filename, Configwifi &configwifi) {
+bool loadwifi(const char *filename, Configwifi &configwifi) {
   // Open file for reading
   File configFile = SPIFFS.open(wifi_conf, "r");
 
@@ -165,7 +165,8 @@ void loadwifi(const char *filename, Configwifi &configwifi) {
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
-    Serial.println(F("Failed to read wifi config, using default configuration in function config.h"));
+    Serial.println(F("Failed to read wifi config, AP mode activated "));
+    return false;
   }
 
   
@@ -179,7 +180,8 @@ void loadwifi(const char *filename, Configwifi &configwifi) {
           doc["passwd"] | "xxx", // <- source
           sizeof(configwifi.passwd));         // <- destination's capacity
   configFile.close();
-      
+
+return true;    
 }
 
 

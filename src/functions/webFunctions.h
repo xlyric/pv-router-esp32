@@ -33,6 +33,25 @@ void notFound(AsyncWebServerRequest *request) {
 
 void call_pages() {
 
+
+
+if (AP) {
+    server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
+    if(SPIFFS.exists("/index.html")){
+     request->send(SPIFFS, "/index-ap.html", "text/html");
+    }
+    else {request->send_P(200, "text/plain", SPIFFSNO ); }
+  });
+
+  server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    if(SPIFFS.exists("/config.html")){
+      request->send(SPIFFS, "/config-ap.html", "text/html");
+    }
+    else {request->send_P(200, "text/plain", SPIFFSNO ); }
+
+  });
+}
+else {
   server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
     if(SPIFFS.exists("/index.html")){
      request->send(SPIFFS, "/index.html", "text/html");
@@ -48,6 +67,8 @@ void call_pages() {
 
   });
 
+}
+
   server.on("/all.min.css",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/all.min.css", "text/css");
   });
@@ -56,8 +77,8 @@ server.on("/loader.js",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/loader.js", "text/css");
   });
 
-server.on("/jquery-3.4.1.js",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/jquery-3.4.1.js", "text/css");
+server.on("/google.css",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/google.css", "text/css");
   });
 
 server.on("/jquery.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
@@ -70,6 +91,11 @@ server.on("/jquery.easing.min.js",  HTTP_GET, [](AsyncWebServerRequest *request)
 
 server.on("/bootstrap.bundle.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/bootstrap.bundle.min.js", "text/css");
+  });
+
+
+server.on("/bootstrap.bundle.min.js.map",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/bootstrap.bundle.min.js.map", "text/css");
   });
 
     server.on("/favicon.ico",  HTTP_GET, [](AsyncWebServerRequest *request){

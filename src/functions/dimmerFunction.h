@@ -48,12 +48,12 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         http.end(); 
         Serial.println("Power command sent "+ String(dimmervalue));
 
-  #ifndef AP
+  if (!AP) {
       #if MQTT_CLIENT == true 
       /// A vérifier que c'est necessaire ( envoie double ? )
         Mqtt_send(String(dimmerIDX), String(dimmervalue));  
       #endif
-  #endif
+  }
       
       delay (1500); // delay de transmission réseau dimmer et application de la charge }
     }

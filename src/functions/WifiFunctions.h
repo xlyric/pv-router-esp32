@@ -9,7 +9,7 @@
 #include "../config/config.h"
 
 const char *ssid = "AC-ROUTER";
-const char *passphrase = "987654321";
+const char *passphrase = "AC-ROUTER";
 
 IPAddress local_IP(192,168,4,1);
 IPAddress gateway(192,168,4,254);
@@ -33,16 +33,23 @@ void WIFIDimmerIP(WiFiEvent_t event, WiFiEventInfo_t info) {
 void APConnect() {
   WiFi.onEvent(WiFiEvent);
   WiFi.onEvent(WiFiGotIP, WiFiEvent_t::SYSTEM_EVENT_AP_STAIPASSIGNED);
+  Serial.println(WiFi.macAddress());
+  String network = ssid + String('-') + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+  Serial.println(network);
+  
+  int net_len = network.length() + 1; 
+  char char_ssid[net_len];
+  network.toCharArray(char_ssid, net_len);
 
   Serial.print("Setting AP-ROUTER configuration ... ");
   Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
 
   Serial.print("Setting AP-ROUTER ... ");
-  Serial.println(WiFi.softAP(ssid,passphrase) ? "Ready" : "Failed!");
+  Serial.println(WiFi.softAP(char_ssid,passphrase) ? "Ready" : "Failed!");
   
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
-  Serial.println(WiFi.macAddress());
+  
 
 }
 

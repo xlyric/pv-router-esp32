@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <WiFiClientSecure.h>
 
-    #ifndef AP
+
 
 #if AWS_ENABLED == true
 
@@ -94,5 +94,5 @@
         vTaskDelete(NULL);
     }
         #endif
-    #endif
+
 #endif

@@ -163,5 +163,6 @@
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"
 
+bool AP=true; 
 
 #endif

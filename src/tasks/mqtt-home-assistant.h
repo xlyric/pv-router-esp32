@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include <WiFiClientSecure.h>
 
-    #ifndef AP
+
 
 #if HA_ENABLED == true
 
@@ -114,5 +114,5 @@
     }
 
         #endif
-    #endif
+
 #endif

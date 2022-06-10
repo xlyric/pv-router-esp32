@@ -1,6 +1,6 @@
 #ifndef TASK_UPDATE_WIFI_SIGNAL
 #define TASK_UPDATE_WIFI_SIGNAL
-  #ifndef AP
+
 
 #include <Arduino.h>
 #include "WiFi.h"
@@ -23,5 +23,5 @@ void updateWiFiSignalStrength(void * parameter){
     vTaskDelay(30000 / portTICK_PERIOD_MS);
   }
 }
-  #endif
+
 #endif

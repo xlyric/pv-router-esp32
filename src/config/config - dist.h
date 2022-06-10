@@ -160,9 +160,11 @@
 #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.4"
+#define VERSION "version 3.5"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"
+
+bool AP=true; 
 
 #endif

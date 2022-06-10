@@ -84,6 +84,16 @@ Open the transformer and remove the diode bridge
 
 Close the transformer and verify the voltage. ~12V AC ( 9-16v ) and adjust the divider bridge if needed ( output 3.3V max )
 
+# AP mode and wifi mode
+
+if you compile directly or not configure the wifi, the pv router switch on AP mode ( access point ), It will detect and configure automaticaly if a dimmer is present on the network. 
+in this mode, the web service can't download some google services ( graphics )
+
+the wifi mode work only if you rename the file wifi.json.ori
+
+# BINaries 
+
+compiled bin ( firmware and filesystem (spiffs ) is present in the folder "compiled_bin". it will launch the pv router in AP mode.
 
 ## Debug
 

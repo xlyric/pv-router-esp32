@@ -1,6 +1,6 @@
 #ifndef MQTT_FUNCTIONS
 #define MQTT_FUNCTIONS
-  #ifndef AP
+
     #include <Arduino.h>
     #include "../config/config.h"
     #include "../config/enums.h"
@@ -70,5 +70,5 @@ void Mqtt_init() {
 
 }
 
-  #endif
+
 #endif

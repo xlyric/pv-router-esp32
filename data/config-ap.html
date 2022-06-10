@@ -13,7 +13,8 @@
 
   <!-- Custom fonts for this template-->
  <link href="all.min.css" rel="stylesheet" type="text/css"> 
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">-->
+  <link href="google.css" rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link href="sb-admin-2.min.css" rel="stylesheet">
@@ -44,7 +45,7 @@
         <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span><br>
-		<span id="version">%Domoticz%</span></a>
+		<span id="version"></span></a>
 		  
       </li>
 
@@ -118,7 +119,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Transmission mode <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter"><span id="sendmode2" onclick="sendmode(this.innerHTML);" >%SENDMODE%</span></span>
+                <span class="badge badge-danger badge-counter"><span id="sendmode2" onclick="sendmode(this.innerHTML);" ></span></span>
               </a>
               
             </li>
@@ -138,9 +139,9 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-		  <h1 class="h3 mb-2 text-gray-800">Configuration</h1>
-          <p class="mb-4">Page de configuration de votre pv routeur, pensez à sauvegarder votre configuration sur la flash après l'avoir appliqué.</p>
-		  <p class="mb-4">page rapide d'aide : <a href="doc.txt" target="_blank"> ici </a></p>
+		  <h1 class="h3 mb-2 text-gray-800">Configuration AP mode</h1>
+          <p class="mb-4">configuration page of pv router, remember to save your config file on the flash after applyu parameters.</p>
+		  <p class="mb-4">FAQ and help  : <a href="https://pvrouteur.apper-solaire.org/shelves/fr-documentation" target="_blank"> ici </a></p>
   
 
           <!-- Content Row -->
@@ -153,7 +154,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">State</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state">%STATE%</span></div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state"></span></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -170,7 +171,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Sigma</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma">%SIGMA%</span></div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma"></span></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -194,8 +195,8 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sauvegarder sur la flash</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="save"   ><a href="#">SAUVEGARDER</a></span><br><span id="savemsg"></span></div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">save on flash</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="save"   ><a href="#">SAVE</a></span><br><span id="savemsg"></span></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-download fa-2x text-gray-300"></i>
@@ -216,72 +217,59 @@
                 </div>
                 <div class="card-body">
                   <div class="col-lg-12">
-            <div class="p-5">
+           
 
               <form class="user" id="formulaire" method="post" action=""  >
-			    <div class="form-group row">
-			  	<div class="col-sm-6" >Serveur</div>
-				 <div class="col-sm-3">Port</div>
-				 <div class="col-sm-3">IDX</div>
-				</div>
-				 
-                <div class="form-group row">
+			  
+          
+       <!-- <div class="form-group">
+                  <div class="custom-control custom-checkbox small">
+                    <input type="checkbox" class="custom-control-input" id="Usemqtt">
+                    <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
+                  </div>
+        </div>
+-->
+        <div class="form-group">
+            MQTT Serveur :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
+        </div>
 
-                  <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="hostname" placeholder="%HOSTNAME%">
-                  </div>
-                  <div class="col-sm-3">
-                   <input type="text" class="form-control form-control-user" id="port" placeholder="%PORT%">
-                  </div>
+        <div class="form-group">
+          MQTT Publish :<input type="text" class="form-control form-control-user" id="publish" placeholder="%PUBLISH%">
+        </div>
+
+        <div class="form-group row">
 				  <div class="col-sm-3">
-                   <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
-                  </div>
-				</div>
-
-                <div class="form-group">
-                 APIKey : <input type="text" class="form-control form-control-user" id="apiKey" placeholder="%APIKEY%">
-                </div>
-				<div class="form-group">
-                 Dimmer :<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
-                </div>
-
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-                        <input type="checkbox" class="custom-control-input" id="UseDomoticz">
-                        <label class="custom-control-label" for="UseDomoticz" onclick="sendservermode(this.innerHTML);" >Domoticz</label>
-                      </div>
-                </div>
-
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="UseJeedom">
-                        <label class="custom-control-label" for="UseJeedom" onclick="sendservermode(this.innerHTML);">Jeedom</label>
-                      </div>
-                </div>
-
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="autonome">
-                        <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
-                      </div>
-                </div>
+                  IDX Power: <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
+          </div>
+				  <div class="col-sm-3">
+                  IDX Dimmer: <input type="text" class="form-control form-control-user" id="IDXDIMMER" placeholder="%IDXDIMMER%">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="col-sm-3">
+            <div class="custom-control custom-checkbox small">
+                    <input type="checkbox" class="custom-control-input" id="autonome">
+                    <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
+            </div>
+          </div>
+        </div>  
+        <div class="form-group row">
+          <div class="col-sm-6">
+                    Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
+          </div>
+        </div>
+      
 				
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="Usemqtt">
-                        <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
-                      </div>
-                </div
-				<div class="form-group">
-                 MQTT :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
-                </div>			
+
+							
 
 
-				
+        
 				<div class="form-group row">
 				 <div class="col-sm-3">Limite Consommation (Delta) </div>
 				  <div class="col-sm-3">Limite Injection (deltaneg) </div>
-				  <div class="col-sm-3">Charge connectée/W </div>
+				  
 				 
 
 				</div>
@@ -293,9 +281,7 @@
 				  <div class="col-sm-3">
 				  <input type="text" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%">
                   </div>
-				  <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
-                  </div>
+
 				  
 				  
 		        </div>
@@ -303,31 +289,57 @@
 				<div class="form-group row">
 				 <div class="col-sm-3">Cosphi</div>
 				 <div class="col-sm-3">Facteur de correction</div>
+         
 				</div>
 				<div class="form-group row">
                   <div class="col-sm-3">
-                   <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
+                    <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
                   </div>
-				<div class="col-sm-3">
-					<input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
-                </div>
-                </div>
+				          <div class="col-sm-3">
+					          <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
+                  </div>
 
-				<div class="form-group row">
-				 <div class="col-sm-3">Dimmer Local</div>
-				</div>
-				<div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-						<input type="checkbox" class="custom-control-input" id="dimmerlocal">
-                        <label class="custom-control-label" for="dimmerlocal" onclick="sendservermode(this.innerHTML);" >Dimmer local</label>
-                      </div>
-                </div>
+        </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3">Charge connectée/W </div>
+        <div class="col-sm-3">limiteur en %</div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3">
+				  <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
+        </div>
+			  <div class="col-sm-3">
+          <input type="text" class="form-control form-control-user" id="Fusible" placeholder="%FUSE%">
+        </div>
+        <div class="col-sm-3">
+          <div class="custom-control custom-checkbox small">
+            <input type="checkbox" class="custom-control-input" id="polarity">
+            <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3">Screen switch off (0: unlimited)</div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-3">
+				  <input type="text" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
+        </div>
+        <div class="col-sm-3">
+          <div class="custom-control custom-checkbox small">
+            <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
+         <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
+          </div>
+        </div>
+      </div> 
 				  
 
 				
 	
 				
-				<input type="submit" value=" Application des parametres" class="btn btn-primary btn-user btn-block">
+				<input type="submit" value="Apply parameters" class="btn btn-primary btn-user btn-block">
 				
                 <hr>
 
@@ -393,7 +405,9 @@ function sendservermode (mode) {
 		document.getElementById("UseDomoticz").value = config[10];
 		document.getElementById("UseJeedom").value = config[11];
 		document.getElementById("dimmerlocal").value = config[14];
-		document.getElementById("Usemqtt").value = config[16];
+		//document.getElementById("Usemqtt").value = config[16];
+    document.getElementById("polarity").value = config[20];
+    document.getElementById("screen").value = config[21];
 		}); 
 
 
@@ -414,7 +428,7 @@ function save () {
            
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+            <script src="jquery.min.js"></script>
 <script>
 
 
@@ -432,10 +446,8 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(),	 'cosphi':$('#cosphi').val(), 'readtime':$('#readtime').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'resistance':$('#resistance').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val() } 
 
-
-		
 		
         $.ajax({
             type: "GET",
@@ -460,31 +472,42 @@ var recupconfig = $.get ({
 		async: false }).responseText; 
 				  
         var config = recupconfig.split(";");
+    i=0;
+		document.getElementById("IDXDIMMER").value = config[i];
+    i++;
+		document.getElementById("Fusible").value = config[i];	  
+    i++;
+		document.getElementById("IDX").value = config[i];
+    i++;
+		document.getElementById("version").innerHTML = config[i];
 
-		document.getElementById("hostname").value = config[0];
-		document.getElementById("port").value = config[1];	  
-		document.getElementById("IDX").value = config[2];
-		document.getElementById("version").innerHTML = config[3];
 		document.getElementById("delta").value = config[5];
-		document.getElementById("deltaneg").value = config[18];
+		
 		document.getElementById("dimmer").value = config[7];
 		document.getElementById("cosphi").value = config[8];
 		
-		document.getElementById("UseDomoticz").checked = config[10];
-		document.getElementById("UseJeedom").checked = config[11];
 		document.getElementById("autonome").checked = config[12];
-		document.getElementById("UseDomoticz").value = config[10];
-		document.getElementById("UseJeedom").value = config[11];
 		document.getElementById("autonome").value = config[12];
-		document.getElementById("apiKey").value = config[13];
-		document.getElementById("dimmerlocal").checked = config[14];
-		document.getElementById("dimmerlocal").value = config[14];
-		document.getElementById("facteur").value = config[15];
-		document.getElementById("mqttserver").value = config[17];
-		document.getElementById("Usemqtt").checked = config[16];
-		document.getElementById("Usemqtt").value = config[16];
-		document.getElementById("resistance").value = config[19];
-	
+		//document.getElementById("dimmerlocal").checked = config[14];
+		//document.getElementById("dimmerlocal").value = config[14];
+    i=15;
+		document.getElementById("facteur").value = config[i];
+    i++;
+		//document.getElementById("Usemqtt").checked = config[i];
+		//document.getElementById("Usemqtt").value = config[i];
+    i++;
+    document.getElementById("mqttserver").value = config[i];
+    i++;
+    document.getElementById("publish").value = config[i];
+    i++;
+    document.getElementById("deltaneg").value = config[i];
+    i++;
+		document.getElementById("resistance").value = config[i];
+    i++;
+    document.getElementById("polarity").checked = config[i];
+		document.getElementById("polarity").value = config[i];
+    i++;
+		document.getElementById("screentime").value = config[i];	  
 
 
 
@@ -512,7 +535,7 @@ var recupconfig = $.get ({
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2020</span>
+            <span>https://github.com/xlyric/  - 2021</span>
           </div>
         </div>
       </footer>
@@ -529,12 +552,14 @@ var recupconfig = $.get ({
 
 
   <!-- Bootstrap core JavaScript-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+  <script src="jquery.min.js"></script>
+  <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
+  <script src="bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>
-
+  <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
+  <script src="bootstrap.bundle.min.js"></script>
   <!-- Custom scripts for all pages-->
   <script src="sb-admin-2.js"></script>
  <script>
