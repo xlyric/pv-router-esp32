@@ -107,6 +107,9 @@
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
+/// flip screen  set true for 3D print box
+#define FLIP true
+
 /**
  * Force Emonlib to assume a 3.3V supply to the CT sensor
  */
