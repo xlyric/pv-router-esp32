@@ -48,8 +48,9 @@ if (AP) {
       request->send(SPIFFS, "/config-ap.html", "text/html");
     }
     else {request->send_P(200, "text/plain", SPIFFSNO ); }
-
   });
+
+
 }
 else {
   server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
@@ -66,6 +67,10 @@ else {
     else {request->send_P(200, "text/plain", SPIFFSNO ); }
 
   });
+
+    server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "application/json", getchart().c_str());
+  }); 
 
 }
 
@@ -114,9 +119,7 @@ server.on("/bootstrap.bundle.min.js.map",  HTTP_GET, [](AsyncWebServerRequest *r
     request->send(SPIFFS, "/sb-admin-2.min.css", "text/css");
   });
 
-  server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "application/json", getchart().c_str());
-  }); 
+
   
   server.on("/sendmode", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "text/plain", getSendmode().c_str());
