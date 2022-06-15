@@ -132,7 +132,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["fuse"] = config.num_fuse;
   doc["mqtt"] = config.mqtt;
   doc["mqttserver"] = config.mqttserver; 
-  doc["mqttport"] = config.port; 
+  doc["mqttport"] = config.mqttport; 
   doc["tmax"] = config.tmax;
   doc["resistance"] = config.resistance;
   doc["polarity"] = config.polarity; 
