@@ -11,7 +11,7 @@
         
     WiFiClient espClient;
     PubSubClient client(espClient);
-
+    extern Config config;
     extern DisplayValues gDisplayValues;
 
 /***

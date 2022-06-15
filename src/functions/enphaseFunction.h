@@ -66,7 +66,12 @@ if ( String(configmodule.envoy) == "R" ) { url = String(EnvoyR) ; Serial.print("
 if ( String(configmodule.envoy) == "S" ) { url = String(EnvoyS) ; Serial.print("type S" ); Serial.print(url);}
 
 httpenphase.begin(String(configmodule.hostname),80,url);
-int httpResponseCode = httpenphase.GET();
+//int httpResponseCode = httpenphase.GET();
+
+/// workaround because envoy is too slow 
+int httpResponseCode;
+while ((httpResponseCode=httpenphase.GET()) != 200);
+
 // start connection and send HTTP header
 
 Serial.print(" httpcode/ fonction mesure: ");
@@ -85,7 +90,7 @@ if(httpResponseCode == HTTP_CODE_OK) {
     gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]) ; 
     }
     else  { 
-    gDisplayValues.Fronius_prod = int(doc["production"][0]["wNow"]); 
+    gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]); 
     gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]) ;
     }
     
