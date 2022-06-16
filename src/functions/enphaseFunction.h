@@ -43,9 +43,7 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   strlcpy(configmodule.hostname,                  // <- destination
           doc["IP_ENPHASE"] | "192.168.0.200", // <- source
           sizeof(configmodule.hostname));         // <- destination's capacity
-  strlcpy(configmodule.port,                  // <- destination
-          doc["PORT_ENPHASE"] | "80", // <- source
-          sizeof(configmodule.port));   
+  configmodule.port = doc["PORT_ENPHASE"] | 80;        
   strlcpy(configmodule.envoy,                  // <- destination
           doc["Type"] | "R", // <- source
           sizeof(configmodule.envoy));         // <- destination's capacity
@@ -68,7 +66,7 @@ Serial.print(configmodule.envoy );
 if ( String(configmodule.envoy) == "R" ) { url = String(EnvoyR) ; Serial.print("type R" ); Serial.print(url);}
 if ( String(configmodule.envoy) == "S" ) { url = String(EnvoyS) ; Serial.print("type S" ); Serial.print(url);}
 
-httpenphase.begin(String(configmodule.hostname),atoi(configmodule.port),url);
+httpenphase.begin(String(configmodule.hostname),configmodule.port,url);
 //int httpResponseCode = httpenphase.GET();
 
 /// workaround because envoy is too slow 
