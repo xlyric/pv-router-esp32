@@ -368,6 +368,9 @@ Dimmer_setup();
     NULL                    // Task handle
   );
   
+  // ----------------------------------------------------------------
+  // Task: Get Dimmer temp
+  // ----------------------------------------------------------------
 
     xTaskCreate(
     GetDImmerTemp,
@@ -455,11 +458,11 @@ void loop()
 
   if (!AP) {
     #if WIFI_ACTIVE == true
-
         #if MQTT_CLIENT == true
         if (!client.connected()) {
-        reconnect();
+          reconnect();
         }
+        client.loop();
         #endif
     #endif
   }
