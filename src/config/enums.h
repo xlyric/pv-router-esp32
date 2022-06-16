@@ -31,6 +31,7 @@ struct DisplayValues {
   String temperature;
   int Fronius_conso; 
   int Fronius_prod; 
+  int Fronius_totalconso;
   float celsius;
 };
 
@@ -71,6 +72,7 @@ struct Configwifi {
 
 struct Configmodule {
   char hostname[16];
+  char port[5];
   bool enphase_present; 
   bool Fronius_present;
   char envoy[5];
