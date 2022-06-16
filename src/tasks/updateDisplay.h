@@ -162,8 +162,9 @@ void updateDisplay(void * parameter){
         display.println(String(gDisplayValues.Fronius_conso) + "Wh");
       }
       else {
-        display.print("Grid : ");
-        display.println(String(gDisplayValues.Fronius_conso) + "W"); 
+        // 20220616 - multinet : affichage de la conso total de la maison
+        display.print("Total conso : ");
+        display.println(String(gDisplayValues.Fronius_totalconso) + "W"); 
       }
     #endif
 

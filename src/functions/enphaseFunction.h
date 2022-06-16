@@ -95,6 +95,7 @@ if(httpResponseCode == HTTP_CODE_OK) {
     else  { 
     gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]); 
     gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]) ;
+    gDisplayValues.Fronius_totalconso = int(doc["consumption"][0]["wNow"]) ;
     }
     
     String test = doc["consumption"][0];

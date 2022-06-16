@@ -31,6 +31,7 @@ struct DisplayValues {
   String temperature;
   int Fronius_conso; 
   int Fronius_prod; 
+  int Fronius_totalconso;
   float celsius;
 };
 
