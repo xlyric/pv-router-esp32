@@ -9,6 +9,8 @@
 #include <RBDdimmer.h>
 #include "HTTPClient.h"
 
+
+
 #if DIMMERLOCAL 
 
 
@@ -36,8 +38,13 @@
 
 void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
-    if ( config.dimmerlocal ) {
-     // dimmerinterne.setPower(dimmervalue);  //// en prévision 
+    if ( DIMMERLOCAL  ) {
+      if ( dimmervalue <= config.num_fuse ){
+      dimmer_hard.setPower(dimmervalue);
+      }
+      else {
+      dimmer_hard.setPower(config.num_fuse); 
+      }
     }
     else {
       #if WIFI_ACTIVE == true
@@ -151,8 +158,13 @@ gDisplayValues.change = 0;
   }
 }
 
+//// fonctions for local dimmer
+
 #if DIMMERLOCAL 
     void Dimmer_setup() {
+      /// Correction issue full power at start
+      pinMode(outputPin, OUTPUT); 
+      digitalWrite(outputPin, LOW);
       // configuration dimmer
       dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
       dimmer_hard.setPower(0); 

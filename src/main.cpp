@@ -117,17 +117,6 @@ void setup()
   }
 
 
-
-  #if DIMMERLOCAL
-    /// Correction issue full power at start
-  pinMode(outputPin, OUTPUT); 
-  digitalWrite(outputPin, LOW);
-    // configuration dimmer
-  dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
-  dimmer_hard.setPower(0); 
-  serial_println("local dimmer mode ");
-  #endif
-
   // test if Fronius is present ( and load conf )
   configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
 
