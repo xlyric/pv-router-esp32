@@ -72,6 +72,7 @@
 #define DIMMER true /// Use distant Dimmer 
 #define DIMMERLOCAL false /// Use local Dimmer 
 #define DALLAS false  //// Use local Dallas ( GPIO 25 )
+#define TRIGGER 10   /// 
 
 ///// PVROUTER false if you use Enphase Envoy S switch ( default : true )
 #define PVROUTER true 
