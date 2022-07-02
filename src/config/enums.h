@@ -33,6 +33,7 @@ struct DisplayValues {
   int Fronius_prod; 
   int Fronius_totalconso;
   float celsius;
+  int page=1; 
 };
 
 struct Config {

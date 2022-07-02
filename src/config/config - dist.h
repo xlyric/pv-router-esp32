@@ -22,6 +22,8 @@
  */
 #define SWITCH 35
 //#define SWITCHTIMER 0   // 0 : always ON  / other : time in sec 
+#define BUTTON_LEFT 0 // bouton droit ttgo
+#define NB_PAGES 5 // nombre de pages d'affichages codées
 
 /**
  * Time between 2 mesure of dimmer temp

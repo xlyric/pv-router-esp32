@@ -32,7 +32,7 @@ if ( DALLAS == false) {
     dimmerstate = httpdimmer.getString();
   }
   else {
-    Serial.print("Error code: ");
+    Serial.print("Get Dimmer temp : Error code: ");
     Serial.println(httpResponseCode);
   }
   // Free resources
@@ -54,8 +54,4 @@ vTaskDelay(GETTEMPREFRESH * 1000 / portTICK_PERIOD_MS);
 
 }
 
-
 #endif
-
-
-
