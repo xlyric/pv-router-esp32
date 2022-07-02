@@ -164,9 +164,10 @@ gDisplayValues.change = 0;
     void Dimmer_setup() {
       /// Correction issue full power at start
       pinMode(outputPin, OUTPUT); 
-      digitalWrite(outputPin, LOW);
+      //digitalWrite(outputPin, HIGH);
       // configuration dimmer
       dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
+      dimmer_hard.setState(ON);
       dimmer_hard.setPower(0); 
       serial_println("Dimmer started...");
 
