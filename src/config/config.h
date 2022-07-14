@@ -22,7 +22,9 @@
  * 
  */
 #define SWITCH 35
-
+//#define SWITCHTIMER 0   // 0 : always ON  / other : time in sec 
+#define BUTTON_LEFT 0 // bouton droit ttgo
+#define NB_PAGES 5 // nombre de pages d'affichages codées
 
 /**
  * Time between 2 mesure of dimmer temp
@@ -69,7 +71,7 @@
  */
 
 #define DIMMER true
-#define DIMMERLOCAL false
+#define DIMMERLOCAL true
 #define DALLAS false
 #define TRIGGER 10   /// 
 
@@ -77,8 +79,8 @@
 #define PVROUTER true
 
 #if DIMMERLOCAL 
-    #define outputPin  26 
-    #define zerocross  27 // for boards with CHANGEBLE input pins
+    #define outputPin  26 // PSM on board
+    #define zerocross  27 // for boards with CHANGEBLE input pins // ZC on board
 #endif
 
 #if DALLAS
