@@ -41,7 +41,9 @@ if ( DALLAS == false) {
 
 // hash temp 
 int starttemp = dimmerstate.indexOf(";"); 
-dimmerstate = dimmerstate.substring(starttemp+1); 
+dimmerstate = dimmerstate.substring(starttemp+1);
+int lasttemp = dimmerstate.indexOf(";"); 
+dimmerstate[lasttemp] = '\0'; 
 
 gDisplayValues.temperature = dimmerstate; 
  Serial.println("temperature " + dimmerstate);
