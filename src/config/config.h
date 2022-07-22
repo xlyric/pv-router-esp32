@@ -71,12 +71,12 @@
  */
 
 #define DIMMER true
-#define DIMMERLOCAL true
+#define DIMMERLOCAL false // forcé à false par multinet // ecart GIT
 #define DALLAS false
 #define TRIGGER 10   /// 
 
 ///// PVROUTER false dans le cas d'un enphase en pilote full 
-#define PVROUTER true
+#define PVROUTER false // forcé à false par multinet // ecart GIT
 
 #if DIMMERLOCAL 
     #define outputPin  26 // PSM on board

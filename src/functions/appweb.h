@@ -17,6 +17,7 @@ const char* PARAM_INPUT_dimmer = "dimmer"; /// paramettre de retour cosphi
 const char* PARAM_INPUT_server = "server"; /// paramettre de retour server domotique
 const char* PARAM_INPUT_IDX = "idx"; /// paramettre de retour idx
 const char* PARAM_INPUT_IDXdimmer = "idxdimmer"; /// paramettre de retour idx
+const char* PARAM_INPUT_IDXprod = "idxprod"; /// paramettre de retour idx
 const char* PARAM_INPUT_port = "port"; /// paramettre de retour port server domotique
 const char* PARAM_INPUT_delta = "delta"; /// paramettre retour delta
 const char* PARAM_INPUT_deltaneg = "deltaneg"; /// paramettre retour deltaneg
@@ -128,7 +129,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+ ";"  + String(config.IDXprod);
   return String(configweb);
 }
 //***********************************

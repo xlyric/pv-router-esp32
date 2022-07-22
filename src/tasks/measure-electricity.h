@@ -15,6 +15,7 @@
 
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
+extern Config config; 
 //extern EnergyMonitor emon1;
 
 
@@ -60,6 +61,9 @@ if (!AP) {
                   Pow_mqtt_send ++ ;
                   if ( Pow_mqtt_send > 10 ) {
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
+                  if ( (configmodule.enphase_present) || (configmodule.Fronius_present) ) {
+                        Mqtt_send(String(config.IDXprod), String(gDisplayValues.Fronius_prod));  
+                  }
                   Pow_mqtt_send = 0 ;
                   }
             #endif

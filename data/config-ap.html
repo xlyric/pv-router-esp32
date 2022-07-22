@@ -1,574 +1,388 @@
-
 <html lang="en">
 
 <head>
-
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>Pv router - Configuration</title>
-
-  <!-- Custom fonts for this template-->
- <link href="all.min.css" rel="stylesheet" type="text/css"> 
-  <!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">-->
-  <link href="google.css" rel="stylesheet">
-
-  <!-- Custom styles for this template-->
-  <link href="sb-admin-2.min.css" rel="stylesheet">
-
-</head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<title>Pv router - Configuration</title>
+	<!-- Custom fonts for this template-->
+	<link href="all.min.css" rel="stylesheet" type="text/css">
+	<!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">-->
+	<link href="google.css" rel="stylesheet">
+	<!-- Custom styles for this template-->
+	<link href="sb-admin-2.min.css" rel="stylesheet"> </head>
 
 <body id="page-top">
-
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
-        </div>
-        <div class="sidebar-brand-text mx-3">Pv router</div>
-      </a>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
-
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item active">
-        <a class="nav-link" href="/">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span><br>
-		<span id="version"></span></a>
-		  
-      </li>
-
-
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Interface
-      </div>
-
-      <!-- Nav Item - Pages Collapse Menu -->
-	  <li class="nav-item active">
-        <a class="nav-link" href="/">
-          <i class="fas fa-fw fa-cog"></i>
-          <span>retour conso</span></a>
-      </li>
-
- 
-	  
-
-
-  
-
-
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-
-      <!-- Main Content -->
-      <div id="content">
-
-        <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          <!-- Sidebar Toggle (Topbar) -->
-   <!--       <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+	<!-- Page Wrapper -->
+	<div id="wrapper">
+		<!-- Sidebar -->
+		<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+			<!-- Sidebar - Brand -->
+			<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+				<div class="sidebar-brand-icon rotate-n-15"> <i class="fas fa-laugh-wink"></i> </div>
+				<div class="sidebar-brand-text mx-3">Pv router</div>
+			</a>
+			<!-- Divider -->
+			<hr class="sidebar-divider my-0">
+			<!-- Nav Item - Dashboard -->
+			<li class="nav-item active">
+				<a class="nav-link" href="/"> <i class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
+					<br> <span id="version"></span></a>
+			</li>
+			<!-- Divider -->
+			<hr class="sidebar-divider">
+			<!-- Heading -->
+			<div class="sidebar-heading"> Interface </div>
+			<!-- Nav Item - Pages Collapse Menu -->
+			<li class="nav-item active">
+				<a class="nav-link" href="/"> <i class="fas fa-fw fa-cog"></i> <span>retour conso</span></a>
+			</li>
+			<!-- Divider -->
+			<hr class="sidebar-divider d-none d-md-block">
+			<!-- Sidebar Toggler (Sidebar) -->
+			<div class="text-center d-none d-md-inline">
+				<button class="rounded-circle border-0" id="sidebarToggle"></button>
+			</div>
+		</ul>
+		<!-- End of Sidebar -->
+		<!-- Content Wrapper -->
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- Main Content -->
+			<div id="content">
+				<!-- Topbar -->
+				<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+					<!-- Sidebar Toggle (Topbar) -->
+					<!--       <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
           </button>
 
 
 
           <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-
-            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-            <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
-              <!-- Dropdown - Messages -->
-              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-
-              </div>
-            </li>
-
-            <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
-              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<ul class="navbar-nav ml-auto">
+						<!-- Nav Item - Search Dropdown (Visible Only XS) -->
+						<li class="nav-item dropdown no-arrow d-sm-none">
+							<a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="fas fa-search fa-fw"></i> </a>
+							<!-- Dropdown - Messages -->
+							<div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown"> </div>
+						</li>
+						<!-- Nav Item - Alerts -->
+						<li class="nav-item dropdown no-arrow mx-1"> <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Transmission mode <i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
                 <span class="badge badge-danger badge-counter"><span id="sendmode2" onclick="sendmode(this.innerHTML);" ></span></span>
-              </a>
-              
-            </li>
-
-            
-
-            <div class="topbar-divider d-none d-sm-block"></div>
-
-        
-
-          </ul>
-
-        </nav>
-        <!-- End of Topbar -->
-
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-
-          <!-- Page Heading -->
-		  <h1 class="h3 mb-2 text-gray-800">Configuration AP mode</h1>
-          <p class="mb-4">configuration page of pv router, remember to save your config file on the flash after applyu parameters.</p>
-		  <p class="mb-4">FAQ and help  : <a href="https://pvrouteur.apper-solaire.org/shelves/fr-documentation" target="_blank"> ici </a></p>
-  
-
-          <!-- Content Row -->
-          <div class="row">
-
-<!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">State</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state"></span></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Sigma</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma"></span></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-			
-
-
-
-          </div>
-		  
-		            <!-- Content Row -->
-          <div class="row">
-
-<!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">save on flash</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="save"   ><a href="#">SAVE</a></span><br><span id="savemsg"></span></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-download fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-		 </div>
-
-
-		<div class="col-lg-6">
-
-              <div class="card position-relative">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Configuration</h6>
-				  <span id="saveform"></span>
-                </div>
-                <div class="card-body">
-                  <div class="col-lg-12">
-           
-
-              <form class="user" id="formulaire" method="post" action=""  >
-			  
-          
-       <!-- <div class="form-group">
-                  <div class="custom-control custom-checkbox small">
-                    <input type="checkbox" class="custom-control-input" id="Usemqtt">
-                    <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
-                  </div>
-        </div>
--->
-        <div class="form-group">
-            MQTT Serveur :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
-        </div>
-
-        <div class="form-group">
-          MQTT Publish :<input type="text" class="form-control form-control-user" id="publish" placeholder="%PUBLISH%">
-        </div>
-
-        <div class="form-group row">
-				  <div class="col-sm-3">
-                  IDX Power: <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
-          </div>
-				  <div class="col-sm-3">
-                  IDX Dimmer: <input type="text" class="form-control form-control-user" id="IDXDIMMER" placeholder="%IDXDIMMER%">
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <div class="col-sm-3">
-            <div class="custom-control custom-checkbox small">
-                    <input type="checkbox" class="custom-control-input" id="autonome">
-                    <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
-            </div>
-          </div>
-        </div>  
-        <div class="form-group row">
-          <div class="col-sm-6">
-                    Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
-          </div>
-        </div>
-      
-				
-
-							
-
-
-        
-				<div class="form-group row">
-				 <div class="col-sm-3">Limite Consommation (Delta) </div>
-				  <div class="col-sm-3">Limite Injection (deltaneg) </div>
-				  
-				 
-
+              </a> </li>
+						<div class="topbar-divider d-none d-sm-block"></div>
+					</ul>
+				</nav>
+				<!-- End of Topbar -->
+				<!-- Begin Page Content -->
+				<div class="container-fluid">
+					<!-- Page Heading -->
+					<h1 class="h3 mb-2 text-gray-800">Configuration AP mode</h1>
+					<p class="mb-4">configuration page of pv router, remember to save your config file on the flash after applyu parameters.</p>
+					<p class="mb-4">FAQ and help : <a href="https://pvrouteur.apper-solaire.org/shelves/fr-documentation" target="_blank"> ici </a></p>
+					<!-- Content Row -->
+					<div class="row">
+						<!-- Earnings (Monthly) Card Example -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-primary shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">State</div>
+											<div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state"></span></div>
+										</div>
+										<div class="col-auto"> <i class="fas fa-calendar fa-2x text-gray-300"></i> </div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Earnings (Monthly) Card Example -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-info shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-success text-uppercase mb-1">Sigma</div>
+											<div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma"></span></div>
+										</div>
+										<div class="col-auto"> <i class="fas fa-dollar-sign fa-2x text-gray-300"></i> </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Content Row -->
+					<div class="row">
+						<!-- Earnings (Monthly) Card Example -->
+						<div class="col-xl-3 col-md-6 mb-4">
+							<div class="card border-left-primary shadow h-100 py-2">
+								<div class="card-body">
+									<div class="row no-gutters align-items-center">
+										<div class="col mr-2">
+											<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">save on flash</div>
+											<div class="h5 mb-0 font-weight-bold text-gray-800"><span id="save"><a href="#">SAVE</a></span>
+												<br><span id="savemsg"></span></div>
+										</div>
+										<div class="col-auto"> <i class="fas fa-download fa-2x text-gray-300"></i> </div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<div class="card position-relative">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary">Configuration</h6> <span id="saveform"></span> </div>
+							<div class="card-body">
+								<div class="col-lg-12">
+									<form class="user" id="formulaire" method="post" action="">
+										<!-- <div class="form-group">
+										<div class="custom-control custom-checkbox small">
+											<input type="checkbox" class="custom-control-input" id="Usemqtt">
+											<label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
+										</div>
+										</div>-->
+										<div class="form-group"> MQTT Serveur :
+											<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%"> </div>
+										<div class="form-group"> MQTT Publish :
+											<input type="text" class="form-control form-control-user" id="publish" placeholder="%PUBLISH%"> </div>
+										<div class="form-group row">
+											<div class="col-sm-3"> IDX Power:
+												<input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%"> </div>
+											<div class="col-sm-3"> IDX Dimmer:
+												<input type="text" class="form-control form-control-user" id="IDXDIMMER" placeholder="%IDXDIMMER%"> </div>
+                      <div class="col-sm-3"> IDX Production :
+                        <input type="text" class="form-control form-control-user" id="IDXPROD" placeholder="%IDXPROD%"> </div>
+										</div>
+										<div class="form-group">
+											<div class="col-sm-3">
+												<div class="custom-control custom-checkbox small">
+													<input type="checkbox" class="custom-control-input" id="autonome">
+													<label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);">Autonome</label>
+												</div>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-6"> Dimmer IP:
+												<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%"> </div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">Limite Consommation (Delta) </div>
+											<div class="col-sm-3">Limite Injection (deltaneg) </div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<input type="text" class="form-control form-control-user" id="delta" placeholder="%DELTA%"> </div>
+											<div class="col-sm-3">
+												<input type="text" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%"> </div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">Cosphi</div>
+											<div class="col-sm-3">Facteur de correction</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%"> </div>
+											<div class="col-sm-3">
+												<input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%"> </div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">Charge connectée/W </div>
+											<div class="col-sm-3">limiteur en %</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%"> </div>
+											<div class="col-sm-3">
+												<input type="text" class="form-control form-control-user" id="Fusible" placeholder="%FUSE%"> </div>
+											<div class="col-sm-3">
+												<div class="custom-control custom-checkbox small">
+													<input type="checkbox" class="custom-control-input" id="polarity">
+													<label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);">polarité</label>
+												</div>
+											</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">Screen switch off (0: unlimited)</div>
+										</div>
+										<div class="form-group row">
+											<div class="col-sm-3">
+												<input type="text" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%"> </div>
+											<div class="col-sm-3">
+												<div class="custom-control custom-checkbox small">
+													<button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');">ON/OFF Oled</button>
+													<!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
+												</div>
+											</div>
+										</div>
+										<input type="submit" value="Apply parameters" class="btn btn-primary btn-user btn-block">
+										<hr> </form>
+									<hr> </div>
+							</div>
+						</div>
+					</div>
 				</div>
-				
-                <div class="form-group row">
-                  <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="delta" placeholder="%DELTA%">
-                  </div>
-				  <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%">
-                  </div>
-
-				  
-				  
-		        </div>
-				
-				<div class="form-group row">
-				 <div class="col-sm-3">Cosphi</div>
-				 <div class="col-sm-3">Facteur de correction</div>
-         
-				</div>
-				<div class="form-group row">
-                  <div class="col-sm-3">
-                    <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
-                  </div>
-				          <div class="col-sm-3">
-					          <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
-                  </div>
-
-        </div>
-
-      <div class="form-group row">
-        <div class="col-sm-3">Charge connectée/W </div>
-        <div class="col-sm-3">limiteur en %</div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
-        </div>
-			  <div class="col-sm-3">
-          <input type="text" class="form-control form-control-user" id="Fusible" placeholder="%FUSE%">
-        </div>
-        <div class="col-sm-3">
-          <div class="custom-control custom-checkbox small">
-            <input type="checkbox" class="custom-control-input" id="polarity">
-            <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <div class="col-sm-3">Screen switch off (0: unlimited)</div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
-        </div>
-        <div class="col-sm-3">
-          <div class="custom-control custom-checkbox small">
-            <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
-         <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
-          </div>
-        </div>
-      </div> 
-				  
-
-				
-	
-				
-				<input type="submit" value="Apply parameters" class="btn btn-primary btn-user btn-block">
-				
-                <hr>
-
-              </form>
-
-
-
-
-
-
-              <hr>
-            </div>
-          </div>
-                </div>
-              </div>
-
-            </div>
-
-
-          <!-- Content Row -->
-
-
-   			
-				
-				  <script type='text/javascript'> 
-setInterval(function refreshsend( ) {
-var xhttpstate = $.get ({
-		url : '/state',
-		type : 'GET',
-		dataType: "text",
-		success: function ( result ) { 
-		var config = result.split(";");
-		
-		document.getElementById("state").innerHTML = config[0];
-		document.getElementById("sigma").innerHTML = config[1];
-		
-		
-	
-		},
-		async: true });
-  }, 5000 ) ;
-
-
-	
-function sendmode (mode) {
-
-		$.get( "/get", { send: 	mode } )
-		.done(function(data) {
-		document.getElementById("sendmode").innerHTML = "Request sent";
-		document.getElementById("sendmode2").innerHTML = "Request sent";
-		});
-
-
-}
-
-function sendservermode (mode) {
-
-		$.get( "/get", { servermode: mode } )
-		.done(function(data) { 
-		$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
-		var config = data.split(";");
-		document.getElementById("autonome").value = config[12];
-		document.getElementById("UseDomoticz").value = config[10];
-		document.getElementById("UseJeedom").value = config[11];
-		document.getElementById("dimmerlocal").value = config[14];
-		//document.getElementById("Usemqtt").value = config[16];
-    document.getElementById("polarity").value = config[20];
-    document.getElementById("screen").value = config[21];
-		}); 
-
-
-}
-
-
-function save () {				  
-  		$.get( "/get", { save: "yes" } )
-		.done(function(data) {
-		
-		});		
-
-
-}
-
-		
-		</script >
-           
-
-
-            <script src="jquery.min.js"></script>
-<script>
-
-
-<!--- sauvegarde de la configuration --> 
-$( "#save" ).click(function() {
-
-  
-  		$.get( "/get", { save: "yes" } )
-		.done(function(data) {
-		$( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
-		});	
-		
-
-});
-
-$( "#formulaire" ).submit(function() {
-
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val() } 
-
-		
-        $.ajax({
-            type: "GET",
-            data: data,
-            url: "get",
-
-            success: function(retour){
-                $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
-                     
-            }
-        });
-  return false;
-});
-
-
-
-
-var recupconfig = $.get ({
-		url : '/config',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-        var config = recupconfig.split(";");
-    i=0;
-		document.getElementById("IDXDIMMER").value = config[i];
-    i++;
-		document.getElementById("Fusible").value = config[i];	  
-    i++;
-		document.getElementById("IDX").value = config[i];
-    i++;
-		document.getElementById("version").innerHTML = config[i];
-
-		document.getElementById("delta").value = config[5];
-		
-		document.getElementById("dimmer").value = config[7];
-		document.getElementById("cosphi").value = config[8];
-		
-		document.getElementById("autonome").checked = config[12];
-		document.getElementById("autonome").value = config[12];
-		//document.getElementById("dimmerlocal").checked = config[14];
-		//document.getElementById("dimmerlocal").value = config[14];
-    i=15;
-		document.getElementById("facteur").value = config[i];
-    i++;
-		//document.getElementById("Usemqtt").checked = config[i];
-		//document.getElementById("Usemqtt").value = config[i];
-    i++;
-    document.getElementById("mqttserver").value = config[i];
-    i++;
-    document.getElementById("publish").value = config[i];
-    i++;
-    document.getElementById("deltaneg").value = config[i];
-    i++;
-		document.getElementById("resistance").value = config[i];
-    i++;
-    document.getElementById("polarity").checked = config[i];
-		document.getElementById("polarity").value = config[i];
-    i++;
-		document.getElementById("screentime").value = config[i];	  
-
-
-
-</script>
-
-
-            
-				  
-
-				  
-                  
-
-				   
-				  
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /.container-fluid -->
-      </div>
-      <!-- End of Main Content -->
-
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2021</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
-  </div>
-  <!-- End of Page Wrapper -->
-
-
-
-
-
-  <!-- Bootstrap core JavaScript-->
-  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
-  <script src="jquery.min.js"></script>
-  <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
-  <script src="bootstrap.bundle.min.js"></script>
-
-  <!-- Core plugin JavaScript-->
-  <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
-  <script src="bootstrap.bundle.min.js"></script>
-  <!-- Custom scripts for all pages-->
-  <script src="sb-admin-2.js"></script>
- <script>
-
-
-
-
-</script>
-
+				<!-- Content Row -->
+				<script type='text/javascript'>
+				setInterval(function refreshsend() {
+					var xhttpstate = $.get({
+						url: '/state',
+						type: 'GET',
+						dataType: "text",
+						success: function(result) {
+							var config = result.split(";");
+							document.getElementById("state").innerHTML = config[0];
+							document.getElementById("sigma").innerHTML = config[1];
+						},
+						async: true
+					});
+				}, 5000);
+
+				function sendmode(mode) {
+					$.get("/get", {
+						send: mode
+					}).done(function(data) {
+						document.getElementById("sendmode").innerHTML = "Request sent";
+						document.getElementById("sendmode2").innerHTML = "Request sent";
+					});
+				}
+
+				function sendservermode(mode) {
+					$.get("/get", {
+						servermode: mode
+					}).done(function(data) {
+						$("#saveform").text("Configuration appliqué").show().fadeOut(5000);
+						var config = data.split(";");
+						document.getElementById("autonome").value = config[12];
+						document.getElementById("UseDomoticz").value = config[10];
+						document.getElementById("UseJeedom").value = config[11];
+						document.getElementById("dimmerlocal").value = config[14];
+						//document.getElementById("Usemqtt").value = config[16];
+						document.getElementById("polarity").value = config[20];
+						document.getElementById("screen").value = config[21];
+            			document.getElementById("IDXProd").value = config[23];
+					});
+				}
+
+				function save() {
+					$.get("/get", {
+						save: "yes"
+					}).done(function(data) {});
+				}
+				</script>
+				<script src="jquery.min.js"></script>
+				<script>
+				<!--- sauvegarde de la configuration --> 
+				$("#save").click(function() {
+					$.get("/get", {
+						save: "yes"
+					}).done(function(data) {
+						$("#savemsg").text("Configuration sauvegardée").show().fadeOut(5000);
+					});
+				});
+				$("#formulaire").submit(function() {
+					var data = {
+						'server': $('#hostname').val(),
+						'idx': $('#IDX').val(),
+						'idxdimmer': $('#IDXDIMMER').val(),
+            'idxprod': $('#IDXPROD').val(),
+						'cosphi': $('#cosphi').val(),
+						'fuse': $('#Fusible').val(),
+						'cycle': $('#cycle').val(),
+						'dimmer': $('#dimmer').val(),
+						'port': $('#port').val(),
+						'delta': $('#delta').val(),
+						'deltaneg': $('#deltaneg').val(),
+						'apiKey': $('#apiKey').val(),
+						'facteur': $('#facteur').val(),
+						'mqttserver': $('#mqttserver').val(),
+						'publish': $('#publish').val(),
+						'resistance': $('#resistance').val(),
+						'screentime': $('#screentime').val()
+					}
+					$.ajax({
+						type: "GET",
+						data: data,
+						url: "get",
+						success: function(retour) {
+							$("#saveform").text("Configuration appliqué").show().fadeOut(5000);
+						}
+					});
+					return false;
+				});
+				var recupconfig = $.get({
+					url: '/config',
+					type: 'GET',
+					dataType: "text",
+					async: false
+				}).responseText;
+				var config = recupconfig.split(";");
+				i = 0;
+				document.getElementById("IDXDIMMER").value = config[i];          //0
+				i++;
+				document.getElementById("Fusible").value = config[i];           //1
+				i++;
+				document.getElementById("IDX").value = config[i];               //2
+				i++;
+				document.getElementById("version").innerHTML = config[i];       //3
+				document.getElementById("delta").value = config[5];             //5
+				document.getElementById("dimmer").value = config[7];            //7  
+				document.getElementById("cosphi").value = config[8];            //8
+				document.getElementById("autonome").checked = config[12];       //12
+				document.getElementById("autonome").value = config[12];         //12 
+				//document.getElementById("dimmerlocal").checked = config[14];  //14
+				//document.getElementById("dimmerlocal").value = config[14];    //14
+				i = 15;
+				document.getElementById("facteur").value = config[i];           //15
+				i++;
+				//document.getElementById("Usemqtt").checked = config[i];       //16
+				//document.getElementById("Usemqtt").value = config[i];         //16
+				i++;
+				document.getElementById("mqttserver").value = config[i];        //17
+				i++;
+				document.getElementById("publish").value = config[i];           //18
+				i++;
+				document.getElementById("deltaneg").value = config[i];          //19
+				i++;
+				document.getElementById("resistance").value = config[i];        //20
+				i++;
+				document.getElementById("polarity").checked = config[i];        //21
+				document.getElementById("polarity").value = config[i];          //21
+				i++;
+				document.getElementById("screentime").value = config[i];        //22
+				i++;
+				document.getElementById("IDXPROD").value = config[i];           //23
+				</script>
+			</div>
+		</div>
+	</div>
+
+	<!-- End of Main Content -->
+	<!-- Footer -->
+	<footer class="sticky-footer bg-white">
+		<div class="container my-auto">
+			<div class="copyright text-center my-auto"> <span>https://github.com/xlyric/  - 2021</span> </div>
+		</div>
+	</footer>
+	<!-- End of Footer -->
+
+	<!-- End of Page Wrapper -->
+	<!-- Bootstrap core JavaScript-->
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+	<script src="jquery.min.js"></script>
+	<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
+	<script src="bootstrap.bundle.min.js"></script>
+	<!-- Core plugin JavaScript-->
+	<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
+	<script src="bootstrap.bundle.min.js"></script>
+	<!-- Custom scripts for all pages-->
+	<script src="sb-admin-2.js"></script>
+	<script>
+	</script>
 </body>
 
 </html>

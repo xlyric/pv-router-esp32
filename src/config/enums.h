@@ -59,6 +59,7 @@ struct Config {
   char mqttserver[16];
   int mqttport; 
   int IDXdimmer;
+  int IDXprod; //IDX pour le device qui comptabilise la production (enphase)
   int tmax;
   int resistance;
   bool polarity; 

@@ -30,6 +30,8 @@ extern Configmodule configmodule;
 void updateDisplay(void* parameter) {
   for (;;) {
     serial_println(F("lcd task"));
+Serial.print("IDXprod=");
+Serial.println(config.IDXprod);
     #ifdef DEVKIT1
         display.clear();
     #endif
