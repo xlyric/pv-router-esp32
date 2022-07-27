@@ -2,6 +2,13 @@
 #define CONFIG
 
 /**
+ * Language 
+ */
+#define LANG_FR true
+#define LANG_EN false
+
+
+/**
  * WiFi credentials
  */
 #define WEBSSERVER true

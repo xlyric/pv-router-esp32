@@ -13,9 +13,7 @@
 
   <!-- Custom fonts for this template-->
  <link href="all.min.css" rel="stylesheet" type="text/css"> 
-  <!--<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">-->
-  <link href="google.css" rel="stylesheet">
-
+  
   <!-- Custom styles for this template-->
   <link href="sb-admin-2.min.css" rel="stylesheet">
 
@@ -140,7 +138,7 @@
 
           <!-- Page Heading -->
 		  <h1 class="h3 mb-2 text-gray-800">Configuration AP mode</h1>
-          <p class="mb-4">configuration page of pv router, remember to save your config file on the flash after applyu parameters.</p>
+          <p class="mb-4">configuration page of pv router, remember to save your config file on the flash after apply parameters.</p>
 		  <p class="mb-4">FAQ and help  : <a href="https://pvrouteur.apper-solaire.org/shelves/fr-documentation" target="_blank"> ici </a></p>
   
 
@@ -267,9 +265,10 @@
 
         
 				<div class="form-group row">
-				 <div class="col-sm-3">Limite Consommation (Delta) </div>
-				  <div class="col-sm-3">Limite Injection (deltaneg) </div>
+				 <div class="col-sm-3 delta"><span>Limite Consommation (Delta)</span> </div>
+				  <div class="col-sm-3 deltaneg"><span>Limite Injection (deltaneg)</span> </div>
 				  
+
 				 
 
 				</div>
@@ -287,7 +286,7 @@
 		        </div>
 				
 				<div class="form-group row">
-				 <div class="col-sm-3">Cosphi</div>
+				<div class="col-sm-3 cosphi" ><span>Cosphi</span></div>
 				 <div class="col-sm-3">Facteur de correction</div>
          
 				</div>
@@ -303,7 +302,7 @@
 
       <div class="form-group row">
         <div class="col-sm-3">Charge connectée/W </div>
-        <div class="col-sm-3">limiteur en %</div>
+        <div class="col-sm-3 limite"><span>limiteur en %</span></div>
       </div>
       <div class="form-group row">
         <div class="col-sm-3">
@@ -315,7 +314,7 @@
         <div class="col-sm-3">
           <div class="custom-control custom-checkbox small">
             <input type="checkbox" class="custom-control-input" id="polarity">
-            <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
+            <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >Polarité</label>
           </div>
         </div>
       </div>
@@ -428,11 +427,48 @@ function save () {
            
 
 
-            <script src="jquery.min.js"></script>
+<script src="jquery.min.js"></script>
+
+<!-- de la doc -->
+  <script>
+          $( "div.delta" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "La puissance du dimmer baissera au dessus de cette valeur" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "Limite Consommation (Delta)" );
+          });
+
+          $( "div.deltaneg" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "La puissance du dimmer augmentara en dessous de cette valeur" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "Limite Injection (deltaneg)" );
+          });
+
+          $( "div.limite" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "Somme de la puissance souhaité sur la totalité des dimmers en %, peut donc dépasser 100%" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "limiteur en %" );
+          });
+          
+          $( "div.cosphi" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "Valeur par defaut 5" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "Cosphi" );
+          });
+          
+  </script>
+
 <script>
 
 
-<!--- sauvegarde de la configuration --> 
+<!-- sauvegarde de la configuration --> 
 $( "#save" ).click(function() {
 
   
@@ -552,13 +588,13 @@ var recupconfig = $.get ({
 
 
   <!-- Bootstrap core JavaScript-->
-  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+
   <script src="jquery.min.js"></script>
-  <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
+
   <script src="bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>-->
+
   <script src="bootstrap.bundle.min.js"></script>
   <!-- Custom scripts for all pages-->
   <script src="sb-admin-2.js"></script>

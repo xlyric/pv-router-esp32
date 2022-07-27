@@ -1,4 +1,5 @@
 
+#ifdef LANG_EN
 
 #define GRID "Grid"
 #define INJECTION "Injection"
@@ -16,3 +17,26 @@
 
 #define OLEDPOW "Power (W)"
 #define OLEDNOSIN "No-Sin"
+
+#endif
+
+#ifdef LANG_FR
+
+#define GRID "Réseau"
+#define INJECTION "Injection"
+#define STABLE "Stable"
+
+#define BOOTING "Demarrage"
+
+#define WIFINO "Wifi non configuré"
+#define WIFICONNECT "Connexion à  "
+
+#define OLEDSTART "Démarrage Oled"
+
+#define SPIFFSNO "Fichier SPIFFS absent, Merci de les uploader"
+#define CONFNO "Fichier de configuration absent"
+
+#define OLEDPOW "Power (W)"
+#define OLEDNOSIN "No-Sin"
+
+#endif

@@ -266,8 +266,8 @@
 
         
 				<div class="form-group row">
-				 <div class="col-sm-3">Limite Consommation (Delta) </div>
-				  <div class="col-sm-3">Limite Injection (deltaneg) </div>
+				 <div class="col-sm-3 delta"><span>Limite Consommation (Delta)</span> </div>
+				  <div class="col-sm-3 deltaneg"><span>Limite Injection (deltaneg)</span> </div>
 				  
 				 
 
@@ -286,7 +286,7 @@
 		        </div>
 				
 				<div class="form-group row">
-				 <div class="col-sm-3">Cosphi</div>
+				 <div class="col-sm-3 cosphi" ><span>Cosphi</span></div>
 				 <div class="col-sm-3">Facteur de correction</div>
          
 				</div>
@@ -302,7 +302,7 @@
 
       <div class="form-group row">
         <div class="col-sm-3">Charge connectée/W </div>
-        <div class="col-sm-3">limiteur en %</div>
+        <div class="col-sm-3 limite"><span>Limiteur en %</span></div>
       </div>
       <div class="form-group row">
         <div class="col-sm-3">
@@ -428,6 +428,43 @@ function save () {
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
+<!-- de la doc -->
+  <script>
+          $( "div.delta" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "La puissance du dimmer baissera au dessus de cette valeur" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "Limite Consommation (Delta)" );
+          });
+
+          $( "div.deltaneg" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "La puissance du dimmer augmentara en dessous de cette valeur" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "Limite Injection (deltaneg)" );
+          });
+
+          $( "div.limite" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "Somme de la puissance souhaité sur la totalité des dimmers en %, peut donc dépasser 100%" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "limiteur en %" );
+          });
+
+          $( "div.cosphi" )
+          .mouseover(function() {
+            $( this ).find( "span" ).text( "Valeur par defaut 5" );
+          })
+          .mouseout(function() {
+            $( this ).find( "span" ).text( "Cosphi" );
+          });
+          
+  </script>
+
 <script>
 
 
@@ -534,7 +571,7 @@ var recupconfig = $.get ({
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2021</span>
+            <span>https://github.com/xlyric/  - 2022</span>
           </div>
         </div>
       </footer>
