@@ -67,7 +67,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.deltaneg = doc["deltaneg"] | -100; 
   config.cosphi = doc["cosphi"] | 23; 
   config.readtime = doc["readtime"] | 555;
-  config.cycle = doc["cycle"] | 25;
+  config.cycle = doc["cycle"] | 72;
   config.tmax = doc["tmax"] | 65;
   config.resistance = doc["resistance"] | 1000;
   config.sending = doc["sending"] | true;
