@@ -71,6 +71,11 @@ struct Configwifi {
   char passwd[64];
 };
 
+struct Mqtt {
+  char username[50];
+  char password[50];
+};
+
 struct Configmodule {
   char hostname[16];
   char port[5];

@@ -13,6 +13,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 extern Config config;
 extern DisplayValues gDisplayValues;
+extern Mqtt configmqtt;
 
 /***
  *  reconnexion au serveur MQTT
@@ -24,7 +25,8 @@ void reconnect() {
     Serial.println("-----------------------------");
     Serial.println("Attempting MQTT reconnection...");
     // Attempt to connect
-    if (client.connect("pvrouter",MQTT_USER, MQTT_PASSWORD )) {
+
+    if (client.connect("pvrouter",configmqtt.username, configmqtt.password )) {
       Serial.println("MQTT reconnect : connected");
     } else {
       Serial.print("MQTT reconnect : failed, retcode="); 
@@ -95,9 +97,11 @@ void Mqtt_init() {
   client.setServer(config.mqttserver, config.mqttport);
   client.setCallback(callback);
   Serial.print("MQTT_init : connexion...");
-  if (client.connect("pvrouter", MQTT_USER, MQTT_PASSWORD)) {
+
+  if (client.connect("pvrouter",configmqtt.username,configmqtt.password)) {
     Serial.println("MQTT_init : connecte a MQTT... Initialisation dimmer à 0");
-    Mqtt_send(String(config.IDXdimmer),"0");   
+    Mqtt_send(String(config.IDXdimmer),"0");  
+    
   }
   else {
     Serial.println("MQTT_init : /! ECHEC !/ ");

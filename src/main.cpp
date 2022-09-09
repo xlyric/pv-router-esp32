@@ -77,6 +77,7 @@ Config config;
 Configwifi configwifi; 
 Configmodule configmodule; 
 
+Mqtt configmqtt;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
@@ -116,7 +117,7 @@ void setup()
     AP=false; 
   }
 
-
+   loadmqtt(mqtt_conf ,configmqtt);
   // test if Fronius is present ( and load conf )
   configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
 
