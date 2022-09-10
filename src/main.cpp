@@ -154,10 +154,25 @@ else {
       if ( strcmp(WIFI_PASSWORD,"xxx") == 0 ) { WiFi.begin(configwifi.SID, configwifi.passwd); }
       else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
       
-      while (WiFi.status() != WL_CONNECTED) {
+      int timeoutwifi=0;
+      while ( WiFi.status() != WL_CONNECTED ) {
         delay(500);
         Serial.print(".");
+        timeoutwifi++; 
+        if (timeoutwifi > 10 ) {break;}
       }
+
+        //// timeout --> AP MODE 
+        if ( timeoutwifi > 10 ) {
+              WiFi.disconnect(); 
+              AP=true; 
+              serial_println("timeout, go to AP mode ");
+              gDisplayValues.currentState = UP;
+              gDisplayValues.IP = String(WiFi.softAPIP().toString());
+              APConnect(); 
+              btStop();
+        }
+
       serial_println("WiFi connected");
       serial_println("IP address: ");
       serial_println(WiFi.localIP());

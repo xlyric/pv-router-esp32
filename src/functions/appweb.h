@@ -6,6 +6,7 @@
 String configweb; 
 extern DisplayValues gDisplayValues;
 extern Config config; 
+extern Configwifi configwifi; 
 int middleoscillo = 1800;
 
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
@@ -138,6 +139,12 @@ String getchart() {
       return String(retour);
 }
 //***********************************
+//***********************************
+String getwifi() {
+
+   String retour =String(configwifi.SID) + ";" + String(configwifi.passwd)  ;
+  return String(retour) ;
+}
 
 String getdebug() {
   configweb = "";

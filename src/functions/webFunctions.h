@@ -8,6 +8,7 @@
 
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
+extern Configwifi configwifi; 
 
 //***********************************
 //************* Gestion du serveur WEB
@@ -152,7 +153,7 @@ if (!configmodule.pilote) {
 server.on("/config.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/config.json", "application/json");
   });
-
+  
 server.on("/doc.txt", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/doc.txt", "text/plain");
   });
@@ -167,6 +168,15 @@ server.on("/puissance", HTTP_GET, [](AsyncWebServerRequest *request){
   });
 
 
+//// wifi
+
+server.on("/wifi.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/wifi.html", "text/html");
+  });
+
+server.on("/getwifi", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+  request->send(200, "text/plain",  getwifi().c_str()); 
+});
 
 server.onNotFound(notFound);
 
@@ -204,6 +214,9 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_tmax)) { config.tmax = request->getParam(PARAM_INPUT_tmax)->value().toInt();}
    if (request->hasParam("resistance")) { config.resistance = request->getParam("resistance")->value().toInt();}
    if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt();}
+   if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50);  }
+   if (request->hasParam("password")) { request->getParam("password")->value().toCharArray(configwifi.passwd,50); 
+   saveWifi(wifi_conf, configwifi);}
    //reset
    if (request->hasParam(PARAM_INPUT_reset)) {Serial.println("Resetting ESP");  ESP.restart();}
       
