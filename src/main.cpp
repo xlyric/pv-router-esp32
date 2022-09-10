@@ -185,9 +185,9 @@ else {
         //digitalWrite(TFT_BL, HIGH);
         display.setRotation(1);
         
-        #ifdef FLIP
+        if (FLIP) {
         display.setRotation(3);
-        #endif 
+        }
         
         //display.begin();               // Initialise the display
         display.fillScreen(TFT_BLACK); // Black screen fill
