@@ -29,7 +29,7 @@
                 "\"name\":\"" DEVICE_NAME "\","
                 "\"sw_version\":\"2.0\","
                 "\"model\":\"HW V2\","
-                "\"manufacturer\":\"Xavier Decuyper\","
+                "\"manufacturer\":\"Cyril Poissonnier\","
                 "\"identifiers\":[\"" DEVICE_NAME "\"]"
             "}"
         "}";

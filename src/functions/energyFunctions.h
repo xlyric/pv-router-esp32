@@ -137,17 +137,18 @@ int middle_debug ;
 
 void injection2(){ 
 
-int temp_read , temp_porteuse ;
+int temp_read ; 
+// int temp_porteuse ;
   double sigma_read = 0 ; 
   //String porteuse = "" ;
-  double zero =0; 
+  //double zero =0; 
   double positive = 0 ; 
-  int zero_count = 0; 
+  //int zero_count = 0; 
   int loop = 0;  int inter=0;
   
   int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
   unsigned long startMillis,stopMillis;
-  int injection = 0; 
+  //int injection = 0; 
  // int nbmesure=72 ;  /// nombre de mesure par ondulation
  // int nombre_cycle = 4 ;  
  // int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures

@@ -150,9 +150,9 @@ void saveConfiguration(const char *filename, const Config &config) {
 
 
 
-
+///////////////////////////////////
 ////////config MQTT
-
+///////////////////////////////////
 const char *mqtt_conf = "/mqtt.json";
 extern Mqtt configmqtt;
 
@@ -187,10 +187,38 @@ bool loadmqtt(const char *filename, Mqtt &configmqtt) {
 return true;    
 }
 
+void savemqtt(const char *filename, const Mqtt &configmqtt) {
+  
+  // Open file for writing
+   File configFile = SPIFFS.open(mqtt_conf, "w");
+  if (!configFile) {
+    Serial.println(F("Failed to open config file for writing in function Save configuration"));
+    return;
+  } 
+
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/assistant to compute the capacity.
+  StaticJsonDocument<1024> doc;
+
+  // Set the values in the document
+  doc["MQTT_USER"] = configmqtt.username;
+  doc["MQTT_PASSWORD"] = configmqtt.password;
+  
+  // Serialize JSON to file
+  if (serializeJson(doc, configFile) == 0) {
+    Serial.println(F("Failed to write to file in function Save configuration "));
+    
+  }
+
+  // Close the file
+  configFile.close();
+}
 
 
+///////////////////////////////////
 ///// config Wifi 
-
+///////////////////////////////////
 const char *wifi_conf = "/wifi.json";
 extern Configwifi configwifi; 
 

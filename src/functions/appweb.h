@@ -7,6 +7,7 @@ String configweb;
 extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Configwifi configwifi; 
+extern Mqtt configmqtt; 
 int middleoscillo = 1800;
 
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
@@ -143,6 +144,12 @@ String getchart() {
 String getwifi() {
 
    String retour =String(configwifi.SID) + ";" + String(configwifi.passwd)  ;
+  return String(retour) ;
+}
+
+String getmqtt() {
+
+   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password)  ;
   return String(retour) ;
 }
 

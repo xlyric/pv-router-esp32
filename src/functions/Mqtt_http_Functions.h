@@ -42,7 +42,7 @@ void reconnect() {
 *    Fonction d'envoie info MQTT vers domoticz
 */
 
-void Mqtt_send ( String idx, String value, String otherpub =NULL ) {
+void Mqtt_send ( String idx, String value, String otherpub = "" ) {
   
   String nvalue = "0" ; 
   
@@ -50,17 +50,18 @@ void Mqtt_send ( String idx, String value, String otherpub =NULL ) {
       nvalue = "2" ; 
       }
   
-  if (otherpub == NULL ) {
-    String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
+  String message; 
+  if (otherpub == "" ) {
+    message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
   }
 
   String jdompub = String(config.Publish) + "/"+idx ;
-  if (otherpub) {jdompub += "/"+otherpub; }
+  if (otherpub != "" ) {jdompub += "/"+otherpub; }
   
 
 
   client.loop();
-    if (otherpub == NULL ) {
+    if (otherpub == "" ) {
       if (client.publish(config.Publish, String(message).c_str(), true)) {
         Serial.println("MQTT_send : MQTT sent to domoticz");
       }

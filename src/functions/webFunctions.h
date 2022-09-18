@@ -178,6 +178,16 @@ server.on("/getwifi", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(200, "text/plain",  getwifi().c_str()); 
 });
 
+///// MQTT
+
+server.on("/mqtt.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/mqtt.html", "text/html");
+  });
+
+server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+  request->send(200, "text/plain",  getmqtt().c_str()); 
+});
+
 server.onNotFound(notFound);
 
 /////////////////////////
@@ -200,8 +210,6 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 	 if (request->hasParam(PARAM_INPUT_4)) { config.cosphi = request->getParam(PARAM_INPUT_4)->value().toInt();  }
    if (request->hasParam(PARAM_INPUT_dimmer)) { request->getParam(PARAM_INPUT_dimmer)->value().toCharArray(config.dimmer,15);  }
    if (request->hasParam(PARAM_INPUT_server)) { request->getParam(PARAM_INPUT_server)->value().toCharArray(config.hostname,15);  }
-   if (request->hasParam(PARAM_INPUT_mqttserver)) { request->getParam(PARAM_INPUT_mqttserver)->value().toCharArray(config.mqttserver,15);  }
-   if (request->hasParam(PARAM_INPUT_publish)) { request->getParam(PARAM_INPUT_publish)->value().toCharArray(config.Publish,100);  }
    if (request->hasParam(PARAM_INPUT_delta)) { config.delta = request->getParam(PARAM_INPUT_delta)->value().toInt(); }
    if (request->hasParam(PARAM_INPUT_deltaneg)) { config.deltaneg = request->getParam(PARAM_INPUT_deltaneg)->value().toInt(); }
    if (request->hasParam(PARAM_INPUT_fuse)) { config.num_fuse = request->getParam(PARAM_INPUT_fuse)->value().toInt(); }
@@ -214,9 +222,22 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_tmax)) { config.tmax = request->getParam(PARAM_INPUT_tmax)->value().toInt();}
    if (request->hasParam("resistance")) { config.resistance = request->getParam("resistance")->value().toInt();}
    if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt();}
+   
+   /// @brief  wifi
    if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50);  }
-   if (request->hasParam("password")) { request->getParam("password")->value().toCharArray(configwifi.passwd,50); 
+   if (request->hasParam("password")) { request->getParam("password")->value().toCharArray(configwifi.passwd,50);    
    saveWifi(wifi_conf, configwifi);}
+
+   //// MQTT
+   if (request->hasParam(PARAM_INPUT_mqttserver)) { request->getParam(PARAM_INPUT_mqttserver)->value().toCharArray(config.mqttserver,15);  }
+   if (request->hasParam(PARAM_INPUT_publish)) { request->getParam(PARAM_INPUT_publish)->value().toCharArray(config.Publish,100); 
+      saveConfiguration(filename_conf, config);   }
+   if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,15);  }
+   if (request->hasParam("mqttpassword")) { request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,15); 
+      savemqtt(mqtt_conf, configmqtt); }
+
+
+
    //reset
    if (request->hasParam(PARAM_INPUT_reset)) {Serial.println("Resetting ESP");  ESP.restart();}
       
