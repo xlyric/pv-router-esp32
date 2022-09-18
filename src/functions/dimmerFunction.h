@@ -132,20 +132,21 @@ gDisplayValues.change = 0;
       }
     } 
 
-  if  (gDisplayValues.change == 1 )  {
+
+  if  (gDisplayValues.change == 1 && !gDisplayValues.security)  {
     dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
 
   #if DIMMERLOCAL 
-    if (security) {
+    if (gDisplayValues.security) {
        if ( gDisplayValues.celsius <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
-       security = false ; // retrait securité si inférieur au trigger
+       gDisplayValues.security = false ; // retrait securité si inférieur au trigger
        gDisplayValues.dimmer = 0 ; 
       }
     }
     else { 
       if ( gDisplayValues.celsius >= config.tmax ) {
         dimmer_hard.setPower(0); 
-        security = true ;   /// mise en place sécurité thermique
+        gDisplayValues.security = true ;   /// mise en place sécurité thermique
       }
       else {
         dimmer_hard.setPower(gDisplayValues.dimmer);

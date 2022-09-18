@@ -42,7 +42,7 @@ void reconnect() {
 *    Fonction d'envoie info MQTT vers domoticz
 */
 
-void Mqtt_send ( String idx, String value ) {
+void Mqtt_send ( String idx, String value, String otherpub =NULL ) {
   
   String nvalue = "0" ; 
   
@@ -50,16 +50,25 @@ void Mqtt_send ( String idx, String value ) {
       nvalue = "2" ; 
       }
   
-  String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
+  if (otherpub == NULL ) {
+    String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
+  }
+
   String jdompub = String(config.Publish) + "/"+idx ;
+  if (otherpub) {jdompub += "/"+otherpub; }
+  
+
 
   client.loop();
-  if (client.publish(config.Publish, String(message).c_str(), true)) {
-    Serial.println("MQTT_send : MQTT sent to domoticz");
-  }
-  else {
-    Serial.println("MQTT_send : error publish to domoticz ");
-  }
+    if (otherpub == NULL ) {
+      if (client.publish(config.Publish, String(message).c_str(), true)) {
+        Serial.println("MQTT_send : MQTT sent to domoticz");
+      }
+
+      else {
+        Serial.println("MQTT_send : error publish to domoticz ");
+      }
+    }
   if (client.publish(jdompub.c_str() , value.c_str(), true)){
     Serial.println("MQTT_send : MQTT sent to Jeedom ");
   }

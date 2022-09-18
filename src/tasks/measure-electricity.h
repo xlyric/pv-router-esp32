@@ -60,6 +60,18 @@ if (!AP) {
                   Pow_mqtt_send ++ ;
                   if ( Pow_mqtt_send > 10 ) {
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
+                  
+                  // send if injection
+                  if (gDisplayValues.watt < 0 ){
+                  Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
+                  Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  }
+                  else {
+                  Mqtt_send(String(config.IDX), String("0"),"injection");
+                  Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                  }
+
+
                   Pow_mqtt_send = 0 ;
                   }
             #endif
