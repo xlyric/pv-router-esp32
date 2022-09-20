@@ -22,6 +22,11 @@
     int dimmer_security_count = 0; 
     bool security=false;
 
+  void dimmer_on();
+  void dimmer_off();
+  String dimmergetState(); 
+
+
 #endif
 
 
@@ -139,20 +144,42 @@ gDisplayValues.change = 0;
   #endif
 
   #if DIMMERLOCAL 
+        /* logs */ 
+       /* int dallas_int = gDisplayValues.temperature.toInt(); 
+        Serial.print("dallas int ");
+        Serial.println(dallas_int);
+        //Serial.println(gDisplayValues.temperature);
+        Serial.print("dimmer at ");
+        Serial.println(gDisplayValues.dimmer);
+        //Serial.print("config.tmax ");
+        //Serial.println(config.tmax);
+        Serial.print("security:");
+        Serial.println(security);*/
+
     if (security) {
-       if ( gDisplayValues.celsius <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
+       if ( dallas_int <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
        security = false ; // retrait securité si inférieur au trigger
        gDisplayValues.dimmer = 0 ; 
        dimmer_hard.setPower(gDisplayValues.dimmer);
+       Serial.println("security on -> off");
+       dimmer_on();
+      }
+      else {
+        gDisplayValues.dimmer = 0 ;
+        dimmer_hard.setPower(0); 
       }
     }
     else { 
-      if ( gDisplayValues.celsius >= config.tmax ) {
+
+      if ( config.tmax < dallas_int ) {
         dimmer_hard.setPower(0); 
+        gDisplayValues.dimmer = 0 ;
         security = true ;   /// mise en place sécurité thermique
+        Serial.println("security off -> on ");
+        dimmer_off();
       }
       else {
-        dimmer_hard.setPower(gDisplayValues.dimmer);
+        if (!security){  dimmer_hard.setPower(gDisplayValues.dimmer); }
       }
     }
 
@@ -183,6 +210,7 @@ gDisplayValues.change = 0;
       if (dimmer_hard.getState()==0) {
         dimmer_hard.setState(ON);
         delay(50);
+        Serial.println("dimmer on");
         }
     }
 
@@ -192,6 +220,7 @@ gDisplayValues.change = 0;
         dimmer_hard.setPower(0);
         dimmer_hard.setState(OFF);
         delay(50);
+        Serial.println("dimmer off");
         }
     }
 
@@ -200,6 +229,7 @@ gDisplayValues.change = 0;
       int pow=dimmer_hard.getPower(); 
       state = String(pow) + ";" + String(gDisplayValues.celsius) ; 
       return String(state);
+      
     }
 
 #endif
