@@ -145,8 +145,8 @@ gDisplayValues.change = 0;
 
   #if DIMMERLOCAL 
         /* logs */ 
-       /* int dallas_int = gDisplayValues.temperature.toInt(); 
-        Serial.print("dallas int ");
+        
+       /* Serial.print("dallas int ");
         Serial.println(dallas_int);
         //Serial.println(gDisplayValues.temperature);
         Serial.print("dimmer at ");
@@ -155,7 +155,8 @@ gDisplayValues.change = 0;
         //Serial.println(config.tmax);
         Serial.print("security:");
         Serial.println(security);*/
-
+        
+    int dallas_int = gDisplayValues.temperature.toInt(); 
     if (security) {
        if ( dallas_int <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
        security = false ; // retrait securité si inférieur au trigger
