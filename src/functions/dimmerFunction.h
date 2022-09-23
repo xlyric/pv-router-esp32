@@ -43,7 +43,7 @@
 
 void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
-    if ( DIMMERLOCAL  ) {
+  /*  if ( DIMMERLOCAL  ) {
       if ( dimmervalue <= config.num_fuse ){
       dimmer_hard.setPower(dimmervalue);
       }
@@ -51,7 +51,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
       dimmer_hard.setPower(config.num_fuse); 
       }
     }
-    else {
+    else {*/
       #if WIFI_ACTIVE == true
       String baseurl; 
         baseurl = "/?POWER=" + String(dimmervalue) ; 
@@ -60,16 +60,16 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         http.end(); 
         Serial.println("Power command sent "+ String(dimmervalue));
 
-  if (!AP) {
-      #if MQTT_CLIENT == true 
-      /// A vérifier que c'est necessaire ( envoie double ? )
-        Mqtt_send(String(dimmerIDX), String(dimmervalue));  
-      #endif
-  }
+        if (!AP) {
+            #if MQTT_CLIENT == true 
+            /// A vérifier que c'est necessaire ( envoie double ? )
+              Mqtt_send(String(dimmerIDX), String(dimmervalue));  
+            #endif
+        }
       
       delay (1500); // delay de transmission réseau dimmer et application de la charge }
-    }
-    #endif
+    //}
+      #endif
 }
 
 
@@ -139,9 +139,7 @@ gDisplayValues.change = 0;
 
   
   if  (gDisplayValues.change  )  {
-  #if !DIMMERLOCAL
-    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
-  #endif
+
 
   #if DIMMERLOCAL 
         /* logs */ 
@@ -185,6 +183,9 @@ gDisplayValues.change = 0;
     }
 
   #endif
+
+ 
+    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
 
   
   }
