@@ -65,7 +65,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.delta = doc["delta"] | 50; 
   config.num_fuse = doc["fuse"] | 70;
   config.deltaneg = doc["deltaneg"] | -100; 
-  config.cosphi = doc["cosphi"] | 23; 
+  config.cosphi = doc["cosphi"] | 5; 
   config.readtime = doc["readtime"] | 555;
   config.cycle = doc["cycle"] | 72;
   config.tmax = doc["tmax"] | 65;
