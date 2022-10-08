@@ -22,7 +22,7 @@
 
 #ifdef LANG_FR
 
-#define GRID "Réseau"
+#define GRID "Reseau"
 #define INJECTION "Injection"
 #define STABLE "Stable"
 
