@@ -9,6 +9,7 @@
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
 extern Configwifi configwifi; 
+extern Logs logging;
 
 //***********************************
 //************* Gestion du serveur WEB
@@ -42,7 +43,7 @@ if (AP) {
     if(SPIFFS.exists("/index.html")){
      request->send(SPIFFS, "/index-ap.html", "text/html");
     }
-    else {request->send_P(200, "text/plain", SPIFFSNO ); }
+    else {request->send_P(200, "text/html", "<html><body>Filesystem is not present. <a href='https://ota.apper-solaire.org/firmware/spiffs-ttgo.bin'>download it here</a> <br>and after  <a href='/update'>upload on the ESP here </a></body></html>" ); }
   });
 
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -187,6 +188,20 @@ server.on("/mqtt.html", HTTP_GET, [](AsyncWebServerRequest *request){
 server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(200, "text/plain",  getmqtt().c_str()); 
 });
+
+
+//// logs 
+
+server.on("/log.html", HTTP_ANY, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/log.html", "text/html");
+  });
+
+server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", getlogs().c_str());
+    logging.init="197}11}1";
+    logging.start = "";
+  });
+
 
 server.onNotFound(notFound);
 

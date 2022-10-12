@@ -37,7 +37,7 @@ void loadConfiguration(const char *filename, Config &config) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read file, using default configuration in function loadConfiguration"));
- 
+    logging.init += "Failed to read file, using default configuration in function loadConfiguration\r\n";
 
   }
 
@@ -88,7 +88,7 @@ void loadConfiguration(const char *filename, Config &config) {
           sizeof(config.Publish));         // <- destination's mqtt
   config.ScreenTime = doc["screentime"] | 0 ; // timer to switch of screen
   configFile.close();
-
+  logging.start += "config file loaded\r\n";
 }
 
 //***********************************
@@ -101,7 +101,7 @@ void saveConfiguration(const char *filename, const Config &config) {
    File configFile = SPIFFS.open(filename_conf, "w");
   if (!configFile) {
     Serial.println(F("Failed to open config file for writing in function Save configuration"));
-    
+    logging.init += "Failed to open config file for writing in function Save configuration\r\n";
     return;
   } 
 
@@ -169,6 +169,7 @@ bool loadmqtt(const char *filename, Mqtt &configmqtt) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read MQTT config "));
+    logging.init += "Failed to read MQTT config\r\n";
     return false;
   }
 
@@ -183,7 +184,7 @@ bool loadmqtt(const char *filename, Mqtt &configmqtt) {
           doc["MQTT_PASSWORD"] | "", // <- source
           sizeof(configmqtt.password));         // <- destination's capacity
   configFile.close();
-
+logging.init += "MQTT config loaded\r\n"; 
 return true;    
 }
 
@@ -193,6 +194,7 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
    File configFile = SPIFFS.open(mqtt_conf, "w");
   if (!configFile) {
     Serial.println(F("Failed to open config file for writing in function Save configuration"));
+    logging.init += "Failed to open config file for writing in function Save configuration\r\n";
     return;
   } 
 
@@ -208,6 +210,7 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
+    logging.init += "Failed to write to file in function Save configuration\r\n";
     
   }
 
@@ -221,6 +224,7 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
 ///////////////////////////////////
 const char *wifi_conf = "/wifi.json";
 extern Configwifi configwifi; 
+extern Logs logging;
 
 bool loadwifi(const char *filename, Configwifi &configwifi) {
   // Open file for reading
@@ -235,6 +239,8 @@ bool loadwifi(const char *filename, Configwifi &configwifi) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read wifi config, AP mode activated "));
+    logging.init += "Failed to read wifi config, AP mode activated\r\n";
+
     return false;
   }
   
@@ -248,7 +254,7 @@ bool loadwifi(const char *filename, Configwifi &configwifi) {
           doc["passwd"] | "xxx", // <- source
           sizeof(configwifi.passwd));         // <- destination's capacity
   configFile.close();
-
+ logging.init += "Wifi config loaded\r\n"; 
 return true;    
 }
 
@@ -258,6 +264,7 @@ void saveWifi(const char *filenamewifi, const Configwifi &configwifi) {
    File configFile = SPIFFS.open(wifi_conf, "w");
   if (!configFile) {
     Serial.println(F("Failed to open config file for writing in function Save configuration"));
+    logging.init += "Failed to open config file for writing in function Save configuration\r\n";
     return;
   } 
 
@@ -273,6 +280,7 @@ void saveWifi(const char *filenamewifi, const Configwifi &configwifi) {
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
+    logging.init += "Failed to write to file in function Save configuration\r\n";
     
   }
 

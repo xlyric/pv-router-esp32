@@ -85,6 +85,11 @@ struct Configmodule {
   bool pilote; 
 };
 
+struct Logs {
+  String init;
+  String start;
+};
+
 #if DEBUG == true
   #define serial_print(x)  Serial.print (x)
   #define serial_println(x)  Serial.println (x)

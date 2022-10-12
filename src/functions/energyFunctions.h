@@ -131,7 +131,8 @@ const int nombre_cycle  = 4 ; /// nombre de cycle pour affiner la mesure
 const int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
 int tableau[freqmesure];
 int porteuse[freqmesure];
-int middle_debug ;  
+int middle_debug ; 
+float constante_voltage = 4.33; 
 
 
 
@@ -140,6 +141,7 @@ void injection2(){
 int temp_read ; 
 // int temp_porteuse ;
   double sigma_read = 0 ; 
+  //double voltage = 0; // test de calcul de voltage
   //String porteuse = "" ;
   //double zero =0; 
   double positive = 0 ; 
@@ -163,6 +165,7 @@ while (loop < freqmesure ) {
     tableau[loop] =  analogRead(ADC_INPUT);
     porteuse[loop] =  analogRead(ADC_PORTEUSE);
     sigma_read += tableau[loop]; 
+    // voltage += porteuse[loop]; // test de calcul de voltage
     
 /*    if (temp_porteuse == 0 ) { // 2eme 1/2 mesure  10ms 
       zero += temp_read * temp_read ; 
@@ -199,14 +202,23 @@ stopMillis = micros();
 // début des calculs 
 
 sigma_read = ( sigma_read / ( loop +1 ) ) ;  /// calcul du sigma ( la valeur moyenne ), ne marche bien que dans le cas d'une ondulation symétrique. A voir si nouvelle méthode de calcul. ( valeur théorique : 2047 -> vcc/2)
+// voltage = ( voltage / (loop + 1 )) ; // test de calcul de voltage
 int start=0; 
 
-//Serial.println("tableau");
+// int voltage_read = int(voltage/constante_voltage) ; // test de calcul de voltage ... pas de réel variation 
+
+//// test de calcul de voltage
+/*Serial.println("voltage");
+Serial.println(voltage);
+Serial.println(voltage_read);*/
+
+
 
 for(int i = 0; i < loop; i++)
 {
   if ( start == 0 ) {  if ( porteuse[i] > 0 ) { 
     start = i ; 
+     //if ( voltage_read < porteuse[i] ) {voltage_read = porteuse[i] ; }
     //Serial.println(String(tableau[i])); }
     }   
   //else { 
@@ -214,6 +226,7 @@ for(int i = 0; i < loop; i++)
   } 
 
 }
+///Serial.println (voltage_read);
 
 int phi = config.cosphi ;
 if (phi > start ) { phi = start ; }
@@ -234,7 +247,14 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
   }
 }
 
+
+//Serial.println(int(positive/10000*voltage_read)) ;// test de calcul de voltage
+
+
+
 positive = positive / ( FACTEURPUISSANCE * nombre_cycle ) ; 
+
+
 
 
 bool nolog =false; 

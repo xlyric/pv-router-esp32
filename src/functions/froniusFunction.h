@@ -15,6 +15,7 @@ HTTPClient httpfronius;
 
 const char *fronius_conf = "/fronius.json";
 extern Configmodule configmodule; 
+extern Logs logging;
 
 void Fronius_get(void);
 
@@ -23,6 +24,7 @@ bool loadfronius(const char *filename, Configmodule &configmodule) {
   File configFile = SPIFFS.open(fronius_conf, "r");
   if (!configFile) {
     Serial.println(F("No Fronius used"));
+    logging.init += "--> No Fronius used\r\n";
       return false;
     }
 
@@ -35,6 +37,7 @@ bool loadfronius(const char *filename, Configmodule &configmodule) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read Fronius config"));
+    logging.init += "--> Fronius not present\r\n";
     return false;
   }
 
@@ -48,6 +51,7 @@ bool loadfronius(const char *filename, Configmodule &configmodule) {
   configFile.close();
 
 Serial.println(" Fronius config : " + String(configmodule.hostname));
+logging.init += "Fronius used\r\n";
 return true;
 }
 

@@ -34,6 +34,7 @@
     extern Config config; 
     HTTPClient http;
     extern dimmerLamp dimmer_hard; 
+    extern Logs logging;
 
 
 
@@ -59,6 +60,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         http.GET();
         http.end(); 
         Serial.println("Power command sent "+ String(dimmervalue));
+        logging.start +="Power command sent "+ String(dimmervalue) + "\r\n";
 
         if (!AP) {
             #if MQTT_CLIENT == true 

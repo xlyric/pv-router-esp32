@@ -19,6 +19,7 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   File configFile = SPIFFS.open(enphase_conf, "r");
   if (!configFile) {
     Serial.println(F("No Enphase used"));
+    logging.init += "--> No Enphase used\r\n";
 
     return false;
   }
@@ -32,6 +33,7 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read Enphase config"));
+    logging.init += "--> Enphase not present\r\n";
 
     return false;
   }
@@ -52,6 +54,7 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
 
   Serial.println(" enphase config : " + String(configmodule.hostname));
   Serial.println(" enphase mode : " + String(configmodule.envoy));
+  logging.init += "Enphase used type "+ String(configmodule.envoy) +"\r\n";
   return true;
 }
 

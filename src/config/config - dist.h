@@ -181,4 +181,7 @@
 
 bool AP=true; 
 
+/// Log web
+#define TEMPOLOG 15 
+
 #endif

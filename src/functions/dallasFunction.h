@@ -10,6 +10,7 @@
     //***********************************
     
 extern Dallas dallas ;
+extern Logs log; 
 OneWire ds(ONE_WIRE_BUS);
 DallasTemperature sensors(&ds);
 DeviceAddress insideThermometer;
@@ -30,6 +31,7 @@ void dallaspresent () {
 
 if ( !ds.search(dallas.addr)) {
     Serial.println("Dallas not connected");
+    log.init += "Dallas not connected\r\n";
     Serial.println();
     ds.reset_search();
     delay(250);
@@ -76,6 +78,7 @@ if ( !ds.search(dallas.addr)) {
 
   Serial.print("  present = ");
   Serial.println(dallas.present, HEX);
+  log.init += "Dallas present at address" + String(dallas.present, HEX) + "\r\n";
 
   return ;
    
@@ -91,9 +94,11 @@ float CheckTemperature(String label, byte deviceAddress[12]){
   Serial.print(label);
   if (tempC == -127.00) {
     Serial.print("Error getting temperature");
+    log.start += "Error getting temperature\r\n";
   } else {
     Serial.print(" Temp C: ");
     Serial.println(tempC);
+    log.start += "temp :"+ String(tempC) +" \r\n";
     return (tempC); 
    
     

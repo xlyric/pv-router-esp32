@@ -77,6 +77,9 @@ Config config;
 Configwifi configwifi; 
 Configmodule configmodule; 
 
+/// declare logs 
+Logs logging;
+/// declare MQTT 
 Mqtt configmqtt;
 
 WiFiUDP ntpUDP;
@@ -106,9 +109,11 @@ void setup()
   #if DEBUG == true
     Serial.begin(115200);
   #endif 
-
+  logging.init="197}11}1";
+  logging.init += "#################  Starting System  ###############\r\n";
   //démarrage file system
   Serial.println("start SPIFFS");
+  logging.init += "Start Filesystem\r\n";
   SPIFFS.begin();
 
 
@@ -174,8 +179,10 @@ else {
         }
 
       serial_println("WiFi connected");
+      logging.init += "Wifi connected\r\n";
       serial_println("IP address: ");
       serial_println(WiFi.localIP());
+      
       gDisplayValues.currentState = UP;
       gDisplayValues.IP = String(WiFi.localIP().toString());
       btStop();
@@ -231,10 +238,12 @@ Dimmer_setup();
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html")){
     Serial.println(SPIFFSNO);  
+    logging.init += "SPIFFS not uploaded!!\r\n";
   }
 
   if(!SPIFFS.exists(filename_conf)){
     Serial.println(CONFNO);  
+    logging.init += "config file not exist, taking default value\r\n";
   }
 
      //***********************************

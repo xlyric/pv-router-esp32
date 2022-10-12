@@ -15,7 +15,10 @@
 
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
+extern Logs Logging;
 //extern EnergyMonitor emon1;
+
+int slowlog = TEMPOLOG - 1 ; 
 
 
 int Pow_mqtt_send = 0;
@@ -32,6 +35,9 @@ void measureElectricity(void * parameter)
             injection2();
             if ( gDisplayValues.porteuse == false ) {
                   gDisplayValues.watt =0 ; 
+                  slowlog ++; 
+                  if (slowlog == TEMPOLOG) { logging.start += "--> No sinus, check 12AC power \r\n"; slowlog =0 ; }
+
             }
             serial_println(int(gDisplayValues.watt)) ;
       }

@@ -8,6 +8,7 @@ extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Configwifi configwifi; 
 extern Mqtt configmqtt; 
+extern Logs logging;
 int middleoscillo = 1800;
 
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
@@ -169,18 +170,21 @@ String getdebug() {
 
 
     return String(configweb);
-}
+  }
+
 //***********************************
 String getmemory() {
    String memory = "";
    // memory = String(ESP.getFreeHeap()) + ";" + String(ESP.getHeapFragmentation()) ;
       return String(memory);
-}
+  }
+
 //***********************************
 String getlogs() {
-   String logs = "";
-      return String(logs);
-}
+    logging.start = logging.init + logging.start  + "}1"; 
+    
+    return logging.start ; 
+  }
 
 //***********************************
 String processor(const String& var){
