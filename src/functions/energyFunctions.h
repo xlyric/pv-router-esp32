@@ -6,6 +6,7 @@
 
 extern DisplayValues gDisplayValues;
 extern Config config; 
+extern Logs logging;
 
 // ***********************************
 // ** recherche du point 0. temps 20 ms max ... 
@@ -143,7 +144,7 @@ int temp_read ;
   double sigma_read = 0 ; 
   //double voltage = 0; // test de calcul de voltage
   //String porteuse = "" ;
-  //double zero =0; 
+  int zero =0; 
   double positive = 0 ; 
   //int zero_count = 0; 
   int loop = 0;  int inter=0;
@@ -239,10 +240,12 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
     if ( i <  ( start + ( nbmesure / 2 ) - phi ) ) {
     temp_read = (tableau[i+(j*nbmesure)]-sigma_read) ; 
     positive += temp_read  ; 
+        if ( tableau[i+(j*nbmesure)] < 5 ) { zero ++ ;}    //détection des zeros ( prise débranchée )
     }
     else {
     temp_read = (sigma_read-tableau[i+(j*nbmesure)]) ; 
     positive += temp_read ; 
+        if ( tableau[i+(j*nbmesure)] < 5 ) { zero ++ ;}  //détection des zeros ( prise débranchée )
     }
   }
 }
@@ -254,7 +257,8 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 positive = positive / ( FACTEURPUISSANCE * nombre_cycle ) ; 
 
-
+if ( zero > 75 ) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; }
+//logging.start += "zero detected : " + String(zero) +   "\r\n" ;
 
 
 bool nolog =false; 

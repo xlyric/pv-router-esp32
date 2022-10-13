@@ -29,7 +29,7 @@
   #include "tasks/Dimmer.h"
   #include "tasks/gettemp.h"
 
-  #include "functions/otaFunctions.h"
+  //#include "functions/otaFunctions.h"
   #include "functions/spiffsFunctions.h"
   #include "functions/Mqtt_http_Functions.h"
   #include "functions/webFunctions.h"
