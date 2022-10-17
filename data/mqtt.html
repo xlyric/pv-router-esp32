@@ -70,11 +70,11 @@
         <i class="fas fa-fw fa-cog"></i>
         <span>Configuration</span></a>
     </li>
-  
+
     <li class="nav-item active">
-      <a class="nav-link" href="/mqtt.html">
-        <i class="fas fa-fw fa-book"></i>
-        <span>Configuration mqtt</span></a>
+      <a class="nav-link" href="/wifi.html">
+        <i class="fas fa-fw fa-wifi"></i>
+        <span>Configuration Wifi</span></a>
     </li>
 
     <li class="nav-item active">
@@ -88,6 +88,9 @@
         <i class="fas fa-fw fa-download"></i>
       <span>OTA</span></a>
     </li> 
+
+
+  
 
 
       <!-- Divider -->
@@ -156,7 +159,7 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-		  <h1 class="h3 mb-2 text-gray-800">Configuration Wifi</h1>
+		  <h1 class="h3 mb-2 text-gray-800">Configuration MQTT</h1>
 
 		<div class="col-lg-6">
 
@@ -175,7 +178,15 @@
 			  
           
             <div class="form-group">
-                SSID  :<input type="text" class="form-control form-control-user" id="ssid" placeholder="%SSID%">
+              Serveur  :<input type="text" class="form-control form-control-user" id="server" placeholder="%SERVER%">
+            </div>
+
+            <div class="form-group">
+              Topic  :<input type="text" class="form-control form-control-user" id="topic" placeholder="%TOPIC%">
+            </div>
+
+            <div class="form-group">
+              User  :<input type="text" class="form-control form-control-user" id="user" placeholder="%USER%">
             </div>
 
             <div class="form-group">
@@ -216,7 +227,7 @@
 	
 
 function save () {				  
-  		$.get( "/getwifi", { save: "yes" } )
+  		$.get( "/getmqtt", { save: "yes" } )
 		.done(function(data) {
 		});		
 
@@ -237,7 +248,7 @@ function save () {
 $( "#save" ).click(function() {
 
   
-  		$.get( "getwifi", { save: "yes" } )
+  		$.get( "getmqtt", { save: "yes" } )
 		.done(function(data) {
 		$( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
 		});	
@@ -247,7 +258,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'ssid':$('#ssid').val(), 'password':$('#password').val()} 
+	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val()} 
 
         $.ajax({
             type: "GET",
@@ -266,16 +277,20 @@ $( "#formulaire" ).submit(function() {
 
 
 var recupconfig = $.get ({
-		url : 'getwifi',
+		url : 'getmqtt',
 		type : 'GET',
 		dataType: "text",
 		async: false }).responseText; 
 				  
-        var config = recupconfig.split(";");
-    i=0;
-		document.getElementById("ssid").value = config[i];
-    i++;
-		document.getElementById("password").value = config[i];	  
+    var config = recupconfig.split(";");
+      i=0;
+      document.getElementById("server").value = config[i];
+      i++;
+      document.getElementById("topic").value = config[i];	
+      i++;  
+      document.getElementById("user").value = config[i];
+      i++;
+      document.getElementById("password").value = config[i];	
 </script>
 				  
                 </div>

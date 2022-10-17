@@ -30,8 +30,8 @@ const char* PARAM_INPUT_dimmer_power = "POWER"; /// paramettre de retour activat
 const char* PARAM_INPUT_facteur = "facteur"; /// paramettre retour delta
 const char* PARAM_INPUT_tmax = "tmax"; /// paramettre retour delta
 const char* PARAM_INPUT_mqttserver = "mqttserver"; /// paramettre retour mqttserver
-const char* PARAM_INPUT_reset = "reset"; /// paramettre retour mqttserver
-const char* PARAM_INPUT_publish = "publish"; /// paramettre retour mqttserver
+const char* PARAM_INPUT_reset = "reset"; /// paramettre reset
+const char* PARAM_INPUT_publish = "publish"; /// paramettre publication mqtt
 
 
 //***********************************
