@@ -93,6 +93,7 @@
 #if DALLAS
     #define ONE_WIRE_BUS  25
     #define TEMPERATURE_PRECISION 10
+    #define TRIGGER 10   /// Trigger % for max temp protection. max temp configuration is in config.json 
  #endif
 
 
@@ -171,7 +172,7 @@
     #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.4"
+#define VERSION "version 3.5"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"
