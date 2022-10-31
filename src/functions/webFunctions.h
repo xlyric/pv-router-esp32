@@ -202,7 +202,11 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
     logging.start = "";
   });
 
-
+  server.on("/reset", HTTP_ANY, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain","Restarting");
+    ESP.restart();
+  });
+  
 server.onNotFound(notFound);
 
 /////////////////////////
@@ -255,10 +259,12 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 
    //reset
    if (request->hasParam(PARAM_INPUT_reset)) {Serial.println("Resetting ESP");  ESP.restart();}
-      
+
+   //// for check boxs in web pages  
    if (request->hasParam(PARAM_INPUT_servermode)) { inputMessage = request->getParam( PARAM_INPUT_servermode)->value();
                                             getServermode(inputMessage);
                                             request->send(200, "text/html", getconfig().c_str());
+                                            saveConfiguration(filename_conf, config);
                                         }
 
   

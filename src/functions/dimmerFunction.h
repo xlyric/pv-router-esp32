@@ -63,10 +63,10 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         logging.start +="Power command sent "+ String(dimmervalue) + "\r\n";
 
         if (!AP) {
-            #if MQTT_CLIENT == true 
+            if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
               Mqtt_send(String(dimmerIDX), String(dimmervalue));  
-            #endif
+            }
         }
       
       delay (1500); // delay de transmission réseau dimmer et application de la charge }

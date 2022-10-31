@@ -446,9 +446,9 @@ Dimmer_setup();
       #endif
 
 if (!AP) {
-    #if MQTT_CLIENT == true
+    if (config.mqtt) {
       Mqtt_init();
-    #endif
+    }
 }
 
   if ( config.autonome == true ) {
@@ -472,12 +472,12 @@ void loop()
 
   if (!AP) {
     #if WIFI_ACTIVE == true
-        #if MQTT_CLIENT == true
+        if (config.mqtt) {
         if (!client.connected()) {
           reconnect();
         }
         client.loop();
-        #endif
+        }
     #endif
   }
 

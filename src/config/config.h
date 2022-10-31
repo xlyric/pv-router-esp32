@@ -13,7 +13,7 @@
  */
 #define WEBSSERVER true
 #define WIFI_ACTIVE  true
-#define MQTT_CLIENT true
+//#define MQTT_CLIENT true --> option in the web menu
 
 #define WIFI_NETWORK "xxx"
 #define WIFI_PASSWORD "xxx"

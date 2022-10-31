@@ -150,7 +150,7 @@ String getwifi() {
 
 String getmqtt() {
 
-   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password)  ;
+   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) ;
   return String(retour) ;
 }
 
