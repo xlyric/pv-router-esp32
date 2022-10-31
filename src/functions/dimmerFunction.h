@@ -54,6 +54,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     }
     else {*/
       #if WIFI_ACTIVE == true
+      /// control dimmer 
       String baseurl; 
         baseurl = "/?POWER=" + String(dimmervalue) ; 
         http.begin(dimmerurl,80,baseurl);   
@@ -62,6 +63,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         Serial.println("Power command sent "+ String(dimmervalue));
         logging.start +="Power command sent "+ String(dimmervalue) + "\r\n";
 
+      //// Mqtt send information
         if (!AP) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
@@ -93,7 +95,7 @@ gDisplayValues.change = 0;
   
   /// si gros mode linky  on reduit la puissance par extrapolation ( valeur de puissance supérieur à config.delta + 30 )
   else if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta+30) ) {
-    gDisplayValues.dimmer += -2*((gDisplayValues.watt-config.delta)/(50*config.resistance/1000)) ; 
+    gDisplayValues.dimmer += -2*((gDisplayValues.watt-config.delta)/(COMPENSATION*config.resistance/1000)) ; 
     gDisplayValues.change = 1; 
     } 
   
@@ -106,7 +108,7 @@ gDisplayValues.change = 0;
     // injection 
     /// si grosse injection on augmente la puissance par extrapolation
   else if ( gDisplayValues.watt <= (config.deltaneg-30) ) {   
-    gDisplayValues.dimmer += 2*abs(gDisplayValues.watt/(50*config.resistance/1000)) ; 
+    gDisplayValues.dimmer += 2*abs(gDisplayValues.watt/(COMPENSATION*config.resistance/1000)) ; 
     gDisplayValues.change = 1 ; 
     } 
   

@@ -134,6 +134,7 @@
  */
 #define LOCAL_MEASUREMENTS 30
 #define FACTEURPUISSANCE 10.50
+#define COMPENSATION 75 ///  % d'asservissement pour l'envoie de puissance au dimmer.
 
 /**
  * Syncing time with an NTP server
