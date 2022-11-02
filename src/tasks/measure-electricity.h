@@ -16,6 +16,9 @@
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
 extern Logs Logging;
+extern HA device_routeur; 
+extern HA device_grid; 
+extern HA device_inject; 
 //extern EnergyMonitor emon1;
 
 int slowlog = TEMPOLOG - 1 ; 
@@ -64,17 +67,21 @@ if (!AP) {
 
             #if WIFI_ACTIVE == true
                   Pow_mqtt_send ++ ;
-                  if ( Pow_mqtt_send > 10 ) {
+                  if ( Pow_mqtt_send > 5 ) {
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
-                  
+                  device_routeur.send(String(gDisplayValues.watt));
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
                   Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
                   Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  device_inject.send(String(int(-gDisplayValues.watt)));
+                  device_grid.send(String("0"));
                   }
                   else {
                   Mqtt_send(String(config.IDX), String("0"),"injection");
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                  device_grid.send(String(int(gDisplayValues.watt)));
+                  device_inject.send(String("0"));
                   }
 
 

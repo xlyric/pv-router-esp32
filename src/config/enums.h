@@ -2,6 +2,8 @@
 #define ENUMS
 
 #include <Arduino.h>
+#include <PubSubClient.h>
+extern PubSubClient client;
 
 // The state in which the device can be. This mainly affects what
 // is drawn on the display.
@@ -106,6 +108,91 @@ struct Dallas{
   byte addr[8];
   float celsius = 0.00 ;
   byte security = 0;
+};
+
+//***********************
+//****    HA 
+//***********************
+
+struct HA
+{
+
+
+      /* HA */
+    private:String name; 
+    public:void Set_name(String setter) {name=setter; }
+
+    private:String dev_cla; 
+    public:void Set_dev_cla(String setter) {dev_cla=setter; }
+
+    private:String unit_of_meas; 
+    public:void Set_unit_of_meas(String setter) {unit_of_meas=setter; }
+
+    private:String stat_cla; 
+    public:void Set_stat_cla(String setter) {stat_cla=setter; }
+
+    private:String entity_category; 
+    public:void Set_entity_category(String setter) {entity_category=setter; }
+
+    bool cmd_t; 
+
+    private:String IPaddress;
+    private:String state_topic; 
+    private:String stat_t; 
+    private:String avty_t;
+
+    
+    private:String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+    private:String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+    private:String node_id = String("PvRouter-") + node_mac; 
+    private:String topic = "homeassistant/sensor/"+ node_id +"/";
+    private:String device_declare() { 
+              String info =         "\"dev\": {"
+              "\"ids\": \""+ node_id + "\","
+              "\"name\": \""+ node_id + "\","
+              "\"sw\": \"PvRouter "+ String(VERSION) +"\","
+              "\"mdl\": \"ESP32 TTGO " + IPaddress + "\","
+              "\"mf\": \"Cyril Poissonnier\""
+            "}"; 
+            return info;
+            }
+    private:String uniq_id; 
+    private:String value_template; 
+
+
+    private:void online(){
+      client.publish(String(topic+"status").c_str() , "online", true); // status Online
+    } 
+
+    public:void discovery(){
+      IPaddress =   WiFi.localIP().toString() ;
+      String device= "{ \"dev_cla\": \""+dev_cla+"\","
+            "\"unit_of_meas\": \""+unit_of_meas+"\","
+            "\"stat_cla\": \""+stat_cla+"\"," 
+            "\"name\": \""+ name +"-"+ node_mac + "\"," 
+            "\"state_topic\": \""+ topic +"state\","
+            "\"stat_t\": \""+ topic +"state"+name+"\","
+            "\"avty_t\": \""+ topic +"status\","
+            "\"uniq_id\": \""+ node_mac + "-" + name +"\", "
+            "\"value_template\": \"{{ value_json."+name +" }}\", "
+            "\"cmd_t\": \""+ topic +"command\","
+            "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
+            
+            + device_declare() + 
+          "}";
+          if (dev_cla =="" ) { dev_cla = name; }
+          client.publish((topic+name+"/config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
+          Serial.println(device.c_str());
+          online();
+          send("0");
+          
+    }
+
+    public:void send(String value){
+       String message = "  { \""+name+"\" : \"" + value.c_str() + "\"  } ";
+       client.publish((topic+"state"+name).c_str() , message.c_str(), true);
+    }
+ 
 };
 
 #endif

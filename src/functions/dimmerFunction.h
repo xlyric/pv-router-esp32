@@ -35,6 +35,7 @@
     HTTPClient http;
     extern dimmerLamp dimmer_hard; 
     extern Logs logging;
+    extern HA device_dimmer; 
 
 
 
@@ -67,7 +68,8 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         if (!AP) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
-              Mqtt_send(String(dimmerIDX), String(dimmervalue));  
+              Mqtt_send(String(dimmerIDX), String(dimmervalue));
+              device_dimmer.send(String(dimmervalue));
             }
         }
       

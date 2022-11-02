@@ -65,7 +65,7 @@ void Mqtt_send ( String idx, String value, String otherpub = "" ) {
   client.loop();
     if (otherpub == "" ) {
       if (client.publish(config.Publish, String(message).c_str(), true)) {
-        Serial.println("MQTT_send : MQTT sent to domoticz");
+     //   Serial.println("MQTT_send : MQTT sent to domoticz");
       }
 
       else {
@@ -73,10 +73,10 @@ void Mqtt_send ( String idx, String value, String otherpub = "" ) {
       }
     }
   if (client.publish(jdompub.c_str() , value.c_str(), true)){
-    Serial.println("MQTT_send : MQTT sent to Jeedom ");
+  //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
   }
   else {
-    Serial.println("MQTT_send : error publish to Jeedom ");
+Serial.println("MQTT_send : error publish to Jeedom ");
   }
   
 
@@ -118,7 +118,7 @@ void Mqtt_init() {
   else {
     Serial.println("MQTT_init : /! ECHEC !/ ");
   }  
-  Mqtt_HA_hello();
+
 }
 
 

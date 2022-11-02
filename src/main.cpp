@@ -97,6 +97,13 @@ unsigned char measureIndex = 0;
 Dallas dallas; 
 #endif
 
+
+
+HA device_dimmer; 
+HA device_routeur; 
+HA device_grid;
+HA device_inject;
+
 /***************************
  *  Dimmer init
  **************************/
@@ -448,6 +455,35 @@ Dimmer_setup();
 if (!AP) {
     if (config.mqtt) {
       Mqtt_init();
+
+    // HA autoconf
+
+      device_dimmer.Set_name("dimmer");
+      device_dimmer.Set_unit_of_meas("%");
+      device_dimmer.Set_stat_cla("measurement");
+      device_dimmer.Set_dev_cla("power");
+      
+      device_routeur.Set_name("power");
+      device_routeur.Set_unit_of_meas("W");
+      device_routeur.Set_stat_cla("measurement");
+      device_routeur.Set_dev_cla("power");
+
+      device_grid.Set_name("grid");
+      device_grid.Set_unit_of_meas("W");
+      device_grid.Set_stat_cla("measurement");
+      device_grid.Set_dev_cla("power");
+
+      device_inject.Set_name("inject");
+      device_inject.Set_unit_of_meas("W");
+      device_inject.Set_stat_cla("measurement");
+      device_inject.Set_dev_cla("power");
+
+      client.setBufferSize(1024);
+      device_routeur.discovery();
+      device_dimmer.discovery();
+      device_grid.discovery();
+      device_inject.discovery();
+
     }
 }
 
@@ -463,6 +499,8 @@ if (!AP) {
       display.clear();
     #endif
   #endif
+
+
 
 }
 
