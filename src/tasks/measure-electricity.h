@@ -19,10 +19,13 @@ extern Logs Logging;
 extern HA device_routeur; 
 extern HA device_grid; 
 extern HA device_inject; 
+extern HA compteur_inject;
+extern HA compteur_grid;
 //extern EnergyMonitor emon1;
 
 int slowlog = TEMPOLOG - 1 ; 
-
+long beforetime; 
+#define timemilli 3.6e+6 
 
 int Pow_mqtt_send = 0;
 
@@ -32,7 +35,7 @@ void measureElectricity(void * parameter)
     //  serial_println("[ENERGY] Measuring...");
        /// vérification qu'une autre task ne va pas fausser les valeurs
       long start = millis();
-
+      
       
       if ( configmodule.pilote == false ) {
             injection2();
@@ -68,6 +71,9 @@ if (!AP) {
             #if WIFI_ACTIVE == true
                   Pow_mqtt_send ++ ;
                   if ( Pow_mqtt_send > 5 ) {
+                  long timemesure = start-beforetime;
+                  float wattheure = (timemesure * gDisplayValues.watt / timemilli) ;  
+
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
                   device_routeur.send(String(gDisplayValues.watt));
                   // send if injection
@@ -76,15 +82,21 @@ if (!AP) {
                   Mqtt_send(String(config.IDX), String("0") ,"grid");
                   device_inject.send(String(int(-gDisplayValues.watt)));
                   device_grid.send(String("0"));
+                  compteur_inject.send(String(wattheure));
+                  compteur_grid.send(String("0"));
                   }
                   else {
                   Mqtt_send(String(config.IDX), String("0"),"injection");
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
                   device_grid.send(String(int(gDisplayValues.watt)));
                   device_inject.send(String("0"));
+                  compteur_inject.send(String("0"));
+                  compteur_grid.send(String(wattheure));
                   }
 
+                  
 
+                  beforetime = start; 
                   Pow_mqtt_send = 0 ;
                   }
             #endif

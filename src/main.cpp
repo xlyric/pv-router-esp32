@@ -37,6 +37,7 @@
   #include "functions/froniusFunction.h"
   #include "functions/enphaseFunction.h"
   #include "functions/WifiFunctions.h"
+  #include "functions/homeassistant.h"
 
 
 #if DALLAS
@@ -103,6 +104,8 @@ HA device_dimmer;
 HA device_routeur; 
 HA device_grid;
 HA device_inject;
+HA compteur_inject;
+HA compteur_grid;
 
 /***************************
  *  Dimmer init
@@ -457,33 +460,8 @@ if (!AP) {
       Mqtt_init();
 
     // HA autoconf
-
-      device_dimmer.Set_name("dimmer");
-      device_dimmer.Set_unit_of_meas("%");
-      device_dimmer.Set_stat_cla("measurement");
-      device_dimmer.Set_dev_cla("power");
+      init_HA_sensor();
       
-      device_routeur.Set_name("power");
-      device_routeur.Set_unit_of_meas("W");
-      device_routeur.Set_stat_cla("measurement");
-      device_routeur.Set_dev_cla("power");
-
-      device_grid.Set_name("grid");
-      device_grid.Set_unit_of_meas("W");
-      device_grid.Set_stat_cla("measurement");
-      device_grid.Set_dev_cla("power");
-
-      device_inject.Set_name("inject");
-      device_inject.Set_unit_of_meas("W");
-      device_inject.Set_stat_cla("measurement");
-      device_inject.Set_dev_cla("power");
-
-      client.setBufferSize(1024);
-      device_routeur.discovery();
-      device_dimmer.discovery();
-      device_grid.discovery();
-      device_inject.discovery();
-
     }
 }
 
