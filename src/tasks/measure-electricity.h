@@ -26,6 +26,8 @@ extern HA compteur_grid;
 int slowlog = TEMPOLOG - 1 ; 
 long beforetime; 
 #define timemilli 3.6e+6 
+float WHtempgrid=0;
+float WHtempinject=0;
 
 int Pow_mqtt_send = 0;
 
@@ -72,7 +74,7 @@ if (!AP) {
                   Pow_mqtt_send ++ ;
                   if ( Pow_mqtt_send > 5 ) {
                   long timemesure = start-beforetime;
-                  float wattheure = (timemesure * gDisplayValues.watt / timemilli) ;  
+                  float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
 
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
                   device_routeur.send(String(gDisplayValues.watt));
@@ -82,7 +84,10 @@ if (!AP) {
                   Mqtt_send(String(config.IDX), String("0") ,"grid");
                   device_inject.send(String(int(-gDisplayValues.watt)));
                   device_grid.send(String("0"));
-                  compteur_inject.send(String(wattheure));
+                  WHtempgrid += wattheure; 
+                  compteur_inject.send(String(WHtempgrid));
+                  
+                  
                   compteur_grid.send(String("0"));
                   }
                   else {
@@ -91,7 +96,9 @@ if (!AP) {
                   device_grid.send(String(int(gDisplayValues.watt)));
                   device_inject.send(String("0"));
                   compteur_inject.send(String("0"));
-                  compteur_grid.send(String(wattheure));
+                  WHtempinject += wattheure;
+                  compteur_grid.send(String(WHtempinject));
+                  
                   }
 
                   

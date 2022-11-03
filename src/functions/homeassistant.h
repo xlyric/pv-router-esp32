@@ -35,12 +35,12 @@ void init_HA_sensor(){
 
         compteur_grid.Set_name("grid_Wh");
         compteur_grid.Set_unit_of_meas("Wh");
-        compteur_grid.Set_stat_cla("measurement");
+        compteur_grid.Set_stat_cla("total_increasing");
         compteur_grid.Set_dev_cla("energy");
 
         compteur_inject.Set_name("inject_Wh");
         compteur_inject.Set_unit_of_meas("Wh");
-        compteur_inject.Set_stat_cla("measurement");
+        compteur_inject.Set_stat_cla("total_increasing");
         compteur_inject.Set_dev_cla("energy");      
 
         client.setBufferSize(1024);
