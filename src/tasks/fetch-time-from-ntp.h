@@ -25,21 +25,34 @@
                 continue;
             }
 
-            //detection été /hiver
+            
             unsigned long unix_epoch = timeClient.getEpochTime();
-            int Mois, jour ; 
+            int Mois, jour, heure, minutes, secondes,weekdays; 
             jour   = day(unix_epoch);
             Mois  = month(unix_epoch);
+            weekdays = weekday(unix_epoch);
+            heure = hour(unix_epoch); 
+            minutes = minute(unix_epoch);
+            secondes = second(unix_epoch);
 
+
+            //detection été /hiver
             if (Mois > 10 || Mois < 3 
             || (Mois == 10 && (jour) > 22) 
             || (Mois == 3 && (jour)<24)){
                 //C'est l'hiver
-            timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
-             }
-            else{
-             //C'est l'été
-             timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
+                timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
+                }
+                else{
+                //C'est l'été
+                timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
+            }
+
+
+            // reboot de précaution nettoyage mémoire ( dimanche 4:00:00 )
+            int uptime = esp_timer_get_time()/ 1000000; 
+            if ( uptime > 600000 ) {
+                ESP.restart(); 
             }
 
 

@@ -48,6 +48,7 @@ void measureElectricity(void * parameter)
 
             }
             serial_println(int(gDisplayValues.watt)) ;
+
       }
       else{
             gDisplayValues.porteuse = true;

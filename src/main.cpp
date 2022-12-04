@@ -170,18 +170,45 @@ else {
       else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
       
       int timeoutwifi=0;
+      logging.init += "Start Wifi Network " + String(WIFI_NETWORK) +  "\r\n";
       while ( WiFi.status() != WL_CONNECTED ) {
         delay(500);
         Serial.print(".");
         timeoutwifi++; 
-        if (timeoutwifi > 10 ) {break;}
+
+        if (timeoutwifi > 20 ) {
+              logging.init += "timeout, go to AP mode \r\n" ;  
+              logging.init += "Wifi State :";
+              
+              switch (WiFi.status()) {
+                  case 1:
+                      logging.init +="SSID is not available" ; 
+                      break;
+                  case 4:
+                      logging.init +="The connection fails for all the attempts"  ;
+                      break;
+                  case 5:
+                      logging.init +="The connection is lost" ; 
+                      break;
+                  case 6:
+                      logging.init +="Disconnected from the network" ; 
+                      break;
+                  default:
+                      logging.init +="I have no idea ?! " ; 
+                      break;
+              }
+         
+              
+              logging.init += "\r\n";
+              break;}
       }
 
         //// timeout --> AP MODE 
-        if ( timeoutwifi > 10 ) {
+        if ( timeoutwifi > 20 ) {
               WiFi.disconnect(); 
               AP=true; 
               serial_println("timeout, go to AP mode ");
+              
               gDisplayValues.currentState = UP;
               gDisplayValues.IP = String(WiFi.softAPIP().toString());
               APConnect(); 

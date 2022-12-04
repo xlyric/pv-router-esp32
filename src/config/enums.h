@@ -182,7 +182,8 @@ struct HA
           "}";
           if (dev_cla =="" ) { dev_cla = name; }
           client.publish((topic+name+"/config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
-          Serial.println(device.c_str());
+          //Serial.println(device.c_str());
+          Serial.println(name + "HA discovery");
           online();
           send("0");
           

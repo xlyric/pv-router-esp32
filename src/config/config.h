@@ -103,13 +103,13 @@
  * the ESP goes into deep sleep for 30seconds to try and
  * recover.
  */
-#define WIFI_TIMEOUT 20000 // 20 seconds
+#define WIFI_TIMEOUT 30000 // 20 seconds
 
 /**
  * How long should we wait after a failed WiFi connection
  * before trying to set one up again.
  */
-#define WIFI_RECOVER_TIME_MS 20000 // 20 seconds
+#define WIFI_RECOVER_TIME_MS 30000 // 20 seconds
 
 /**
  * Dimensions of the OLED display attached to the ESP

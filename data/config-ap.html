@@ -329,7 +329,7 @@
         <div class="col-sm-3">
           <div class="custom-control custom-checkbox small">
             <input type="checkbox" class="custom-control-input" id="polarity">
-            <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >Polarité</label>
+            <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
           </div>
         </div>
       </div>
@@ -416,9 +416,9 @@ function sendservermode (mode) {
 		$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
 		var config = data.split(";");
 		document.getElementById("autonome").value = config[12];
-		document.getElementById("UseDomoticz").value = config[10];
-		document.getElementById("UseJeedom").value = config[11];
-		document.getElementById("dimmerlocal").value = config[14];
+		//document.getElementById("UseDomoticz").value = config[10];
+		//document.getElementById("UseJeedom").value = config[11];
+		//document.getElementById("dimmerlocal").value = config[14];
 		//document.getElementById("Usemqtt").value = config[16];
     document.getElementById("polarity").value = config[20];
     document.getElementById("screen").value = config[21];
