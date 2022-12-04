@@ -225,133 +225,154 @@
 
 
 		<div class="col-lg-6">
-
-              <div class="card position-relative">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Configuration</h6>
-				  <span id="saveform"></span>
-                </div>
-                <div class="card-body">
-                  <div class="col-lg-12">
+    <form class="user" id="formulaire" method="post" action=""  >
+    
+      <div class="card position-relative">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Configuration</h6>
+            <span id="saveform"></span>
+        </div>
+        <div class="card-body">
+          <div class="col-lg-12">
            
 
-              <form class="user" id="formulaire" method="post" action=""  >
-			  
-          
-       <!-- <div class="form-group">
-                  <div class="custom-control custom-checkbox small">
-                    <input type="checkbox" class="custom-control-input" id="Usemqtt">
-                    <label class="custom-control-label" for="Usemqtt" onclick="sendservermode(this.innerHTML);" >MQTT</label>
-                  </div>
-        </div>
--->
-        <div class="form-group">
-            MQTT Serveur :<input type="text" class="form-control form-control-user" id="mqttserver" placeholder="%MQTTSERVER%">
-        </div>
 
-        <div class="form-group">
-          MQTT Publish :<input type="text" class="form-control form-control-user" id="publish" placeholder="%PUBLISH%">
-        </div>
+            <br>
 
-        <div class="form-group row">
-				  <div class="col-sm-3">
-                  IDX Power: <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
-          </div>
-				  <div class="col-sm-3">
-                  IDX Dimmer: <input type="text" class="form-control form-control-user" id="IDXDIMMER" placeholder="%IDXDIMMER%">
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <div class="col-sm-3">
-            <div class="custom-control custom-checkbox small">
-                    <input type="checkbox" class="custom-control-input" id="autonome">
-                    <label class="custom-control-label" for="autonome" onclick="sendservermode(this.innerHTML);" >Autonome</label>
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Dimmer</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-sm-6"><span>Charge connectée</span>
+                      <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
+                    </div>
+                    <div class="col-sm-6 limite"><span>Limiteur en %</span>
+                        <input type="text" class="form-control form-control-user" id="Fusible" placeholder="%FUSE%">
+                    </div>
+                </div> 
+              </div>
             </div>
-          </div>
-        </div>  
-        <div class="form-group row">
-          <div class="col-sm-6">
-                    Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
-          </div>
-        </div>
-      
-				
+            <br>
+
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Dimmer Distant</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+
+                <div class="form-group row">
+                      <div class="col-sm-6">
+                              Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
+                    </div>
+
+                </div> 
+              </div>
+            </div>
+            <br>
+
+            <div class="card position-relative">
+              <div class="card-header py-6">
+                <h6 class="m-0 font-weight-bold text-primary">Dimmer Local</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+
+                <div class="form-group row"> 
+                  
+                    <div class="col-sm-3">
+                      <div class="custom-control custom-checkbox small">
+                              <input type="checkbox" class="custom-control-input" id="dimmerlocal">
+                              <label class="custom-control-label" for="dimmerlocal" onclick="sendservermode(this.innerHTML);" >Dimmer local</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-5">
+                        Limiteur local : <input type="text" class="form-control form-control-user" id="Fusiblelocal" placeholder="%FUSELOCAL%">
+                    </div>
+                    <div class="col-sm-4">
+                      Max temp : <input type="text" class="form-control form-control-user" id="maxtemp" placeholder="%MAXTEMP%">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <br>
+
 
 							
 
 
-        
-				<div class="form-group row">
-				 <div class="col-sm-3 delta"><span>Limite Consommation (Delta)</span> </div>
-				  <div class="col-sm-3 deltaneg"><span>Limite Injection (deltaneg)</span> </div>
-				  
-				 
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Pv Routeur</h6>
+                  <span id="saveform"></span>
+              </div>
+                <div class="card-body">        
+                <div class="form-group row">
+                <div class="col-sm-3 delta"><span>Limite Consommation (Delta)</span> </div>
+                  <div class="col-sm-3 deltaneg"><span>Limite Injection (deltaneg)</span> </div>
+                  
+                
 
-				</div>
+                </div>
 				
                 <div class="form-group row">
                   <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="delta" placeholder="%DELTA%">
-                  </div>
-				  <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%">
-                  </div>
+                  <input type="text" class="form-control form-control-user" id="delta" placeholder="%DELTA%">
+                </div>
+                <div class="col-sm-3">
+                  <input type="text" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%">
+                </div>
 
 				  
 				  
-		        </div>
+		            </div>
 				
-				<div class="form-group row">
-				 <div class="col-sm-3 cosphi" ><span>Cosphi</span></div>
-				 <div class="col-sm-3">Facteur de correction</div>
-         
-				</div>
-				<div class="form-group row">
+                <div class="form-group row">
+                  <div class="col-sm-3 cosphi" ><span>Cosphi</span></div>
+                  <div class="col-sm-3">Facteur de correction</div>
+                
+                </div>
+                <div class="form-group row">
                   <div class="col-sm-3">
                     <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
                   </div>
-				          <div class="col-sm-3">
-					          <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
                   </div>
 
-        </div>
+                </div>
 
-      <div class="form-group row">
-        <div class="col-sm-3">Charge connectée/W </div>
-        <div class="col-sm-3 limite"><span>Limiteur en %</span></div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
-        </div>
-			  <div class="col-sm-3">
-          <input type="text" class="form-control form-control-user" id="Fusible" placeholder="%FUSE%">
-        </div>
-        <div class="col-sm-3">
-          <div class="custom-control custom-checkbox small">
-            <input type="checkbox" class="custom-control-input" id="polarity">
-            <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
+                <div class="form-group row">
+                  <div class="col-sm-3">Inversion de la mesure (+/-) :</div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox small">
+                      <input type="checkbox" class="custom-control-input" id="polarity">
+                      <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
+                    </div>
+                  </div>
+               </div>
+
+              <div class="form-group row">
+                <div class="col-sm-3">Screen switch off (0: unlimited)</div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-3">
+                  <input type="text" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
+                </div>
+                <div class="col-sm-3">
+                  <div class="custom-control custom-checkbox small">
+                    <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
+                <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
+                  </div>
+                </div>
+              </div> 
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="form-group row">
-        <div class="col-sm-3">Screen switch off (0: unlimited)</div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-3">
-				  <input type="text" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
-        </div>
-        <div class="col-sm-3">
-          <div class="custom-control custom-checkbox small">
-            <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
-         <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
-          </div>
-        </div>
-      </div> 
-				  
-
+          <br>
 				
 	
 				
@@ -360,12 +381,6 @@
                 <hr>
 
               </form>
-
-
-
-
-
-
               <hr>
             </div>
           </div>
@@ -417,10 +432,10 @@ function sendservermode (mode) {
 		.done(function(data) { 
 		$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
 		var config = data.split(";");
-		document.getElementById("autonome").value = config[12];
+		//document.getElementById("autonome").value = config[12];
 		//document.getElementById("UseDomoticz").value = config[10];
 		//document.getElementById("UseJeedom").value = config[11];
-		//document.getElementById("dimmerlocal").value = config[14];
+		document.getElementById("dimmerlocal").value = config[14];
 		//document.getElementById("Usemqtt").value = config[16];
     document.getElementById("polarity").value = config[20];
     document.getElementById("screen").value = config[21];
@@ -499,7 +514,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val() } 
 
 		
         $.ajax({
@@ -526,11 +541,11 @@ var recupconfig = $.get ({
 				  
         var config = recupconfig.split(";");
     i=0;
-		document.getElementById("IDXDIMMER").value = config[i];
+
     i++;
 		document.getElementById("Fusible").value = config[i];	  
     i++;
-		document.getElementById("IDX").value = config[i];
+
     i++;
 		document.getElementById("version").innerHTML = config[i];
 
@@ -539,19 +554,17 @@ var recupconfig = $.get ({
 		document.getElementById("dimmer").value = config[7];
 		document.getElementById("cosphi").value = config[8];
 		
-		document.getElementById("autonome").checked = config[12];
-		document.getElementById("autonome").value = config[12];
-		//document.getElementById("dimmerlocal").checked = config[14];
-		//document.getElementById("dimmerlocal").value = config[14];
+		//document.getElementById("autonome").checked = config[12];
+		//document.getElementById("autonome").value = config[12];
+		document.getElementById("dimmerlocal").checked = config[14];
+		document.getElementById("dimmerlocal").value = config[14];
     i=15;
 		document.getElementById("facteur").value = config[i];
     i++;
 		//document.getElementById("Usemqtt").checked = config[i];
 		//document.getElementById("Usemqtt").value = config[i];
     i++;
-    document.getElementById("mqttserver").value = config[i];
     i++;
-    document.getElementById("publish").value = config[i];
     i++;
     document.getElementById("deltaneg").value = config[i];
     i++;
@@ -561,9 +574,10 @@ var recupconfig = $.get ({
 		document.getElementById("polarity").value = config[i];
     i++;
 		document.getElementById("screentime").value = config[i];	  
-
-
-
+    i++;
+		document.getElementById("Fusiblelocal").value = config[i];	
+    i++;
+		document.getElementById("maxtemp").value = config[i];	
 </script>
 
 

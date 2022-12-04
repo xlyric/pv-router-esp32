@@ -62,7 +62,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         http.GET();
         http.end(); 
         Serial.println("Power command sent "+ String(dimmervalue));
-        logging.start +="Power command sent "+ String(dimmervalue) + "\r\n";
+        if (logging.power) { logging.start +="Power command sent "+ String(dimmervalue) + "\r\n"; logging.power = false;}
 
       //// Mqtt send information
         if (!AP) {

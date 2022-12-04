@@ -131,7 +131,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax;
   return String(configweb);
 }
 //***********************************
@@ -150,7 +150,7 @@ String getwifi() {
 
 String getmqtt() {
 
-   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) ;
+   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) + ";" + String(config.IDX) + ";" + String(config.IDXdimmer);
   return String(retour) ;
 }
 
@@ -182,7 +182,7 @@ String getmemory() {
 //***********************************
 String getlogs() {
     logging.start = logging.init + logging.start  + "}1"; 
-    
+    logging.power = true ; logging.sct = true; logging.sinus = true; 
     return logging.start ; 
   }
 

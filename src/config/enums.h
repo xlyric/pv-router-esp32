@@ -57,11 +57,12 @@ struct Config {
   bool dimmerlocal;
   float facteur;
   int num_fuse;
+  int localfuse;
+  int tmax;
   bool mqtt;
   char mqttserver[16];
   int mqttport; 
   int IDXdimmer;
-  int tmax;
   int resistance;
   bool polarity; 
   char Publish[100];
@@ -90,6 +91,9 @@ struct Configmodule {
 struct Logs {
   String init;
   String start;
+  bool sct;
+  bool sinus;
+  bool power;
 };
 
 #if DEBUG == true

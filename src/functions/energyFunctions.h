@@ -257,7 +257,9 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 positive = positive / ( FACTEURPUISSANCE * nombre_cycle ) ; 
 
-if ( zero > 75 ) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; }
+if ( zero > 75 ) { 
+  if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
+}
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
 
 

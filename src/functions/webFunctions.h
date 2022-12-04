@@ -255,7 +255,9 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam("mqttpassword")) { request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,15); 
       savemqtt(mqtt_conf, configmqtt); }
 
-
+  //// Dimmer local
+    if (request->hasParam("Fusiblelocal")) { config.localfuse = request->getParam("Fusiblelocal")->value().toInt();}
+    if (request->hasParam("maxtemp")) { config.tmax = request->getParam("maxtemp")->value().toInt();}
 
    //reset
    if (request->hasParam(PARAM_INPUT_reset)) {Serial.println("Resetting ESP");  ESP.restart();}

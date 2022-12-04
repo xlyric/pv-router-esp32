@@ -68,13 +68,17 @@ void loadConfiguration(const char *filename, Config &config) {
   config.cosphi = doc["cosphi"] | 5; 
   config.readtime = doc["readtime"] | 555;
   config.cycle = doc["cycle"] | 72;
-  config.tmax = doc["tmax"] | 65;
+
   config.resistance = doc["resistance"] | 1000;
   config.sending = doc["sending"] | true;
   config.autonome = doc["autonome"] | true;
   config.mqtt = doc["mqtt"] | true;
   config.mqttport = doc["mqttport"] | 1883;
+  
   config.dimmerlocal = doc["dimmerlocal"] | false;
+  config.tmax = doc["tmax"] | 65;
+  config.localfuse = doc["localfuse"] | 50;
+
   config.polarity = doc["polarity"] | false;
   strlcpy(config.dimmer,                  // <- destination
           doc["dimmer"] | "192.168.1.20", // <- source
@@ -127,7 +131,11 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["sending"] = config.sending;
   doc["autonome"] = config.autonome;
   doc["dimmer"] = config.dimmer;
+
   doc["dimmerlocal"] = config.dimmerlocal;
+  doc["tmax"] = config.tmax;
+  doc["localfuse"] = config.localfuse;
+
   doc["facteur"] = config.facteur;
   doc["fuse"] = config.num_fuse;
   doc["mqtt"] = config.mqtt;

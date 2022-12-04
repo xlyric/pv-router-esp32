@@ -200,6 +200,25 @@
               Password :<input type="text" class="form-control form-control-user" id="password" placeholder="%PASSWORD%">
             </div>
 
+
+
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">MQTT Domoticz</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                            IDX Power: <input type="text" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
+                    </div>
+                    <div class="col-sm-6">
+                            IDX Dimmer: <input type="text" class="form-control form-control-user" id="IDXDIMMER" placeholder="%IDXDIMMER%">
+                    </div>
+                </div>
+              </div>
+            </div>
 				  
 		    </div>
 				
@@ -276,7 +295,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val()} 
+	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val()} 
 
         $.ajax({
             type: "GET",
@@ -312,6 +331,10 @@ var recupconfig = $.get ({
       i++;
       document.getElementById("MQTT").checked = config[i];
 		  document.getElementById("MQTT").value = config[i];
+      i++;  
+      document.getElementById("IDX").value = config[i];
+      i++;
+      document.getElementById("IDXDIMMER").value = config[i];
 </script>
 				  
                 </div>
