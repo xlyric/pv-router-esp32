@@ -78,7 +78,7 @@
  */
 
 #define DIMMER true
-#define DIMMERLOCAL false
+#define DIMMERLOCAL true
 #define DALLAS false
 #define TRIGGER 10   /// 
 

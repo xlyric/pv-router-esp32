@@ -27,13 +27,9 @@
 
             
             unsigned long unix_epoch = timeClient.getEpochTime();
-            int Mois, jour, heure, minutes, secondes,weekdays; 
+            int Mois, jour; 
             jour   = day(unix_epoch);
             Mois  = month(unix_epoch);
-            weekdays = weekday(unix_epoch);
-            heure = hour(unix_epoch); 
-            minutes = minute(unix_epoch);
-            secondes = second(unix_epoch);
 
 
             //detection été /hiver

@@ -147,59 +147,66 @@ gDisplayValues.change = 0;
   if  (gDisplayValues.change  )  {
 
 
-  #if DIMMERLOCAL 
-        /* logs */ 
-        
-       /* Serial.print("dallas int ");
-        Serial.println(dallas_int);
-        //Serial.println(gDisplayValues.temperature);
-        Serial.print("dimmer at ");
-        Serial.println(gDisplayValues.dimmer);
-        //Serial.print("config.tmax ");
-        //Serial.println(config.tmax);
-        Serial.print("security:");
-        Serial.println(security);*/
-        
-    int dallas_int = gDisplayValues.temperature.toInt(); 
-    if (security) {
-       if ( dallas_int <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
-       security = false ; // retrait securité si inférieur au trigger
-       gDisplayValues.dimmer = 0 ; 
-       dimmer_hard.setPower(gDisplayValues.dimmer);
-       Serial.println("security on -> off");
-       dimmer_on();
-      }
-      else {
-        gDisplayValues.dimmer = 0 ;
-        dimmer_hard.setPower(0); 
-      }
+    if (config.dimmerlocal) {
+            /* logs */ 
+            
+          /* Serial.print("dallas int ");
+            Serial.println(dallas_int);
+            //Serial.println(gDisplayValues.temperature);
+            Serial.print("dimmer at ");
+            Serial.println(gDisplayValues.dimmer);
+            //Serial.print("config.tmax ");
+            //Serial.println(config.tmax);
+            Serial.print("security:");
+            Serial.println(security);*/
+            
+        int dallas_int = gDisplayValues.temperature.toInt(); 
+        if (security) {
+          if ( dallas_int <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
+          security = false ; // retrait securité si inférieur au trigger
+          gDisplayValues.dimmer = 0 ; 
+          dimmer_hard.setPower(gDisplayValues.dimmer);
+          Serial.println("security on -> off");
+          dimmer_on();
+          }
+          else {
+            gDisplayValues.dimmer = 0 ;
+            dimmer_hard.setPower(0); 
+          }
+        }
+        else { 
+
+          if ( config.tmax < dallas_int ) {
+            dimmer_hard.setPower(0); 
+            gDisplayValues.dimmer = 0 ;
+            security = true ;   /// mise en place sécurité thermique
+            Serial.println("security off -> on ");
+            dimmer_off();
+          }
+          else {
+            if (!security){  
+                /// fonctionnement du dimmer local 
+                 
+                if ( gDisplayValues.dimmer < config.localfuse ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0 ) ; }
+                else {
+                    dimmer_hard.setPower(config.localfuse); 
+                    dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ) ) ;
+                }
+            }
+          }
+        }
+
     }
-    else { 
 
-      if ( config.tmax < dallas_int ) {
-        dimmer_hard.setPower(0); 
-        gDisplayValues.dimmer = 0 ;
-        security = true ;   /// mise en place sécurité thermique
-        Serial.println("security off -> on ");
-        dimmer_off();
-      }
-      else {
-        if (!security){  dimmer_hard.setPower(gDisplayValues.dimmer); }
-      }
-    }
-
-  #endif
-
+    else { dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ;  }
  
-    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
-
   
   }
 }
 
 //// fonctions for local dimmer
 
-#if DIMMERLOCAL 
+ 
     void Dimmer_setup() {
       /// Correction issue full power at start
       pinMode(outputPin, OUTPUT); 
@@ -240,7 +247,7 @@ gDisplayValues.change = 0;
       
     }
 
-#endif
+
 
 
 #endif

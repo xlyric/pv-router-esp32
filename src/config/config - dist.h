@@ -80,7 +80,7 @@
  */
 
 #define DIMMER true /// Use distant Dimmer 
-#define DIMMERLOCAL false /// Use local Dimmer 
+#define DIMMERLOCAL true /// Use local Dimmer 
 #define DALLAS false  //// Use local Dallas ( GPIO 25 )
 #define TRIGGER 10   /// 
 
