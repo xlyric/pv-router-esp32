@@ -189,6 +189,10 @@
             </div>
 
             <div class="form-group">
+              Serveur  :<input type="text" class="form-control form-control-user" id="port" placeholder="%PORT%">
+            </div>
+
+            <div class="form-group">
               Topic  :<input type="text" class="form-control form-control-user" id="topic" placeholder="%TOPIC%">
             </div>
 
@@ -295,7 +299,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val()} 
+	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'port':$('#port').val()} 
 
         $.ajax({
             type: "GET",
@@ -335,6 +339,8 @@ var recupconfig = $.get ({
       document.getElementById("IDX").value = config[i];
       i++;
       document.getElementById("IDXDIMMER").value = config[i];
+      i++;
+      document.getElementById("port").value = config[i];
 </script>
 				  
                 </div>

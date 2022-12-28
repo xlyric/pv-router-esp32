@@ -73,7 +73,7 @@
  * The voltage of your home, used to calculate the wattage.
  * Try setting this as accurately as possible.
  */
-#define HOME_VOLTAGE 225.0
+/// #define HOME_VOLTAGE 225.0
 
 /**
  *  Dimmer 
@@ -90,6 +90,7 @@
 #if DIMMERLOCAL 
 #define outputPin  26 
 #define zerocross  27 // for boards with CHANGEBLE input pins
+#define cooler 12 // Pin for cooler. (switch on dimmer)
 #endif
 
 #if DALLAS
@@ -175,7 +176,7 @@
 #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.20221205"
+#define VERSION "version 3.20221228"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"

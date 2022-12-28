@@ -131,7 +131,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset;
   return String(configweb);
 }
 //***********************************
@@ -150,7 +150,7 @@ String getwifi() {
 
 String getmqtt() {
 
-   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) + ";" + String(config.IDX) + ";" + String(config.IDXdimmer);
+   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) + ";" + String(config.IDX) + ";" + String(config.IDXdimmer) + ";" + String(config.port);
   return String(retour) ;
 }
 

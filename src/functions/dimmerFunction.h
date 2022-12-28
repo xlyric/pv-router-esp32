@@ -93,6 +93,7 @@ gDisplayValues.change = 0;
   if ( gDisplayValues.watt >= 350 && gDisplayValues.dimmer != 0 )  {
     gDisplayValues.dimmer = 0 ;  
     gDisplayValues.change = 1 ;
+
     } 
   
   /// si gros mode linky  on reduit la puissance par extrapolation ( valeur de puissance supérieur à config.delta + 30 )
@@ -159,6 +160,12 @@ gDisplayValues.change = 0;
             //Serial.println(config.tmax);
             Serial.print("security:");
             Serial.println(security);*/
+
+        /// Cooler 
+        if ( gDisplayValues.dimmer > 10 ) { digitalWrite(cooler, HIGH); } // start cooler at 10%  }
+        else { digitalWrite(cooler, LOW); }
+
+
             
         int dallas_int = gDisplayValues.temperature.toInt(); 
         if (security) {
@@ -210,6 +217,10 @@ gDisplayValues.change = 0;
     void Dimmer_setup() {
       /// Correction issue full power at start
       pinMode(outputPin, OUTPUT); 
+      
+      pinMode(cooler, OUTPUT);
+      digitalWrite(cooler, LOW);
+
       //digitalWrite(outputPin, HIGH);
       // configuration dimmer
       dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 

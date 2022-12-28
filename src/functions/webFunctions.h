@@ -241,6 +241,8 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_tmax)) { config.tmax = request->getParam(PARAM_INPUT_tmax)->value().toInt();}
    if (request->hasParam("resistance")) { config.resistance = request->getParam("resistance")->value().toInt();}
    if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt();}
+   if (request->hasParam("voltage")) { config.voltage = request->getParam("voltage")->value().toInt();}
+   if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toInt();}
    
    /// @brief  wifi
    if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50);  }

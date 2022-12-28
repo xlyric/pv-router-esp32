@@ -343,7 +343,22 @@
                   <div class="col-sm-3">
                     <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
                   </div>
+                  
 
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-3"><span>Correction Voltage</span></div>
+                  <div class="col-sm-3">Correction Offset</div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control form-control-user" id="voltage" placeholder="%voltage%">
+                  </div>
+                  <div class="col-sm-3">
+                    <input type="text" class="form-control form-control-user" id="offset" placeholder="%offset%">
+                  </div>
                 </div>
 
                 <div class="form-group row">
@@ -514,7 +529,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() } 
 
 		
         $.ajax({
@@ -578,6 +593,10 @@ var recupconfig = $.get ({
 		document.getElementById("Fusiblelocal").value = config[i];	
     i++;
 		document.getElementById("maxtemp").value = config[i];	
+    i++;
+		document.getElementById("voltage").value = config[i];	
+    i++;
+		document.getElementById("offset").value = config[i];	
 </script>
 
 

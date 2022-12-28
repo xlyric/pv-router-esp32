@@ -54,6 +54,7 @@ while ( micros() <=  ( startmicro + timer ) )  /// a vérifier si < permetrait e
 int middle = 0;
 int middle_count = 0; 
 
+#ifdef OLD
 void injection(){
   //int tableau[144][144]; 
   int injection = 0; 
@@ -126,6 +127,7 @@ void injection(){
 
 
 }
+#endif
 
 const int nbmesure = 72 ; /// nombre de mesure par ondulation
 const int nombre_cycle  = 4 ; /// nombre de cycle pour affiner la mesure
@@ -133,7 +135,7 @@ const int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
 int tableau[freqmesure];
 int porteuse[freqmesure];
 int middle_debug ; 
-float constante_voltage = 4.33; 
+//float constante_voltage = 4.33; 
 
 
 
@@ -255,7 +257,7 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 
 
-positive = positive / ( FACTEURPUISSANCE * nombre_cycle ) ; 
+positive = ( positive / ( FACTEURPUISSANCE * nombre_cycle * 230 / config.voltage ) ) + config.offset ; 
 
 if ( zero > 75 ) { 
   if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }

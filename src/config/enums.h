@@ -67,6 +67,8 @@ struct Config {
   bool polarity; 
   char Publish[100];
   int  ScreenTime;
+  int voltage; 
+  int offset; 
 };
 
 struct Configwifi {

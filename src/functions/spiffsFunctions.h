@@ -78,6 +78,8 @@ void loadConfiguration(const char *filename, Config &config) {
   config.dimmerlocal = doc["dimmerlocal"] | false;
   config.tmax = doc["tmax"] | 65;
   config.localfuse = doc["localfuse"] | 50;
+  config.voltage = doc["voltage"] | 230;
+  config.offset = doc["offset"] | 0;
 
   config.polarity = doc["polarity"] | false;
   strlcpy(config.dimmer,                  // <- destination
@@ -146,6 +148,8 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["polarity"] = config.polarity; 
   doc["Publish"] = config.Publish;
   doc["screentime"] = config.ScreenTime; 
+  doc["voltage"] = config.voltage; 
+  doc["offset"] = config.offset; 
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
