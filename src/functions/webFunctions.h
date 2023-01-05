@@ -271,7 +271,19 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                                             saveConfiguration(filename_conf, config);
                                         }
 
-  
+    /// relays : 0 : off , 1 : on , other : switch 
+    if (request->hasParam("relay1")) { int relay = request->getParam("relay1")->value().toInt(); 
+        if ( relay == 0 ) { digitalWrite(RELAY1 , LOW); }
+        else if ( relay == 1 ) { digitalWrite(RELAY1 , HIGH); } 
+        else digitalWrite(RELAY1, !digitalRead(RELAY1));
+    }
+    if (request->hasParam("relay2")) { int relay = request->getParam("relay2")->value().toInt(); 
+        if ( relay == 0) { digitalWrite(RELAY2 , LOW); }
+        else if ( relay == 1 ) { digitalWrite(RELAY2 , HIGH); } 
+        else digitalWrite(RELAY2, !digitalRead(RELAY2));
+    }
+
+
     request->send(200, "text/html", getconfig().c_str());
 
 	}); 

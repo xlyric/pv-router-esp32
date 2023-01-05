@@ -185,4 +185,12 @@ bool AP=true;
 /// Log web
 #define TEMPOLOG 15 
 
+
+#define RELAY1 13
+#define RELAY2 15
+
+
 #endif
+
+
+///

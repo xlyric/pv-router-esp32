@@ -152,6 +152,12 @@ void setup()
   //analogReadResolution(ADC_BITS);
   pinMode(ADC_INPUT, INPUT);
 
+  // déclaration switch
+  pinMode(RELAY1, OUTPUT);
+  pinMode(RELAY2, OUTPUT);
+  digitalWrite(RELAY1, LOW);
+  digitalWrite(RELAY2, LOW);
+
 
 ///  WIFI INIT
  

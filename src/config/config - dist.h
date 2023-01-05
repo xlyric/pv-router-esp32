@@ -73,7 +73,7 @@
  * The voltage of your home, used to calculate the wattage.
  * Try setting this as accurately as possible.
  */
-/// #define HOME_VOLTAGE 225.0
+/// 5#define HOME_VOLTAGE 225.0
 
 /**
  *  Dimmer 
@@ -185,5 +185,10 @@ bool AP=true;
 
 /// Log web
 #define TEMPOLOG 15 
+
+
+#define RELAY1 13
+#define RELAY2 15
+
 
 #endif
