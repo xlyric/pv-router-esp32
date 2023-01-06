@@ -7,9 +7,10 @@
   #include "config/enums.h"
   #include "config/traduction.h"
 
-
+  #if  NTP
   #include <NTPClient.h>
-
+  #include "tasks/fetch-time-from-ntp.h"
+  #endif
 
 #include <AsyncElegantOTA.h>
 
@@ -20,7 +21,7 @@
 
   #include "tasks/updateDisplay.h"
   #include "tasks/switchDisplay.h"
-  #include "tasks/fetch-time-from-ntp.h"
+ 
   //#include "tasks/mqtt-aws.h"
   #include "tasks/wifi-connection.h"
   //#include "tasks/wifi-update-signalstrength.h"
@@ -83,9 +84,10 @@ Logs logging;
 /// declare MQTT 
 Mqtt configmqtt;
 
+#if  NTP
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
-
+#endif
 
 // Place to store local measurements before sending them off to AWS
 unsigned short measurements[LOCAL_MEASUREMENTS];
@@ -144,7 +146,7 @@ void setup()
   Serial.println("start 18b20");
   sensors.begin();
   /// recherche d'une sonde dallas
-  dallaspresent();
+  dallas.detect = dallaspresent();
   #endif
 
   // Setup the ADC
@@ -447,17 +449,21 @@ Dimmer_setup();
   // ----------------------------------------------------------------
 #if WIFI_ACTIVE == true
   if (!AP) {
-    #if NTP_TIME_SYNC_ENABLED == true
-      xTaskCreate(
-        fetchTimeFromNTP,
-        "Update NTP time",
-        5000,            // Stack size (bytes)
-        NULL,             // Parameter
-        2,                // Task priority
-        NULL              // Task handle
-      );
-    }
-  #endif
+    #if NTP  
+      #if NTP_TIME_SYNC_ENABLED == true
+        xTaskCreate(
+          fetchTimeFromNTP,
+          "Update NTP time",
+          5000,            // Stack size (bytes)
+          NULL,             // Parameter
+          2,                // Task priority
+          NULL              // Task handle
+        );
+      #endif
+    #endif
+  }
+    
+  
 
   #if HA_ENABLED == true
     xTaskCreate(

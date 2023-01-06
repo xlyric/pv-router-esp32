@@ -7,6 +7,8 @@
 #define LANG_FR true
 #define LANG_EN false
 
+#define CLEAN false
+#define NTP false
 
 /**
  * WiFi credentials
@@ -79,7 +81,7 @@
 
 #define DIMMER true
 #define DIMMERLOCAL true
-#define DALLAS false
+#define DALLAS true
 #define TRIGGER 10   /// 
 
 ///// PVROUTER false dans le cas d'un enphase en pilote full 

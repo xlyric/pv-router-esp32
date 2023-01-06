@@ -3,9 +3,9 @@
 
 #include <WiFi.h>
 
-
-#include <NTPClient.h>
-
+#if NTP
+  #include <NTPClient.h>
+#endif
 
 #include "../config/enums.h"
 #include "../config/config.h"
@@ -25,8 +25,9 @@ extern TFT_eSPI display;
 extern DisplayValues gDisplayValues;
 extern unsigned char measureIndex;
 
+#if NTP
   extern NTPClient timeClient;
-
+#endif
 
 
   void drawTime(){

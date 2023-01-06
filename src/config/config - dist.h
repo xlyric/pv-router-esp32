@@ -7,6 +7,8 @@
 #define LANG_FR true
 #define LANG_EN false
 
+#define CLEAN false
+#define NTP false
 
 /**
  * WiFi credentials
@@ -81,7 +83,7 @@
 
 #define DIMMER true /// Use distant Dimmer 
 #define DIMMERLOCAL true /// Use local Dimmer 
-#define DALLAS false  //// Use local Dallas ( GPIO 25 )
+#define DALLAS true  //// Use local Dallas ( GPIO 25 )
 #define TRIGGER 10   /// 
 
 ///// PVROUTER false if you use Enphase Envoy S switch ( default : true )

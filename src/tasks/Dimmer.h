@@ -22,6 +22,7 @@ void updateDimmer(void * parameter){
 #if WIFI_ACTIVE == true
     dimmer();
     
+    #if CLEAN
     /*
     /// si changement à faire
     if  (gDisplayValues.change != 0 ) {
@@ -29,6 +30,7 @@ void updateDimmer(void * parameter){
         // envoie de l'information au dimmer et au serveur MQTT ( mosquito ou autre )
         dimmer_change(); 
     }*/ 
+    #endif
    
 #endif
     gDisplayValues.task = false;

@@ -114,6 +114,7 @@ struct Dallas{
   byte addr[8];
   float celsius = 0.00 ;
   byte security = 0;
+  bool detect = false; 
 };
 
 //***********************

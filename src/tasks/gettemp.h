@@ -12,12 +12,13 @@ HTTPClient httpdimmer;
 
 extern DisplayValues gDisplayValues;
 extern Config config; 
+extern Dallas dallas ;
 
 void GetDImmerTemp(void * parameter){
  for (;;){ 
 // create get request 
 
-if ( DALLAS == false) {
+if ( !dallas.detect) {
     String baseurl; 
       baseurl = "/state" ; 
       httpdimmer.begin(String(config.dimmer),80,baseurl);   

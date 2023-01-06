@@ -5,7 +5,6 @@
 
 #include "../config/config.h"
 #include "../config/enums.h"
-#include "mqtt-aws.h"
 #include "mqtt-home-assistant.h"
 #include "functions/energyFunctions.h"
 #include "functions/dimmerFunction.h"

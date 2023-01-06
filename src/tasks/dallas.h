@@ -17,9 +17,9 @@ extern Dallas dallas ;
  */
 void dallasread(void * parameter){
   for (;;){
-    
+    if (dallas.detect) {
     gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
-   
+   } 
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(5000 / portTICK_PERIOD_MS);
   }
