@@ -114,7 +114,7 @@ long end = millis();
       // Schedule the task to run again in 1 second (while
       // taking into account how long measurement took)
       if (configmodule.enphase_present && configmodule.pilote) {
-            vTaskDelay(5500 / portTICK_PERIOD_MS);
+            vTaskDelay(3000 / portTICK_PERIOD_MS);
       }
       else
       {      

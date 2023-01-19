@@ -257,7 +257,9 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 
 
-positive = ( positive / ( FACTEURPUISSANCE * nombre_cycle * 230 / config.voltage ) ) + config.offset ; 
+//positive = ( positive / ( FACTEURPUISSANCE * nombre_cycle * 230 / config.voltage ) ) + config.offset ; 
+positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle * 230 ) ) + config.offset ; 
+
 
 if ( zero > 75 ) { 
   if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
