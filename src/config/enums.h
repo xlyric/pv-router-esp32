@@ -69,6 +69,7 @@ struct Config {
   int  ScreenTime;
   int voltage; 
   int offset; 
+  bool flip;
 };
 
 struct Configwifi {

@@ -128,6 +128,13 @@ void setup()
   logging.init += "Start Filesystem\r\n";
   SPIFFS.begin();
 
+    //***********************************
+    //************* Setup -  récupération du fichier de configuration
+    //***********************************
+  
+  // Should load default config if run for the first time
+  Serial.println(F("Loading configuration..."));
+  loadConfiguration(filename_conf, config);
 
   ///define if AP mode or load configuration
   if (loadwifi(wifi_conf, configwifi)) {
@@ -159,6 +166,8 @@ void setup()
   pinMode(RELAY2, OUTPUT);
   digitalWrite(RELAY1, LOW);
   digitalWrite(RELAY2, LOW);
+
+
 
 
 ///  WIFI INIT
@@ -252,7 +261,7 @@ else {
         //digitalWrite(TFT_BL, HIGH);
         display.setRotation(1);
         
-        if (FLIP) {
+        if (config.flip) {
         display.setRotation(3);
         }
         
@@ -291,13 +300,7 @@ Dimmer_setup();
     logging.init += "config file not exist, taking default value\r\n";
   }
 
-     //***********************************
-    //************* Setup -  récupération du fichier de configuration
-    //***********************************
-  
-  // Should load default config if run for the first time
-  Serial.println(F("Loading configuration..."));
-  loadConfiguration(filename_conf, config);
+
 
   // Create configuration file
   //Serial.println(F("Saving configuration..."));
