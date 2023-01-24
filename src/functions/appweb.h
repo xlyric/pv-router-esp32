@@ -85,7 +85,7 @@ String getState() {
   if (gDisplayValues.watt >= config.delta  ) {   state = GRID; }
   if (gDisplayValues.watt <= config.deltaneg ) {   state = INJECTION; }
   
-  state = state + ";" + int(gDisplayValues.watt) + ";" + gDisplayValues.dimmer + ";" + config.delta + ";" + config.deltaneg;
+  state = state + ";" + int(gDisplayValues.watt) + ";" + gDisplayValues.dimmer + ";" + config.delta + ";" + config.deltaneg + ";" + gDisplayValues.temperature ;
   return String(state);
 }
 

@@ -201,6 +201,8 @@
                 </div>
               </div>
             </div>
+
+            
 			
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
@@ -226,31 +228,45 @@
           <div class="row">
 
             <!-- Area Chart -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card shadow mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Sigma</h6>
-				  </div>
-					<div class="card-body">
+          <h6 class="m-0 font-weight-bold text-primary">Sigma</h6>
+				</div>
+				<div class="card-body">
 					<div id='curve_chart2' style=' width: auto; height: 200px;'>
 										
 					</div>
-					</div>
+				</div>
 			</div>
 		</div>
 		
-		     <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card shadow mb-4">
+		<div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Routed Power</h6>
-				  </div>
-					<div class="card-body">
+          <h6 class="m-0 font-weight-bold text-primary">Routed Power</h6>
+				</div>
+				<div class="card-body">
 					<div id='curve_power' style=' width: auto; height: 200px;'>
 										
 					</div>
+				</div>
+			</div>
+		</div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Temperature</h6>
+				</div>
+				<div class="card-body">
+					<div id='curve_temp' style=' width: auto; height: 200px;'>
+										
 					</div>
+				</div>
 			</div>
 		</div>
 			
@@ -284,7 +300,7 @@
 				  
 				  function drawChart() {    
 
-					var optionsGauge = {           
+				var optionsGauge = {           
           redFrom: -100, 
           redTo: -25,
            
@@ -298,12 +314,11 @@
 		  
           min: -100, 
           max: 400, 
-           
-          
+ 
         };
        
 	   
-	   var optionsGaugepower = {           
+	      var optionsGaugepower = {           
           redFrom: 37.5, 
           redTo: 50,
            
@@ -317,11 +332,25 @@
 		  
           min: 0, 
           max: 50, 
-           
           
         };
 				  
-				 			  
+        var optionsGaugetemp = {           
+          redFrom: 75, 
+          redTo: 100,
+           
+          yellowFrom: 0, 
+          yellowTo: 40, 
+           
+          greenFrom: 40, 
+          greenTo: 75, 
+		  	  
+          minorTicks: 5,
+		  
+          min: 0, 
+          max: 90, 
+          
+        }; 			  
 				
 				  setInterval(function ( ) {
 				  
@@ -360,7 +389,11 @@
 		dataGaugePApower.addColumn('number', 'Value');
 		dataGaugePApower.addRows(1);
 
-
+		var gaugePAtemp = new google.visualization.Gauge(document.getElementById('curve_temp'));
+	    dataGaugePAtemp = new google.visualization.DataTable();
+	    dataGaugePAtemp.addColumn('string', 'temp');
+		dataGaugePAtemp.addColumn('number', 'Value');
+		dataGaugePAtemp.addRows(1);
 
 	<!-- <!-- récupération valeur sigma et State --> 	 -->
 	  setInterval(function ( ) {
@@ -379,9 +412,13 @@
 		
 		dataGaugePApower.setValue(0, 0, "Power"); 
 		dataGaugePApower.setValue(0, 1, config[2]);
+
+    dataGaugePAtemp.setValue(0, 0, "temp"); 
+    dataGaugePAtemp.setValue(0, 1, config[5]);
 		
 		gaugePA.draw(dataGaugePA,optionsGauge);
 		gaugePApower.draw(dataGaugePApower,optionsGaugepower);
+    gaugePAtemp.draw(dataGaugePAtemp,optionsGaugetemp);
 		
 		document.getElementById("state").innerHTML = config[0];
 		document.getElementById("sigma").innerHTML = config[1];
@@ -439,7 +476,7 @@
 		//document.getElementById("domoticz").innerHTML = config[0];
 		//document.getElementById("port").innerHTML = config[1];	  
 		//document.getElementById("idx").innerHTML = config[2];
-		document.getElementById("version").innerHTML = config[3];
+		//document.getElementById("version").innerHTML = config[3];
     document.getElementById("screentime").value = config[21];	
 	
 				  

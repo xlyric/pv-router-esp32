@@ -33,9 +33,9 @@ void reconnect() {
     } else {
       Serial.print("MQTT reconnect : failed, retcode="); 
       Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(5000);
+      Serial.println(" try again in 2 seconds");
+      // Wait 2 seconds before retrying
+      delay(2000);  // 24/01/2023 passage de 5 à 2s 
     }
   }
 }
