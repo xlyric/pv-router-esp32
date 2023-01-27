@@ -30,7 +30,7 @@ void reconnect() {
     Serial.println("Attempting MQTT reconnection...");
     // Attempt to connect
 
-    if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", true)) {       //Connect to MQTT server
+    if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
       client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
       Serial.println("MQTT reconnect : connected");
     } else {
@@ -105,8 +105,8 @@ void callback(char* topic, byte* payload, unsigned int length) {
 */
 
 void Mqtt_init() {
-  String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-  String topic = "homeassistant/sensor/"+ pvname +"/status";
+  // String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
+  // String topic = "homeassistant/sensor/"+ pvname +"/status";
 
   // debug
   Serial.println("MQTT_init : server="+String(config.mqttserver));
