@@ -46,7 +46,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include "tasks/dallas.h"
-#include "functions/dallasfunction.h"
+#include "functions/dallasFunction.h"
 #endif
 
 #if DIMMERLOCAL 
@@ -84,6 +84,9 @@ Logs logging;
 /// declare MQTT 
 Mqtt configmqtt;
 
+
+int retry_wifi = 0;
+void connect_to_wifi();
 #if  NTP
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
@@ -157,7 +160,9 @@ void setup()
   #endif
 
   // Setup the ADC
-  adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
+  adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
+  adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);
+
   //analogReadResolution(ADC_BITS);
   pinMode(ADC_INPUT, INPUT);
 
@@ -172,76 +177,7 @@ void setup()
 
 ///  WIFI INIT
  
-
-
-///// AP WIFI INIT 
-if (AP) {
-  APConnect(); 
-    gDisplayValues.currentState = UP;
-    gDisplayValues.IP = String(WiFi.softAPIP().toString());
-    btStop();
-}
-else {
-    #if WIFI_ACTIVE == true
-      if ( strcmp(WIFI_PASSWORD,"xxx") == 0 ) { WiFi.begin(configwifi.SID, configwifi.passwd); }
-      else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
-      
-      int timeoutwifi=0;
-      logging.init += "Start Wifi Network " + String(WIFI_NETWORK) +  "\r\n";
-      while ( WiFi.status() != WL_CONNECTED ) {
-        delay(500);
-        Serial.print(".");
-        timeoutwifi++; 
-
-        if (timeoutwifi > 20 ) {
-              logging.init += "timeout, go to AP mode \r\n" ;  
-              logging.init += "Wifi State :";
-              
-              switch (WiFi.status()) {
-                  case 1:
-                      logging.init +="SSID is not available" ; 
-                      break;
-                  case 4:
-                      logging.init +="The connection fails for all the attempts"  ;
-                      break;
-                  case 5:
-                      logging.init +="The connection is lost" ; 
-                      break;
-                  case 6:
-                      logging.init +="Disconnected from the network" ; 
-                      break;
-                  default:
-                      logging.init +="I have no idea ?! " ; 
-                      break;
-              }
-         
-              
-              logging.init += "\r\n";
-              break;}
-      }
-
-        //// timeout --> AP MODE 
-        if ( timeoutwifi > 20 ) {
-              WiFi.disconnect(); 
-              AP=true; 
-              serial_println("timeout, go to AP mode ");
-              
-              gDisplayValues.currentState = UP;
-              gDisplayValues.IP = String(WiFi.softAPIP().toString());
-              APConnect(); 
-              btStop();
-        }
-
-      serial_println("WiFi connected");
-      logging.init += "Wifi connected\r\n";
-      serial_println("IP address: ");
-      serial_println(WiFi.localIP());
-      
-      gDisplayValues.currentState = UP;
-      gDisplayValues.IP = String(WiFi.localIP().toString());
-      btStop();
-    #endif
-}
+  connect_to_wifi();
 
 #if OLED_ON == true
     Serial.println(OLEDSTART);
@@ -526,8 +462,31 @@ logging.power=true; logging.sct=true; logging.sinus=true;
 
 void loop()
 {
+  if (config.restart) {
+    delay(5000);
+    Serial.print("Restarting PV ROUTER");
+    ESP.restart();
+  }
+
 //serial_println(F("loop")); 
 
+  if ( WiFi.status() != WL_CONNECTED ) {
+      connect_to_wifi();
+      }
+    
+  if (AP) {
+    int number_client = WiFi.softAPgetStationNum(); // Nombre de stations connectées à ESP8266 soft-AP
+    if (number_client == 0 ) {
+      if (retry_wifi == 10 ) {
+        retry_wifi = 0;
+        connect_to_wifi();
+      }
+      if (retry_wifi < 10 ) {
+        retry_wifi ++;
+      }
+
+    }
+  }
   if (!AP) {
     #if WIFI_ACTIVE == true
         if (config.mqtt) {
@@ -538,8 +497,77 @@ void loop()
         }
     #endif
   }
-
-
-
   vTaskDelay(10000 / portTICK_PERIOD_MS);
+}
+
+void connect_to_wifi() {
+  ///// AP WIFI INIT 
+  if (AP) {
+    APConnect(); 
+      gDisplayValues.currentState = UP;
+      gDisplayValues.IP = String(WiFi.softAPIP().toString());
+      btStop();
+  }
+
+  else {
+      #if WIFI_ACTIVE == true
+      if ( strcmp(WIFI_PASSWORD,"xxx") == 0 ) { WiFi.begin(configwifi.SID, configwifi.passwd); }
+      else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
+      
+      int timeoutwifi=0;
+      logging.init += "Start Wifi Network " + String(WIFI_NETWORK) +  "\r\n";
+      while ( WiFi.status() != WL_CONNECTED ) {
+        delay(500);
+        Serial.print(".");
+        timeoutwifi++; 
+
+        if (timeoutwifi > 20 ) {
+              logging.init += "timeout, go to AP mode \r\n" ;  
+              logging.init += "Wifi State :";
+              
+              switch (WiFi.status()) {
+                  case 1:
+                      logging.init +="SSID is not available" ; 
+                      break;
+                  case 4:
+                      logging.init +="The connection fails for all the attempts"  ;
+                      break;
+                  case 5:
+                      logging.init +="The connection is lost" ; 
+                      break;
+                  case 6:
+                      logging.init +="Disconnected from the network" ; 
+                      break;
+                  default:
+                      logging.init +="I have no idea ?! " ; 
+                      break;
+              }
+          
+              
+              logging.init += "\r\n";
+              break;}
+      }
+
+        //// timeout --> AP MODE 
+        if ( timeoutwifi > 20 ) {
+              WiFi.disconnect(); 
+              AP=true; 
+              serial_println("timeout, go to AP mode ");
+              
+              gDisplayValues.currentState = UP;
+              gDisplayValues.IP = String(WiFi.softAPIP().toString());
+              APConnect(); 
+              btStop();
+        }
+
+      serial_println("WiFi connected");
+      logging.init += "Wifi connected\r\n";
+      serial_println("IP address: ");
+      serial_println(WiFi.localIP());
+      
+      gDisplayValues.currentState = UP;
+      gDisplayValues.IP = String(WiFi.localIP().toString());
+      btStop();
+      #endif
+  }
 }

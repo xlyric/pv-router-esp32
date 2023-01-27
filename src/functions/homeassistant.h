@@ -16,7 +16,9 @@ void init_HA_sensor(){
         device_dimmer.Set_name("dimmer");
         device_dimmer.Set_unit_of_meas("%");
         device_dimmer.Set_stat_cla("measurement");
-        device_dimmer.Set_dev_cla("power");
+        //device_dimmer.Set_dev_cla("power");
+        device_dimmer.Set_dev_cla("power_factor"); // Correct : is using native unit of measurement '%' which is not a valid unit for the device class ('power') it is using
+        device_dimmer.Set_icon("mdi:percent");
         
         device_routeur.Set_name("power");
         device_routeur.Set_unit_of_meas("W");

@@ -81,7 +81,12 @@
         <i class="fas fa-fw fa-download"></i>
       <span>OTA</span></a>
     </li>
-
+  
+    <li class="nav-item active">
+      <a class="nav-link" href="/update">
+        <i class="fas fa-fw fa-download"></i>
+      <span>OTA</span></a>
+    </li>
 
   
 
@@ -367,7 +372,7 @@
                 <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
                   </div>
                 </div>
-
+                
                 <div class="col-sm-3">
                   <div class="custom-control custom-checkbox small">
                     <input type="checkbox" class="custom-control-input" id="flip">
@@ -454,7 +459,7 @@ function sendservermode (mode) {
     document.getElementById("polarity").value = config[20];
     document.getElementById("screen").value = config[21];
     document.getElementById("flip").value = config[22];
-		}); 
+  }); 
 
 
 }

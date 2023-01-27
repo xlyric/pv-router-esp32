@@ -70,6 +70,7 @@ struct Config {
   int voltage; 
   int offset; 
   bool flip;
+  bool restart;
 };
 
 struct Configwifi {
@@ -142,6 +143,9 @@ struct HA
     private:String entity_category; 
     public:void Set_entity_category(String setter) {entity_category=setter; }
 
+    private:String icon; 
+    public:void Set_icon(String setter) {icon="\"ic\": \""+ setter +"\", "; }
+
     bool cmd_t; 
 
     private:String IPaddress;
@@ -160,7 +164,8 @@ struct HA
               "\"name\": \""+ node_id + "\","
               "\"sw\": \"PvRouter "+ String(VERSION) +"\","
               "\"mdl\": \"ESP32 TTGO " + IPaddress + "\","
-              "\"mf\": \"Cyril Poissonnier\""
+              "\"mf\": \"Cyril Poissonnier\","
+              "\"cu\": \"http://"+ IPaddress +"\""
             "}"; 
             return info;
             }
@@ -168,9 +173,9 @@ struct HA
     private:String value_template; 
 
 
-    private:void online(){
-      client.publish(String(topic+"status").c_str() , "online", true); // status Online
-    } 
+    // private:void online(){
+    //   client.publish(String(topic+"status").c_str() , "online", true); // status Online
+    // } 
 
     public:void discovery(){
       IPaddress =   WiFi.localIP().toString() ;
@@ -185,14 +190,14 @@ struct HA
             "\"value_template\": \"{{ value_json."+name +" }}\", "
             "\"cmd_t\": \""+ topic +"command\","
             "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
-            
+            + icon
             + device_declare() + 
           "}";
           if (dev_cla =="" ) { dev_cla = name; }
           client.publish((topic+name+"/config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
           //Serial.println(device.c_str());
           Serial.println(name + "HA discovery");
-          online();
+          // online();
           send("0");
           
     }

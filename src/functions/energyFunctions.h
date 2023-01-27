@@ -135,6 +135,8 @@ const int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
 int tableau[freqmesure];
 int porteuse[freqmesure];
 int middle_debug ; 
+int positive_debug ; 
+
 //float constante_voltage = 4.33; 
 
 
@@ -143,20 +145,20 @@ void injection2(){
 
 int temp_read ; 
 // int temp_porteuse ;
-  double sigma_read = 0 ; 
-  //double voltage = 0; // test de calcul de voltage
-  //String porteuse = "" ;
-  int zero =0; 
-  double positive = 0 ; 
-  //int zero_count = 0; 
-  int loop = 0;  int inter=0;
-  
-  int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
-  unsigned long startMillis,stopMillis;
-  //int injection = 0; 
- // int nbmesure=72 ;  /// nombre de mesure par ondulation
- // int nombre_cycle = 4 ;  
- // int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
+double sigma_read = 0 ; 
+//double voltage = 0; // test de calcul de voltage
+//String porteuse = "" ;
+int zero =0; 
+double positive = 0 ; 
+//int zero_count = 0; 
+int loop = 0;  int inter=0;
+
+int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
+unsigned long startMillis,stopMillis;
+//int injection = 0; 
+// int nbmesure=72 ;  /// nombre de mesure par ondulation
+// int nombre_cycle = 4 ;  
+// int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
 
 
 front();  ///synchro porteuse.
@@ -256,10 +258,8 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 //Serial.println(int(positive/10000*voltage_read)) ;// test de calcul de voltage
 
 
-
-//positive = ( positive / ( FACTEURPUISSANCE * nombre_cycle * 230 / config.voltage ) ) + config.offset ; 
-positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle * 230 ) ) + config.offset ; 
-
+positive = ( positive / nombre_cycle / config.facteur * config.voltage) + config.offset ; 
+positive_debug = ( positive / nombre_cycle * config.voltage) ; 
 
 if ( zero > 75 ) { 
   if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }

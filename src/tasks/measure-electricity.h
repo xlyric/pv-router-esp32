@@ -76,26 +76,30 @@ if (!AP) {
                   long timemesure = start-beforetime;
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
 
-                  Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
+                  if (config.IDX != 0) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
                   device_routeur.send(String(gDisplayValues.watt));
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
-                  Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
-                  Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  if (config.IDX != 0) {
+                        Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
+                        Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  }
                   device_inject.send(String(int(-gDisplayValues.watt)));
                   device_grid.send(String("0"));
                   WHtempgrid += wattheure; 
                   compteur_inject.send(String(WHtempgrid));
                   
                   
-                  compteur_grid.send(String("0"));
+                  //compteur_grid.send(String("0"));
                   }
                   else {
-                  Mqtt_send(String(config.IDX), String("0"),"injection");
-                  Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                        if (config.IDX != 0) {
+                              Mqtt_send(String(config.IDX), String("0"),"injection");
+                              Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                        }
                   device_grid.send(String(int(gDisplayValues.watt)));
                   device_inject.send(String("0"));
-                  compteur_inject.send(String("0"));
+                  //compteur_inject.send(String("0"));
                   WHtempinject += wattheure;
                   compteur_grid.send(String(WHtempinject));
                   

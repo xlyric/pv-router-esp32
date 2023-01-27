@@ -61,7 +61,7 @@ void loadConfiguration(const char *filename, Config &config) {
           doc["otapassword"] | "Pvrouteur2", // <- source
           sizeof(config.otapassword));         // <- destination's capacity
   
-  config.facteur = doc["facteur"] | 0.86; 
+  config.facteur = doc["facteur"] | 1650;
   config.delta = doc["delta"] | 50; 
   config.num_fuse = doc["fuse"] | 70;
   config.deltaneg = doc["deltaneg"] | -100; 

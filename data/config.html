@@ -89,6 +89,13 @@
       <span>OTA</span></a>
     </li>
 
+    <li class="nav-item active">
+      <a class="nav-link" href="/reboot">
+          <i class="fas fa-fw fa-power-off"></i>
+          <span>Reboot</span>
+      </a>
+  </li>
+
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
@@ -334,7 +341,7 @@
                 <div class="form-group row">
                   <div class="col-sm-3 cosphi" ><span>Cosphi</span></div>
                   <div class="col-sm-3">Facteur de correction</div>
-                
+
                 </div>
                 <div class="form-group row">
                   <div class="col-sm-3">
@@ -343,7 +350,7 @@
                   <div class="col-sm-3">
                     <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
                   </div>
-                  
+
 
                 </div>
 
@@ -462,7 +469,7 @@ function sendservermode (mode) {
     document.getElementById("polarity").value = config[20];
     document.getElementById("screen").value = config[21];
     document.getElementById("flip").value = config[22];
-		}); 
+    }); 
 
 
 }
@@ -584,7 +591,7 @@ var recupconfig = $.get ({
     i=15;
 		document.getElementById("facteur").value = config[i];
     i++;
-		//document.getElementById("Usemqtt").checked = config[i];
+    //document.getElementById("Usemqtt").checked = config[i];
 		//document.getElementById("Usemqtt").value = config[i];
     i++;
     i++;

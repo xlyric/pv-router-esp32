@@ -169,18 +169,17 @@ String getmqtt() {
 String getdebug() {
   configweb = "";
   configweb += "middle:" + String(middle_debug) + "\r\n" ; 
-  //// calcul du cos phi par recherche milieu de demi onde positive 
+  // calcul du cos phi par recherche milieu de demi onde positive 
   int start=0;int end=0;int half=0  ;
     for ( int i=0; i < 72; i ++ )
     {
       if ( porteuse[i] !=0  && start == 0 ) {start = i ;}
-      if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i ;}
-	  configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
+      if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i -1 ;}
+	    configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
     }
     half = 36 - ( end - start ); 
-    configweb += "  cosphi :" + String(half) + "  end  :" + String(end ) +"  start :" + String(start)  ; 
-
-
+    configweb += "cosphi :" + String(half) + "  end :" + String(end ) +"  start :" + String(start)  ; 
+    configweb += "  positive :" + String(positive_debug) + "\r\n" ;  
     return String(configweb);
   }
 

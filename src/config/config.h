@@ -135,7 +135,6 @@
  * Local measurements
  */
 #define LOCAL_MEASUREMENTS 30
-#define FACTEURPUISSANCE 10.50
 #define COMPENSATION 60 ///  % d'asservissement pour l'envoie de puissance au dimmer.
 
 /**
@@ -177,7 +176,7 @@
     #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.20230127"
+#define VERSION "version 3.20221228"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"
