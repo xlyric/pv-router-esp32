@@ -367,6 +367,14 @@
                 <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
                   </div>
                 </div>
+
+                <div class="col-sm-3">
+                  <div class="custom-control custom-checkbox small">
+                    <input type="checkbox" class="custom-control-input" id="flip">
+                    <label class="custom-control-label" for="flip" onclick="sendservermode(this.innerHTML);" >flip</label>
+                  </div>
+                </div>
+
               </div> 
             </div>
           </div>
@@ -445,6 +453,7 @@ function sendservermode (mode) {
 		//document.getElementById("Usemqtt").value = config[16];
     document.getElementById("polarity").value = config[20];
     document.getElementById("screen").value = config[21];
+    document.getElementById("flip").value = config[22];
 		}); 
 
 
@@ -588,6 +597,9 @@ i++;
 		document.getElementById("voltage").value = config[i];	
     i++;
 		document.getElementById("offset").value = config[i];	
+    i++;
+    document.getElementById("flip").checked = config[i];
+		document.getElementById("flip").value = config[i];
 
 </script>
 

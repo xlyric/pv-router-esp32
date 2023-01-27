@@ -73,7 +73,8 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
             }
         }
       
-      delay (1500); // delay de transmission réseau dimmer et application de la charge }
+      delay (500); // delay de transmission réseau dimmer et application de la charge } 
+      /// 24/01/2023 passage de 1500 à 500ms 
     //}
       #endif
 }

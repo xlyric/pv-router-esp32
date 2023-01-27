@@ -9,6 +9,11 @@ extern Config config;
 extern Configwifi configwifi; 
 extern Mqtt configmqtt; 
 extern Logs logging;
+#ifdef  TTGO
+#include <TFT_eSPI.h>
+#include <SPI.h>
+extern TFT_eSPI display ;   // Invoke library
+#endif
 int middleoscillo = 1800;
 
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
@@ -85,7 +90,7 @@ String getState() {
   if (gDisplayValues.watt >= config.delta  ) {   state = GRID; }
   if (gDisplayValues.watt <= config.deltaneg ) {   state = INJECTION; }
   
-  state = state + ";" + int(gDisplayValues.watt) + ";" + gDisplayValues.dimmer + ";" + config.delta + ";" + config.deltaneg;
+  state = state + ";" + int(gDisplayValues.watt) + ";" + gDisplayValues.dimmer + ";" + config.delta + ";" + config.deltaneg + ";" + gDisplayValues.temperature ;
   return String(state);
 }
 
@@ -109,6 +114,13 @@ String getServermode(String Servermode) {
   if ( Servermode == "Dimmer local" ) {   config.dimmerlocal = !config.dimmerlocal; }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
   if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; }
+  if ( Servermode == "flip" ) {   
+              config.flip = !config.flip; 
+              #ifdef  TTGO
+              if (config.flip) display.setRotation(3);
+              else display.setRotation(1);
+              #endif
+              }
   
 
 return String(Servermode);
@@ -131,7 +143,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip);
   return String(configweb);
 }
 //***********************************

@@ -76,6 +76,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.mqttport = doc["mqttport"] | 1883;
   
   config.dimmerlocal = doc["dimmerlocal"] | false;
+  config.flip = doc["flip"] | true;
   config.tmax = doc["tmax"] | 65;
   config.localfuse = doc["localfuse"] | 50;
   config.voltage = doc["voltage"] | 230;
@@ -150,6 +151,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["screentime"] = config.ScreenTime; 
   doc["voltage"] = config.voltage; 
   doc["offset"] = config.offset; 
+  doc["flip"] = config.flip; 
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
