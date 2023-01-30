@@ -178,8 +178,9 @@ String getdebug() {
 	    configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
     }
     half = 36 - ( end - start ); 
-    configweb += "cosphi :" + String(half) + "  end :" + String(end ) +"  start :" + String(start)  ; 
-    configweb += "  positive :" + String(positive_debug) + "\r\n" ;  
+    configweb += "cosphi :" + String(half) + "  end :" + String(end ) +"  start :" + String(start)  + "\r\n" ; 
+    configweb += "positive :" + String(positive_debug) + "\r\n" ;  
+    configweb += "watt :" + String(gDisplayValues.watt) + "\r\n" ;  
     return String(configweb);
   }
 

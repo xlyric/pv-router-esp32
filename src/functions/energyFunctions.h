@@ -257,9 +257,8 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 //Serial.println(int(positive/10000*voltage_read)) ;// test de calcul de voltage
 
-
-positive = ( positive / nombre_cycle / config.facteur * config.voltage) + config.offset ; 
 positive_debug = ( positive / nombre_cycle * config.voltage) ; 
+positive = ( positive / nombre_cycle / config.facteur * config.voltage) + config.offset ; 
 
 if ( zero > 75 ) { 
   if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
