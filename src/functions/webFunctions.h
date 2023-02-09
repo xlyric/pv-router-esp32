@@ -116,6 +116,10 @@ server.on("/bootstrap.bundle.min.js.map",  HTTP_GET, [](AsyncWebServerRequest *r
   server.on("/sb-admin-2.min.css", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/sb-admin-2.min.css", "text/css");
   });
+// pour débug 
+  server.on("/mqtt.json", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/mqtt.json", "text/css");
+  });
 
 if (!configmodule.pilote) {
   server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -254,6 +258,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_publish)) { request->getParam(PARAM_INPUT_publish)->value().toCharArray(config.Publish,100); 
       saveConfiguration(filename_conf, config);   }
    if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,50);  }
+   if (request->hasParam("mqttport")) { config.mqttport = request->getParam("mqttport")->value().toInt();}
    if (request->hasParam("mqttpassword")) { request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
       savemqtt(mqtt_conf, configmqtt); }
 
@@ -269,6 +274,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                                             getServermode(inputMessage);
                                             request->send(200, "text/html", getconfig().c_str());
                                             saveConfiguration(filename_conf, config);
+                                            savemqtt(mqtt_conf, configmqtt);
                                         }
 
     /// relays : 0 : off , 1 : on , other : switch 
@@ -282,7 +288,8 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
         else if ( relay == 1 ) { digitalWrite(RELAY2 , HIGH); } 
         else digitalWrite(RELAY2, !digitalRead(RELAY2));
     }
-
+    if (request->hasParam("relaystart")) { config.relayon = request->getParam("relaystart")->value().toInt();}
+    if (request->hasParam("relaystop")) { config.relayoff = request->getParam("relaystop")->value().toInt();}
 
     request->send(200, "text/html", getconfig().c_str());
 

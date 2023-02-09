@@ -81,6 +81,8 @@ void loadConfiguration(const char *filename, Config &config) {
   config.localfuse = doc["localfuse"] | 50;
   config.voltage = doc["voltage"] | 230;
   config.offset = doc["offset"] | 0;
+  config.relayoff = doc["relayoff"] | 95;
+  config.relayon = doc["relayon"] | 100;
 
   config.polarity = doc["polarity"] | false;
   strlcpy(config.dimmer,                  // <- destination
@@ -152,6 +154,11 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["voltage"] = config.voltage; 
   doc["offset"] = config.offset; 
   doc["flip"] = config.flip; 
+  
+  doc["relayon"] = config.relayon; 
+  doc["relayoff"] = config.relayoff; 
+
+
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
@@ -197,6 +204,7 @@ bool loadmqtt(const char *filename, Mqtt &configmqtt) {
   strlcpy(configmqtt.password,                  // <- destination
           doc["MQTT_PASSWORD"] | "", // <- source
           sizeof(configmqtt.password));         // <- destination's capacity
+  configmqtt.HA = doc["HA"] | true;
   configFile.close();
 logging.init += "MQTT config loaded\r\n"; 
 return true;    
@@ -220,7 +228,7 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   // Set the values in the document
   doc["MQTT_USER"] = configmqtt.username;
   doc["MQTT_PASSWORD"] = configmqtt.password;
-  
+  doc["HA"] = configmqtt.HA;
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));

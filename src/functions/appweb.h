@@ -2,6 +2,7 @@
 #define APPWEB_FUNCTIONS
 
 #include "energyFunctions.h"
+#include "homeassistant.h"
 
 String configweb; 
 extern DisplayValues gDisplayValues;
@@ -114,6 +115,10 @@ String getServermode(String Servermode) {
   if ( Servermode == "Dimmer local" ) {   config.dimmerlocal = !config.dimmerlocal; }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
   if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; }
+  if ( Servermode == "HA" ) {   configmqtt.HA = !configmqtt.HA; 
+                    if (configmqtt.HA) init_HA_sensor(); 
+                    }
+
   if ( Servermode == "flip" ) {   
               config.flip = !config.flip; 
               #ifdef  TTGO
@@ -143,7 +148,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip);
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+config.relayon+";"+config.relayoff;
   return String(configweb);
 }
 //***********************************
@@ -162,7 +167,7 @@ String getwifi() {
 
 String getmqtt() {
 
-   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) + ";" + String(config.IDX) + ";" + String(config.IDXdimmer) + ";" + String(config.port);
+   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) + ";" + String(config.IDX) + ";" + String(config.IDXdimmer) + ";" + String(config.mqttport)+";"+stringbool(configmqtt.HA);
   return String(retour) ;
 }
 

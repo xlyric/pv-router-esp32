@@ -70,6 +70,8 @@ struct Config {
   int voltage; 
   int offset; 
   bool flip;
+  int relayon; 
+  int relayoff;
 };
 
 struct Configwifi {
@@ -80,6 +82,7 @@ struct Configwifi {
 struct Mqtt {
   char username[50];
   char password[50];
+  bool HA;
 };
 
 struct Configmodule {

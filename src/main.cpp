@@ -108,6 +108,8 @@ HA device_grid;
 HA device_inject;
 HA compteur_inject;
 HA compteur_grid;
+HA switch_1;
+HA temperature_HA;
 
 /***************************
  *  Dimmer init
@@ -502,7 +504,7 @@ if (!AP) {
       Mqtt_init();
 
     // HA autoconf
-      init_HA_sensor();
+     if (configmqtt.HA) init_HA_sensor();
       
     }
 }

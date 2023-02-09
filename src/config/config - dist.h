@@ -178,7 +178,7 @@
 #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.20230127"
+#define VERSION "version 3.20230209"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"

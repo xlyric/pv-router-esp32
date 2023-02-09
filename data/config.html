@@ -41,7 +41,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="/">
+        <a class="nav-link" href="https://github.com/xlyric/pv-router-esp32/MAJ.md" target="_blank">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span><br>
 		<span id="version"></span></a>
@@ -301,6 +301,27 @@
 
             <br>
 
+            <div class="card position-relative">
+              <div class="card-header py-6">
+                <h6 class="m-0 font-weight-bold text-primary">Relay</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+
+                <div class="form-group row"> 
+                  
+                    <div class="col-sm-5">
+                        Mise en route à X% : <input type="text" class="form-control form-control-user" id="relaystart" placeholder="%RELAYSTART%">
+                    </div>
+                    <div class="col-sm-4">
+                       Arret à X% : <input type="text" class="form-control form-control-user" id="relaystop" placeholder="%RELAYSTOP%">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <br>
+
 
 							
 
@@ -537,7 +558,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val()} 
 
 		
         $.ajax({
@@ -608,6 +629,13 @@ var recupconfig = $.get ({
     i++;
     document.getElementById("flip").checked = config[i];
 		document.getElementById("flip").value = config[i];
+    i++;
+    i++;
+    document.getElementById("relaystart").checked = config[i];
+		document.getElementById("relaystart").value = config[i];
+    i++;
+    document.getElementById("relaystop").checked = config[i];
+		document.getElementById("relaystop").value = config[i];
 </script>
 
 

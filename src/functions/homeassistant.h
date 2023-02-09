@@ -10,6 +10,8 @@ extern HA device_grid;
 extern HA device_inject;
 extern HA compteur_inject;
 extern HA compteur_grid;
+extern HA switch_1;
+extern HA temperature_HA;
 
 void init_HA_sensor(){
 
@@ -42,6 +44,14 @@ void init_HA_sensor(){
         compteur_inject.Set_unit_of_meas("Wh");
         compteur_inject.Set_stat_cla("total_increasing");
         compteur_inject.Set_dev_cla("energy");      
+                
+        temperature_HA.Set_name("Dallas");
+        temperature_HA.Set_dev_cla("temperature"); 
+        temperature_HA.Set_unit_of_meas("°C");
+        temperature_HA.Set_stat_cla("measurement");
+
+        switch_1.Set_name("Switch1");
+        switch_1.Set_dev_cla("switch"); 
 
         client.setBufferSize(1024);
         device_routeur.discovery();
@@ -50,6 +60,8 @@ void init_HA_sensor(){
         device_inject.discovery();
         compteur_inject.discovery();
         compteur_grid.discovery();
+        temperature_HA.discovery();
+        switch_1.discovery();
 
 }
 
