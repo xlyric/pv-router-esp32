@@ -46,7 +46,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include "tasks/dallas.h"
-#include "functions/dallasfunction.h"
+#include "functions/dallasFunction.h"
 #endif
 
 #if DIMMERLOCAL 
