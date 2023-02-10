@@ -22,6 +22,7 @@ void dallasread(void * parameter){
     if (dallas.detect) {
     gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
     if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
+    Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );
    } 
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(5000 / portTICK_PERIOD_MS);
