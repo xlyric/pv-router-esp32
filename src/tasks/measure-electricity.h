@@ -99,8 +99,9 @@ if (!AP) {
                   if (configmqtt.HA) compteur_inject.send(String("0"));
                   WHtempinject += wattheure;
                   if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
+                  //maj 202030209
                   if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
-                  
+                  Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );
                   }
 
                   
