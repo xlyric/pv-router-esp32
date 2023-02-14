@@ -95,7 +95,8 @@ void init_HA_sensor(){
         power_vrms.discovery();
         power_irms.discovery();
         power_apparent.discovery();
-
+        temperature_HA.discovery();
+        switch_1.discovery();
 
 
 
