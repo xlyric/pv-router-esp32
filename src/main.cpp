@@ -47,6 +47,7 @@
 #include <DallasTemperature.h>
 #include "tasks/dallas.h"
 #include "functions/dallasFunction.h"
+#include "functions/dallasFunction.h"
 #endif
 
 #if DIMMERLOCAL 
@@ -111,6 +112,8 @@ HA device_grid;
 HA device_inject;
 HA compteur_inject;
 HA compteur_grid;
+HA switch_1;
+HA temperature_HA;
 HA power_factor;
 HA power_vrms;
 HA power_irms;
@@ -443,7 +446,7 @@ if (!AP) {
       Mqtt_init();
 
     // HA autoconf
-      init_HA_sensor();
+     if (configmqtt.HA) init_HA_sensor();
       
     }
 }

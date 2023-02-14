@@ -88,7 +88,12 @@
         <i class="fas fa-fw fa-download"></i>
       <span>OTA</span></a>
     </li> 
-
+    <li class="nav-item active">
+      <a class="nav-link" href="/reboot">
+          <i class="fas fa-fw fa-power-off"></i>
+          <span>Reboot</span>
+      </a>
+    </li>
 
   
 
@@ -223,6 +228,26 @@
                 </div>
               </div>
             </div>
+            <br>
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">HA MQTT ( Envoie d'info MQTT sur topic HA )</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox small">
+                      Actif
+                      <br>
+                      <input type="checkbox" class="custom-control-input" id="HA">
+                      <label class="custom-control-label" for="HA" onclick="sendservermode(this.innerHTML);" >HA</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>          
 				  
 		    </div>
 				
@@ -271,6 +296,7 @@ $.get( "/get", { servermode: mode } )
 $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
 var config = data.split(";");
 document.getElementById("MQTT").value = config[16];
+document.getElementById("HA").value = config[28];
 }); 
 
 
@@ -299,7 +325,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'port':$('#port').val()} 
+	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'mqttport':$('#port').val()} 
 
         $.ajax({
             type: "GET",
@@ -341,6 +367,9 @@ var recupconfig = $.get ({
       document.getElementById("IDXDIMMER").value = config[i];
       i++;
       document.getElementById("port").value = config[i];
+      i++;
+      document.getElementById("HA").checked = config[i];
+		  document.getElementById("HA").value = config[i];
 </script>
 				  
                 </div>

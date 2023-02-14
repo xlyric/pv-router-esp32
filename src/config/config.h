@@ -121,6 +121,7 @@ float PowerFactor; //
     #define TEMPERATURE_PRECISION 10
     #define TRIGGER 10   /// Trigger % for max temp protection. max temp configuration is in config.json 
  #endif
+bool discovery_temp = false;
 
 
 
@@ -198,7 +199,7 @@ float PowerFactor; //
     #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.20221228"
+#define VERSION "version 3.20230209"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"

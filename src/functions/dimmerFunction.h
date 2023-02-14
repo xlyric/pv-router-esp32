@@ -70,7 +70,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
               if (dimmerIDX != 0) {Mqtt_send(String(dimmerIDX), String(dimmervalue));}
-              device_dimmer.send(String(dimmervalue));
+              if (configmqtt.HA) device_dimmer.send(String(dimmervalue));
             }
         }
       
@@ -204,6 +204,11 @@ gDisplayValues.change = 0;
             }
           }
         }
+
+        /// Relay
+
+        if ( gDisplayValues.dimmer >= config.relayon ) {   digitalWrite(RELAY1, HIGH); }
+        if ( gDisplayValues.dimmer <= config.relayoff ) {   digitalWrite(RELAY1, LOW ); }
 
     }
 

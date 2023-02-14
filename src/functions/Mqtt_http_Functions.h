@@ -15,7 +15,7 @@ extern Config config;
 extern DisplayValues gDisplayValues;
 extern Mqtt configmqtt;
 
-// void Mqtt_HA_hello();
+// void Mqtt_HA_hello(); // non utilisé maintenant 
 void reconnect();
 /***
  *  reconnexion au serveur MQTT
@@ -141,6 +141,8 @@ void Mqtt_init() {
 // if (client.publish(topic.c_str(), String(message).c_str(), true))  {  Serial.println("HELLO dimmer");}
 // message = "{'device_class': 'temperature', 'name': '"+ pvname +"-temp', 'state_topic': 'homeassistant/sensor/"+ pvname +"/state', 'unit_of_measurement': '°C', 'value_template': '{{ value_json.temperature}}' }"; 
 // topic = "homeassistant/sensor/"+ pvname +"/temperature/config";
+// message = "{'device_class': 'switch', 'name': '"+ pvname +"-switch', 'state_topic': 'homeassistant/sensor/"+ pvname +"/state', 'value_template': '{{ value_json.switch}}' }"; 
+// topic = "homeassistant/sensor/"+ pvname +"/switch/config";
 // if (client.publish(topic.c_str(), String(message).c_str(), true))  {  Serial.println("HELLO temp");}
 // Serial.println (pvname);
 // //Serial.println (message);
