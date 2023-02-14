@@ -26,6 +26,7 @@
  */
 #define MQTT_USER ""
 #define MQTT_PASSWORD ""
+#define MQTT_INTERVAL 60
 
 /**
  * Switch Screnn button and time on
@@ -71,6 +72,25 @@
 
 #define ADC_MIDDLE 1893  /// en dessous laquelle on considère une valeur négative
 
+
+#define ADC_BITS    12
+#define ADC_COUNTS  (1<<ADC_BITS)
+int sigma_read;
+float VrmsOLD = 225; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
+float PHASECAL = 0.5;
+
+// Valeurs théoriques pour PHASECAL.
+// En modifiant le logiciel pour signaler le temps qu'il faut pour terminer la boucle de mesure interne 
+// et le nombre d'échantillons enregistrés, le temps entre les échantillons a été mesuré à 377 μs.
+// Cela équivaut à 6,79° (à 50 Hz, un cycle complet, soit 360°, prend 20 ms)
+// Par conséquent, une valeur de 1 n'applique aucune correction, 
+// Zéro et 2 appliquent environ 7° de correction dans des directions opposées.
+// Une valeur de 1,28 corrigera l'erreur de 2° causée par le retard entre la tension d'échantillonnage et le courant.
+
+float PVA;  //Power in VA
+double PW;   //Power in Watt
+float PowerFactor; // 
+
 /**
  * The voltage of your home, used to calculate the wattage.
  * Try setting this as accurately as possible.
@@ -100,7 +120,7 @@
 #define TEMPERATURE_PRECISION 10  
 #define TRIGGER 10   /// Trigger % for max temp protection. max temp configuration is in config.json 
 #endif
-
+bool discovery_temp = false;
 
 
 /**
@@ -108,13 +128,13 @@
  * the ESP goes into deep sleep for 30seconds to try and
  * recover.
  */
-#define WIFI_TIMEOUT 20000 // 20 seconds
+#define WIFI_TIMEOUT 30000 // 20 seconds
 
 /**
  * How long should we wait after a failed WiFi connection
  * before trying to set one up again.
  */
-#define WIFI_RECOVER_TIME_MS 20000 // 20 seconds
+#define WIFI_RECOVER_TIME_MS 30000 // 20 seconds
 
 /**
  * Dimensions of the OLED display attached to the ESP
@@ -178,7 +198,7 @@
 #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 3.20230209"
+#define VERSION "version 3.20230214"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"
