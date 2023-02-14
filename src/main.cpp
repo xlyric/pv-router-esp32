@@ -47,7 +47,6 @@
 #include <DallasTemperature.h>
 #include "tasks/dallas.h"
 #include "functions/dallasFunction.h"
-#include "functions/dallasFunction.h"
 #endif
 
 #if DIMMERLOCAL 
