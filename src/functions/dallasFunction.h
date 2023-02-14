@@ -80,6 +80,12 @@ if ( !ds.search(dallas.addr)) {
   Serial.println(dallas.present, HEX);
   logging.init += "Dallas present at address" + String(dallas.present, HEX) + "\r\n";
 
+  if (!discovery_temp) {
+    discovery_temp = true;
+    temperature_HA.discovery();
+  }
+
+
   return true;
    
   }

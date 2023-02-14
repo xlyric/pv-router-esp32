@@ -207,8 +207,13 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
   });
 
   server.on("/reset", HTTP_ANY, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain","Restarting");
-    ESP.restart();
+     request->send_P(200, "text/plain","Restarting");
+     ESP.restart();
+  });
+
+  server.on("/reboot", HTTP_ANY, [](AsyncWebServerRequest *request){
+   request->redirect("/");
+    config.restart = true;
   });
   
 server.onNotFound(notFound);

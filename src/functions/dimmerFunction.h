@@ -56,6 +56,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     else {*/
       #if WIFI_ACTIVE == true
       /// control dimmer 
+      if ( strcmp(config.dimmer,"none") != 0 ) {
       String baseurl; 
         baseurl = "/?POWER=" + String(dimmervalue) ; 
         http.begin(dimmerurl,80,baseurl);   
@@ -63,11 +64,12 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         http.end(); 
         Serial.println("Power command sent "+ String(dimmervalue));
         if (logging.power) { logging.start +="Power command sent "+ String(dimmervalue) + "\r\n"; logging.power = false;}
-
+      }
       //// Mqtt send information
         if (!AP) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
+            /// la valeur 0 doit quand meme être envoyé 
               Mqtt_send(String(dimmerIDX), String(dimmervalue));
               if (configmqtt.HA) device_dimmer.send(String(dimmervalue));
             }
