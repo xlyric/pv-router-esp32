@@ -232,7 +232,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                            
 	 if (request->hasParam(PARAM_INPUT_2)) { config.cycle = request->getParam(PARAM_INPUT_2)->value().toInt(); }
 	 if (request->hasParam(PARAM_INPUT_3)) { config.readtime = request->getParam(PARAM_INPUT_3)->value().toInt();}
-	 if (request->hasParam(PARAM_INPUT_4)) { config.cosphi = request->getParam(PARAM_INPUT_4)->value().toInt();  }
+	 //if (request->hasParam(PARAM_INPUT_4)) { config.cosphi = request->getParam(PARAM_INPUT_4)->value().toInt();  }
    if (request->hasParam(PARAM_INPUT_dimmer)) { request->getParam(PARAM_INPUT_dimmer)->value().toCharArray(config.dimmer,16);  }
    if (request->hasParam(PARAM_INPUT_server)) { request->getParam(PARAM_INPUT_server)->value().toCharArray(config.hostname,16);  }
    if (request->hasParam(PARAM_INPUT_delta)) { config.delta = request->getParam(PARAM_INPUT_delta)->value().toInt(); }
@@ -247,9 +247,9 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_tmax)) { config.tmax = request->getParam(PARAM_INPUT_tmax)->value().toInt();}
    if (request->hasParam("resistance")) { config.resistance = request->getParam("resistance")->value().toInt();}
    if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt();}
-   if (request->hasParam("voltage")) { config.voltage = request->getParam("voltage")->value().toInt();}
-   if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toInt();}
-   
+   if (request->hasParam("voltage")) { config.voltage = request->getParam("voltage")->value().toFloat();}
+   if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toFloat();}
+
    /// @brief  wifi
    if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50);  }
    if (request->hasParam("password")) { request->getParam("password")->value().toCharArray(configwifi.passwd,50);    

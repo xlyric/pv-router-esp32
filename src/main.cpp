@@ -111,6 +111,11 @@ HA device_grid;
 HA device_inject;
 HA compteur_inject;
 HA compteur_grid;
+HA power_factor;
+HA power_vrms;
+HA power_irms;
+HA power_apparent;
+
 
 /***************************
  *  Dimmer init
@@ -490,11 +495,14 @@ void loop()
   if (!AP) {
     #if WIFI_ACTIVE == true
         if (config.mqtt) {
-        if (!client.connected()) {
-          reconnect();
+          if (!client.connected()) { reconnect(); }
+          client.loop();
         }
-        client.loop();
-        }
+        // TODO : désactivation MQTT en décochant la case, sans redémarrer
+        // else {
+        //     if (client.connected()) { client.disconnect(); }
+        // }  
+
     #endif
   }
   vTaskDelay(10000 / portTICK_PERIOD_MS);

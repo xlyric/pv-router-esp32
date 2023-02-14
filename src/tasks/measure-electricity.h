@@ -20,7 +20,12 @@ extern HA device_grid;
 extern HA device_inject; 
 extern HA compteur_inject;
 extern HA compteur_grid;
-//extern EnergyMonitor emon1;
+
+extern HA power_factor;
+extern HA power_vrms;
+extern HA power_irms;
+extern HA power_apparent;
+
 
 int slowlog = TEMPOLOG - 1 ; 
 long beforetime; 
@@ -39,7 +44,7 @@ void measureElectricity(void * parameter)
       
       
       if ( configmodule.pilote == false ) {
-            injection2();
+            injection3();
             if ( gDisplayValues.porteuse == false ) {
                   gDisplayValues.watt =0 ; 
                   slowlog ++; 
@@ -77,7 +82,12 @@ if (!AP) {
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
 
                   if (config.IDX != 0) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
-                  device_routeur.send(String(gDisplayValues.watt));
+                  device_routeur.send(String(int(gDisplayValues.watt)));
+                  power_apparent.send(String(int(PVA)));
+                  power_vrms.send(String(int(Vrms)));
+                  power_irms.send(String(Irms));
+                  power_factor.send(String(PowerFactor));
+
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
                   if (config.IDX != 0) {
@@ -105,11 +115,9 @@ if (!AP) {
                   
                   }
 
-                  
-
                   beforetime = start; 
                   Pow_mqtt_send = 0 ;
-                  }
+                  }             
             #endif
 }
 

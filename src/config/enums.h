@@ -48,7 +48,7 @@ struct Config {
   char otapassword[64];
   int delta;
   int deltaneg;
-  int cosphi;
+ // int cosphi;
   int readtime;
   int cycle;
   bool sending;
@@ -67,8 +67,8 @@ struct Config {
   bool polarity; 
   char Publish[100];
   int  ScreenTime;
-  int voltage; 
-  int offset; 
+  float voltage; 
+  float offset; 
   bool flip;
   bool restart;
 };
@@ -183,13 +183,13 @@ struct HA
             "\"unit_of_meas\": \""+unit_of_meas+"\","
             "\"stat_cla\": \""+stat_cla+"\"," 
             "\"name\": \""+ name +"-"+ node_mac + "\"," 
-            "\"state_topic\": \""+ topic +"state\","
             "\"stat_t\": \""+ topic +"state"+name+"\","
             "\"avty_t\": \""+ topic +"status\","
             "\"uniq_id\": \""+ node_mac + "-" + name +"\", "
             "\"value_template\": \"{{ value_json."+name +" }}\", "
             "\"cmd_t\": \""+ topic +"command\","
             "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
+            "\"exp_aft\": \""+ MQTT_INTERVAL +"\", "
             + icon
             + device_declare() + 
           "}";
@@ -198,13 +198,13 @@ struct HA
           //Serial.println(device.c_str());
           Serial.println(name + "HA discovery");
           // online();
-          send("0");
+          // send("0");
           
     }
 
     public:void send(String value){
        String message = "  { \""+name+"\" : \"" + value.c_str() + "\"  } ";
-       client.publish((topic+"state"+name).c_str() , message.c_str(), true);
+       client.publish((topic+"state"+name).c_str() , message.c_str(), false); // false for exp_aft in discovery
     }
  
 };
