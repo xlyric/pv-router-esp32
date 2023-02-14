@@ -26,7 +26,6 @@ DeviceAddress insideThermometer;
   int refreshcount = 0; 
 */
 byte i;
-
 bool dallaspresent () {
 
 if ( !ds.search(dallas.addr)) {
@@ -79,6 +78,12 @@ if ( !ds.search(dallas.addr)) {
   Serial.print("  present = ");
   Serial.println(dallas.present, HEX);
   logging.init += "Dallas present at address" + String(dallas.present, HEX) + "\r\n";
+
+  if (!discovery_temp) {
+    discovery_temp = true;
+    temperature_HA.discovery();
+  }
+
 
   return true;
    

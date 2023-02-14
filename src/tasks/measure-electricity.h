@@ -21,7 +21,12 @@ extern HA device_inject;
 extern HA compteur_inject;
 extern HA compteur_grid;
 extern HA temperature_HA;
-//extern EnergyMonitor emon1;
+
+extern HA power_factor;
+extern HA power_vrms;
+extern HA power_irms;
+extern HA power_apparent;
+
 
 int slowlog = TEMPOLOG - 1 ; 
 long beforetime; 
@@ -40,7 +45,7 @@ void measureElectricity(void * parameter)
       
       
       if ( configmodule.pilote == false ) {
-            injection2();
+            injection3();
             if ( gDisplayValues.porteuse == false ) {
                   gDisplayValues.watt =0 ; 
                   slowlog ++; 
@@ -77,38 +82,46 @@ if (!AP) {
                   long timemesure = start-beforetime;
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
 
-                  Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  
-                  if (configmqtt.HA) device_routeur.send(String(gDisplayValues.watt));
+                  if (config.IDX != 0) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
+                  if (configmqtt.HA) {
+                        device_routeur.send(String(int(gDisplayValues.watt)));
+                        power_apparent.send(String(int(PVA)));
+                        power_vrms.send(String(int(Vrms)));
+                        power_irms.send(String(Irms));
+                        power_factor.send(String(PowerFactor));
+                  }
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
-                  Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
-                  Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  if (config.IDX != 0) {
+                        Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
+                        Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  }
                   if (configmqtt.HA) device_inject.send(String(int(-gDisplayValues.watt)));
                   if (configmqtt.HA) device_grid.send(String("0"));
                   WHtempgrid += wattheure; 
                   if (configmqtt.HA) compteur_inject.send(String(WHtempgrid));
                   
                   
-                  if (configmqtt.HA)compteur_grid.send(String("0"));
+                  // if (configmqtt.HA)compteur_grid.send(String("0"));
                   }
                   else {
-                  Mqtt_send(String(config.IDX), String("0"),"injection");
-                  Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                        if (config.IDX != 0) {
+                              Mqtt_send(String(config.IDX), String("0"),"injection");
+                              Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                        }
                   if (configmqtt.HA) device_grid.send(String(int(gDisplayValues.watt)));
                   if (configmqtt.HA) device_inject.send(String("0"));
-                  if (configmqtt.HA) compteur_inject.send(String("0"));
+                  // if (configmqtt.HA) compteur_inject.send(String("0"));
                   WHtempinject += wattheure;
                   if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
                   //maj 202030209
-                  if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
-                  Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );
+                  if (configmqtt.HA && discovery_temp) temperature_HA.send(String(gDisplayValues.temperature));
+                  if (config.IDX != 0 && discovery_temp) {Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );}
                   }
-
-                  
 
                   beforetime = start; 
                   Pow_mqtt_send = 0 ;
-                  }
+                  }             
             #endif
 }
 

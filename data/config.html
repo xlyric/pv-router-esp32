@@ -1,4 +1,3 @@
-
 <html lang="en">
 
 <head>
@@ -88,7 +87,12 @@
         <i class="fas fa-fw fa-download"></i>
       <span>OTA</span></a>
     </li>
-
+    <li class="nav-item active">
+      <a class="nav-link" href="/reboot">
+          <i class="fas fa-fw fa-power-off"></i>
+          <span>Reboot</span>
+      </a>
+    </li>
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
@@ -351,12 +355,25 @@
 				  
 				  
 		            </div>
-				
+<!-- 				
                 <div class="form-group row">
                   <div class="col-sm-3 cosphi" ><span>Cosphi</span></div>
                   <div class="col-sm-3">Facteur de correction</div>
                 
-                </div>
+                </div> -->
+                <div class="form-group row">
+                  <div class="col-sm-3">
+                      <span>Facteur de correction</span>
+                  </div>
+                  <div class="col-sm-3">
+                      <span>Correction Voltage</span>
+                  </div>
+                  <div class="col-sm-3">
+                      <span>Correction Offset</span>
+                  </div>
+
+              </div>                
+<!--                 
                 <div class="form-group row">
                   <div class="col-sm-3">
                     <input type="text" class="form-control form-control-user" id="cosphi" placeholder="%COSPHI%">
@@ -366,79 +383,117 @@
                   </div>
                   
 
-                </div>
+                </div> -->
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-3">
+                                                            <span>Facteur de correction</span>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <span>Correction Voltage</span>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <span>Correction Offset</span>
+                                                        </div>
 
-                <div class="form-group row">
-                  <div class="col-sm-3"><span>Correction Voltage</span></div>
-                  <div class="col-sm-3">Correction Offset</div>
-                </div>
+                                                    </div>
 
-                <div class="form-group row">
-                  <div class="col-sm-3">
-                    <input type="text" class="form-control form-control-user" id="voltage" placeholder="%voltage%">
-                  </div>
-                  <div class="col-sm-3">
-                    <input type="text" class="form-control form-control-user" id="offset" placeholder="%offset%">
-                  </div>
-                </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-3">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control form-control-user"
+                                                                id="facteur"
+                                                                placeholder="%facteur%"
+                                                            >
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control form-control-user"
+                                                                id="voltage"
+                                                                placeholder="%voltage%"
+                                                            >
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control form-control-user"
+                                                                id="offset"
+                                                                placeholder="%offset%"
+                                                            >
+                                                        </div>
+                                                      
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-6">
+                                                            <span>Inversion de la mesure (+/-) :</span>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <div class="custom-control custom-checkbox small">
+                                                                <input type="checkbox" class="custom-control-input" id="polarity">
+                                                                <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);">polarité</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="card position-relative">
+                                                <div class="card-header py-3">
+                                                    <h6 class="m-0 font-weight-bold text-primary">Ecran</h6>
+                                                    <span id="saveform"></span>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-4">Screen switch off (0: unlimited)</div>
+                                                        <div class="col-sm-2">
+                                                        </div>
 
-                <div class="form-group row">
-                  <div class="col-sm-3">Inversion de la mesure (+/-) :</div>
-                  <div class="col-sm-3">
-                    <div class="custom-control custom-checkbox small">
-                      <input type="checkbox" class="custom-control-input" id="polarity">
-                      <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
+                                                        <div class="col-sm-4">
+                                                            <div class="custom-control custom-checkbox small">
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn btn-primary btn-user btn-block"
+                                                                    id="screen"
+                                                                    onclick="sendservermode('screen');"
+                                                                >ON/OFF Oled</button>
+                                                                <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-3">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control form-control-user"
+                                                                id="screentime"
+                                                                placeholder="%SCREENTIME%"
+                                                            >
+                                                        </div>
+                                                        <div class="col-sm-4"></div>
+                                                        <div class="col-sm-3">
+                                                            <div class="custom-control custom-checkbox small">
+                                                                <input type="checkbox" class="custom-control-input" id="flip">
+                                                                <label class="custom-control-label" for="flip" onclick="sendservermode(this.innerHTML);">flip</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <input type="submit" value=" Application des parametres" class="btn btn-primary btn-user btn-block">
+                                            <hr>
+                                        </form>
+                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-               </div>
-
-              <div class="form-group row">
-                <div class="col-sm-3">Screen switch off (0: unlimited)</div>
-              </div>
-              <div class="form-group row">
-                <div class="col-sm-3">
-                  <input type="text" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
                 </div>
-                <div class="col-sm-3">
-                  <div class="custom-control custom-checkbox small">
-                    <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
-                <!--   <label class="custom-control-label" for="screen" onclick="sendservermode(this.innerHTML);" >screen</label>-->
-                  </div>
-                </div>
-
-                <div class="col-sm-3">
-                  <div class="custom-control custom-checkbox small">
-                    <input type="checkbox" class="custom-control-input" id="flip">
-                    <label class="custom-control-label" for="flip" onclick="sendservermode(this.innerHTML);" >flip</label>
-                  </div>
-                </div>
-              </div> 
-            </div>
-          </div>
-          <br>
-				
-	
-				
-				<input type="submit" value=" Application des parametres" class="btn btn-primary btn-user btn-block">
-				
-                <hr>
-
-              </form>
-              <hr>
-            </div>
-          </div>
-                </div>
-              </div>
-
-            </div>
-
-
-          <!-- Content Row -->
-
-
-   			
-				
-				  <script type='text/javascript'> 
+                <!-- Content Row -->
+                <script type="text/javascript"> 
 setInterval(function refreshsend( ) {
 var xhttpstate = $.get ({
 		url : '/state',
@@ -483,7 +538,7 @@ function sendservermode (mode) {
     document.getElementById("polarity").value = config[20];
     document.getElementById("screen").value = config[21];
     document.getElementById("flip").value = config[22];
-		}); 
+    }); 
 
 
 }
@@ -503,10 +558,10 @@ function save () {
            
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-
-<!-- de la doc -->
-  <script>
+<script src="https://code.jquery.com/jquery-3.4.1.js">
+                </script>
+                <!-- de la doc -->
+                <script>
           $( "div.delta" )
           .mouseover(function() {
             $( this ).find( "span" ).text( "La puissance du dimmer baissera au dessus de cette valeur" );
@@ -530,18 +585,8 @@ function save () {
           .mouseout(function() {
             $( this ).find( "span" ).text( "limiteur en %" );
           });
-
-          $( "div.cosphi" )
-          .mouseover(function() {
-            $( this ).find( "span" ).text( "Valeur par defaut 5" );
-          })
-          .mouseout(function() {
-            $( this ).find( "span" ).text( "Cosphi" );
-          });
-          
-  </script>
-
-<script>
+                </script>
+                <script>
 
 
 <!--- sauvegarde de la configuration --> 
@@ -558,7 +603,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val()} 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val()} 
 
 		
         $.ajax({
@@ -596,16 +641,16 @@ var recupconfig = $.get ({
 		document.getElementById("delta").value = config[5];
 		
 		document.getElementById("dimmer").value = config[7];
-		document.getElementById("cosphi").value = config[8];
+		//document.getElementById("cosphi").value = config[8];
 		
 		//document.getElementById("autonome").checked = config[12];
 		//document.getElementById("autonome").value = config[12];
-		document.getElementById("dimmerlocal").checked = config[14];
-		document.getElementById("dimmerlocal").value = config[14];
-    i=15;
+		document.getElementById("dimmerlocal").checked = config[13];
+		document.getElementById("dimmerlocal").value = config[13];
+    i=14
 		document.getElementById("facteur").value = config[i];
     i++;
-		//document.getElementById("Usemqtt").checked = config[i];
+    //document.getElementById("Usemqtt").checked = config[i];
 		//document.getElementById("Usemqtt").value = config[i];
     i++;
     i++;
@@ -661,37 +706,18 @@ var recupconfig = $.get ({
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
             <span>https://github.com/xlyric/  - 2022</span>
-          </div>
         </div>
-      </footer>
-      <!-- End of Footer -->
-
     </div>
-    <!-- End of Content Wrapper -->
-
-  </div>
-  <!-- End of Page Wrapper -->
-
-
-
-
-
-  <!-- Bootstrap core JavaScript-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Core plugin JavaScript-->
-  <script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="sb-admin-2.js"></script>
- <script>
-
-
-
-
-</script>
-
+</footer>
+<!-- End of Footer -->
+<!-- End of Page Wrapper -->
+<!-- Bootstrap core JavaScript-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="sb-admin-2.js"></script>
+<script></script>
 </body>
-
 </html>

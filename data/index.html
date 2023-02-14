@@ -66,15 +66,15 @@
           <span>Configuration</span></a>
       </li>
 
-    <!-- Divider -->
+    <!-- Divider
       <hr class="sidebar-divider">
 	  
       <div class="sidebar-heading">
         tuning
-      </div>	  
+      </div>	   -->
 	  
       <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
           <span>Debug</span>
@@ -89,7 +89,7 @@
 			<a class="collapse-item" href="#collapserawdata" data-toggle="collapse" aria-controls="collapserawdata">Raw Data</a>
           </div>
         </div>
-      </li>
+      </li> -->
 
   
 
@@ -203,7 +203,7 @@
             </div>
 
             
-			
+
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -228,31 +228,31 @@
           <div class="row">
 
             <!-- Area Chart -->
-    <div class="col-xl-3 col-md-6 mb-4">
-      <div class="card shadow mb-4">
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Sigma</h6>
-				</div>
-				<div class="card-body">
+                  <h6 class="m-0 font-weight-bold text-primary">Sigma</h6>
+				  </div>
+					<div class="card-body">
 					<div id='curve_chart2' style=' width: auto; height: 200px;'>
 										
 					</div>
-				</div>
+					</div>
 			</div>
 		</div>
 		
-		<div class="col-xl-3 col-md-6 mb-4">
-      <div class="card shadow mb-4">
+		     <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Routed Power</h6>
-				</div>
-				<div class="card-body">
+                  <h6 class="m-0 font-weight-bold text-primary">Routed Power</h6>
+				  </div>
+					<div class="card-body">
 					<div id='curve_power' style=' width: auto; height: 200px;'>
 										
 					</div>
-				</div>
+					</div>
 			</div>
 		</div>
 
@@ -300,7 +300,7 @@
 				  
 				  function drawChart() {    
 
-				var optionsGauge = {           
+					var optionsGauge = {           
           redFrom: -100, 
           redTo: -25,
            
@@ -314,11 +314,11 @@
 		  
           min: -100, 
           max: 400, 
- 
+           
         };
        
 	   
-	      var optionsGaugepower = {           
+	   var optionsGaugepower = {           
           redFrom: 37.5, 
           redTo: 50,
            
@@ -332,7 +332,7 @@
 		  
           min: 0, 
           max: 50, 
-          
+               
         };
 				  
         var optionsGaugetemp = {           
@@ -350,7 +350,7 @@
           min: 0, 
           max: 90, 
           
-        }; 			  
+        }; 							 			  
 				
 				  setInterval(function ( ) {
 				  
@@ -415,7 +415,7 @@
 
     dataGaugePAtemp.setValue(0, 0, "temp"); 
     dataGaugePAtemp.setValue(0, 1, config[5]);
-		
+
 		gaugePA.draw(dataGaugePA,optionsGauge);
 		gaugePApower.draw(dataGaugePApower,optionsGaugepower);
     gaugePAtemp.draw(dataGaugePAtemp,optionsGaugetemp);
@@ -500,7 +500,7 @@ var xhttpstate = $.get ({
 		document.getElementById("trigger").innerHTML = config[1];
 		document.getElementById("middle").innerHTML = config[2];
 		document.getElementById("loop").innerHTML = config[4];
-		
+
 	
 		},
 		async: true });

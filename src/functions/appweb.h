@@ -20,7 +20,7 @@ int middleoscillo = 1800;
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
 const char* PARAM_INPUT_2 = "cycle"; /// paramettre de retour cycle
 const char* PARAM_INPUT_3 = "readtime"; /// paramettre de retour readtime
-const char* PARAM_INPUT_4 = "cosphi"; /// paramettre de retour cosphi
+//const char* PARAM_INPUT_4 = "cosphi"; /// paramettre de retour cosphi
 const char* PARAM_INPUT_save = "save"; /// paramettre de retour cosphi
 const char* PARAM_INPUT_dimmer = "dimmer"; /// paramettre de retour cosphi
 const char* PARAM_INPUT_server = "server"; /// paramettre de retour server domotique
@@ -52,24 +52,24 @@ String oscilloscope() {
   int freqmesure = 40; 
   int sigma = 0;
   String retour = "[[";
-  
+ 
   front();
-  
-  delayMicroseconds (config.cosphi*config.readtime); // correction décalage
-  while ( timer < ( freqmesure ) )
-  {
 
+  delay(15);
   
-  temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
-  moyenne = middleoscillo  + signe/50; 
-  sigma += temp;
-  //moyenne = moyenne + abs(temp - middle) ;
-  /// mode oscillo graph 
+  delayMicroseconds (half*config.readtime); // correction décalage
+  while ( timer < freqmesure ) {
+    
+    temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+    moyenne = middleoscillo  + signe/50; 
+    sigma += temp;
+    //moyenne = moyenne + abs(temp - middle) ;
+    /// mode oscillo graph 
 
-  
-  retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "],[" ; 
-  timer ++ ;
-  delayMicroseconds (config.readtime);
+    
+    retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "],[" ; 
+    timer ++ ;
+    delayMicroseconds (config.readtime);
   } 
   
   temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
@@ -148,7 +148,7 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+config.relayon+";"+config.relayoff;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+config.relayon+";"+config.relayoff;
   return String(configweb);
 }
 //***********************************
@@ -174,18 +174,18 @@ String getmqtt() {
 String getdebug() {
   configweb = "";
   configweb += "middle:" + String(middle_debug) + "\r\n" ; 
-  //// calcul du cos phi par recherche milieu de demi onde positive 
+  // calcul du cos phi par recherche milieu de demi onde positive 
   int start=0;int end=0;int half=0  ;
-    for ( int i=0; i < 72; i ++ )
+    for ( int i=0; i < freqmesure; i ++ )
     {
       if ( porteuse[i] !=0  && start == 0 ) {start = i ;}
-      if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i ;}
-	  configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
+      if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i -1 ;}
+	    configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
     }
-    half = 36 - ( end - start ); 
-    configweb += "  cosphi :" + String(half) + "  end  :" + String(end ) +"  start :" + String(start)  ; 
-
-
+    half = (nbmesure/2) - ( end - start ); 
+    configweb += "cosphi :" + String(half) + "  end :" + String(end ) +"  start :" + String(start)  + "\r\n" ; 
+    configweb += "positive :" + String(positive_debug) + "\r\n" ;  
+    configweb += "watt :" + String(gDisplayValues.watt) + "\r\n" ;  
     return String(configweb);
   }
 

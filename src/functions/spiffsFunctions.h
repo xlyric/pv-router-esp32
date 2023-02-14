@@ -60,12 +60,13 @@ void loadConfiguration(const char *filename, Config &config) {
   strlcpy(config.otapassword,                  // <- destination
           doc["otapassword"] | "Pvrouteur2", // <- source
           sizeof(config.otapassword));         // <- destination's capacity
-  
-  config.facteur = doc["facteur"] | 0.86; 
+
+
+  config.facteur = doc["facteur"] | 37.85;
   config.delta = doc["delta"] | 50; 
   config.num_fuse = doc["fuse"] | 70;
   config.deltaneg = doc["deltaneg"] | -100; 
-  config.cosphi = doc["cosphi"] | 5; 
+ // config.cosphi = doc["cosphi"] | 5; 
   config.readtime = doc["readtime"] | 555;
   config.cycle = doc["cycle"] | 72;
 
@@ -79,7 +80,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.flip = doc["flip"] | true;
   config.tmax = doc["tmax"] | 65;
   config.localfuse = doc["localfuse"] | 50;
-  config.voltage = doc["voltage"] | 230;
+  config.voltage = doc["voltage"] | 6.13;
   config.offset = doc["offset"] | 0;
   config.relayoff = doc["relayoff"] | 95;
   config.relayon = doc["relayon"] | 100;
@@ -117,7 +118,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonDocument<1024> doc;
+  StaticJsonDocument<2048> doc;
 
   // Set the values in the document
   doc["hostname"] = config.hostname;
@@ -130,7 +131,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["otapassword"] = config.otapassword;
   doc["delta"] = config.delta;
   doc["deltaneg"] = config.deltaneg;
-  doc["cosphi"] = config.cosphi;
+ // doc["cosphi"] = config.cosphi;
   doc["readtime"] = config.readtime;
   doc["cycle"] = config.cycle;
   doc["sending"] = config.sending;
