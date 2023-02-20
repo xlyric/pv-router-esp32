@@ -116,7 +116,7 @@ if (!AP) {
                   if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
                   //maj 202030209
                   if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
-                  Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );
+                  //Mqtt_send(String("temperature"), String(gDisplayValues.temperature) ); //  bug#11  remonté domoticz
                   }
 
                   beforetime = start; 
@@ -141,3 +141,4 @@ long end = millis();
 }
 
 #endif
+5
