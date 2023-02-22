@@ -65,10 +65,11 @@
 #ifdef  TTGO
 #define ADC_INPUT 32 // linky
 #define ADC_PORTEUSE 33 // porteuse
+#define ADC_MIDDLE 39 // 3.3V / 2
 #endif
 
 
-#define ADC_MIDDLE 1893  /// en dessous laquelle on considère une valeur négative
+// #define ADC_MIDDLE 1893  /// en dessous laquelle on considère une valeur négative
 
 
 
@@ -76,7 +77,9 @@
 #define ADC_COUNTS  (1<<ADC_BITS)
 int sigma_read;
 float VrmsOLD = 225; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
-float PHASECAL = 0.5;
+float PHASECAL = 0.1;
+int timeout = 22000; // 20ms , 1 * 50Hz + 2ms marge?
+int value0=1840; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
 
 // Valeurs théoriques pour PHASECAL.
 // En modifiant le logiciel pour signaler le temps qu'il faut pour terminer la boucle de mesure interne 

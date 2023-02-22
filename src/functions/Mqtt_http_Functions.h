@@ -15,6 +15,7 @@ extern Config config;
 extern DisplayValues gDisplayValues;
 extern Mqtt configmqtt;
 
+void callback(char* Subscribedtopic, byte* message, unsigned int length);
 // void Mqtt_HA_hello(); // non utilisé maintenant 
 void reconnect();
 /***
@@ -22,16 +23,28 @@ void reconnect();
  */
 
 void reconnect() {
-  String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-  String topic = "homeassistant/sensor/"+ pvname +"/status";
+  String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+  String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+  String node_id = String("PvRouter-") + node_mac; 
+  String topic = "homeassistant/sensor/"+ node_id +"/status";  
+  String command_switch = "homeassistant/switch/"+ node_id + "/command";
+  // String command_number = "homeassistant/number/"+ node_id + "/command";
+  // String command_select = "homeassistant/select/"+ node_id + "/command";
+  // String command_button = "homeassistant/button/"+ node_id + "/command";
+
+
+  // String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
+  // String topic = "homeassistant/sensor/"+ pvname +"/status";
   // Loop until we're reconnected
   while (!client.connected()) {
     Serial.println("-----------------------------");
     Serial.println("Attempting MQTT reconnection...");
     // Attempt to connect
 
-    if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
+    if (client.connect(node_id.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
       client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
+      client.subscribe(command_switch.c_str());
+
       Serial.println("MQTT reconnect : connected");
     } else {
       Serial.print("MQTT reconnect : failed, retcode="); 
@@ -89,15 +102,38 @@ Serial.println("MQTT_send : error publish to Jeedom ");
 Fonction MQTT callback
 *
 */
-void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i=0;i<length;i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
+
+
+void callback(char* Subscribedtopic, byte* message, unsigned int length) {
+  String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+  String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+  String node_id = String("PvRouter-") + node_mac; 
+  String switch_command = String("homeassistant/switch/"+ node_id + "/command");
+  // String number_command = String("homeassistant/number/"+ node_id + "/command");
+  // String select_command = String("homeassistant/select/"+ node_id + "/command");
+  // String button_command = String("homeassistant/button/"+ node_id + "/command");
+
+  StaticJsonDocument<64> doc2;
+  deserializeJson(doc2, message);
+  if (strcmp( Subscribedtopic, switch_command.c_str() ) == 0) { 
+    if (doc2.containsKey("Switch1")) { 
+        int relay = doc2["Switch1"]; 
+        if ( relay == 0) { digitalWrite(RELAY1 , LOW); }
+        else { digitalWrite(RELAY1 , HIGH); } 
+        logging.start += "RELAY1 at " + String(relay) + "\r\n"; 
+        switch_1.send(String(relay));
+    }
+    if (doc2.containsKey("Switch2")) { 
+        int relay = doc2["Switch2"]; 
+        if ( relay == 0) { digitalWrite(RELAY2 , LOW); }
+        else { digitalWrite(RELAY2 , HIGH); } 
+        logging.start += "RELAY2 at " + String(relay) + "\r\n"; 
+        switch_2.send(String(relay));
+    }
+  } 
 }
+
+
 
 
 /*

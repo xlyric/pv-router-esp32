@@ -5,7 +5,7 @@
     #include "../config/config.h"
     #include "../config/enums.h"
     #include "../functions/dallasFunction.h"
-    #include "mqtt-home-assistant.h"
+   // #include "mqtt-home-assistant.h"
    
 
 extern DisplayValues gDisplayValues;

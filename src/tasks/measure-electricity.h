@@ -5,7 +5,7 @@
 
 #include "../config/config.h"
 #include "../config/enums.h"
-#include "mqtt-home-assistant.h"
+// #include "mqtt-home-assistant.h"
 #include "functions/energyFunctions.h"
 #include "functions/dimmerFunction.h"
 #include "functions/drawFunctions.h"
@@ -21,6 +21,7 @@ extern HA device_inject;
 extern HA compteur_inject;
 extern HA compteur_grid;
 extern HA temperature_HA;
+extern HA device_alarm_temp;
 
 extern HA power_factor;
 extern HA power_vrms;
@@ -115,7 +116,10 @@ if (!AP) {
                   WHtempinject += wattheure;
                   if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
                   //maj 202030209
-                  if (configmqtt.HA && discovery_temp) temperature_HA.send(String(gDisplayValues.temperature));
+                  if (configmqtt.HA && discovery_temp) {
+                        temperature_HA.send(String(gDisplayValues.temperature));
+                        device_alarm_temp.send(stringbool(security));}
+
                   if (config.IDX != 0 && discovery_temp) {Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );}
                   }
 

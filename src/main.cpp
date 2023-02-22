@@ -112,11 +112,13 @@ HA device_inject;
 HA compteur_inject;
 HA compteur_grid;
 HA switch_1;
+HA switch_2;
 HA temperature_HA;
 HA power_factor;
 HA power_vrms;
 HA power_irms;
 HA power_apparent;
+HA device_alarm_temp;
 
 
 /***************************
