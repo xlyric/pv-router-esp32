@@ -47,43 +47,39 @@ void reconnect() {
 *    Fonction d'envoie info MQTT vers domoticz
 */
 
-void Mqtt_send ( String idx, String value, String otherpub = "" ) {
-  
+void Mqtt_send_domoticz ( String idx, String value ) {
+
   String nvalue = "0" ; 
   
   if ( value != "0" ) { 
-      nvalue = "2" ; 
-      }
-  
-  String message; 
-  if (otherpub == "" ) {
-    message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
+    nvalue = "2" ; 
   }
 
-  String jdompub = String(config.Publish) + "/"+idx ;
-  if (otherpub != "" ) {jdompub += "/"+otherpub; }
-  
-
+  String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
 
   client.loop();
-    if (otherpub == "" ) {
-      if (client.publish(config.Publish, String(message).c_str(), true)) {
-     //   Serial.println("MQTT_send : MQTT sent to domoticz");
-      }
 
-      else {
-        Serial.println("MQTT_send : error publish to domoticz ");
-      }
-    }
-  if (client.publish(jdompub.c_str() , value.c_str(), true)){
-  //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
+  if (client.publish(config.Publish, String(message).c_str(), true)) {
+    //   Serial.println("MQTT_send : MQTT sent to domoticz");
+  } else {
+    Serial.println("MQTT_send : error publish to domoticz ");
   }
-  else {
-Serial.println("MQTT_send : error publish to Jeedom ");
-  }
-  
-
 }
+
+void Mqtt_send_jdom( String idx, String value, String otherpub ) {
+
+  String jdompub = String(config.Publish) + "/" + idx + "/" + otherpub ;
+  
+  client.loop();
+
+  if (client.publish(jdompub.c_str() , value.c_str(), true)){
+    //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
+  } else {
+    Serial.println("MQTT_send : error publish to Jeedom ");
+  }
+}
+
+
 
 /*
 Fonction MQTT callback
@@ -119,7 +115,9 @@ void Mqtt_init() {
   // if (client.connect(pvname,configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline")) {       //Connect to MQTT server
   //   client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
   //   Serial.println("MQTT_init : connecte a MQTT... Initialisation dimmer à 0");
-     if (config.IDXdimmer != 0 ){ Mqtt_send(String(config.IDXdimmer),"0"); }
+    if (config.IDXdimmer != 0 ) { 
+      Mqtt_send_domoticz( String( config.IDXdimmer ), "0" ); 
+    }
     
   // }
   // else {

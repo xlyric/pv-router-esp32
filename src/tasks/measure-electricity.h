@@ -82,7 +82,9 @@ if (!AP) {
                   long timemesure = start-beforetime;
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
 
-                  if (config.IDX != 0) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
+                  if (config.IDX != 0) {
+                        Mqtt_send_domoticz(String(config.IDX), String(int(gDisplayValues.watt)));  
+                  }
                   if (configmqtt.HA) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
                         power_apparent.send(String(int(PVA)));
@@ -93,8 +95,9 @@ if (!AP) {
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
                   if (config.IDX != 0) {
-                  Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
-                  Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  Mqtt_send_jdom(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
+                  Mqtt_send_jdom(String(config.IDX), String("0") ,"grid");
+
                   }
                   if (configmqtt.HA) device_inject.send(String(int(-gDisplayValues.watt)));
                   if (configmqtt.HA) device_grid.send(String("0"));
@@ -106,8 +109,8 @@ if (!AP) {
                   }
                   else {
                         if (config.IDX != 0) {
-                  Mqtt_send(String(config.IDX), String("0"),"injection");
-                  Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                              Mqtt_send_jdom(String(config.IDX), String("0"),"injection");
+                              Mqtt_send_jdom(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
                         }
                   if (configmqtt.HA) device_grid.send(String(int(gDisplayValues.watt)));
                   if (configmqtt.HA) device_inject.send(String("0"));

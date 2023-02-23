@@ -70,7 +70,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
             /// la valeur 0 doit quand meme être envoyé 
-              Mqtt_send(String(dimmerIDX), String(dimmervalue));
+              Mqtt_send_domoticz(String(dimmerIDX), String(dimmervalue));
               if (configmqtt.HA) device_dimmer.send(String(dimmervalue));
             }
         }
