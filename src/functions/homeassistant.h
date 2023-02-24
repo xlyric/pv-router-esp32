@@ -22,13 +22,15 @@ extern HA device_alarm_temp;
 
 void init_HA_sensor(){
 
-        device_dimmer.Set_name("Puissance Dimmer");
+        device_dimmer.Set_name("Consigne");
         device_dimmer.Set_object_id("dimmer");
         device_dimmer.Set_unit_of_meas("%");
         device_dimmer.Set_stat_cla("measurement");
         device_dimmer.Set_dev_cla("power_factor"); // fix is using native unit of measurement '%' which is not a valid unit for the device class ('power') it is using
         device_dimmer.Set_icon("mdi:percent");
         device_dimmer.Set_entity_type("sensor");
+        device_dimmer.Set_retain_flag(true);
+        // device_dimmer.Set_expire_after(true);
         
         device_routeur.Set_name("Puissance");
         device_routeur.Set_object_id("power");
@@ -36,6 +38,8 @@ void init_HA_sensor(){
         device_routeur.Set_stat_cla("measurement");
         device_routeur.Set_dev_cla("power");
         device_routeur.Set_entity_type("sensor");
+        device_routeur.Set_retain_flag(true);
+        // device_routeur.Set_expire_after(true);
 
         device_grid.Set_name("Soutirage");
         device_grid.Set_object_id("grid");
@@ -43,6 +47,8 @@ void init_HA_sensor(){
         device_grid.Set_stat_cla("measurement");
         device_grid.Set_dev_cla("power");
         device_grid.Set_entity_type("sensor");
+        device_grid.Set_retain_flag(true);
+        // device_grid.Set_expire_after(true);
 
 
         device_inject.Set_name("Injection");
@@ -51,6 +57,8 @@ void init_HA_sensor(){
         device_inject.Set_stat_cla("measurement");
         device_inject.Set_dev_cla("power");
         device_inject.Set_entity_type("sensor");
+        device_inject.Set_retain_flag(true);
+        // device_inject.Set_expire_after(true);
 
         compteur_grid.Set_name("Compteur soutirage");
         compteur_grid.Set_object_id("grid_Wh");
@@ -58,6 +66,8 @@ void init_HA_sensor(){
         compteur_grid.Set_stat_cla("total_increasing");
         compteur_grid.Set_dev_cla("energy");
         compteur_grid.Set_entity_type("sensor");
+        compteur_grid.Set_retain_flag(true);
+        // compteur_grid.Set_expire_after(true);
 
 
         compteur_inject.Set_name("Compteur injection");
@@ -66,6 +76,8 @@ void init_HA_sensor(){
         compteur_inject.Set_stat_cla("total_increasing");
         compteur_inject.Set_dev_cla("energy");      
         compteur_inject.Set_entity_type("sensor");
+        compteur_inject.Set_retain_flag(true);
+        // compteur_inject.Set_expire_after(true);
             
         temperature_HA.Set_name("Température");
         temperature_HA.Set_object_id("Dallas");
@@ -73,15 +85,21 @@ void init_HA_sensor(){
         temperature_HA.Set_unit_of_meas("°C");
         temperature_HA.Set_stat_cla("measurement");
         temperature_HA.Set_entity_type("sensor");
+        temperature_HA.Set_retain_flag(true);
+        // temperature_HA.Set_expire_after(true);
 
 
         switch_1.Set_name("Relais 1");
         switch_1.Set_object_id("Switch1");
         switch_1.Set_entity_type("switch");
+        switch_1.Set_retain_flag(true);
+        // switch_1.Set_expire_after(true);
 
         switch_2.Set_name("Relais 2");
         switch_2.Set_object_id("Switch2");
         switch_2.Set_entity_type("switch");
+        switch_2.Set_retain_flag(true);
+        // switch_2.Set_expire_after(true);
 
         power_factor.Set_name("Facteur de puissance");
         power_factor.Set_object_id("PowerFactor");
@@ -89,6 +107,8 @@ void init_HA_sensor(){
         power_factor.Set_stat_cla("measurement");
         power_factor.Set_dev_cla("power_factor");
         power_factor.Set_entity_type("sensor");
+        power_factor.Set_retain_flag(true);
+        // power_factor.Set_expire_after(true);
 
         power_vrms.Set_name("Tension RMS");
         power_vrms.Set_object_id("Vrms");
@@ -96,6 +116,8 @@ void init_HA_sensor(){
         power_vrms.Set_stat_cla("measurement");
         power_vrms.Set_dev_cla("voltage");
         power_vrms.Set_entity_type("sensor");
+        power_vrms.Set_retain_flag(true);
+        // power_vrms.Set_expire_after(true);
 
         power_irms.Set_name("Intensité RMS");
         power_irms.Set_object_id("Irms");
@@ -103,6 +125,8 @@ void init_HA_sensor(){
         power_irms.Set_stat_cla("measurement");
         power_irms.Set_dev_cla("current");
         power_irms.Set_entity_type("sensor");
+        power_irms.Set_retain_flag(true);
+        // power_irms.Set_expire_after(true);
 
         power_apparent.Set_name("Puissance apparente");
         power_apparent.Set_object_id("ApparentPower");
@@ -110,76 +134,15 @@ void init_HA_sensor(){
         power_apparent.Set_stat_cla("measurement");
         power_apparent.Set_dev_cla("apparent_power");
         power_apparent.Set_entity_type("sensor");
+        power_apparent.Set_retain_flag(true);
+        // power_apparent.Set_expire_after(true);
 
-        device_alarm_temp.Set_name("Alerte température atteinte");
+        device_alarm_temp.Set_name("Surchauffe");
         device_alarm_temp.Set_object_id("alarm_temp");
         device_alarm_temp.Set_entity_type("binary_sensor");
-        device_alarm_temp.Set_stat_cla("problem");
-
-
-
-
-
-//
-
-
-
-
-//         /// création des button
-//         device_save.Set_name("Sauvegarder");
-//         device_save.Set_object_id("save");
-//         device_save.Set_entity_type("button");
-//         device_save.Set_entity_category("config");
-
-//     /// création des number
-//   device_starting_pow.Set_name("Puissance de démarrage Dimmer");
-//   device_starting_pow.Set_object_id("starting_power");
-//   device_starting_pow.Set_entity_type("number");
-//   device_starting_pow.Set_entity_category("config");
-//   device_starting_pow.Set_entity_valuemin("-100");
-//   device_starting_pow.Set_entity_valuemax("500"); // trop? pas assez? TODO : test sans valeur max?
-//   device_starting_pow.Set_entity_valuestep("1");
-
-//   device_dimmer_minpow.Set_name("Puissance mini Dimmer");
-//   device_dimmer_minpow.Set_object_id("minpow");
-//   device_dimmer_minpow.Set_entity_type("number");
-//   device_dimmer_minpow.Set_entity_category("config");
-//   device_dimmer_minpow.Set_entity_valuemin("0");
-//   device_dimmer_minpow.Set_entity_valuemax("100"); // trop? pas assez? TODO : test sans valeur max?
-//   device_dimmer_minpow.Set_entity_valuestep("1");
-
-//   device_dimmer_maxpow.Set_name("Puissance maxi Dimmer");
-//   device_dimmer_maxpow.Set_object_id("maxpow");
-//   device_dimmer_maxpow.Set_entity_type("number");
-//   device_dimmer_maxpow.Set_entity_category("config");
-//   device_dimmer_maxpow.Set_entity_valuemin("0");
-//   device_dimmer_maxpow.Set_entity_valuemax("100"); // trop? pas assez? TODO : test sans valeur max?
-//   device_dimmer_maxpow.Set_entity_valuestep("1");
-
-//   device_dimmer_maxtemp.Set_name("Température maxi Dimmer");
-//   device_dimmer_maxtemp.Set_object_id("maxtemp");
-//   device_dimmer_maxtemp.Set_entity_type("number");
-//   device_dimmer_maxtemp.Set_entity_category("config");
-//   device_dimmer_maxtemp.Set_entity_valuemin("0");
-//   device_dimmer_maxtemp.Set_entity_valuemax("75"); // trop? pas assez? TODO : test sans valeur max?
-//   device_dimmer_maxtemp.Set_entity_valuestep("1");
-//     /// création des select
-//   device_dimmer_child_mode.Set_name("Mode du dimmer");
-//   device_dimmer_child_mode.Set_object_id("child_mode");
-//   device_dimmer_child_mode.Set_entity_type("select");
-//   device_dimmer_child_mode.Set_entity_category("config");
-//   device_dimmer_child_mode.Set_entity_option("\"off\",\"delester\",\"equal\"");
-
-
-
-
-
-
-
-
-
-
-
+        device_alarm_temp.Set_dev_cla("problem");
+        device_alarm_temp.Set_retain_flag(true);
+        // device_alarm_temp.Set_expire_after(true);
 
 
 
@@ -189,8 +152,13 @@ void init_HA_sensor(){
         device_dimmer.discovery();
         device_grid.discovery();
         device_inject.discovery();
+
         compteur_inject.discovery();
+        compteur_inject.send(String("0"));
+
         compteur_grid.discovery();
+        compteur_grid.send(String("0"));
+
         // temperature_HA.discovery();
         switch_1.discovery();
         switch_1.send(String(0));
