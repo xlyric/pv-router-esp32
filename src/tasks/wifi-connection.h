@@ -33,6 +33,7 @@ void keepWiFiAlive(void * parameter){
 
         serial_println(F("[WIFI] Connecting"));
         gDisplayValues.currentState = CONNECTING_WIFI;
+        WiFi.useStaticBuffers(true);   // test for increase speed
 
         WiFi.mode(WIFI_STA);
         WiFi.setHostname(DEVICE_NAME);

@@ -25,7 +25,6 @@
  */
 #define MQTT_USER ""
 #define MQTT_PASSWORD ""
-#define MQTT_INTERVAL 60
 
 /**
  * Switch Screnn button and time on
@@ -77,7 +76,7 @@
 #define ADC_COUNTS  (1<<ADC_BITS)
 int sigma_read;
 float VrmsOLD = 225; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
-float PHASECAL = 0.1;
+float PHASECAL = 0.2;
 int timeout = 22000; // 20ms , 1 * 50Hz + 2ms marge?
 int value0=1840; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
 
@@ -215,6 +214,9 @@ bool AP=true;
 
 #define RELAY1 13
 #define RELAY2 15
+
+
+#define ESPTOOLPY_FLASHFREQ_80M
 
 
 #endif

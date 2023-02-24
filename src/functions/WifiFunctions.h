@@ -1,6 +1,7 @@
 #ifndef WIFI_FUNCTIONS
 #define WIFI_FUNCTIONS
 
+
 #include <Arduino.h>
 #include "WiFi.h"
 #include "HTTPClient.h"
@@ -35,7 +36,7 @@ void WIFIDimmerIP(WiFiEvent_t event, WiFiEventInfo_t info) {
 
 void APConnect() {
   WiFi.onEvent(WiFiEvent);
-  WiFi.onEvent(WiFiGotIP, WiFiEvent_t::SYSTEM_EVENT_AP_STAIPASSIGNED);
+  WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED);
   Serial.println(WiFi.macAddress());
   String network = ssid + String('-') + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
   Serial.println(network);
@@ -113,7 +114,7 @@ void WiFiEvent(WiFiEvent_t event) {
     case SYSTEM_EVENT_AP_STADISCONNECTED:
       Serial.println("Client disconnected");
       break;
-    case SYSTEM_EVENT_AP_STAIPASSIGNED:
+    case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
       Serial.println("Assigned IP address to client");
       break;
     case SYSTEM_EVENT_AP_PROBEREQRECVED:
@@ -160,7 +161,7 @@ void WiFiEvent(WiFiEvent_t event) {
 14 SYSTEM_EVENT_AP_STOP                  < ESP32 soft-AP stop
 15 SYSTEM_EVENT_AP_STACONNECTED          < a station connected to ESP32 soft-AP
 16 SYSTEM_EVENT_AP_STADISCONNECTED       < a station disconnected from ESP32 soft-AP
-17 SYSTEM_EVENT_AP_STAIPASSIGNED         < ESP32 soft-AP assign an IP to a connected station
+17 ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED         < ESP32 soft-AP assign an IP to a connected station
 18 SYSTEM_EVENT_AP_PROBEREQRECVED        < Receive probe request packet in soft-AP interface
 19 SYSTEM_EVENT_GOT_IP6                  < ESP32 station or ap or ethernet interface v6IP addr is preferred
 20 SYSTEM_EVENT_ETH_START                < ESP32 ethernet start

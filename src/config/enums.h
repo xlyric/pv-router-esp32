@@ -125,95 +125,9 @@ struct Dallas{
 //***********************
 //****    HA 
 //***********************
-
-// struct HA
-// {
-
-
-//       /* HA */
-//     private:String name; 
-//     public:void Set_name(String setter) {name=setter; }
-
-//     private:String dev_cla; 
-//     public:void Set_dev_cla(String setter) {dev_cla=setter; }
-
-//     private:String unit_of_meas; 
-//     public:void Set_unit_of_meas(String setter) {unit_of_meas=setter; }
-
-//     private:String stat_cla; 
-//     public:void Set_stat_cla(String setter) {stat_cla=setter; }
-
-//     private:String entity_category; 
-//     public:void Set_entity_category(String setter) {entity_category=setter; }
-
-//     private:String icon; 
-//     public:void Set_icon(String setter) {icon="\"ic\": \""+ setter +"\", "; }
-
-//     bool cmd_t; 
-
-//     private:String IPaddress;
-//     private:String state_topic; 
-//     private:String stat_t; 
-//     private:String avty_t;
-
-    
-//     private:String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-//     private:String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-//     private:String node_id = String("PvRouter-") + node_mac; 
-//     private:String topic = "homeassistant/sensor/"+ node_id +"/";
-//     private:String device_declare() { 
-//               String info =         "\"dev\": {"
-//               "\"ids\": \""+ node_id + "\","
-//               "\"name\": \""+ node_id + "\","
-//               "\"sw\": \"PvRouter "+ String(VERSION) +"\","
-//               "\"mdl\": \"ESP32 TTGO " + IPaddress + "\","
-//               "\"mf\": \"Cyril Poissonnier\","
-//               "\"cu\": \"http://"+ IPaddress +"\""
-//             "}"; 
-//             return info;
-//             }
-//     private:String uniq_id; 
-//     private:String value_template; 
-
-
-//     // private:void online(){
-//     //   client.publish(String(topic+"status").c_str() , "online", true); // status Online
-//     // } 
-
-//     public:void discovery(){
-//       IPaddress =   WiFi.localIP().toString() ;
-//       String device= "{ \"dev_cla\": \""+dev_cla+"\","
-//             "\"unit_of_meas\": \""+unit_of_meas+"\","
-//             "\"stat_cla\": \""+stat_cla+"\"," 
-//             "\"name\": \""+ name +"-"+ node_mac + "\"," 
-//             "\"stat_t\": \""+ topic +"state"+name+"\","
-//             "\"avty_t\": \""+ topic +"status\","
-//             "\"uniq_id\": \""+ node_mac + "-" + name +"\", "
-//             "\"value_template\": \"{{ value_json."+name +" }}\", "
-//             "\"cmd_t\": \""+ topic +"command\","
-//             "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
-//             "\"exp_aft\": \""+ MQTT_INTERVAL +"\", "
-//             + icon
-//             + device_declare() + 
-//           "}";
-//           if (dev_cla =="" ) { dev_cla = name; }
-//           client.publish((topic+name+"/config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
-//           //Serial.println(device.c_str());
-//           Serial.println(name + "HA discovery");
-//           // online();
-//           // send("0");
-          
-//     }
-
-//     public:void send(String value){
-//        String message = "  { \""+name+"\" : \"" + value.c_str() + "\"  } ";
-//        client.publish((topic+"state"+name).c_str() , message.c_str(), false); // false for exp_aft in discovery
-//     }
- 
-// };
-
 struct HA
 {
+    private:int MQTT_INTERVAL = 60;
 
       /* HA */
     private:String name; 
@@ -233,7 +147,7 @@ struct HA
 
     private:String entity_category; 
     public:void Set_entity_category(String setter) {entity_category=setter; }
-
+    
     private:String entity_type; 
     public:void Set_entity_type(String setter) {entity_type=setter; }
 
@@ -252,8 +166,13 @@ struct HA
     private:String entity_option; 
     public:void Set_entity_option(String setter) {entity_option=setter; }
 
-    // private:String retain; 
-    // public:void Set_retain(String setter) {retain=setter; }
+    private:bool retain_flag; 
+    public:void Set_retain_flag(bool setter) {retain_flag=setter; }
+
+    private:String expire_after; 
+    public:void Set_expire_after(bool setter) {
+      if (setter) {expire_after="\"exp_aft\": \""+ String(MQTT_INTERVAL) +"\", "; }
+    }
 
     private:String sensor_type() {
       String topic = "homeassistant/"+ entity_type +"/"+ node_id +"/";
@@ -262,9 +181,7 @@ struct HA
               info =         "\"dev_cla\": \""+dev_cla+"\","
             "\"unit_of_meas\": \""+unit_of_meas+"\","
             "\"stat_cla\": \""+stat_cla+"\"," 
-            "\"avty_t\": \""+ topic + "status\","
-            "\"value_template\": \"{{ value_json."+ object_id +" }}\","
-            "\"exp_aft\": \""+ MQTT_INTERVAL +"\","; 
+            "\"value_template\": \"{{ value_json."+ object_id +" }}\","; 
       }
       else if (entity_type == "switch") { 
               info =         "\"val_tpl\": \"{{ value_json."+ object_id +" }}\","
@@ -273,50 +190,39 @@ struct HA
             "\"pl_off\": \"{ \\\""+object_id+"\\\" : \\\"0\\\"  } \","
             "\"stat_on\":1,"
             "\"stat_off\":0,"
-            "\"cmd_t\": \""+ topic + "command\"," 
-            "\"avty_t\": \"homeassistant/sensor/"+ node_id +"/" + "status\",";
+            "\"cmd_t\": \""+ topic + "command\",";
       } 
       // else if (entity_type == "number") { 
-      //         info =         "\"val_tpl\": \"{{ value_json."+ object_id +" }}\"," //
-      //       "\"cmd_t\": \""+ topic + "command\"," //
+      //         info =         "\"val_tpl\": \"{{ value_json."+ object_id +" }}\","
+      //       "\"cmd_t\": \""+ topic + "command\","
       //       "\"cmd_tpl\": \"{ \\\""+object_id+"\\\" : {{ value }} } \"," 
-      //       "\"entity_category\": \""+ entity_category + "\"," //
-      //       "\"max\": \""+max+"\"," //
-      //       "\"min\": \""+min+"\"," //
-      //       "\"step\": \""+step+"\"," //
-      //       "\"avty_t\": \"homeassistant/sensor/"+ node_id +"/" + "status\","; //
+      //       "\"entity_category\": \""+ entity_category + "\","
+      //       "\"max\": \""+max+"\","
+      //       "\"min\": \""+min+"\","
+      //       "\"step\": \""+step+"\",";
       // } 
       // else if (entity_type == "select") { 
-      //         info =         "\"val_tpl\": \"{{ value_json."+ object_id +" }}\"," //
-      //       "\"cmd_t\": \""+ topic + "command\"," //
-      //       "\"cmd_tpl\": \"{ \\\""+object_id+"\\\" : \\\"{{ value }}\\\" } \"," 
-      //       "\"entity_category\": \""+ entity_category + "\"," //
-			//       "\"options\": ["+ entity_option + "]," //
-      //       "\"avty_t\": \"homeassistant/sensor/"+ node_id +"/" + "status\","; //
+      //         info =         "\"val_tpl\": \"{{ value_json."+ object_id +" }}\","
+      //       "\"cmd_t\": \""+ topic + "command\","
+      //       "\"cmd_tpl\": \"{ \\\""+object_id+"\\\" : \\\"{{ value }}\\\" } \","
+      //       "\"entity_category\": \""+ entity_category + "\","
+			//       "\"options\": ["+ entity_option + "],";
       // } 
       else if (entity_type == "binary_sensor") { 
               info =         "\"dev_cla\": \""+dev_cla+"\","
-            "\"pl_on\": \"{ \\\""+object_id+"\\\" : \\\"true\\\"  } \","
-            "\"pl_off\": \"{ \\\""+object_id+"\\\" : \\\"false\\\"  } \","
-            "\"avty_t\": \"homeassistant/sensor/"+ node_id +"/" + "status\",";
+            "\"pl_on\":\"true\","
+            "\"pl_off\":\"false\","
+            "\"val_tpl\": \"{{ value_json."+ object_id +" }}\",";
       }
       // else if (entity_type == "button") { 
-      //         info =            "\"entity_category\": \""+ entity_category + "\"," //
-      //       "\"cmd_t\": \""+ topic + "command\"," //
-      //       "\"pl_prs\": \"{ \\\""+object_id+"\\\" : \\\"1\\\"  } \","
-      //       "\"avty_t\": \"homeassistant/sensor/"+ node_id +"/" + "status\",";
+      //         info =            "\"entity_category\": \""+ entity_category + "\","
+      //       "\"cmd_t\": \""+ topic + "command\","
+      //       "\"pl_prs\": \"{ \\\""+object_id+"\\\" : \\\"1\\\"  } \",";
       // }
-
-
-
-
-    
       return info;
-
     }
 
-    private:String IPaddress;
-    
+    private:String IPaddress = WiFi.localIP().toString();
     private:String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
     private:String node_id = String("PvRouter-") + node_mac; 
     private:String device_declare() { 
@@ -331,29 +237,28 @@ struct HA
             return info;
             }
 
+
     public:void discovery(){
-      IPaddress =   WiFi.localIP().toString();
       String topic = "homeassistant/"+ entity_type +"/"+ node_id +"/";
       String device= "{\"name\": \""+ name + "\"," 
             "\"obj_id\": \"PvRouter-"+ object_id +"-"+ node_mac + "\"," 
             "\"uniq_id\": \""+ node_mac + "-" + object_id +"\","
             "\"stat_t\": \""+ topic + object_id + "/state\"," 
+            "\"avty_t\": \"homeassistant/sensor/"+ node_id +"/" + "status\","
             + sensor_type()
             + icon
+            + expire_after
             + device_declare() + 
             "}";
-
       client.publish((topic+object_id+"/config").c_str() , device.c_str(), true); // déclaration autoconf PvRouter
       Serial.println(device.c_str());
     }
-        
 
     public:void send(String value){
       String topic = "homeassistant/"+ entity_type +"/"+ node_id +"/";
       String message = "  { \""+object_id+"\" : \"" + value.c_str() + "\"  } ";
-      client.publish((topic + object_id + "/state").c_str() , message.c_str(), false);
+      client.publish((topic + object_id + "/state").c_str() , message.c_str(), retain_flag);
     } 
- 
 };
 
 

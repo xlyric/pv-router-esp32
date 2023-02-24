@@ -99,8 +99,8 @@ if (!AP) {
                   }
                   if (configmqtt.HA) device_inject.send(String(int(-gDisplayValues.watt)));
                   if (configmqtt.HA) device_grid.send(String("0"));
-                  WHtempgrid += wattheure; 
-                  if (configmqtt.HA) compteur_inject.send(String(WHtempgrid));
+                  WHtempinject += wattheure; 
+                  if (configmqtt.HA) compteur_inject.send(String(WHtempinject));
                   
                   
                   // if (configmqtt.HA)compteur_grid.send(String("0"));
@@ -113,8 +113,8 @@ if (!AP) {
                   if (configmqtt.HA) device_grid.send(String(int(gDisplayValues.watt)));
                   if (configmqtt.HA) device_inject.send(String("0"));
                   // if (configmqtt.HA) compteur_inject.send(String("0"));
-                  WHtempinject += wattheure;
-                  if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
+                  WHtempgrid += wattheure;
+                  if (configmqtt.HA) compteur_grid.send(String(WHtempgrid));
                   //maj 202030209
                   if (configmqtt.HA && discovery_temp) {
                         temperature_HA.send(String(gDisplayValues.temperature));
