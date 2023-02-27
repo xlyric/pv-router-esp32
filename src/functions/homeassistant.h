@@ -12,12 +12,15 @@ extern HA compteur_inject;
 extern HA compteur_grid;
 extern HA switch_1;
 extern HA switch_2;
-extern HA temperature_HA;
-extern HA power_factor;
-extern HA power_vrms;
-extern HA power_irms;
-extern HA power_apparent;
+extern HA temperature;
 extern HA device_alarm_temp;
+
+#ifdef HARDWARE_MOD
+        extern HA power_factor;
+        extern HA power_vrms;
+        extern HA power_irms;
+        extern HA power_apparent;
+#endif
 
 
 void init_HA_sensor(){
@@ -69,7 +72,6 @@ void init_HA_sensor(){
         compteur_grid.Set_retain_flag(true);
         // compteur_grid.Set_expire_after(true);
 
-
         compteur_inject.Set_name("Compteur injection");
         compteur_inject.Set_object_id("inject_Wh");
         compteur_inject.Set_unit_of_meas("Wh");
@@ -79,15 +81,14 @@ void init_HA_sensor(){
         compteur_inject.Set_retain_flag(true);
         // compteur_inject.Set_expire_after(true);
             
-        temperature_HA.Set_name("Température");
-        temperature_HA.Set_object_id("Dallas");
-        temperature_HA.Set_dev_cla("temperature"); 
-        temperature_HA.Set_unit_of_meas("°C");
-        temperature_HA.Set_stat_cla("measurement");
-        temperature_HA.Set_entity_type("sensor");
-        temperature_HA.Set_retain_flag(true);
-        // temperature_HA.Set_expire_after(true);
-
+        temperature.Set_name("Température");
+        temperature.Set_object_id("temperature");
+        temperature.Set_dev_cla("temperature"); 
+        temperature.Set_unit_of_meas("°C");
+        temperature.Set_stat_cla("measurement");
+        temperature.Set_entity_type("sensor");
+        temperature.Set_retain_flag(true);
+        // temperature.Set_expire_after(true);
 
         switch_1.Set_name("Relais 1");
         switch_1.Set_object_id("Switch1");
@@ -101,51 +102,12 @@ void init_HA_sensor(){
         switch_2.Set_retain_flag(true);
         // switch_2.Set_expire_after(true);
 
-        power_factor.Set_name("Facteur de puissance");
-        power_factor.Set_object_id("PowerFactor");
-        power_factor.Set_unit_of_meas("");
-        power_factor.Set_stat_cla("measurement");
-        power_factor.Set_dev_cla("power_factor");
-        power_factor.Set_entity_type("sensor");
-        power_factor.Set_retain_flag(true);
-        // power_factor.Set_expire_after(true);
-
-        power_vrms.Set_name("Tension RMS");
-        power_vrms.Set_object_id("Vrms");
-        power_vrms.Set_unit_of_meas("V");
-        power_vrms.Set_stat_cla("measurement");
-        power_vrms.Set_dev_cla("voltage");
-        power_vrms.Set_entity_type("sensor");
-        power_vrms.Set_retain_flag(true);
-        // power_vrms.Set_expire_after(true);
-
-        power_irms.Set_name("Intensité RMS");
-        power_irms.Set_object_id("Irms");
-        power_irms.Set_unit_of_meas("A");
-        power_irms.Set_stat_cla("measurement");
-        power_irms.Set_dev_cla("current");
-        power_irms.Set_entity_type("sensor");
-        power_irms.Set_retain_flag(true);
-        // power_irms.Set_expire_after(true);
-
-        power_apparent.Set_name("Puissance apparente");
-        power_apparent.Set_object_id("ApparentPower");
-        power_apparent.Set_unit_of_meas("VA");
-        power_apparent.Set_stat_cla("measurement");
-        power_apparent.Set_dev_cla("apparent_power");
-        power_apparent.Set_entity_type("sensor");
-        power_apparent.Set_retain_flag(true);
-        // power_apparent.Set_expire_after(true);
-
         device_alarm_temp.Set_name("Surchauffe");
         device_alarm_temp.Set_object_id("alarm_temp");
         device_alarm_temp.Set_entity_type("binary_sensor");
         device_alarm_temp.Set_dev_cla("problem");
         device_alarm_temp.Set_retain_flag(true);
         // device_alarm_temp.Set_expire_after(true);
-
-
-
 
         client.setBufferSize(1024);
         device_routeur.discovery();
@@ -159,21 +121,58 @@ void init_HA_sensor(){
         compteur_grid.discovery();
         compteur_grid.send(String("0"));
 
-        // temperature_HA.discovery();
+        // temperature.discovery();
         switch_1.discovery();
         switch_1.send(String(0));
  
         switch_2.discovery(); 
         switch_2.send(String(0));
 
-        power_factor.discovery();
-        power_vrms.discovery();
-        power_irms.discovery();
-        power_apparent.discovery();
+        #ifdef HARDWARE_MOD
 
+                power_factor.Set_name("Facteur de puissance");
+                power_factor.Set_object_id("PowerFactor");
+                power_factor.Set_unit_of_meas("");
+                power_factor.Set_stat_cla("measurement");
+                power_factor.Set_dev_cla("power_factor");
+                power_factor.Set_entity_type("sensor");
+                power_factor.Set_retain_flag(true);
+                // power_factor.Set_expire_after(true);
 
+                power_vrms.Set_name("Tension RMS");
+                power_vrms.Set_object_id("Vrms");
+                power_vrms.Set_unit_of_meas("V");
+                power_vrms.Set_stat_cla("measurement");
+                power_vrms.Set_dev_cla("voltage");
+                power_vrms.Set_entity_type("sensor");
+                power_vrms.Set_retain_flag(true);
+                // power_vrms.Set_expire_after(true);
 
+                power_irms.Set_name("Intensité RMS");
+                power_irms.Set_object_id("Irms");
+                power_irms.Set_unit_of_meas("A");
+                power_irms.Set_stat_cla("measurement");
+                power_irms.Set_dev_cla("current");
+                power_irms.Set_entity_type("sensor");
+                power_irms.Set_retain_flag(true);
+                // power_irms.Set_expire_after(true);
 
+                power_apparent.Set_name("Puissance apparente");
+                power_apparent.Set_object_id("ApparentPower");
+                power_apparent.Set_unit_of_meas("VA");
+                power_apparent.Set_stat_cla("measurement");
+                power_apparent.Set_dev_cla("apparent_power");
+                power_apparent.Set_entity_type("sensor");
+                power_apparent.Set_retain_flag(true);
+                // power_apparent.Set_expire_after(true);
+
+                        
+                power_factor.discovery();
+                power_vrms.discovery();
+                power_irms.discovery();
+                power_apparent.discovery();
+                
+        #endif
 }
 
 

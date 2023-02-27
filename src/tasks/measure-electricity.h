@@ -20,7 +20,7 @@ extern HA device_grid;
 extern HA device_inject; 
 extern HA compteur_inject;
 extern HA compteur_grid;
-extern HA temperature_HA;
+extern HA temperature;
 extern HA device_alarm_temp;
 
 extern HA power_factor;
@@ -46,7 +46,11 @@ void measureElectricity(void * parameter)
       
       
       if ( configmodule.pilote == false ) {
-            injection3();
+            #ifndef HARDWARE_MOD
+                  injection2();
+            #else
+                  injection3();
+            #endif
             if ( gDisplayValues.porteuse == false ) {
                   gDisplayValues.watt =0 ; 
                   slowlog ++; 
@@ -86,10 +90,12 @@ if (!AP) {
                   if (config.IDX != 0) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
                   if (configmqtt.HA) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
-                        power_apparent.send(String(int(PVA)));
-                        power_vrms.send(String(int(Vrms)));
-                        power_irms.send(String(Irms));
-                        power_factor.send(String(PowerFactor));
+                        #ifdef HARDWARE_MOD
+                              power_apparent.send(String(int(PVA)));
+                              power_vrms.send(String(int(Vrms)));
+                              power_irms.send(String(Irms));
+                              power_factor.send(String(PowerFactor));
+                        #endif
                   }
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
@@ -117,7 +123,7 @@ if (!AP) {
                   if (configmqtt.HA) compteur_grid.send(String(WHtempgrid));
                   //maj 202030209
                   if (configmqtt.HA && discovery_temp) {
-                        temperature_HA.send(String(gDisplayValues.temperature));
+                        temperature.send(String(gDisplayValues.temperature));
                         device_alarm_temp.send(stringbool(security));}
 
                   if (config.IDX != 0 && discovery_temp) {Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );}

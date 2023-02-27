@@ -344,6 +344,9 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
+                                                        <div class="col-sm-3 cosphi">
+                                                            <span>Cosphi</span>
+                                                        </div>
                                                         <div class="col-sm-3">
                                                             <span>Facteur de correction</span>
                                                         </div>
@@ -355,6 +358,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
+                                                        <div class="col-sm-3">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control form-control-user"
+                                                                id="cosphi"
+                                                                placeholder="%COSPHI%"
+                                                            >
+                                                        </div>
                                                         <div class="col-sm-3">
                                                             <input
                                                                 type="text"
@@ -555,7 +566,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-  var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(),'voltage':$('#voltage').val(), 'offset':$('#offset').val() } 
+  var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val()}  
 
 		
         $.ajax({
@@ -575,57 +586,68 @@ $( "#formulaire" ).submit(function() {
 
 
 var recupconfig = $.get ({
-		url : '/config',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-        var config = recupconfig.split(";");
-        i=0;
-
-i++;
-document.getElementById("Fusible").value = config[i];	  
-i++;
-
-i++;
-document.getElementById("version").innerHTML = config[i];
-
-document.getElementById("delta").value = config[5];
-
-document.getElementById("dimmer").value = config[7];
-//document.getElementById("cosphi").value = config[8];
-
-//document.getElementById("autonome").checked = config[12];
-//document.getElementById("autonome").value = config[12];
-document.getElementById("dimmerlocal").checked = config[13];
-document.getElementById("dimmerlocal").value = config[13];
-i=14
-document.getElementById("facteur").value = config[i];
-i++;
-//document.getElementById("Usemqtt").checked = config[i];
-//document.getElementById("Usemqtt").value = config[i];
-i++;
-i++;
-i++;
-document.getElementById("deltaneg").value = config[i];
-i++;
-document.getElementById("resistance").value = config[i];
-i++;
-document.getElementById("polarity").checked = config[i];
-document.getElementById("polarity").value = config[i];
-i++;
-document.getElementById("screentime").value = config[i];	  
-i++;
-document.getElementById("Fusiblelocal").value = config[i];	
-i++;
-document.getElementById("maxtemp").value = config[i];	  
-i++;
-document.getElementById("voltage").value = config[i];	
-i++;
-document.getElementById("offset").value = config[i];	
-i++;
-document.getElementById("flip").checked = config[i];
-document.getElementById("flip").value = config[i];
+    url : '/config',
+    type : 'GET',
+    dataType: "text",
+    async: false }).responseText; 
+                
+    var config = recupconfig.split(";");
+    i=0;
+    i++;
+    document.getElementById("Fusible").value = config[i];	  
+    i++;
+    i++;
+    document.getElementById("version").innerHTML = config[i];
+    i++;
+    i++;
+    document.getElementById("delta").value = config[i];
+    i++;
+    i++;
+    document.getElementById("dimmer").value = config[i];
+    i++;
+    document.getElementById("cosphi").value = config[i];
+    i++;
+    i++;
+    //document.getElementById("autonome").checked = config[i];
+    //document.getElementById("autonome").value = config[i];
+    i++;
+    i++;
+    document.getElementById("dimmerlocal").checked = config[i];
+    document.getElementById("dimmerlocal").value = config[i];
+    i++;
+    document.getElementById("facteur").value = config[i];
+    i++;
+    //document.getElementById("Usemqtt").checked = config[i];
+    //document.getElementById("Usemqtt").value = config[i];
+    i++;
+    i++;
+    i++;
+    document.getElementById("deltaneg").value = config[i];
+    i++;
+    document.getElementById("resistance").value = config[i];
+    i++;
+    document.getElementById("polarity").checked = config[i];
+    document.getElementById("polarity").value = config[i];
+    i++;
+    document.getElementById("screentime").value = config[i];	  
+    i++;
+    document.getElementById("Fusiblelocal").value = config[i];	
+    i++;
+    document.getElementById("maxtemp").value = config[i];	  
+    i++;
+    document.getElementById("voltage").value = config[i];	
+    i++;
+    document.getElementById("offset").value = config[i];	
+    i++;
+    document.getElementById("flip").checked = config[i];
+    document.getElementById("flip").value = config[i];
+    i++;
+    i++;
+    document.getElementById("relaystart").checked = config[i];
+		document.getElementById("relaystart").value = config[i];
+    i++;
+    document.getElementById("relaystop").checked = config[i];
+		document.getElementById("relaystop").value = config[i];
                     </script>
                 </div>
             </div>

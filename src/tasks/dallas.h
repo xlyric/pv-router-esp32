@@ -10,7 +10,7 @@
 
 extern DisplayValues gDisplayValues;
 extern Dallas dallas ;
-extern HA temperature_HA;
+extern HA temperature;
 
 /**
  * Task: Modifier le dimmer en fonction de la production

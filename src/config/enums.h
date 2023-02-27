@@ -48,7 +48,7 @@ struct Config {
   char otapassword[64];
   int delta;
   int deltaneg;
- // int cosphi;
+  int cosphi;
   int readtime;
   int cycle;
   bool sending;

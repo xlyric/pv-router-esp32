@@ -42,7 +42,7 @@ void reconnect() {
 
     if (client.connect(node_id.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
       client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
-      // client.subscribe(command_switch.c_str());
+      client.subscribe(command_switch.c_str());
 
       Serial.println("MQTT reconnect : connected");
     } else {

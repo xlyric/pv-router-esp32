@@ -54,6 +54,7 @@
 #include "functions/dimmerFunction.h"
 #endif
 
+#include "tasks/client_loop.h"
 
 
 //***********************************
@@ -113,7 +114,7 @@ HA compteur_inject;
 HA compteur_grid;
 HA switch_1;
 HA switch_2;
-HA temperature_HA;
+HA temperature;
 HA power_factor;
 HA power_vrms;
 HA power_irms;
@@ -409,9 +410,18 @@ Dimmer_setup();
         );
       #endif
     #endif
+    if (config.mqtt) {
+        xTaskCreate(
+          client_loop,
+          "Update network data",
+          5000,            // Stack size (bytes)
+          NULL,             // Parameter
+          4,                // Task priority
+          NULL              // Task handle
+        );
+    }
   }
     
-  
 
   #if HA_ENABLED == true
     xTaskCreate(
@@ -445,7 +455,6 @@ Dimmer_setup();
 if (!AP) {
     if (config.mqtt) {
       Mqtt_init();
-
     // HA autoconf
      if (configmqtt.HA) init_HA_sensor();
       
@@ -502,10 +511,6 @@ void loop()
           if (!client.connected()) { reconnect(); }
           client.loop();
         }
-        // TODO : désactivation MQTT en décochant la case, sans redémarrer
-        // else {
-        //     if (client.connected()) { client.disconnect(); }
-        // }  
 
     #endif
   }

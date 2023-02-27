@@ -131,7 +131,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["otapassword"] = config.otapassword;
   doc["delta"] = config.delta;
   doc["deltaneg"] = config.deltaneg;
- // doc["cosphi"] = config.cosphi;
+  doc["cosphi"] = config.cosphi;
   doc["readtime"] = config.readtime;
   doc["cycle"] = config.cycle;
   doc["sending"] = config.sending;

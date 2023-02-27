@@ -2,6 +2,26 @@
 #define CONFIG
 
 /**
+ * Modification matérielle du PV Routeur --> Très bon résultats, a tester dans le but de, pourquoi pas, lancer une V2?  
+ */
+#ifdef HARDWARE_MOD // si modification hardware du PV Router (bypass diode, ADC Middle sur GPIO 39, SCT centrée sur ADC MIDDLE )
+// ADC MIDDLE = 3.3V /2
+
+    float VrmsOLD = 225; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
+    float PHASECAL = 0.2; // Coefficient permettant le lissage des valeurs de tension.  Vrms = VrmsOLD + PHASECAL * (Vrms - VrmsOLD); 
+    int timeout = 22000; // 20ms , 1 * 50Hz + 2ms marge?
+    int value0=1840; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
+
+
+    float PVA;  //Puissance active en  VA
+    double PW;   //Puissance en Watt
+    float PowerFactor; // Facteur de puissance
+    int startV; // Mesure ADC AC en début de cycle
+    double Vrms; // Tension secteur RMS
+    double Irms; // Intensité secteur RMS
+#endif
+
+/**
  * Language 
  */
 #define LANG_FR true
@@ -75,22 +95,9 @@
 #define ADC_BITS    12
 #define ADC_COUNTS  (1<<ADC_BITS)
 int sigma_read;
-float VrmsOLD = 225; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
-float PHASECAL = 0.2;
-int timeout = 22000; // 20ms , 1 * 50Hz + 2ms marge?
-int value0=1840; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
+int half;
 
-// Valeurs théoriques pour PHASECAL.
-// En modifiant le logiciel pour signaler le temps qu'il faut pour terminer la boucle de mesure interne 
-// et le nombre d'échantillons enregistrés, le temps entre les échantillons a été mesuré à 377 μs.
-// Cela équivaut à 6,79° (à 50 Hz, un cycle complet, soit 360°, prend 20 ms)
-// Par conséquent, une valeur de 1 n'applique aucune correction, 
-// Zéro et 2 appliquent environ 7° de correction dans des directions opposées.
-// Une valeur de 1,28 corrigera l'erreur de 2° causée par le retard entre la tension d'échantillonnage et le courant.
 
-float PVA;  //Power in VA
-double PW;   //Power in Watt
-float PowerFactor; // 
 
 
 /**
@@ -132,13 +139,13 @@ bool discovery_temp = false;
  * the ESP goes into deep sleep for 30seconds to try and
  * recover.
  */
-#define WIFI_TIMEOUT 30000 // 20 seconds
+#define WIFI_TIMEOUT 30000 // 30 seconds
 
 /**
  * How long should we wait after a failed WiFi connection
  * before trying to set one up again.
  */
-#define WIFI_RECOVER_TIME_MS 30000 // 20 seconds
+#define WIFI_RECOVER_TIME_MS 30000 // 30 seconds
 
 /**
  * Dimensions of the OLED display attached to the ESP
@@ -153,7 +160,7 @@ bool discovery_temp = false;
 /**
  * Force Emonlib to assume a 3.3V supply to the CT sensor
  */
-#define emonTxV3 1
+// #define emonTxV3 1
 
 
 /**
@@ -170,28 +177,6 @@ bool discovery_temp = false;
 #define NTP_OFFSET_SECONDS 3600
 #define NTP_UPDATE_INTERVAL_MS 3600000 /// synch de l'heure toute les heures
 
-
-//*************not implemented /tested **********
-/**
- * Wether or not you want to enable Home Assistant integration
- */
-//#define HA_ENABLED false
-//#define HA_ADDRESS "*** YOUR HOME ASSISTANT IP ADDRESSS ***"
-//#define HA_PORT 8883
-//#define HA_USER ""
-//#define HA_PASSWORD ""
-//*************not implemented /tested **********
-/**
- * The MQTT endpoint of the service we should connect to and receive messages
- * from.
- */
-//#define AWS_ENABLED false
-//#define AWS_IOT_ENDPOINT "**** YOUR AWS IOT ENDPOINT ****"
-//#define AWS_IOT_TOPIC "**** YOUR AWS IOT RULE ARN ****"
-
-//#define MQTT_CONNECT_DELAY 200
-//#define MQTT_CONNECT_TIMEOUT 20000 // 20 seconds
-//*************END not implemented /tested **********
 
 // Check which core Arduino is running on. This is done because updating the 
 // display only works from the Arduino core.
@@ -214,9 +199,6 @@ bool AP=true;
 
 #define RELAY1 13
 #define RELAY2 15
-
-
-#define ESPTOOLPY_FLASHFREQ_80M
 
 
 #endif

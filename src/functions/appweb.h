@@ -20,7 +20,7 @@ int middleoscillo = 1800;
 const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
 const char* PARAM_INPUT_2 = "cycle"; /// paramettre de retour cycle
 const char* PARAM_INPUT_3 = "readtime"; /// paramettre de retour readtime
-//const char* PARAM_INPUT_4 = "cosphi"; /// paramettre de retour cosphi
+const char* PARAM_INPUT_4 = "cosphi"; /// paramettre de retour cosphi
 const char* PARAM_INPUT_save = "save"; /// paramettre de retour cosphi
 const char* PARAM_INPUT_dimmer = "dimmer"; /// paramettre de retour cosphi
 const char* PARAM_INPUT_server = "server"; /// paramettre de retour server domotique
@@ -45,46 +45,58 @@ const char* PARAM_INPUT_publish = "publish"; /// paramettre publication mqtt
 //***********************************
 
 String oscilloscope() {
-
- // int starttime,endtime; 
   int timer = 0; 
   int temp, signe; // , moyenne; 
   int freqmesure = 40; 
-  // int sigma = 0;
   String retour = "[[";
- 
-  // front();
-
-  // delay(15);
-
-// int value0;
-// value0 = analogRead(ADC_MIDDLE);  //Mean value. Should be at 3.3v/2
-frontmod();
-
-// startMillis = micros();   // 0ms 
-
-
- // delayMicroseconds (half*config.readtime); // correction décalage
-  while ( timer < freqmesure ) {
-    
-    temp =  analogRead(ADC_INPUT) - value0; signe = analogRead(ADC_PORTEUSE) - value0 ;
-    // moyenne = middleoscillo  + signe/50; 
-    // sigma += temp;
-    //moyenne = moyenne + abs(temp - middle) ;
-    /// mode oscillo graph 
-
-    
-    retour += String(timer) + "," + String(signe) + "," + String(temp) + "],[" ; 
-    timer ++ ;
-    delayMicroseconds (config.readtime);
-  } 
+  #ifndef HARDWARE_MOD
+    #ifndef HALF_AUTO
+      config.cosphi = half;
+    #endif
+    int moyenne; 
+    int sigma = 0;
   
-  temp =  analogRead(ADC_INPUT) - value0; signe = analogRead(ADC_PORTEUSE) - value0;
-  // moyenne = middleoscillo  + signe/50; 
-  retour += String(timer) + "," + String(signe) + "," + String(temp) + "]]" ;
-  middleoscillo = value0 ;
+    front();
 
-return ( retour ); 
+    delay(15);
+    
+    delayMicroseconds (half*config.readtime); // correction décalage
+    while ( timer < freqmesure ) {
+      
+      temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+      moyenne = middleoscillo  + signe/50; 
+      sigma += temp;
+      //moyenne = moyenne + abs(temp - middle) ;
+      /// mode oscillo graph 
+
+      
+      retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "],[" ; 
+      timer ++ ;
+      delayMicroseconds (config.readtime);
+    } 
+    
+    temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+    moyenne = middleoscillo  + signe/50; 
+    retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
+    middleoscillo = sigma / freqmesure ;
+
+  #else  
+    frontmod();
+
+    while ( timer < freqmesure ) {
+      
+      temp =  analogRead(ADC_INPUT) - value0; signe = analogRead(ADC_PORTEUSE) - value0 ;
+      retour += String(timer) + "," + String(signe) + "," + String(temp) + "],[" ; 
+      timer ++ ;
+      delayMicroseconds (config.readtime);
+    } 
+    
+    temp =  analogRead(ADC_INPUT) - value0; signe = analogRead(ADC_PORTEUSE) - value0;
+    retour += String(timer) + "," + String(signe) + "," + String(temp) + "]]" ;
+    middleoscillo = value0 ;
+  #endif
+
+  return ( retour ); 
   
 }
 
@@ -181,18 +193,23 @@ String getmqtt() {
 String getdebug() {
   configweb = "";
   configweb += "middle:" + String(middle_debug) + "\r\n" ; 
-  // calcul du cos phi par recherche milieu de demi onde positive 
-  int start=0;int end=0;int half=0  ;
-    for ( int i=0; i < nbmesure; i ++ )
-    {
-      if ( porteuse[i] !=0  && start == 0 ) {start = i ;}
-      if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i  ;}
-	    configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
-    }
-    half = (nbmesure/2) - (end - start); 
-    configweb += "cosphi :" + String(half) + "  end :" + String(end ) +"  start :" + String(start)  + "\r\n" ; 
-    configweb += "positive :" + String(positive_debug) + "\r\n" ;  
-    configweb += "watt :" + String(gDisplayValues.watt) + "\r\n" ;  
+  #ifndef HARDWARE_MOD
+    // calcul du cos phi par recherche milieu de demi onde positive 
+    int start=0;int end=0;int half=0  ;
+      for ( int i=0; i < nbmesure; i ++ )
+      {
+        if ( porteuse[i] !=0  && start == 0 ) {start = i ;}
+        if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i  ;}
+        configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
+      }
+      half = (nbmesure/2) - (end - start); 
+      configweb += "cosphi :" + String(half) + "  end :" + String(end ) +"  start :" + String(start)  + "\r\n" ; 
+    #else
+      configweb += "Vrms :" + String(Vrms) + "V. \r\n" ;  
+      configweb += "Irms :" + String(Irms) + "A. \r\n" ;  
+      configweb += "P_VA :" + String(PVA) + "VA. \r\n" ;  
+    #endif
+    configweb += "PW :" + String(gDisplayValues.watt) + "W. \r\n" ;  
     return String(configweb);
   }
 
