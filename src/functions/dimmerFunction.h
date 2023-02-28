@@ -35,7 +35,7 @@
     HTTPClient http;
     extern dimmerLamp dimmer_hard; 
     extern Logs logging;
-    extern HA device_dimmer; 
+    extern MQTT device_dimmer; 
 
 
 
@@ -56,7 +56,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
     else {*/
       #if WIFI_ACTIVE == true
       /// control dimmer 
-      if ( strcmp(config.dimmer,"none") != 0 ) {
+      if ( configmqtt.HTTP || AP) {
         String baseurl; 
           baseurl = "/?POWER=" + String(dimmervalue) ; 
           http.begin(dimmerurl,80,baseurl);   
@@ -69,8 +69,8 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         if (!AP) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
-              if (dimmerIDX != 0) {Mqtt_send(String(dimmerIDX), String(dimmervalue));}
-              if (configmqtt.HA) device_dimmer.send(String(dimmervalue));
+              if (configmqtt.DOMOTICZ) {Mqtt_send_DOMOTICZ(String(dimmerIDX), String(dimmervalue));}
+              if ((configmqtt.HA) || (configmqtt.JEEDOM)) {device_dimmer.send(String(dimmervalue));}
             }
         }
       

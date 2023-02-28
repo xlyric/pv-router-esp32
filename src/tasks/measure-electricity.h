@@ -15,19 +15,19 @@
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
 extern Logs Logging;
-extern HA device_routeur; 
-extern HA device_grid; 
-extern HA device_inject; 
-extern HA compteur_inject;
-extern HA compteur_grid;
-extern HA temperature;
-extern HA device_alarm_temp;
-
-extern HA power_factor;
-extern HA power_vrms;
-extern HA power_irms;
-extern HA power_apparent;
-
+extern MQTT device_routeur; 
+extern MQTT device_grid; 
+extern MQTT device_inject; 
+extern MQTT compteur_inject;
+extern MQTT compteur_grid;
+extern MQTT temperature;
+extern MQTT device_alarm_temp;
+#ifdef HARDWARE_MOD
+      extern MQTT power_factor;
+      extern MQTT power_vrms;
+      extern MQTT power_irms;
+      extern MQTT power_apparent;
+#endif
 
 int slowlog = TEMPOLOG - 1 ; 
 long beforetime; 
@@ -83,12 +83,12 @@ if (!AP) {
 
             #if WIFI_ACTIVE == true
                   Pow_mqtt_send ++ ;
-                  if ( Pow_mqtt_send > 5 ) {
+                  if ( Pow_mqtt_send >= 5 ) {
                   long timemesure = start-beforetime;
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
 
-                  if (config.IDX != 0) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
-                  if (configmqtt.HA) {
+                  if (configmqtt.DOMOTICZ) {Mqtt_send_DOMOTICZ(String(config.IDX), String(int(gDisplayValues.watt)));  }
+                  if ((configmqtt.HA) || ( configmqtt.JEEDOM)) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
                         #ifdef HARDWARE_MOD
                               power_apparent.send(String(int(PVA)));
@@ -99,36 +99,38 @@ if (!AP) {
                   }
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
-                  if (config.IDX != 0) {
-                        Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
-                        Mqtt_send(String(config.IDX), String("0") ,"grid");
+                  if (configmqtt.DOMOTICZ) {
+                        Mqtt_send_DOMOTICZ(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
+                        Mqtt_send_DOMOTICZ(String(config.IDX), String("0") ,"grid");
                   }
-                  if (configmqtt.HA) device_inject.send(String(int(-gDisplayValues.watt)));
-                  if (configmqtt.HA) device_grid.send(String("0"));
-                  WHtempinject += wattheure; 
-                  if (configmqtt.HA) compteur_inject.send(String(WHtempinject));
+                  if ((configmqtt.HA) || ( configmqtt.JEEDOM)) {
+                        device_inject.send(String(int(-gDisplayValues.watt)));
+                        device_grid.send(String("0"));
+                        WHtempinject += wattheure; 
+                        compteur_inject.send(String(WHtempinject));
+                  }
                   
                   
                   // if (configmqtt.HA)compteur_grid.send(String("0"));
                   }
                   else {
-                        if (config.IDX != 0) {
-                              Mqtt_send(String(config.IDX), String("0"),"injection");
-                              Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                        if (configmqtt.DOMOTICZ) {
+                              Mqtt_send_DOMOTICZ(String(config.IDX), String("0"),"injection");
+                              Mqtt_send_DOMOTICZ(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                              if (discovery_temp) {Mqtt_send_DOMOTICZ(String("temperature"), String(gDisplayValues.temperature) );}
                         }
-                  if (configmqtt.HA) device_grid.send(String(int(gDisplayValues.watt)));
-                  if (configmqtt.HA) device_inject.send(String("0"));
-                  // if (configmqtt.HA) compteur_inject.send(String("0"));
-                  WHtempgrid += wattheure;
-                  if (configmqtt.HA) compteur_grid.send(String(WHtempgrid));
-                  //maj 202030209
-                  if (configmqtt.HA && discovery_temp) {
-                        temperature.send(String(gDisplayValues.temperature));
-                        device_alarm_temp.send(stringbool(security));}
-
-                  if (config.IDX != 0 && discovery_temp) {Mqtt_send(String("temperature"), String(gDisplayValues.temperature) );}
                   }
-
+                  if ((configmqtt.HA) || (configmqtt.JEEDOM)) {
+                        device_grid.send(String(int(gDisplayValues.watt)));
+                        device_inject.send(String("0"));
+                        WHtempgrid += wattheure;
+                        compteur_grid.send(String(WHtempgrid));
+                        //maj 202030209
+                        if (discovery_temp) {
+                              temperature.send(String(gDisplayValues.temperature));
+                              device_alarm_temp.send(stringbool(security));
+                        }
+                  }
                   beforetime = start; 
                   Pow_mqtt_send = 0 ;
                   }             

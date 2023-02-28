@@ -231,7 +231,7 @@
             <br>
             <div class="card position-relative">
               <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">HA MQTT ( Envoie d'info MQTT sur topic HA )</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Transmission MQTT/HTTP</h6>
                   <span id="saveform"></span>
               </div>
               <div class="card-body">
@@ -239,10 +239,34 @@
                 <div class="form-group row">
                   <div class="col-sm-3">
                     <div class="custom-control custom-checkbox small">
-                      Actif
+                      MQTT
                       <br>
                       <input type="checkbox" class="custom-control-input" id="HA">
                       <label class="custom-control-label" for="HA" onclick="sendservermode(this.innerHTML);" >HA</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox small">
+                      MQTT
+                      <br>
+                      <input type="checkbox" class="custom-control-input" id="JEEDOM">
+                      <label class="custom-control-label" for="JEEDOM" onclick="sendservermode(this.innerHTML);" >JEEDOM</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox small">
+                      MQTT
+                      <br>
+                      <input type="checkbox" class="custom-control-input" id="DOMOTICZ">
+                      <label class="custom-control-label" for="DOMOTICZ" onclick="sendservermode(this.innerHTML);" >DOMOTICZ</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox small">
+                      DIMMER
+                      <br>
+                      <input type="checkbox" class="custom-control-input" id="HTTP">
+                      <label class="custom-control-label" for="HTTP" onclick="sendservermode(this.innerHTML);" >HTTP</label>
                     </div>
                   </div>
                 </div>
@@ -297,6 +321,10 @@ $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
 var config = data.split(";");
 document.getElementById("MQTT").value = config[16];
 document.getElementById("HA").value = config[28];
+document.getElementById("JEEDOM").value = config[31];
+document.getElementById("DOMOTICZ").value = config[32];
+document.getElementById("HTTP").value = config[33];
+
 }); 
 
 
@@ -370,6 +398,15 @@ var recupconfig = $.get ({
       i++;
       document.getElementById("HA").checked = config[i];
 		  document.getElementById("HA").value = config[i];
+      i++;
+      document.getElementById("JEEDOM").checked = config[i];
+		  document.getElementById("JEEDOM").value = config[i];
+      i++;
+      document.getElementById("DOMOTICZ").checked = config[i];
+		  document.getElementById("DOMOTICZ").value = config[i];
+      i++;
+      document.getElementById("HTTP").checked = config[i];
+		  document.getElementById("HTTP").value = config[i];
 </script>
 				  
                 </div>

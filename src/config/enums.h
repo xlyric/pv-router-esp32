@@ -3,8 +3,9 @@
 
 #include <Arduino.h>
 #include <PubSubClient.h>
+// #include "WiFi.h"
+// #include "functions/WifiFunctions.h"
 extern PubSubClient client;
-
 // The state in which the device can be. This mainly affects what
 // is drawn on the display.
 enum DEVICE_STATE {
@@ -84,6 +85,9 @@ struct Mqtt {
   char username[50];
   char password[50];
   bool HA;
+  bool JEEDOM;
+  bool DOMOTICZ;
+  bool HTTP;
 };
 
 struct Configmodule {
@@ -123,13 +127,14 @@ struct Dallas{
 };
 
 //***********************
-//****    HA 
+//****    MQTT 
 //***********************
-struct HA
+struct MQTT
 {
     private:int MQTT_INTERVAL = 60;
+    private:String IPaddress = String(WiFi.localIP().toString());
 
-      /* HA */
+      /* MQTT */
     private:String name; 
     public:void Set_name(String setter) {name=setter; }
 
@@ -169,13 +174,19 @@ struct HA
     private:bool retain_flag; 
     public:void Set_retain_flag(bool setter) {retain_flag=setter; }
 
+    private:String retain; 
+    public:void Set_retain(bool setter) {
+      if (setter) {retain="\"ret\":true,"; }
+    }
+
     private:String expire_after; 
     public:void Set_expire_after(bool setter) {
       if (setter) {expire_after="\"exp_aft\": \""+ String(MQTT_INTERVAL) +"\", "; }
     }
 
-    private:String sensor_type() {
+    private:String HA_sensor_type() {
       String topic = "homeassistant/"+ entity_type +"/"+ node_id +"/";
+      String topic_Xlyric = "Xlyric/"+ node_id +"/";
       String info;
       if (entity_type == "sensor") {
               info =         "\"dev_cla\": \""+dev_cla+"\","
@@ -190,7 +201,7 @@ struct HA
             "\"pl_off\": \"{ \\\""+object_id+"\\\" : \\\"0\\\"  } \","
             "\"stat_on\":1,"
             "\"stat_off\":0,"
-            "\"cmd_t\": \""+ topic + "command\",";
+            "\"cmd_t\": \""+ topic_Xlyric + entity_type + "/command\",";
       } 
       // else if (entity_type == "number") { 
       //         info =         "\"val_tpl\": \"{{ value_json."+ object_id +" }}\","
@@ -222,10 +233,9 @@ struct HA
       return info;
     }
 
-    private:String IPaddress = WiFi.localIP().toString();
     private:String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
     private:String node_id = String("PvRouter-") + node_mac; 
-    private:String device_declare() { 
+    private:String HA_device_declare() { 
                String info =         "\"dev\": {"
               "\"ids\": \""+ node_id + "\","
               "\"name\": \""+ node_id + "\","
@@ -238,29 +248,38 @@ struct HA
             }
 
 
-    public:void discovery(){
+    public:void HA_discovery(){
       String topic = "homeassistant/"+ entity_type +"/"+ node_id +"/";
+      String topic_Xlyric = "Xlyric/"+ node_id +"/";
+
       String device= "{\"name\": \""+ name + "\"," 
             "\"obj_id\": \"PvRouter-"+ object_id +"-"+ node_mac + "\"," 
             "\"uniq_id\": \""+ node_mac + "-" + object_id +"\","
-            "\"stat_t\": \""+ topic + object_id + "/state\"," 
-            "\"avty_t\": \"homeassistant/sensor/"+ node_id +"/" + "status\","
-            + sensor_type()
+            "\"stat_t\": \""+ topic_Xlyric + "sensors/" + object_id +"/state\"," 
+            "\"avty_t\": \""+ topic_Xlyric + "status\","
+            + HA_sensor_type()
             + icon
+            + retain
             + expire_after
-            + device_declare() + 
+            + HA_device_declare() + 
             "}";
       client.publish((topic+object_id+"/config").c_str() , device.c_str(), true); // déclaration autoconf PvRouter
       Serial.println(device.c_str());
+
     }
 
-    public:void send(String value){
-      String topic = "homeassistant/"+ entity_type +"/"+ node_id +"/";
-      String message = "  { \""+object_id+"\" : \"" + value.c_str() + "\"  } ";
-      client.publish((topic + object_id + "/state").c_str() , message.c_str(), retain_flag);
-    } 
-};
+    // public:void send(String value){
+    //   String topic = "homeassistant/"+ entity_type +"/"+ node_id +"/";
+    //   String message = "  { \""+object_id+"\" : \"" + value.c_str() + "\"  } ";
+    //   client.publish((topic + object_id + "/state").c_str() , message.c_str(), retain_flag);
+    // } 
 
+    public:void send(String value){
+    String topic = "Xlyric/"+ node_id +"/sensors/";
+    String message = "  { \""+object_id+"\" : \"" + value.c_str() + "\"  } ";
+    client.publish((topic + object_id + "/state").c_str() , message.c_str(), retain_flag);
+  } 
+};
 
 
 #endif

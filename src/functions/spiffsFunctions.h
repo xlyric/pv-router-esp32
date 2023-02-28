@@ -66,7 +66,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.delta = doc["delta"] | 50; 
   config.num_fuse = doc["fuse"] | 70;
   config.deltaneg = doc["deltaneg"] | -100; 
- // config.cosphi = doc["cosphi"] | 5; 
+  config.cosphi = doc["cosphi"] | 5; 
   config.readtime = doc["readtime"] | 555;
   config.cycle = doc["cycle"] | 72;
 
@@ -206,6 +206,10 @@ bool loadmqtt(const char *filename, Mqtt &configmqtt) {
           doc["MQTT_PASSWORD"] | "", // <- source
           sizeof(configmqtt.password));         // <- destination's capacity
   configmqtt.HA = doc["HA"] | true;
+  configmqtt.JEEDOM = doc["JEEDOM"] | true;
+  configmqtt.DOMOTICZ = doc["DOMOTICZ"] | true;
+  configmqtt.HTTP = doc["HTTP"] | true;
+
   configFile.close();
 logging.init += "MQTT config loaded\r\n"; 
 return true;    
@@ -230,6 +234,10 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   doc["MQTT_USER"] = configmqtt.username;
   doc["MQTT_PASSWORD"] = configmqtt.password;
   doc["HA"] = configmqtt.HA;
+  doc["JEEDOM"] = configmqtt.JEEDOM;
+  doc["DOMOTICZ"] = configmqtt.DOMOTICZ;
+  doc["HTTP"] = configmqtt.HTTP;
+
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));

@@ -20,11 +20,12 @@ String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substrin
 // String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
 String node_id = String("PvRouter-") + node_mac; 
 String topic = "homeassistant/sensor/"+ node_id +"/status";  
+String topic_Xlyric = "Xlyric/"+ node_id +"/";
 
-String command_switch = String("homeassistant/switch/"+ node_id + "/command");
-// String command_number = String("homeassistant/number/"+ node_id + "/command");
-// String command_select = String("homeassistant/select/"+ node_id + "/command");
-// String command_button = String("homeassistant/button/"+ node_id + "/command");
+String command_switch = String(topic_Xlyric + "switch/command");
+// String command_number = String(topic_Xlyric + "number/command");
+// String command_select = String(topic_Xlyric + "select/command");
+// String command_button = String(topic_Xlyric + "button/command");
 
 void callback(char* Subscribedtopic, byte* message, unsigned int length);
 // void Mqtt_HA_hello(); // non utilisé maintenant 
@@ -40,9 +41,10 @@ void reconnect() {
     Serial.println("Attempting MQTT reconnection...");
     // Attempt to connect
 
-    if (client.connect(node_id.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
-      client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
+    if (client.connect(node_id.c_str(), configmqtt.username, configmqtt.password, String(topic_Xlyric +"status").c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
+      client.publish(String(topic_Xlyric +"status").c_str(), "online", true);         // Once connected, publish online to the availability topic
       client.subscribe(command_switch.c_str());
+      client.loop();
 
       Serial.println("MQTT reconnect : connected");
     } else {
@@ -56,10 +58,10 @@ void reconnect() {
 }
 
 /*
-*    Fonction d'envoie info MQTT vers domoticz
+*    Fonction d'envoie info MQTT
 */
 
-void Mqtt_send ( String idx, String value, String otherpub = "" ) {
+void Mqtt_send_DOMOTICZ ( String idx, String value, String otherpub = "" ) {
   
   String nvalue = "0" ; 
   
@@ -72,12 +74,12 @@ void Mqtt_send ( String idx, String value, String otherpub = "" ) {
     message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
   }
 
-  String jdompub = String(config.Publish) + "/"+idx ;
-  if (otherpub != "" ) {jdompub += "/"+otherpub; }
+  // String jdompub = String(config.Publish) + "/"+idx ;
+  // if (otherpub != "" ) {jdompub += "/"+otherpub; }
   
 
 
-  client.loop();
+  //client.loop();
     if (otherpub == "" ) {
       if (client.publish(config.Publish, String(message).c_str(), true)) {
      //   Serial.println("MQTT_send : MQTT sent to domoticz");
@@ -87,12 +89,12 @@ void Mqtt_send ( String idx, String value, String otherpub = "" ) {
         Serial.println("MQTT_send : error publish to domoticz ");
       }
     }
-  if (client.publish(jdompub.c_str() , value.c_str(), true)){
-  //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
-  }
-  else {
-Serial.println("MQTT_send : error publish to Jeedom ");
-  }
+//   if (client.publish(jdompub.c_str() , value.c_str(), true)){
+//   //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
+//   }
+//   else {
+// Serial.println("MQTT_send : error publish to Jeedom ");
+//   }
   
 
 }
@@ -144,7 +146,7 @@ void Mqtt_init() {
   // if (client.connect(pvname,configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline")) {       //Connect to MQTT server
   //   client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
   //   Serial.println("MQTT_init : connecte a MQTT... Initialisation dimmer à 0");
-     if (config.IDXdimmer != 0 ){ Mqtt_send(String(config.IDXdimmer),"0"); }
+  //   if (configmqtt.DOMOTICZ){ Mqtt_send_DOMOTICZ(String(config.IDXdimmer),"0"); }
     
   // }
   // else {

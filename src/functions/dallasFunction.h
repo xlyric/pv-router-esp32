@@ -81,8 +81,8 @@ if ( !ds.search(dallas.addr)) {
 
   if (!discovery_temp) {
     discovery_temp = true;
-    temperature.discovery();
-    device_alarm_temp.discovery();
+    temperature.HA_discovery();
+    device_alarm_temp.HA_discovery();
   }
 
 
