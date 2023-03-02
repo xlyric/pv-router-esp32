@@ -128,7 +128,7 @@ if (!AP) {
                         //maj 202030209
                         if (discovery_temp) {
                               temperature.send(String(gDisplayValues.temperature));
-                              device_alarm_temp.send(stringbool(security));
+                              device_alarm_temp.send(stringboolMQTT(security));
                         }
                   }
                   beforetime = start; 

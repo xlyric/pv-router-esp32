@@ -215,6 +215,10 @@ void init_HA_sensor(){
         #endif
 
 }
-
+ String stringboolMQTT(bool mybool){
+  String truefalse = "true";
+  if (mybool == false ) {truefalse = "false";}
+  return String(truefalse);
+  }
 
 #endif
