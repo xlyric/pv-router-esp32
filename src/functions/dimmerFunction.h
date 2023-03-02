@@ -88,42 +88,34 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
 
 void dimmer(){
 gDisplayValues.change = 0; 
+   
+   /// pour éviter les erreurs sur le site (inversion delta et deltaneg)
+   if (config.delta < config.deltaneg){
+   int temp_error_delta; 
+   temp_error_delta = config.delta; 
+   config.delta = config.deltaneg ; 
+   config.deltaneg = temp_error_delta; 
+   }
 
   // 0 -> linky ; 1-> injection  ; 2-> stabilisé
 
   /// Linky 
-  // si grosse puissance instantanée sur le réseau, coupure du dimmer. ( ici 350w environ ) 
-  if ( gDisplayValues.watt >= 350 && gDisplayValues.dimmer != 0 )  {
-    gDisplayValues.dimmer = 0 ;  
-    gDisplayValues.change = 1 ;
 
-    } 
-  
-  /// si gros mode linky  on reduit la puissance par extrapolation ( valeur de puissance supérieur à config.delta + 30 )
-  else if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta+30) ) {
-    gDisplayValues.dimmer += -2*((gDisplayValues.watt-config.delta)/(COMPENSATION*config.resistance/1000)) ; 
+if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
+    //Serial.println("dimmer:" + String(gDisplayValues.dimmer));
+    gDisplayValues.dimmer += -abs((gDisplayValues.watt-((config.delta+config.deltaneg)/2))*COMPENSATION/config.resistance); 
     gDisplayValues.change = 1; 
+//debug    Serial.println(String(gDisplayValues.watt) + " " + String(config.delta) + " " + String(config.deltaneg) + " " + String(gDisplayValues.dimmer) );
     } 
-  
-    /// si petit mode linky on reduit la puissance 
-  else if (gDisplayValues.watt >= (config.delta) && gDisplayValues.dimmer != 0 ) {
-    gDisplayValues.dimmer += -1 ; 
-    gDisplayValues.change = 1; 
-    }  
-  
+
     // injection 
     /// si grosse injection on augmente la puissance par extrapolation
-  else if ( gDisplayValues.watt <= (config.deltaneg-30) ) {   
-    gDisplayValues.dimmer += 2*abs(gDisplayValues.watt/(COMPENSATION*config.resistance/1000)) ; 
+  else if ( gDisplayValues.watt <= (config.deltaneg) ) {   
+    gDisplayValues.dimmer += abs((((config.delta+config.deltaneg)/2)-gDisplayValues.watt)*COMPENSATION/config.resistance) ; 
     gDisplayValues.change = 1 ; 
+
     } 
-  
-    /// si injection legère on augmente la puissance doucement
-  else if (gDisplayValues.watt <= (config.deltaneg)  ) { 
-    gDisplayValues.dimmer += 1 ; 
-    gDisplayValues.change = 1 ; 
-    }
-  
+
     /// test puissance de sécurité 
   if ( gDisplayValues.dimmer >= config.num_fuse ) {
     gDisplayValues.dimmer = config.num_fuse; 
