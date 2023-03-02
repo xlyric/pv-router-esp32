@@ -14,7 +14,7 @@
     #include "../config/config.h"
 
     WiFiClientSecure HA_net;
-    MQTTClient HA_mqtt(1024);
+    MQTTClient HA_mqtt(512);
 
     extern unsigned short measurements[];
 
