@@ -31,6 +31,7 @@ bool dallaspresent () {
 
 if ( !ds.search(dallas.addr)) {
     Serial.println("Dallas not connected");
+    logging.init += loguptime();
     logging.init += "Dallas not connected\r\n";
     Serial.println();
     ds.reset_search();
@@ -49,15 +50,15 @@ if ( !ds.search(dallas.addr)) {
   // the first ROM byte indicates which chip
   switch (dallas.addr[0]) {
     case 0x10:
-      Serial.println("  Chip = DS18S20");  // or old DS1820
+      Serial.println(DALLAS_TEXT);  // or old DS1820
       dallas.type_s = 1;
       break;
     case 0x28:
-      Serial.println("  Chip = DS18B20");
+      Serial.println(DALLAS_TEXT);
       dallas.type_s = 0;
       break;
     case 0x22:
-      Serial.println("  Chip = DS1822");
+      Serial.println(DALLAS_TEXT);
       dallas.type_s = 0;
       break;
     default:
@@ -78,6 +79,7 @@ if ( !ds.search(dallas.addr)) {
 
   Serial.print("  present = ");
   Serial.println(dallas.present, HEX);
+      logging.init += loguptime();
   logging.init += "Dallas present at address" + String(dallas.present, HEX) + "\r\n";
 
   if (!discovery_temp) {
@@ -98,6 +100,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){
   sensors.requestTemperatures(); 
   float tempC = sensors.getTempC(deviceAddress);
   Serial.print(label);
+  logging.init += loguptime();
   if (tempC == -127.00) {
     Serial.print("Error getting temperature");
     logging.start += "Error getting temperature\r\n";

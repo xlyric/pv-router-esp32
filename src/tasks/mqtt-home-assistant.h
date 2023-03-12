@@ -14,6 +14,7 @@
     #include "../config/config.h"
 
     WiFiClientSecure HA_net;
+    /// @brief  HA_mqtt(512); pas plus sinon bug Socket error on client PvRouter-xxxx, disconnecting.
     MQTTClient HA_mqtt(512);
 
     extern unsigned short measurements[];

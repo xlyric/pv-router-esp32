@@ -207,7 +207,7 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
   });
 
   server.on("/reset", HTTP_ANY, [](AsyncWebServerRequest *request){
-     request->send_P(200, "text/plain","Restarting");
+     request->send_P(200, "text/plain",PV_RESTART);
      ESP.restart();
   });
 

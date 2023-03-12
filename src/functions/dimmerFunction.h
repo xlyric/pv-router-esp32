@@ -62,8 +62,8 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
         http.begin(dimmerurl,80,baseurl);   
         http.GET();
         http.end(); 
-        Serial.println("Power command sent "+ String(dimmervalue));
-        if (logging.power) { logging.start +="Power command sent "+ String(dimmervalue) + "\r\n"; logging.power = false;}
+        Serial.println(POWER_COMMAND + String(dimmervalue));
+        if (logging.power) {     logging.start += loguptime(); logging.start += POWER_COMMAND + String(dimmervalue) + "\r\n"; logging.power = false;}
       }
       //// Mqtt send information
         if (!AP) {
@@ -144,17 +144,6 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
 
     if (config.dimmerlocal) {
-            /* logs */ 
-            
-          /* Serial.print("dallas int ");
-            Serial.println(dallas_int);
-            //Serial.println(gDisplayValues.temperature);
-            Serial.print("dimmer at ");
-            Serial.println(gDisplayValues.dimmer);
-            //Serial.print("config.tmax ");
-            //Serial.println(config.tmax);
-            Serial.print("security:");
-            Serial.println(security);*/
 
         /// Cooler 
         if ( gDisplayValues.dimmer > 10 ) { digitalWrite(cooler, HIGH); } // start cooler at 10%  }

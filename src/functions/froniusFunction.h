@@ -17,27 +17,30 @@ const char *fronius_conf = "/fronius.json";
 extern Configmodule configmodule; 
 extern Logs logging;
 
+
 void Fronius_get(void);
 
 bool loadfronius(const char *filename, Configmodule &configmodule) {
   // Open file for reading
   File configFile = SPIFFS.open(fronius_conf, "r");
   if (!configFile) {
-    Serial.println(F("No Fronius used"));
-    logging.init += "--> No Fronius used\r\n";
+    Serial.println(NOT_FRONIUS);
+    logging.init += loguptime();
+    logging.init +=  NOT_FRONIUS;
       return false;
     }
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
-    Serial.println(F("Failed to read Fronius config"));
-    logging.init += "--> Fronius not present\r\n";
+    Serial.println(NOT_FRONIUS);
+    logging.init += loguptime();
+    logging.init += NOT_FRONIUS;
     return false;
   }
 
@@ -51,6 +54,7 @@ bool loadfronius(const char *filename, Configmodule &configmodule) {
   configFile.close();
 
 Serial.println(" Fronius config : " + String(configmodule.hostname));
+logging.init += loguptime();
 logging.init += "Fronius used\r\n";
 return true;
 }

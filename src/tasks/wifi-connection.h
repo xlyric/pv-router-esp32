@@ -49,11 +49,13 @@ void keepWiFiAlive(void * parameter){
         // Make sure that we're actually connected, otherwise go to deep sleep
         if(WiFi.status() != WL_CONNECTED){
             serial_println(F("[WIFI] FAILED"));
+            logging.start += loguptime(); 
             logging.start += "Wifi disconnected\r\n";
             vTaskDelay(WIFI_RECOVER_TIME_MS / portTICK_PERIOD_MS);
         }
 
         serial_print(F("[WIFI] Connected: "));
+        logging.start += loguptime(); 
         logging.start += "Wifi reconnected\r\n";
         serial_println(WiFi.localIP());
         gDisplayValues.currentState = UP;

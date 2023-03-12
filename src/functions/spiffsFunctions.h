@@ -16,9 +16,11 @@
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
 
 
+extern String loguptime(); 
 
 const char *filename_conf = "/config.json";
 extern Config config; 
+
 
 //***********************************
 //************* Gestion de la configuration - Lecture du fichier de configuration
@@ -31,13 +33,14 @@ void loadConfiguration(const char *filename, Config &config) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
-    Serial.println(F("Failed to read file, using default configuration in function loadConfiguration"));
-    logging.init += "Failed to read file, using default configuration in function loadConfiguration\r\n";
+    Serial.println(F("Failed to read, using default configuration in function loadConfiguration"));
+    logging.init += loguptime();
+    logging.init += "Failed to read, using default configuration in function loadConfiguration\r\n";
 
   }
 
@@ -97,6 +100,7 @@ void loadConfiguration(const char *filename, Config &config) {
           sizeof(config.Publish));         // <- destination's mqtt
   config.ScreenTime = doc["screentime"] | 0 ; // timer to switch of screen
   configFile.close();
+  logging.init += loguptime();
   logging.start += "config file loaded\r\n";
 }
 
@@ -110,6 +114,7 @@ void saveConfiguration(const char *filename, const Config &config) {
    File configFile = SPIFFS.open(filename_conf, "w");
   if (!configFile) {
     Serial.println(F("Failed to open config file for writing in function Save configuration"));
+    logging.init += loguptime();
     logging.init += "Failed to open config file for writing in function Save configuration\r\n";
     return;
   } 
@@ -117,7 +122,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonDocument<2048> doc;
+  DynamicJsonDocument doc(2048);
 
   // Set the values in the document
   doc["hostname"] = config.hostname;
@@ -184,12 +189,13 @@ bool loadmqtt(const char *filename, Mqtt &configmqtt) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read MQTT config "));
+    logging.init += loguptime();
     logging.init += "Failed to read MQTT config\r\n";
     return false;
   }
@@ -206,7 +212,8 @@ bool loadmqtt(const char *filename, Mqtt &configmqtt) {
           sizeof(configmqtt.password));         // <- destination's capacity
   configmqtt.HA = doc["HA"] | true;
   configFile.close();
-logging.init += "MQTT config loaded\r\n"; 
+  logging.init += loguptime();
+  logging.init += "MQTT config loaded\r\n"; 
 return true;    
 }
 
@@ -215,15 +222,16 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   // Open file for writing
    File configFile = SPIFFS.open(mqtt_conf, "w");
   if (!configFile) {
-    Serial.println(F("Failed to open config file for writing in function Save configuration"));
-    logging.init += "Failed to open config file for writing in function Save configuration\r\n";
+    Serial.println(F("Failed to open config file for writing in function mqtt configuration"));
+    logging.init += loguptime();
+    logging.init += "Failed to open config file for writing in function mqtt configuration\r\n";
     return;
   } 
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
 
   // Set the values in the document
   doc["MQTT_USER"] = configmqtt.username;
@@ -232,6 +240,7 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
+    logging.init += loguptime();
     logging.init += "Failed to write to file in function Save configuration\r\n";
     
   }
@@ -255,12 +264,13 @@ bool loadwifi(const char *filename, Configwifi &configwifi) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(F("Failed to read wifi config, AP mode activated "));
+    logging.init += loguptime();
     logging.init += "Failed to read wifi config, AP mode activated\r\n";
 
     return false;
@@ -276,6 +286,7 @@ bool loadwifi(const char *filename, Configwifi &configwifi) {
           doc["passwd"] | "xxx", // <- source
           sizeof(configwifi.passwd));         // <- destination's capacity
   configFile.close();
+ logging.init += loguptime();
  logging.init += "Wifi config loaded\r\n"; 
 return true;    
 }
@@ -285,15 +296,16 @@ void saveWifi(const char *filenamewifi, const Configwifi &configwifi) {
   // Open file for writing
    File configFile = SPIFFS.open(wifi_conf, "w");
   if (!configFile) {
-    Serial.println(F("Failed to open config file for writing in function Save configuration"));
-    logging.init += "Failed to open config file for writing in function Save configuration\r\n";
+    Serial.println(F("Failed to open config file for writing in function wifi configuration"));
+    logging.init += loguptime();
+    logging.init += "Failed to open config file for writing in function wifi configuration\r\n";
     return;
   } 
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  StaticJsonDocument<1024> doc;
+  DynamicJsonDocument doc(1024);
 
   // Set the values in the document
   doc["SID"] = configwifi.SID;
@@ -302,6 +314,7 @@ void saveWifi(const char *filenamewifi, const Configwifi &configwifi) {
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
     Serial.println(F("Failed to write to file in function Save configuration "));
+    logging.init += loguptime();
     logging.init += "Failed to write to file in function Save configuration\r\n";
     
   }

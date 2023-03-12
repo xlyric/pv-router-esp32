@@ -14,12 +14,15 @@ HTTPClient httpenphase;
 const char *enphase_conf = "/enphase.json";
 extern Configmodule configmodule;
 
+
+
 bool loadenphase(const char *filename, Configmodule &configmodule) {
   // Open file for reading
   File configFile = SPIFFS.open(enphase_conf, "r");
   if (!configFile) {
-    Serial.println(F("No Enphase used"));
-    logging.init += "--> No Enphase used\r\n";
+    Serial.println(NOT_ENPHASE);
+    logging.init += loguptime();
+    logging.init += NOT_ENPHASE;
 
     return false;
   }
@@ -27,13 +30,14 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  StaticJsonDocument<512> doc;
+  DynamicJsonDocument doc(512);
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
-    Serial.println(F("Failed to read Enphase config"));
-    logging.init += "--> Enphase not present\r\n";
+    Serial.println(NOT_ENPHASE);
+    logging.init += loguptime();
+    logging.init += NOT_ENPHASE;
 
     return false;
   }
@@ -54,6 +58,7 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
 
   Serial.println(" enphase config : " + String(configmodule.hostname));
   Serial.println(" enphase mode : " + String(configmodule.envoy));
+  logging.init += loguptime();
   logging.init += "Enphase used type "+ String(configmodule.envoy) +"\r\n";
   return true;
 }

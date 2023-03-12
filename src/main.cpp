@@ -40,6 +40,7 @@
   #include "functions/WifiFunctions.h"
   #include "functions/homeassistant.h"
 
+  #include "uptime.h"
 
 #if DALLAS
 // Dallas 18b20
@@ -79,6 +80,7 @@ Config config;
 Configwifi configwifi; 
 Configmodule configmodule; 
 
+
 /// declare logs 
 Logs logging;
 /// declare MQTT 
@@ -103,7 +105,7 @@ unsigned char measureIndex = 0;
 Dallas dallas; 
 #endif
 
-
+String loguptime();
 
 HA device_dimmer; 
 HA device_routeur; 
@@ -135,6 +137,7 @@ void setup()
   logging.init += "#################  Starting System  ###############\r\n";
   //démarrage file system
   Serial.println("start SPIFFS");
+  logging.init += loguptime();
   logging.init += "Start Filesystem\r\n";
   SPIFFS.begin();
 
@@ -236,27 +239,15 @@ Dimmer_setup();
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html")){
     Serial.println(SPIFFSNO);  
-    logging.init += "SPIFFS not uploaded!!\r\n";
+    logging.init += loguptime();
+    logging.init += SPIFFSNO ;
   }
 
   if(!SPIFFS.exists(filename_conf)){
     Serial.println(CONFNO);  
-    logging.init += "config file not exist, taking default value\r\n";
+    logging.init += loguptime();
+    logging.init += CONFNO;
   }
-
-
-
-  // Create configuration file
-  //Serial.println(F("Saving configuration..."));
-  //saveConfiguration(filename_conf, config);
-
-  
-
-
-
-
-  // Initialize emon library
-  //emon1.current(ADC_INPUT, 30);
 
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
@@ -410,27 +401,6 @@ Dimmer_setup();
     #endif
   }
     
-  
-
-  #if HA_ENABLED == true
-    xTaskCreate(
-      HADiscovery,
-      "MQTT-HA Discovery",  // Task name
-      5000,                // Stack size (bytes)
-      NULL,                 // Parameter
-      5,                    // Task priority
-      NULL                  // Task handle
-    );
-
-    xTaskCreate(
-      keepHAConnectionAlive,
-      "MQTT-HA Connect",
-      5000,
-      NULL,
-      4,
-      NULL
-    );
-  #endif
 #endif
 
 #if WIFI_ACTIVE == true
@@ -470,11 +440,20 @@ logging.power=true; logging.sct=true; logging.sinus=true;
 
 void loop()
 {
+
+/// redémarrage sur demande
   if (config.restart) {
     delay(5000);
-    Serial.print("Restarting PV ROUTER");
+    Serial.print(PV_RESTART);
     ESP.restart();
   }
+
+/// vérification du buffer log 
+  if (logging.start.length() > LOG_MAX_STRING_LENGTH ) { 
+    logging.start = "";
+  }
+
+
 
 //serial_println(F("loop")); 
 
@@ -526,6 +505,7 @@ void connect_to_wifi() {
       else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
 
       int timeoutwifi=0;
+      logging.init += loguptime();
       logging.init += "Start Wifi Network " + String(WIFI_NETWORK) +  "\r\n";
       while ( WiFi.status() != WL_CONNECTED ) {
         delay(500);
@@ -533,15 +513,20 @@ void connect_to_wifi() {
         timeoutwifi++; 
 
         if (timeoutwifi > 20 ) {
+              logging.init += loguptime();
               logging.init += "timeout, go to AP mode \r\n" ;  
+              logging.init += loguptime();
               logging.init += "Wifi State :";
+              logging.init += loguptime();
               
               switch (WiFi.status()) {
                   case 1:
-                      logging.init +="SSID is not available" ; 
+
+                      logging.init += "SSID is not available" ; 
                       break;
                   case 4:
-                      logging.init +="The connection fails for all the attempts"  ;
+
+                      logging.init += "The connection fails for all the attempts"  ;
                       break;
                   case 5:
                       logging.init +="The connection is lost" ; 
@@ -572,6 +557,7 @@ void connect_to_wifi() {
         }
 
       serial_println("WiFi connected");
+      logging.init += loguptime();
       logging.init += "Wifi connected\r\n";
       serial_println("IP address: ");
       serial_println(WiFi.localIP());
@@ -581,4 +567,11 @@ void connect_to_wifi() {
       btStop();
       #endif
   }
+}
+
+String loguptime() {
+  String uptime_stamp;
+  uptime::calculateUptime();
+  uptime_stamp = String(uptime::getDays())+":"+String(uptime::getHours())+":"+String(uptime::getMinutes())+":"+String(uptime::getSeconds())+ "\t";
+  return uptime_stamp;
 }

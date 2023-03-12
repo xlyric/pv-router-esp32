@@ -8,6 +8,8 @@ extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Logs logging;
 
+extern String loguptime(); 
+
 // ***********************************
 // ** recherche du point 0. temps 20 ms max ... 
 // ***********************************
@@ -21,7 +23,7 @@ void front() {
   while ( analogRead(ADC_PORTEUSE) > margin  ) { 
   	delayMicroseconds (3);
     Watchdog++;
-    if ( Watchdog > 2500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ? "); gDisplayValues.porteuse = false; break; } 
+    if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false; break; } 
 
 	}
 
@@ -31,7 +33,7 @@ void front() {
   while ( analogRead(ADC_PORTEUSE) == margin  ) {
   delayMicroseconds (3);  
     Watchdog++;
-    if ( Watchdog > 2500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ou inversée ? "); gDisplayValues.porteuse = false ; break;}  
+    if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false ; break;}  
 	}
     
 }
@@ -267,7 +269,7 @@ positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle *
 
 
 if ( zero > 75 ) { 
-  if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
+  if (logging.sct) {     logging.start  += loguptime(); logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
 }
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
 
@@ -402,7 +404,7 @@ PowerFactor = floor(100 * abs(PW) / PVA) / 100;
 // logging.start +="Intensité-->" + String(positive) + "A. \r\n" ;
 positive = PW ; 
 if ( zero > 75 ) { 
-  if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
+  if (logging.sct) {     logging.start  += loguptime(); logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
 }
 //  logging.start +="Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
 
@@ -475,7 +477,7 @@ while (loop < freqmesure ) {
       Watchdog++ ;  
       startMillis = micros();   // reset du timer 
     }   
-    if ( Watchdog > nbmesure  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ? "); gDisplayValues.porteuse = false; break; } 
+    if ( Watchdog > nbmesure  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false; break; } 
   }
   ///// fin  construction du tableau de mesures  /////
 
@@ -546,10 +548,11 @@ positive = PW + config.offset ;
 
 
 if ( zero > 75 ) { 
-  if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
+  if (logging.sct) { logging.start += loguptime() + "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
 }
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
- logging.start +="Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
+ logging.start += loguptime();
+ logging.start +=  "Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
 
 
 bool nolog =false; 
@@ -609,7 +612,7 @@ int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us
   while ( analogRead(ADC_PORTEUSE) > margin  ) { 
   	delayMicroseconds (3);
     Watchdog++;
-    if ( Watchdog > 2500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ? "); gDisplayValues.porteuse = false; break; } 
+    if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false; break; } 
 
 	}
 
@@ -620,7 +623,7 @@ int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us
   delayMicroseconds (3);  
   //startMillis = micros();   // 0ms 
     Watchdog++;
-    if ( Watchdog > 2500  ) {  Serial.print("Attention pas de porteuse, alimentation 12v AC ou pont redresseur débranché ou inversée ? "); gDisplayValues.porteuse = false ; break;}  
+    if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false ; break;}  
 	}
 
 

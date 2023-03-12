@@ -49,7 +49,7 @@ void measureElectricity(void * parameter)
             if ( gDisplayValues.porteuse == false ) {
                   gDisplayValues.watt =0 ; 
                   slowlog ++; 
-                  if (slowlog == TEMPOLOG) { logging.start += "--> No sinus, check 12AC power \r\n"; slowlog =0 ; }
+                  if (slowlog == TEMPOLOG) {     logging.start  += loguptime(); logging.start +=  String("--> No sinus, check 12AC power \r\n"); slowlog =0 ; }
 
             }
             serial_println(int(gDisplayValues.watt)) ;
@@ -116,7 +116,7 @@ if (!AP) {
                   if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
                   //maj 202030209
                   if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
-                  //Mqtt_send(String("temperature"), String(gDisplayValues.temperature) ); //  bug#11  remonté domoticz
+                  Mqtt_send(String("temperature"), String(gDisplayValues.temperature) ); //  bug#11  remonté domoticz
                   }
 
                   beforetime = start; 

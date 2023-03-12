@@ -52,6 +52,7 @@ void APConnect() {
   
   Serial.print("Soft-AP IP address = ");
   Serial.println(WiFi.softAPIP());
+  logging.init += loguptime();
   logging.init += "New connexion on AP :" + String(WiFi.softAPIP()) +"\r\n";
 
 }
@@ -209,10 +210,12 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info) {
   dimmertemp = info.got_ip.ip_info.ip.addr; 
   if (dimmeradress(dimmertemp)) {
     Serial.println("dimmer ");
+        logging.init += loguptime();
     logging.start += "New Dimmer on AP :" + String(dimmertemp) +"\r\n";
   }
   else {
     Serial.println("not dimmer");
+    logging.init += loguptime();
     logging.start += "New Connexion on AP :" + String(dimmertemp) +"\r\n";
   }
 

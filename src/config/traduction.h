@@ -12,8 +12,8 @@
 
 #define OLEDSTART "Start Oled"
 
-#define SPIFFSNO "SPIFFS Files are missing, please upload them"
-#define CONFNO "config Files is missing"
+#define SPIFFSNO "SPIFFS Files are missing, please upload them\r\n"
+#define CONFNO "config Files is missing\r\n"
 
 #define OLEDPOW "Power (W)"
 #define OLEDNOSIN "No-Sin"
@@ -33,10 +33,18 @@
 
 #define OLEDSTART "Démarrage Oled"
 
-#define SPIFFSNO "Fichier SPIFFS absent, Merci de les uploader"
-#define CONFNO "Fichier de configuration absent"
+#define SPIFFSNO "Fichier SPIFFS absent, Merci de les uploader\r\n"
+#define CONFNO "Fichier de configuration absent\r\n"
 
 #define OLEDPOW "Power (W)"
 #define OLEDNOSIN "No-Sin"
 
 #endif
+
+#define NOT_ENPHASE "--> Enphase not present\r\n"
+#define NOT_FRONIUS "--> Fronius not present\r\n"
+#define PV_RESTART "Restarting PV ROUTER"
+#define POWER_COMMAND "Power command sent "
+#define DALLAS_TEXT "Chip is DS18S20"
+#define NO_SYNC "Attention pas de porteuse, alimentation 9VAC ou pont redresseur débranché ? "
+//#define FAIL_READ "Failed to read, using default configuration in function"
