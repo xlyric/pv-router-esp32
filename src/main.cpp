@@ -30,6 +30,8 @@
   #include "tasks/Dimmer.h"
   #include "tasks/gettemp.h"
 
+  #include "tasks/Serial_task.h"
+
   //#include "functions/otaFunctions.h"
   #include "functions/spiffsFunctions.h"
   #include "functions/Mqtt_http_Functions.h"
@@ -285,16 +287,15 @@ Dimmer_setup();
   // ----------------------------------------------------------------
   // TASK: Connect to AWS & keep the connection alive.
   // ----------------------------------------------------------------
-  #if AWS_ENABLED == true
     xTaskCreate(
-      keepAWSConnectionAlive,
-      "MQTT-AWS",      // Task name
-      5000,            // Stack size (bytes)
+      serial_read_task,
+      "Serial Read",      // Task name
+      2000,            // Stack size (bytes)
       NULL,             // Parameter
-      5,                // Task priority
+      1,                // Task priority
       NULL              // Task handle
     );
-  #endif
+
 
   // ----------------------------------------------------------------
   // TASK: Update the display every second
@@ -458,7 +459,7 @@ void loop()
     logging.start = "";
   }
 
-
+  
 
 //serial_println(F("loop")); 
 

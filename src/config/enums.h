@@ -128,6 +128,7 @@ struct Logs {
   bool sct;
   bool sinus;
   bool power;
+  bool serial=false; 
 };
 
 #if DEBUG == true

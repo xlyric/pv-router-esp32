@@ -29,7 +29,7 @@ extern Configmodule configmodule;
  */
 void updateDisplay(void* parameter) {
   for (;;) {
-    serial_println(F("lcd task"));
+    //serial_println(F("lcd task"));
     #ifdef DEVKIT1
         display.clear();
     #endif

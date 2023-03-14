@@ -304,7 +304,7 @@ if ( config.polarity == true ) { gDisplayValues.watt = - gDisplayValues.watt ; }
 int half = 0 ;
 double Vrms = 0;
 double Irms = 0;
-
+#ifdef OLD
 void injection3(){ 
 
 int temp_read ; 
@@ -808,9 +808,6 @@ middle_debug= sigma_read;
 
 gDisplayValues.watt = int(( positive )) ; 
 
-
-
-
 }
-
+#endif
 #endif

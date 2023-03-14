@@ -301,4 +301,53 @@ WiFiClient client;
   return (line);
    
 }
+
+void serial_read() {
+  String message_get; 
+    while (Serial.available() > 0)
+    {
+      message_get = Serial.readStringUntil('\n');
+      message_get.replace("\n","");
+      message_get.replace("\r","");
+    }
+
+  int index = message_get.indexOf("reset");
+  if (index != -1 ){
+    Serial.println("commande reset reçue");
+    ESP.restart();
+  }
+
+  index = message_get.indexOf("ssid");
+  if (index != -1 ){
+    String wifitemp=message_get.substring(5, message_get.length());
+    Serial.println("ssid enregistré: " + wifitemp);
+    wifitemp.toCharArray(configwifi.SID,50);
+    configwifi.sauve_wifi(); 
+    return;
+  }
+
+  index = message_get.indexOf("pass");
+  if (index != -1 ){
+    Serial.println("password enregistré :");
+    String passtemp=message_get.substring(5, message_get.length());
+    passtemp.toCharArray(configwifi.passwd,50);
+    configwifi.sauve_wifi(); 
+    return;
+  }
+
+  index = message_get.indexOf("log");
+  if (index != -1 ){
+    logging.serial = true; 
+    return; 
+  }
+
+  if (message_get.length() !=0){
+    Serial.println("Commande disponibles : 'reset' pour redémarrer le routeur ");
+    Serial.println("Commande disponibles : 'ssid' pour changer le SSID wifi");
+    Serial.println("Commande disponibles : 'pass' pour changer le mdp wifi");
+    Serial.println("Commande disponibles : 'log' pour afficher les logs serial");
+  }
+
+ }
+
 #endif

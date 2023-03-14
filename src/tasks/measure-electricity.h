@@ -54,7 +54,9 @@ void measureElectricity(void * parameter)
                   if (slowlog == TEMPOLOG) {     logging.start  += loguptime(); logging.start +=  String("--> No sinus, check 12AC power \r\n"); slowlog =0 ; }
 
             }
+            if (logging.serial){
             serial_println(int(gDisplayValues.watt)) ;
+            }
 
       }
       else{
