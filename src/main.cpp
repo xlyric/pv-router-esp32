@@ -106,20 +106,20 @@ Dallas dallas;
 #endif
 
 String loguptime();
-
-HA device_dimmer; 
-HA device_routeur; 
-HA device_grid;
-HA device_inject;
-HA compteur_inject;
-HA compteur_grid;
-HA switch_1;
-HA temperature_HA;
-HA power_factor;
-HA power_vrms;
-HA power_irms;
-HA power_apparent;
-
+#ifndef LIGHT_FIRMWARE
+    HA device_dimmer; 
+    HA device_routeur; 
+    HA device_grid;
+    HA device_inject;
+    HA compteur_inject;
+    HA compteur_grid;
+    HA switch_1;
+    HA temperature_HA;
+    HA power_factor;
+    HA power_vrms;
+    HA power_irms;
+    HA power_apparent;
+#endif
 
 /***************************
  *  Dimmer init
@@ -150,8 +150,13 @@ void setup()
   loadConfiguration(filename_conf, config);
 
   ///define if AP mode or load configuration
-  if (loadwifi(wifi_conf, configwifi)) {
+  /*if (loadwifi(wifi_conf, configwifi)) {
     AP=false; 
+  }*/
+  if (configwifi.recup_wifi()){
+     logging.init += loguptime();
+     logging.init += "Wifi config \r\n"; 
+       AP=false; 
   }
 
    loadmqtt(mqtt_conf ,configmqtt);
@@ -410,17 +415,17 @@ Dimmer_setup();
         AsyncElegantOTA.begin(&server);
         server.begin(); 
       #endif
+#ifndef LIGHT_FIRMWARE
+    if (!AP) {
+        if (config.mqtt) {
+          Mqtt_init();
 
-if (!AP) {
-    if (config.mqtt) {
-      Mqtt_init();
-
-    // HA autoconf
-     if (configmqtt.HA) init_HA_sensor();
-      
+        // HA autoconf
+        if (configmqtt.HA) init_HA_sensor();
+          
+        }
     }
-}
-
+#endif
   //if ( config.autonome == true ) {
     gDisplayValues.dimmer = 0; 
     dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
@@ -474,19 +479,21 @@ void loop()
 
     }
   }
-  if (!AP) {
-    #if WIFI_ACTIVE == true
-        if (config.mqtt) {
-          if (!client.connected()) { reconnect(); }
-        client.loop();
-        }
-        // TODO : désactivation MQTT en décochant la case, sans redémarrer
-        // else {
-        //     if (client.connected()) { client.disconnect(); }
-        // }  
+#ifndef LIGHT_FIRMWARE
+    if (!AP) {
+      #if WIFI_ACTIVE == true
+          if (config.mqtt) {
+            if (!client.connected()) { reconnect(); }
+          client.loop();
+          }
+          // TODO : désactivation MQTT en décochant la case, sans redémarrer
+          // else {
+          //     if (client.connected()) { client.disconnect(); }
+          // }  
 
-    #endif
-  }
+      #endif
+    }
+#endif
   vTaskDelay(10000 / portTICK_PERIOD_MS);
 }
 

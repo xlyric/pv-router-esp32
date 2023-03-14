@@ -15,18 +15,20 @@
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
 extern Logs Logging;
-extern HA device_routeur; 
-extern HA device_grid; 
-extern HA device_inject; 
-extern HA compteur_inject;
-extern HA compteur_grid;
-extern HA temperature_HA;
 
-extern HA power_factor;
-extern HA power_vrms;
-extern HA power_irms;
-extern HA power_apparent;
+#ifndef LIGHT_FIRMWARE
+      extern HA device_routeur; 
+      extern HA device_grid; 
+      extern HA device_inject; 
+      extern HA compteur_inject;
+      extern HA compteur_grid;
+      extern HA temperature_HA;
 
+      extern HA power_factor;
+      extern HA power_vrms;
+      extern HA power_irms;
+      extern HA power_apparent;
+#endif
 
 int slowlog = TEMPOLOG - 1 ; 
 long beforetime; 
@@ -76,13 +78,14 @@ if (!AP) {
             }           
 
 
-            #if WIFI_ACTIVE == true
+      #if WIFI_ACTIVE == true
                   Pow_mqtt_send ++ ;
                   if ( Pow_mqtt_send > 5 ) {
                   long timemesure = start-beforetime;
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
-
+            #ifndef LIGHT_FIRMWARE
                   if (config.IDX != 0 && config.mqtt ) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
+
                   if (configmqtt.HA) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
                         power_apparent.send(String(int(PVA)));
@@ -90,6 +93,7 @@ if (!AP) {
                         power_irms.send(String(Irms));
                         power_factor.send(String(PowerFactor));
                   }
+
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
                   if (config.IDX != 0 && config.mqtt) {
@@ -118,11 +122,11 @@ if (!AP) {
                   if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
                   Mqtt_send(String("temperature"), String(gDisplayValues.temperature) ); //  bug#11  remonté domoticz
                   }
-
+            #endif
                   beforetime = start; 
                   Pow_mqtt_send = 0 ;
                   }
-            #endif
+      #endif
 }
 
 long end = millis();

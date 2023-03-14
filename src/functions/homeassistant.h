@@ -2,7 +2,10 @@
 #define HOMEASSISTANT
 
 #include <Arduino.h>
-#include <PubSubClient.h>
+
+#ifndef LIGHT_FIRMWARE
+  #include <PubSubClient.h>
+
 
 extern HA device_dimmer; 
 extern HA device_routeur; 
@@ -101,6 +104,6 @@ void init_HA_sensor(){
 
 
 }
-
+#endif
 
 #endif

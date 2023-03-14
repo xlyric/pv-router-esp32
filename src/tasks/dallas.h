@@ -10,7 +10,9 @@
 
 extern DisplayValues gDisplayValues;
 extern Dallas dallas ;
-extern HA temperature_HA;
+#ifndef LIGHT_FIRMWARE
+    extern HA temperature_HA;
+#endif
 
 /**
  * Task: Modifier le dimmer en fonction de la production

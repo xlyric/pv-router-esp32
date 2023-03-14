@@ -263,15 +263,11 @@
 			
 		<div class="col-xl-12 col-lg-7">
             <div class="card shadow mb-4">
-			<a href="#collapseOscillo" class="d-block card-header py-3 collapsed"" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseOscillo">
+			<a href="#collapseOscillo" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseOscillo">
+
                   <h6 class="m-0 font-weight-bold text-primary">Oscillo</h6>
                 </a>
-                
-         
-
-
-				
-				
+   				
                 <!-- Card Body -->
 				<div class="collapse " id="collapseOscillo">
                 <div class="card-body">
@@ -468,7 +464,7 @@
 		//document.getElementById("port").innerHTML = config[1];	  
 		//document.getElementById("idx").innerHTML = config[2];
 		//document.getElementById("version").innerHTML = config[3];
-    document.getElementById("screentime").value = config[21];	
+    //document.getElementById("screentime").value = config[21];	
 	
 				  
 <!-- récupération onclick sur send mode -->
@@ -554,7 +550,7 @@ document.getElementById("screen").value = config[21];
     <input type="submit">
   </div>
 </form>
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="jquery.min.js"></script>
 <script>
 $( "form" ).submit(function( event ) {
   if ( $( "input" ).first().val() === "correct" ) {
@@ -610,11 +606,11 @@ $( "form" ).submit(function( event ) {
 
 
   <!-- Bootstrap core JavaScript-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+  <script src="/jquery.min.js"></script>
+  <script src="/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --> 
 
   <!-- Custom scripts for all pages-->
   <script src="/sb-admin-2.js"></script>

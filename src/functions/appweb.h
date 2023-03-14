@@ -115,10 +115,13 @@ String getServermode(String Servermode) {
   if ( Servermode == "Dimmer local" ) {   config.dimmerlocal = !config.dimmerlocal; }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
   if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; }
-  if ( Servermode == "HA" ) {   configmqtt.HA = !configmqtt.HA; 
-                    if (configmqtt.HA) init_HA_sensor(); 
-                    }
 
+  #ifndef LIGHT_FIRMWARE
+    if ( Servermode == "HA" ) {   configmqtt.HA = !configmqtt.HA; 
+                      if (configmqtt.HA) init_HA_sensor(); 
+                      }
+  #endif
+  
   if ( Servermode == "flip" ) {   
               config.flip = !config.flip; 
               #ifdef  TTGO

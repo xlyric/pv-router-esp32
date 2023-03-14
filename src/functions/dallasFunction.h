@@ -82,11 +82,12 @@ if ( !ds.search(dallas.addr)) {
       logging.init += loguptime();
   logging.init += "Dallas present at address" + String(dallas.present, HEX) + "\r\n";
 
+#ifndef LIGHT_FIRMWARE
   if (!discovery_temp) {
     discovery_temp = true;
     temperature_HA.discovery();
   }
-
+#endif
 
   return true;
    

@@ -33,22 +33,25 @@ void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
 }
 
+void compress_html(AsyncWebServerRequest *request,String filefs , String format ) {
+      AsyncWebServerResponse *response = request->beginResponse(SPIFFS, filefs, format );
+      response->addHeader("Content-Encoding", "gzip");
+      request->send(response);
+}
 
 void call_pages() {
-
-
 
 if (AP) {
     server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
     if(SPIFFS.exists("/index.html")){
-     request->send(SPIFFS, "/index-ap.html", "text/html");
+      compress_html(request,"/index-ap.html.gz", "text/html");
     }
     else {request->send_P(200, "text/html", "<html><body>Filesystem is not present. <a href='https://ota.apper-solaire.org/firmware/spiffs-ttgo.bin'>download it here</a> <br>and after  <a href='/update'>upload on the ESP here </a></body></html>" ); }
   });
 
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
     if(SPIFFS.exists("/config.html")){
-      request->send(SPIFFS, "/config-ap.html", "text/html");
+      compress_html(request,"/config-ap.html.gz", "text/html");
     }
     else {request->send_P(200, "text/plain", SPIFFSNO ); }
 
@@ -56,15 +59,25 @@ if (AP) {
 }
 else {
   server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
-    if(SPIFFS.exists("/index.html")){
-     request->send(SPIFFS, "/index.html", "text/html");
+    if(SPIFFS.exists("/index.html") ){
+    #ifndef LIGHT_FIRMWARE
+      compress_html(request,"/index.html.gz", "text/html");
+    #else
+      compress_html(request,"/index-light.html.gz", "text/html");
+    #endif
+
     }
     else {request->send_P(200, "text/plain", SPIFFSNO ); }
   });
 
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
     if(SPIFFS.exists("/config.html")){
-      request->send(SPIFFS, "/config.html", "text/html");
+    #ifndef LIGHT_FIRMWARE
+       compress_html(request,"/config.html.gz", "text/html");
+    #else
+       compress_html(request,"/config-ap.html.gz", "text/html");
+    #endif
+
     }
     else {request->send_P(200, "text/plain", SPIFFSNO ); }
 
@@ -73,9 +86,9 @@ else {
 }
 
   server.on("/all.min.css",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/all.min.css", "text/css");
+      compress_html(request,"/all.min.css.gz", "text/css");
   });
-
+/*
 server.on("/loader.js",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/loader.js", "text/css");
   });
@@ -83,39 +96,39 @@ server.on("/loader.js",  HTTP_GET, [](AsyncWebServerRequest *request){
 server.on("/google.css",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/google.css", "text/css");
   });
-
+*/
 server.on("/jquery.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/jquery.min.js", "text/css");
+      compress_html(request,"/jquery.min.js.gz", "text/css");
   });
-
+/*
 server.on("/jquery.easing.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/jquery.easing.min.js", "text/css");
   });
-
+*/
 server.on("/bootstrap.bundle.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/bootstrap.bundle.min.js", "text/css");
+      compress_html(request,"/bootstrap.bundle.min.js.gz", "text/css");
   });
-
 
 server.on("/bootstrap.bundle.min.js.map",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/bootstrap.bundle.min.js.map", "text/css");
+      compress_html(request,"/bootstrap.bundle.min.js.map.gz", "text/css");
   });
 
-    server.on("/favicon.ico",  HTTP_GET, [](AsyncWebServerRequest *request){
+server.on("/favicon.ico",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/favicon.ico", "image/png");
   });
 
-  server.on("/fa-solid-900.woff2", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/fa-solid-900.woff2", "text/css");
+server.on("/fa-solid-900.woff2", HTTP_GET, [](AsyncWebServerRequest *request){
+      compress_html(request, "/fa-solid-900.woff2.gz", "text/css");
   });
   
-    server.on("/sb-admin-2.js", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/sb-admin-2.js", "text/javascript");
+server.on("/sb-admin-2.js", HTTP_GET, [](AsyncWebServerRequest *request){
+      compress_html(request, "/sb-admin-2.js.gz", "text/javascript");
   });
 
   server.on("/sb-admin-2.min.css", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/sb-admin-2.min.css", "text/css");
+      compress_html(request, "/sb-admin-2.min.css.gz", "text/css");
   });
+
 // pour débug 
   server.on("/mqtt.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/mqtt.json", "text/css");
@@ -176,8 +189,9 @@ server.on("/puissance", HTTP_GET, [](AsyncWebServerRequest *request){
 //// wifi
 
 server.on("/wifi.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/wifi.html", "text/html");
+      compress_html(request,"/wifi.html.gz", "text/html");
   });
+
 
 server.on("/getwifi", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(200, "text/plain",  getwifi().c_str()); 
@@ -186,7 +200,7 @@ server.on("/getwifi", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 ///// MQTT
 
 server.on("/mqtt.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/mqtt.html", "text/html");
+    compress_html(request,"/mqtt.html.gz", "text/html");
   });
 
 server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
@@ -197,7 +211,7 @@ server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 //// logs 
 
 server.on("/log.html", HTTP_ANY, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/log.html", "text/html");
+      compress_html(request,"/log.html.gz", "text/html");
   });
 
 server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
@@ -256,7 +270,10 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    /// @brief  wifi
    if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50);  }
    if (request->hasParam("password")) { request->getParam("password")->value().toCharArray(configwifi.passwd,50);    
-   saveWifi(wifi_conf, configwifi);}
+    logging.start += loguptime();
+    logging.start += "saving wifi\r\n";
+   configwifi.sauve_wifi();
+   }
 
    //// MQTT
    if (request->hasParam(PARAM_INPUT_mqttserver)) { request->getParam(PARAM_INPUT_mqttserver)->value().toCharArray(config.mqttserver,16);  }

@@ -5,15 +5,22 @@
 #include "../config/config.h"
 #include "../config/enums.h"
 #include "functions/spiffsFunctions.h"
-#include <PubSubClient.h>
 #include <WiFi.h>
 #include "HTTPClient.h"
+
+#ifndef LIGHT_FIRMWARE
+  #include <PubSubClient.h>
+#endif
     
 WiFiClient espClient;
-PubSubClient client(espClient);
+#ifndef LIGHT_FIRMWARE
+  PubSubClient client(espClient);
+#endif
 extern Config config;
 extern DisplayValues gDisplayValues;
 extern Mqtt configmqtt;
+
+#ifndef LIGHT_FIRMWARE
 
 // void Mqtt_HA_hello(); // non utilisé maintenant 
 void reconnect();
@@ -21,27 +28,27 @@ void reconnect();
  *  reconnexion au serveur MQTT
  */
 
-void reconnect() {
-  String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-  String topic = "homeassistant/sensor/"+ pvname +"/status";
-  // Loop until we're reconnected
-  while (!client.connected()) {
-    Serial.println("-----------------------------");
-    Serial.println("Attempting MQTT reconnection...");
-    // Attempt to connect
+    void reconnect() {
+      String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
+      String topic = "homeassistant/sensor/"+ pvname +"/status";
+      // Loop until we're reconnected
+      while (!client.connected()) {
+        Serial.println("-----------------------------");
+        Serial.println("Attempting MQTT reconnection...");
+        // Attempt to connect
 
-    if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
-      client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
-      Serial.println("MQTT reconnect : connected");
-    } else {
-      Serial.print("MQTT reconnect : failed, retcode="); 
-      Serial.print(client.state());
-      Serial.println(" try again in 2 seconds");
-      // Wait 2 seconds before retrying
-      delay(2000);  // 24/01/2023 passage de 5 à 2s 
+        if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
+          client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
+          Serial.println("MQTT reconnect : connected");
+        } else {
+          Serial.print("MQTT reconnect : failed, retcode="); 
+          Serial.print(client.state());
+          Serial.println(" try again in 2 seconds");
+          // Wait 2 seconds before retrying
+          delay(2000);  // 24/01/2023 passage de 5 à 2s 
+        }
+      }
     }
-  }
-}
 
 /*
 *    Fonction d'envoie info MQTT vers domoticz
@@ -150,6 +157,6 @@ void Mqtt_init() {
 // //if (client.publish(topic.c_str(), String(message).c_str(), true))  {  Serial.println("HELLO");}
 // }
 
-
+#endif
 
 #endif

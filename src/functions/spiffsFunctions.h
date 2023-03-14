@@ -100,7 +100,7 @@ void loadConfiguration(const char *filename, Config &config) {
           sizeof(config.Publish));         // <- destination's mqtt
   config.ScreenTime = doc["screentime"] | 0 ; // timer to switch of screen
   configFile.close();
-  logging.init += loguptime();
+  logging.start += loguptime();
   logging.start += "config file loaded\r\n";
 }
 
@@ -253,10 +253,10 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
 ///////////////////////////////////
 ///// config Wifi 
 ///////////////////////////////////
-const char *wifi_conf = "/wifi.json";
-extern Configwifi configwifi; 
-extern Logs logging;
-
+//const char *wifi_conf = "/wifi.json";
+//extern Configwifi configwifi; 
+//extern Logs logging;
+/*
 bool loadwifi(const char *filename, Configwifi &configwifi) {
   // Open file for reading
   File configFile = SPIFFS.open(wifi_conf, "r");
@@ -286,8 +286,7 @@ bool loadwifi(const char *filename, Configwifi &configwifi) {
           doc["passwd"] | "xxx", // <- source
           sizeof(configwifi.passwd));         // <- destination's capacity
   configFile.close();
- logging.init += loguptime();
- logging.init += "Wifi config loaded\r\n"; 
+
 return true;    
 }
 
@@ -322,7 +321,7 @@ void saveWifi(const char *filenamewifi, const Configwifi &configwifi) {
   // Close the file
   configFile.close();
 }
-
+*/
 
 
 #endif
