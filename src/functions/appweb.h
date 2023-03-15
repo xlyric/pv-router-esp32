@@ -3,6 +3,7 @@
 
 #include "energyFunctions.h"
 #include "homeassistant.h"
+#include "spiffsFunctions.h"
 
 String configweb; 
 extern DisplayValues gDisplayValues;
@@ -311,9 +312,9 @@ void serial_read() {
       message_get.replace("\r","");
     }
 
-  int index = message_get.indexOf("reset");
+  int index = message_get.indexOf("reboot");
   if (index != -1 ){
-    Serial.println("commande reset reçue");
+    Serial.println("commande reboot reçue");
     ESP.restart();
   }
 
@@ -341,11 +342,23 @@ void serial_read() {
     return; 
   }
 
+
+  index = message_get.indexOf("flip");
+  if (index != -1 ){
+              config.flip = !config.flip; 
+              if (config.flip) display.setRotation(3);
+              else display.setRotation(1);
+              saveConfiguration(filename_conf, config); 
+    return; 
+  }
+
   if (message_get.length() !=0){
-    Serial.println("Commande disponibles : 'reset' pour redémarrer le routeur ");
-    Serial.println("Commande disponibles : 'ssid' pour changer le SSID wifi");
-    Serial.println("Commande disponibles : 'pass' pour changer le mdp wifi");
-    Serial.println("Commande disponibles : 'log' pour afficher les logs serial");
+    Serial.println("Commande disponibles :");
+    Serial.println("'reboot' pour redémarrer le routeur ");
+    Serial.println("'ssid' pour changer le SSID wifi");
+    Serial.println("'pass' pour changer le mdp wifi");
+    Serial.println("'log' pour afficher les logs serial");
+    Serial.println("'flip' pour retourner l'ecran");
   }
 
  }

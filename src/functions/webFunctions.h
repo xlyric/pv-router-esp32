@@ -43,14 +43,14 @@ void call_pages() {
 
 if (AP) {
     server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
-    if(SPIFFS.exists("/index.html")){
+    if(SPIFFS.exists("/index.html.gz")){
       compress_html(request,"/index-ap.html.gz", "text/html");
     }
     else {request->send_P(200, "text/html", "<html><body>Filesystem is not present. <a href='https://ota.apper-solaire.org/firmware/spiffs-ttgo.bin'>download it here</a> <br>and after  <a href='/update'>upload on the ESP here </a></body></html>" ); }
   });
 
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(SPIFFS.exists("/config.html")){
+    if(SPIFFS.exists("/config.html.gz")){
       compress_html(request,"/config-ap.html.gz", "text/html");
     }
     else {request->send_P(200, "text/plain", SPIFFSNO ); }
@@ -59,7 +59,7 @@ if (AP) {
 }
 else {
   server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
-    if(SPIFFS.exists("/index.html") ){
+    if(SPIFFS.exists("/index.html.gz") ){
     #ifndef LIGHT_FIRMWARE
       compress_html(request,"/index.html.gz", "text/html");
     #else
@@ -71,7 +71,7 @@ else {
   });
 
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    if(SPIFFS.exists("/config.html")){
+    if(SPIFFS.exists("/config.html.gz")){
     #ifndef LIGHT_FIRMWARE
        compress_html(request,"/config.html.gz", "text/html");
     #else
