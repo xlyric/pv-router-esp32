@@ -36,8 +36,8 @@ void keepWiFiAlive(void * parameter){
 
         WiFi.mode(WIFI_STA);
         WiFi.setHostname(DEVICE_NAME);
-        if ( strcmp(WIFI_NETWORK,"xxx") == 0) { WiFi.begin(configwifi.SID, configwifi.passwd); }
-        else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
+        WiFi.begin(configwifi.SID, configwifi.passwd); 
+        //else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
         
 
         unsigned long startAttemptTime = millis();

@@ -43,7 +43,9 @@ void switchDisplay(void * parameter){
       }
 
     if ( (digitalRead(BUTTON_LEFT)==LOW) ) {
-        gDisplayValues.page++;
+        //// changement, pour les démos, c'est plus pratique que d'inverser la sonde
+      config.polarity = !config.polarity;
+       /* gDisplayValues.page++;
         if (gDisplayValues.page == NB_PAGES+1) {
           gDisplayValues.page=1;
         }
@@ -53,6 +55,7 @@ void switchDisplay(void * parameter){
         logging.start += "Page changed nb:" + String(gDisplayValues.page) +" \r\n";
         Serial.print("mode=");
         Serial.println(gDisplayValues.page);
+        */
       }
 
       vTaskDelay(500 / portTICK_PERIOD_MS);  

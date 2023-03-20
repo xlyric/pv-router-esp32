@@ -99,12 +99,20 @@ if ( !ds.search(dallas.addr)) {
 
 float CheckTemperature(String label, byte deviceAddress[12]){
   sensors.requestTemperatures(); 
+
   float tempC = sensors.getTempC(deviceAddress);
   Serial.print(label);
   logging.init += loguptime();
-  if (tempC == -127.00) {
-    Serial.print("Error getting temperature");
-    logging.start += "Error getting temperature\r\n";
+    if ( (tempC == -127.00) || (tempC == -255.00) ) {
+    
+    //// cas d'une sonde trop longue à préparer les valeurs 
+    delay(187); /// attente de 187ms ( temps de réponse de la sonde )
+    tempC = sensors.getTempC(deviceAddress);
+      if ( (tempC == -127.00) || (tempC == -255.00) ) {
+      Serial.print("Error getting temperature");
+       logging.start += "Dallas on error\r\n";
+       tempC = gDisplayValues.temperature.toFloat(); 
+      }
   } else {
     Serial.print(" Temp C: ");
     Serial.println(tempC);

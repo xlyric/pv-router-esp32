@@ -102,12 +102,13 @@ String stringbool(bool mybool){
   return String(truefalse);
   }
 //***********************************
+/*
 String getSendmode() {
   String sendmode;
   if ( config.sending == 0 ) {   sendmode = "Off"; }
   else {   sendmode = "On"; }
   return String(sendmode);
-}
+}*/
 //***********************************
 String getServermode(String Servermode) {
   if ( Servermode == "screen" ) {  gDisplayValues.screenstate = !gDisplayValues.screenstate; }
@@ -213,10 +214,10 @@ String processor(const String& var){
    if (var == "SIGMA"){
     return getSigma();
   }
-  else if (var == "SENDMODE"){
+  /*else if (var == "SENDMODE"){
   
     return getSendmode();
-  }
+  }*/
   else if (var == "STATE"){
     
     return getState();
@@ -302,7 +303,45 @@ WiFiClient client;
   return (line);
    
 }
+/* //// la fonction prend 100 octets de plus .
+void processMessage(String message_get ) {
+  
+    if (-1 == message_get.indexOf("reboot")) {
+          Serial.println("commande reboot reçue");
+          ESP.restart();
+    } else if (-1 == message_get.indexOf("ssid")) {
+          String wifitemp=message_get.substring(5, message_get.length());
+          Serial.println("ssid enregistré: " + wifitemp);
+          wifitemp.toCharArray(configwifi.SID,50);
+          configwifi.sauve_wifi(); 
+          return;
+    } else if (-1 == message_get.indexOf("pass")) {
+        Serial.println("password enregistré :");
+        String passtemp=message_get.substring(5, message_get.length());
+        passtemp.toCharArray(configwifi.passwd,50);
+        configwifi.sauve_wifi(); 
+        return;
+    } else if (-1 == message_get.indexOf("log")) {
+          logging.serial = true; 
+          return; 
+    } else if (-1 == message_get.indexOf("flip")) {
+          config.flip = !config.flip; 
+          if (config.flip) display.setRotation(3);
+          else display.setRotation(1);
+          saveConfiguration(filename_conf, config); 
+          return; 
+    } else if (message_get.length() !=0) {
+          Serial.println("Commande disponibles :");
+          Serial.println("'reboot' pour redémarrer le routeur ");
+          Serial.println("'ssid' pour changer le SSID wifi");
+          Serial.println("'pass' pour changer le mdp wifi");
+          Serial.println("'log' pour afficher les logs serial");
+          Serial.println("'flip' pour retourner l'ecran");
+    }
+  
+}
 
+*/
 void serial_read() {
   String message_get; 
     while (Serial.available() > 0)
@@ -311,6 +350,7 @@ void serial_read() {
       message_get.replace("\n","");
       message_get.replace("\r","");
     }
+
 
   int index = message_get.indexOf("reboot");
   if (index != -1 ){

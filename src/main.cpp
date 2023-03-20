@@ -224,15 +224,6 @@ void setup()
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
         display.println(BOOTING);
-          if  (strcmp(WIFI_PASSWORD,"xxx") == 0) { 
-            if  (strcmp(configwifi.SID,"xxx") == 0) {
-            display.println(WIFINO); 
-            }
-          else { 
-            display.println(WIFICONNECT + String(configwifi.SID));
-          }
-        } 
-        else display.println(WIFICONNECT WIFI_NETWORK);
     #endif
 #endif
 
@@ -500,21 +491,20 @@ void loop()
 
 void connect_to_wifi() {
   ///// AP WIFI INIT 
-  if (AP) {
-    APConnect(); 
+  if (AP || strcmp(configwifi.SID,"AP") == 0 ) {
+      AP=true; 
+      APConnect(); 
       gDisplayValues.currentState = UP;
       gDisplayValues.IP = String(WiFi.softAPIP().toString());
       btStop();
+      return; 
   }
-
   else {
       #if WIFI_ACTIVE == true
-      if ( strcmp(WIFI_PASSWORD,"xxx") == 0 ) { WiFi.begin(configwifi.SID, configwifi.passwd); }
-      else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
-
+      WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
       logging.init += loguptime();
-      logging.init += "Start Wifi Network " + String(WIFI_NETWORK) +  "\r\n";
+      logging.init += "Start Wifi Network " + String(configwifi.SID) +  "\r\n";
       while ( WiFi.status() != WL_CONNECTED ) {
         delay(500);
         Serial.print(".");
@@ -545,12 +535,12 @@ void connect_to_wifi() {
                   default:
                       logging.init +="I have no idea ?! " ; 
                       break;
-              }
           
               
               logging.init += "\r\n";
               break;}
       }
+
 
         //// timeout --> AP MODE 
         if ( timeoutwifi > 20 ) {
@@ -559,10 +549,10 @@ void connect_to_wifi() {
               serial_println("timeout, go to AP mode ");
               
               gDisplayValues.currentState = UP;
-              gDisplayValues.IP = String(WiFi.softAPIP().toString());
+             // gDisplayValues.IP = String(WiFi.softAPIP().toString());
               APConnect(); 
-              btStop();
         }
+    }
 
       serial_println("WiFi connected");
       logging.init += loguptime();
