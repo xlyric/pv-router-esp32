@@ -58,6 +58,15 @@ void drawIP(){
     display.setCursor(120, 0, 2);
     display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
     display.println(gDisplayValues.IP);
+    display.setCursor(5, 0, 2);
+    int signstr=WiFi.RSSI(); 
+    if ( signstr < -80 ){ display.setTextColor(TFT_RED,TFT_BLACK); }
+    else if ( signstr < -70 ){ display.setTextColor(TFT_ORANGE,TFT_BLACK); } 
+    else if ( signstr < -64 ){ display.setTextColor(TFT_YELLOW,TFT_BLACK); } 
+    else { display.setTextColor(TFT_GREEN,TFT_BLACK); } 
+    display.println(signstr);
+    display.setCursor(30, 0, 2);
+    display.println("dBm");
   #endif
 }
 /*

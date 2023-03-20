@@ -58,6 +58,9 @@ void keepWiFiAlive(void * parameter){
         logging.start += loguptime(); 
         logging.start += "Wifi reconnected\r\n";
         serial_println(WiFi.localIP());
+        serial_print("force du signal:");
+        serial_print(WiFi.RSSI());
+        serial_print("dBm");
         gDisplayValues.currentState = UP;
         gDisplayValues.IP = String(WiFi.localIP().toString());
         btStop();

@@ -559,7 +559,9 @@ void connect_to_wifi() {
       logging.init += "Wifi connected\r\n";
       serial_println("IP address: ");
       serial_println(WiFi.localIP());
-      
+        serial_print("force du signal:");
+        serial_print(WiFi.RSSI());
+        serial_print("dBm");
       gDisplayValues.currentState = UP;
       gDisplayValues.IP = String(WiFi.localIP().toString());
       btStop();
