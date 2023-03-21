@@ -344,11 +344,14 @@ void processMessage(String message_get ) {
 */
 void serial_read() {
   String message_get; 
-    while (Serial.available() > 0)
+  int watchdog; 
+
+    while (Serial.available() > 0 || watchdog > 255 )
     {
       message_get = Serial.readStringUntil('\n');
       message_get.replace("\n","");
       message_get.replace("\r","");
+      watchdog ++;
     }
 
 

@@ -235,7 +235,7 @@ Dimmer_setup();
 
 
    // vérification de la présence d'index.html
-  if(!SPIFFS.exists("/index.html")){
+  if(!SPIFFS.exists("/index.html.gz")){
     Serial.println(SPIFFSNO);  
     logging.init += loguptime();
     logging.init += SPIFFSNO ;
@@ -283,7 +283,7 @@ Dimmer_setup();
       "Serial Read",      // Task name
       2000,            // Stack size (bytes)
       NULL,             // Parameter
-      1,                // Task priority
+      0,                // Task priority
       NULL              // Task handle
     );
 
@@ -299,7 +299,7 @@ Dimmer_setup();
     "UpdateDisplay",  // Task name
     10000,            // Stack size (bytes)
     NULL,             // Parameter
-    4,                // Task priority
+    1,                // Task priority
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
   );
@@ -501,6 +501,9 @@ void connect_to_wifi() {
   }
   else {
       #if WIFI_ACTIVE == true
+      WiFi.mode(WIFI_STA);
+      //Esp_wifi_set_ps (WIFI_PS_NONE);
+      WiFi.setSleep(false);
       WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
       logging.init += loguptime();

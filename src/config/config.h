@@ -200,7 +200,7 @@ bool discovery_temp = false;
     #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 20230320"
+#define VERSION "version 20230321"
 
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"
