@@ -140,7 +140,7 @@ long end = millis();
       }
       else
       {      
-            vTaskDelay((1500-(end-start)) / portTICK_PERIOD_MS);
+            vTaskDelay(pdMS_TO_TICKS(2000));
       }
 
     }    

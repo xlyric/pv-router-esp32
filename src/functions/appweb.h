@@ -61,7 +61,8 @@ String oscilloscope() {
   {
 
   
-  temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+  //temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+  temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
   moyenne = middleoscillo  + signe/50; 
   sigma += temp;
   //moyenne = moyenne + abs(temp - middle) ;
@@ -73,7 +74,8 @@ String oscilloscope() {
   delayMicroseconds (config.readtime);
   } 
   
-  temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+  //temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+  temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
   moyenne = middleoscillo  + signe/50; 
   retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
   middleoscillo = sigma / freqmesure ;
@@ -354,56 +356,57 @@ void serial_read() {
       watchdog ++;
     }
 
+    if (message_get.length() !=0 ) {
+      /// test du message 
+      int index = message_get.indexOf("reboot");
+      if (index != -1 ){
+        Serial.println("commande reboot reçue");
+        ESP.restart();
+      }
 
-  int index = message_get.indexOf("reboot");
-  if (index != -1 ){
-    Serial.println("commande reboot reçue");
-    ESP.restart();
-  }
+      index = message_get.indexOf("ssid");
+      if (index != -1 ){
+        String wifitemp=message_get.substring(5, message_get.length());
+        Serial.println("ssid enregistré: " + wifitemp);
+        wifitemp.toCharArray(configwifi.SID,50);
+        configwifi.sauve_wifi(); 
+        return;
+      }
 
-  index = message_get.indexOf("ssid");
-  if (index != -1 ){
-    String wifitemp=message_get.substring(5, message_get.length());
-    Serial.println("ssid enregistré: " + wifitemp);
-    wifitemp.toCharArray(configwifi.SID,50);
-    configwifi.sauve_wifi(); 
-    return;
-  }
+      index = message_get.indexOf("pass");
+      if (index != -1 ){
+        Serial.println("password enregistré :");
+        String passtemp=message_get.substring(5, message_get.length());
+        passtemp.toCharArray(configwifi.passwd,50);
+        configwifi.sauve_wifi(); 
+        return;
+      }
 
-  index = message_get.indexOf("pass");
-  if (index != -1 ){
-    Serial.println("password enregistré :");
-    String passtemp=message_get.substring(5, message_get.length());
-    passtemp.toCharArray(configwifi.passwd,50);
-    configwifi.sauve_wifi(); 
-    return;
-  }
-
-  index = message_get.indexOf("log");
-  if (index != -1 ){
-    logging.serial = true; 
-    return; 
-  }
+      index = message_get.indexOf("log");
+      if (index != -1 ){
+        logging.serial = true; 
+        return; 
+      }
 
 
-  index = message_get.indexOf("flip");
-  if (index != -1 ){
-              config.flip = !config.flip; 
-              if (config.flip) display.setRotation(3);
-              else display.setRotation(1);
-              saveConfiguration(filename_conf, config); 
-    return; 
-  }
+      index = message_get.indexOf("flip");
+      if (index != -1 ){
+                  config.flip = !config.flip; 
+                  if (config.flip) display.setRotation(3);
+                  else display.setRotation(1);
+                  saveConfiguration(filename_conf, config); 
+        return; 
+      }
 
-  if (message_get.length() !=0){
-    Serial.println("Commande disponibles :");
-    Serial.println("'reboot' pour redémarrer le routeur ");
-    Serial.println("'ssid' pour changer le SSID wifi");
-    Serial.println("'pass' pour changer le mdp wifi");
-    Serial.println("'log' pour afficher les logs serial");
-    Serial.println("'flip' pour retourner l'ecran");
-  }
-
+      if (message_get.length() !=0){
+        Serial.println("Commande disponibles :");
+        Serial.println("'reboot' pour redémarrer le routeur ");
+        Serial.println("'ssid' pour changer le SSID wifi");
+        Serial.println("'pass' pour changer le mdp wifi");
+        Serial.println("'log' pour afficher les logs serial");
+        Serial.println("'flip' pour retourner l'ecran");
+      }
+    }
  }
 
 #endif

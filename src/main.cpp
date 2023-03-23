@@ -43,7 +43,7 @@
   #include "functions/homeassistant.h"
 
   #include "uptime.h"
-
+  #include <driver/adc.h>
 #if DALLAS
 // Dallas 18b20
 #include <OneWire.h>
@@ -142,6 +142,15 @@ void setup()
   logging.init += loguptime();
   logging.init += "Start Filesystem\r\n";
   SPIFFS.begin();
+
+/// test ACD 
+
+    adc1_config_width(ADC_WIDTH_BIT_12);
+    adc1_config_channel_atten(ADC1_CHANNEL_0,ADC_ATTEN_DB_11);
+    adc1_config_channel_atten(ADC1_CHANNEL_3, ADC_ATTEN_DB_11);
+    adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
+    adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);
+   
 
     //***********************************
     //************* Setup -  récupération du fichier de configuration
@@ -281,9 +290,9 @@ Dimmer_setup();
     xTaskCreate(
       serial_read_task,
       "Serial Read",      // Task name
-      2000,            // Stack size (bytes)
+      3000,            // Stack size (bytes)
       NULL,             // Parameter
-      0,                // Task priority
+      1,                // Task priority
       NULL              // Task handle
     );
 
@@ -299,7 +308,7 @@ Dimmer_setup();
     "UpdateDisplay",  // Task name
     10000,            // Stack size (bytes)
     NULL,             // Parameter
-    1,                // Task priority
+    2,                // Task priority
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
   );
@@ -312,7 +321,7 @@ Dimmer_setup();
   xTaskCreate(
     dallasread,
     "Dallas temp",  // Task name
-    1000,                  // Stack size (bytes)
+    2000,                  // Stack size (bytes)
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
@@ -341,9 +350,9 @@ Dimmer_setup();
   xTaskCreate(
     measureElectricity,
     "Measure electricity",  // Task name
-    5000,                  // Stack size (bytes)
+    15000,                  // Stack size (bytes)
     NULL,                   // Parameter
-    25,                      // Task priority
+    7,                      // Task priority
     NULL                    // Task handle
   
   );
@@ -440,7 +449,7 @@ void loop()
 
 /// redémarrage sur demande
   if (config.restart) {
-    delay(5000);
+    //delay(5000);
     Serial.print(PV_RESTART);
     ESP.restart();
   }
@@ -486,7 +495,7 @@ void loop()
       #endif
     }
 #endif
-  vTaskDelay(10000 / portTICK_PERIOD_MS);
+  vTaskDelay(pdMS_TO_TICKS(10000));
 }
 
 void connect_to_wifi() {

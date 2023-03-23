@@ -27,7 +27,7 @@ void dallasread(void * parameter){
 
    } 
    // Sleep for 5 seconds, avant de refaire une analyse
-    vTaskDelay(5000 / portTICK_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(10000));
   }
 }
 #endif

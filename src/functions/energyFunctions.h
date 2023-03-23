@@ -20,7 +20,7 @@ void front() {
   gDisplayValues.porteuse = true; 
   int margin = 0; /// 0 marge de bruit de fond  en lecture ( si pb ) 
   // recherche demi ondulation
-  while ( analogRead(ADC_PORTEUSE) > margin  ) { 
+  while ( adc1_get_raw((adc1_channel_t)5) > margin  ) { 
   	delayMicroseconds (3);
     Watchdog++;
     if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false; break; } 
@@ -30,7 +30,7 @@ void front() {
   Watchdog=0 ; 
   // recherche d'un 0
   
-  while ( analogRead(ADC_PORTEUSE) == margin  ) {
+  while ( adc1_get_raw((adc1_channel_t)5) == margin  ) {
   delayMicroseconds (3);  
     Watchdog++;
     if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false ; break;}  
@@ -172,8 +172,8 @@ startMillis = micros();   // 0ms
 
 ///// construction du tableau de mesures  /////
 while (loop < freqmesure ) {
-    tableau[loop] =  analogRead(ADC_INPUT);
-    porteuse[loop] =  analogRead(ADC_PORTEUSE);
+    tableau[loop] =  adc1_get_raw((adc1_channel_t)4);
+    porteuse[loop] =  adc1_get_raw((adc1_channel_t)5);
     sigma_read += tableau[loop]; 
     // voltage += porteuse[loop]; // test de calcul de voltage
     

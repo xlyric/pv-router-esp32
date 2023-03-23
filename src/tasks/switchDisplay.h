@@ -58,7 +58,7 @@ void switchDisplay(void * parameter){
         */
       }
 
-      vTaskDelay(500 / portTICK_PERIOD_MS);  
+      vTaskDelay(pdMS_TO_TICKS(1000));  
   } //for
 } //switchDisplay
 #endif

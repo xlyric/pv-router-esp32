@@ -94,12 +94,12 @@ void init_HA_sensor(){
         // temperature_HA.discovery();
         // switch_1.discovery(); 
 
-        power_factor.discovery();
-        power_vrms.discovery();
-        power_irms.discovery();
-        power_apparent.discovery();
+        //power_factor.discovery();
+        //power_vrms.discovery();
+        //power_irms.discovery();
+        //power_apparent.discovery();
         temperature_HA.discovery();
-        switch_1.discovery();
+        //switch_1.discovery();
 
 
 

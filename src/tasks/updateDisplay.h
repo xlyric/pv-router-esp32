@@ -176,7 +176,7 @@ void updateDisplay(void* parameter) {
      //     display.drawString(aff,10,40,4);
       }
       // Sleep for 5 seconds, then update display again!
-      vTaskDelay(5000 / portTICK_PERIOD_MS);
+      vTaskDelay(pdMS_TO_TICKS(5000));
   } // for
 } // updateDisplay
 

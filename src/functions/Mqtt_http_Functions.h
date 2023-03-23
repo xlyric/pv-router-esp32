@@ -121,7 +121,7 @@ void Mqtt_init() {
   
   client.setServer(config.mqttserver, config.mqttport);
   client.setCallback(callback);
-  Serial.print("MQTT_init : connexion...");
+  Serial.println("MQTT_init : connexion...");
   reconnect();
   // if (client.connect(pvname,configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline")) {       //Connect to MQTT server
   //   client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic

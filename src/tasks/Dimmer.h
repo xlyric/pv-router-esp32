@@ -35,7 +35,7 @@ void updateDimmer(void * parameter){
 #endif
     gDisplayValues.task = false;
    // Sleep for 5 seconds, avant de refaire une analyse
-    vTaskDelay(4000 / portTICK_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(4000));
     // 24/01/2023 changement de 5 à 4s 
   }
 }
