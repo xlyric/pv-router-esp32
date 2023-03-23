@@ -122,7 +122,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  DynamicJsonDocument doc(2048);
+  DynamicJsonDocument doc(1024);
 
   // Set the values in the document
   doc["hostname"] = config.hostname;
@@ -231,7 +231,7 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  DynamicJsonDocument doc(1024);
+  DynamicJsonDocument doc(512);
 
   // Set the values in the document
   doc["MQTT_USER"] = configmqtt.username;

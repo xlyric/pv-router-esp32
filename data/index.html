@@ -66,35 +66,9 @@
           <span>Configuration</span></a>
       </li>
 
-    <!-- Divider -->
-      <hr class="sidebar-divider">
+
 	  
-      <div class="sidebar-heading">
-        tuning
-      </div>	  
-	  
-      <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>Debug</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Debug options</h6>
-            <a class="collapse-item" href="">free memory : <span id="memory">init</span></a>
-            <a class="collapse-item" href="">Trigger start : <span id="trigger">init</span></a>
-            <a class="collapse-item" href="">Middle point: <span id="middle">init</span></a>
-            <a class="collapse-item" href="">resistance: <span id="loop">init</span></a>
-			<a class="collapse-item" href="#collapserawdata" data-toggle="collapse" aria-controls="collapserawdata">Raw Data</a>
-          </div>
-        </div>
-      </li>
-
-  
-
-
-      <!-- Divider -->
+     <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
       <!-- Sidebar Toggler (Sidebar) -->
@@ -369,7 +343,7 @@
 		dataGaugePA.addRows(1);
 		
 		
-		<!-- mise à jour de la jauge  --> 	
+	
 		var gaugePApower = new google.visualization.Gauge(document.getElementById('curve_power'));
 	    dataGaugePApower = new google.visualization.DataTable();
 	    dataGaugePApower.addColumn('string', 'Power');
@@ -382,7 +356,7 @@
 		dataGaugePAtemp.addColumn('number', 'Value');
 		dataGaugePAtemp.addRows(1);
 
-	<!-- <!-- récupération valeur sigma et State --> 	 -->
+
 	  setInterval(function ( ) {
 
 
@@ -414,43 +388,12 @@
 		},
 		async: true });
 		
-	    <!-- datahistoPA.addRows([  [ inc , inc ] ]); -->
-		<!-- histoPA.draw(datahistoPA,options); -->
-		<!-- inc++; -->
-		
-	<!-- var xhttpstate = $.get ({ -->
-		<!-- url : '/state', -->
-		<!-- type : 'GET', -->
-		<!-- dataType: "text", -->
-		<!-- async: false }).responseText;	 -->
-		
-		<!-- var config = xhttpstate.split(";"); -->
-		
-		<!-- dataGaugePA.setValue(0, 0, config[0]);  -->
-		<!-- dataGaugePA.setValue(0, 1, config[1]); -->
-		<!-- gaugePA.draw(dataGaugePA,optionsGauge); -->
-		<!-- document.getElementById("state").innerHTML = config[0]; -->
-		<!-- document.getElementById("sigma").innerHTML = config[1]; -->
-				
-      <!-- valeur dispo String(domotic_server) + ";" +  port + ";"  + IDX + ";"  +  VERSION +";" + middle +";"+ delta +";"+cycle ; --> 
+
   }, 2000 ) ;	
 				  
 	
 
-<!-- récupération valeur sendmode --> 	
-  setInterval(function refreshsend( ) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("sendmode").innerHTML = this.responseText;
-		document.getElementById("sendmode2").innerHTML = this.responseText;
-		
-      }
-    };
-    xhttp.open("GET", "/sendmode", true);
-    xhttp.send();
-	
-  }, 10000 ) ;
+
   			
 			var recupconfig = $.get ({
 		url : '/config',
@@ -465,46 +408,12 @@
 		//document.getElementById("idx").innerHTML = config[2];
 		//document.getElementById("version").innerHTML = config[3];
     //document.getElementById("screentime").value = config[21];	
-	
-				  
-<!-- récupération onclick sur send mode -->
-
-
-
-  
+			  
+  5
 }
 
 
-setInterval(function refreshsend( ) {
-var xhttpstate = $.get ({
-		url : '/debug',
-		type : 'GET',
-		dataType: "text",
-		success: function ( result ) { 
-		var config = result.split(";");
-		
-		document.getElementById("memory").innerHTML = config[0];
-		document.getElementById("trigger").innerHTML = config[1];
-		document.getElementById("middle").innerHTML = config[2];
-		document.getElementById("loop").innerHTML = config[4];
-		
 	
-		},
-		async: true });
-  }, 20000 ) ;
-
-
-	
-function sendmode (mode) {
-
-		$.get( "/get", { send: 	mode } )
-		.done(function(data) {
-		document.getElementById("sendmode").innerHTML = "Request sent";
-		document.getElementById("sendmode2").innerHTML = "Request sent";
-		});
-
-
-}
 
 				  
 function sendservermode (mode) {
@@ -550,7 +459,7 @@ document.getElementById("screen").value = config[21];
     <input type="submit">
   </div>
 </form>
-<script src="jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
 <script>
 $( "form" ).submit(function( event ) {
   if ( $( "input" ).first().val() === "correct" ) {
@@ -606,11 +515,12 @@ $( "form" ).submit(function( event ) {
 
 
   <!-- Bootstrap core JavaScript-->
-  <script src="/jquery.min.js"></script>
-  <script src="/bootstrap.bundle.min.js"></script>
+  
 
-  <!-- Core plugin JavaScript-->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --> 
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+
+
+
 
   <!-- Custom scripts for all pages-->
   <script src="/sb-admin-2.js"></script>
