@@ -280,8 +280,8 @@ Dimmer_setup();
       5,                // Task priority
       NULL          // Task handle
       
-    );
-    }
+    );  //pdMS_TO_TICKS(30000)
+    } 
   #endif
 
   // ----------------------------------------------------------------
@@ -294,7 +294,7 @@ Dimmer_setup();
       NULL,             // Parameter
       1,                // Task priority
       NULL              // Task handle
-    );
+    );  //pdMS_TO_TICKS(5000)
 
 
   // ----------------------------------------------------------------
@@ -311,7 +311,7 @@ Dimmer_setup();
     2,                // Task priority
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
-  );
+  );  //pdMS_TO_TICKS(5000)
   #endif
 
 #if DALLAS
@@ -325,22 +325,22 @@ Dimmer_setup();
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
-  );
+  );  //pdMS_TO_TICKS(10000)
 #endif
 
 #ifdef  TTGO
   // ----------------------------------------------------------------
   // Task: Update Dimmer power
   // ----------------------------------------------------------------
-  xTaskCreate(
+  xTaskCreate( 
     switchDisplay,
     "Swith Oled",  // Task name
     1000,                  // Stack size (bytes)
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
-  );
- #endif
+  );  // pdMS_TO_TICKS(1000)
+  #endif
 
 
 
@@ -355,7 +355,7 @@ Dimmer_setup();
     7,                      // Task priority
     NULL                    // Task handle
   
-  );
+  );  // pdMS_TO_TICKS(2000)
 
 #if WIFI_ACTIVE == true
   #if DIMMER == true
@@ -369,7 +369,7 @@ Dimmer_setup();
     NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
-  );
+  ); //pdMS_TO_TICKS(4000)
   
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
@@ -382,7 +382,7 @@ Dimmer_setup();
     NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
-  );
+  );  //pdMS_TO_TICKS(15000)
   #endif
 
 #endif
