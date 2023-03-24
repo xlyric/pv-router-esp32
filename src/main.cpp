@@ -13,6 +13,7 @@
   #endif
 
 #include <AsyncElegantOTA.h>
+//#include <WebSerial.h>
 
 // File System
 #include <FS.h>
@@ -91,6 +92,7 @@ Mqtt configmqtt;
 
 int retry_wifi = 0;
 void connect_to_wifi();
+void handler_before_reset();
 #if  NTP
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
@@ -136,7 +138,10 @@ void setup()
     Serial.begin(115200);
   #endif 
   logging.init="197}11}1";
-  logging.init += "#################  Starting System  ###############\r\n";
+  logging.init += "#################  Restart reason  ###############\r\n";
+  esp_reset_reason_t reason = esp_reset_reason();
+  logging.init += reason ; 
+  logging.init += "\r\n#################  Starting System  ###############\r\n";
   //démarrage file system
   Serial.println("start SPIFFS");
   logging.init += loguptime();
@@ -236,7 +241,10 @@ void setup()
     #endif
 #endif
 
-
+//Jotta
+  ledcSetup(0, GRIDFREQ , 8);
+  ledcAttachPin(JOTTA, 0);
+  ledcWrite(0, 0);
 
 #if DIMMERLOCAL 
 Dimmer_setup();
@@ -440,8 +448,14 @@ Dimmer_setup();
     #endif
   #endif
 
+esp_register_shutdown_handler( handler_before_reset );
 
 logging.power=true; logging.sct=true; logging.sinus=true; 
+
+//WebSerial.begin(&server);
+//WebSerial.msgCallback(recvMsg);
+
+
 }
 
 void loop()
@@ -586,4 +600,8 @@ String loguptime() {
   uptime::calculateUptime();
   uptime_stamp = String(uptime::getDays())+":"+String(uptime::getHours())+":"+String(uptime::getMinutes())+":"+String(uptime::getSeconds())+ "\t";
   return uptime_stamp;
+}
+
+void handler_before_reset() {
+  client.publish("panic", "gonna die !! argh") ;
 }

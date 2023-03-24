@@ -161,18 +161,21 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
           security = false ; // retrait securité si inférieur au trigger
           gDisplayValues.dimmer = 0 ; 
           dimmer_hard.setPower(gDisplayValues.dimmer);
+          ledcWrite(0, gDisplayValues.dimmer*256/100);
           Serial.println("security on -> off");
           dimmer_on();
           }
           else {
             gDisplayValues.dimmer = 0 ;
             dimmer_hard.setPower(0); 
+            ledcWrite(0, 0);
           }
         }
         else { 
 
           if ( config.tmax < dallas_int ) {
             dimmer_hard.setPower(0); 
+            ledcWrite(0, 0);
             gDisplayValues.dimmer = 0 ;
             security = true ;   /// mise en place sécurité thermique
             Serial.println("security off -> on ");
@@ -182,9 +185,10 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
             if (!security){  
                 /// fonctionnement du dimmer local 
                  
-                if ( gDisplayValues.dimmer < config.localfuse ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0 ) ; }
+                if ( gDisplayValues.dimmer < config.localfuse ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0 ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
                 else {
                     dimmer_hard.setPower(config.localfuse); 
+                    ledcWrite(0, config.localfuse*256/100);
                     dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ) ) ;
                 }
             }
@@ -219,6 +223,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
       dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
       dimmer_hard.setState(ON);
       dimmer_hard.setPower(0); 
+      ledcWrite(0, 0);
       serial_println("Dimmer started...");
 
     }
@@ -238,6 +243,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
       if (dimmer_hard.getState()==1) {
         dimmer_hard.setPower(0);
         dimmer_hard.setState(OFF);
+        ledcWrite(0, 0);
         delay(50);
         Serial.println("dimmer off");
         }
