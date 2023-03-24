@@ -603,5 +603,7 @@ String loguptime() {
 }
 
 void handler_before_reset() {
+  #ifndef LIGHT_FIRMWARE
   client.publish("panic", "gonna die !! argh") ;
+  #endif
 }

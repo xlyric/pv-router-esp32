@@ -268,7 +268,9 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
   });
 */
   server.on("/reboot", HTTP_ANY, [](AsyncWebServerRequest *request){
+   #ifndef LIGHT_FIRMWARE
    client.publish("panic", "/reboot appelé") ;
+   #endif
    request->redirect("/");
    config.restart = true;
   });
