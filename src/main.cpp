@@ -93,6 +93,8 @@ Mqtt configmqtt;
 int retry_wifi = 0;
 void connect_to_wifi();
 void handler_before_reset();
+void reboot_after_lost_wifi(int timeafterlost);
+
 #if  NTP
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
@@ -460,6 +462,10 @@ logging.power=true; logging.sct=true; logging.sinus=true;
 
 void loop()
 {
+//// si perte du wifi après  6h, reboot
+  if (AP) {
+    reboot_after_lost_wifi(6);
+  }
 
 /// redémarrage sur demande
   if (config.restart) {
@@ -472,8 +478,7 @@ void loop()
   if (logging.start.length() > LOG_MAX_STRING_LENGTH ) { 
     logging.start = "";
   }
-
-  
+ 
 
 //serial_println(F("loop")); 
 
@@ -518,6 +523,8 @@ void loop()
 
 void connect_to_wifi() {
   ///// AP WIFI INIT 
+   
+
   if (AP || strcmp(configwifi.SID,"AP") == 0 ) {
       AP=true; 
       APConnect(); 
@@ -610,4 +617,12 @@ void handler_before_reset() {
   #ifndef LIGHT_FIRMWARE
   client.publish("panic", " ESP reboot" ) ;
   #endif
+}
+
+void reboot_after_lost_wifi(int timeafterlost) {
+  uptime::calculateUptime();
+  if ( uptime::getHours() > timeafterlost ) { 
+    delay(15000);  
+    config.restart = true; 
+  }
 }
