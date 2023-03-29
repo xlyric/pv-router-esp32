@@ -190,7 +190,7 @@ void affichage_normal(){
 }
 
 void affichage_autre(){
-   drawtext10TTGO(0, 40, "Flip", TFT_WHITE);
+   drawtext10TTGO(0, 40, "Flip screen", TFT_WHITE);
    drawtext10TTGO(0, 80, "Switch SCT-013", TFT_WHITE);
 }
 
