@@ -23,6 +23,7 @@ extern TFT_eSPI display;
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule;
 
+#define TFT_PIN 4
 
 /**
  * Metafunction that takes care of drawing all the different
@@ -30,7 +31,7 @@ extern Configmodule configmodule;
  */
 void updateDisplay(void* parameter) {
   for (;;) {
-     if ( gDisplayValues.option == 0 ){
+     if ( gDisplayValues.option == 0 && digitalRead(TFT_PIN)==HIGH){
       call_display();
       }
       // Sleep for 5 seconds, then update display again!
