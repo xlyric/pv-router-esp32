@@ -94,6 +94,8 @@ int retry_wifi = 0;
 void connect_to_wifi();
 void handler_before_reset();
 void reboot_after_lost_wifi(int timeafterlost);
+void IRAM_ATTR function_off_screen();
+void IRAM_ATTR function_next_screen();
 
 #if  NTP
 WiFiUDP ntpUDP;
@@ -225,7 +227,8 @@ void setup()
     
     #ifdef TTGO
 
-        pinMode(SWITCH,INPUT);
+        pinMode(SWITCH,INPUT_PULLUP);
+        pinMode(BUTTON_LEFT,INPUT_PULLUP);
 
         display.init();
         //digitalWrite(TFT_BL, HIGH);
@@ -342,14 +345,18 @@ Dimmer_setup();
   // ----------------------------------------------------------------
   // Task: Update Dimmer power
   // ----------------------------------------------------------------
+  attachInterrupt(SWITCH, function_off_screen, FALLING);
+  attachInterrupt(BUTTON_LEFT, function_next_screen, FALLING);
+
   xTaskCreate( 
     switchDisplay,
     "Swith Oled",  // Task name
-    1000,                  // Stack size (bytes)
+    4000,                  // Stack size (bytes)
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
   );  // pdMS_TO_TICKS(1000)
+  
   #endif
 
 
@@ -516,7 +523,7 @@ void loop()
     }
 #endif
 #ifndef LIGHT_FIRMWARE
-  //client.publish("memory2", String(esp_get_free_heap_size()).c_str())   ;
+  client.publish("memory2", String(esp_get_free_heap_size()).c_str())   ;
 #endif
   vTaskDelay(pdMS_TO_TICKS(10000));
 }
@@ -626,3 +633,33 @@ void reboot_after_lost_wifi(int timeafterlost) {
     config.restart = true; 
   }
 }
+
+void IRAM_ATTR function_off_screen() {
+  gDisplayValues.screenbutton = true;
+}
+
+void IRAM_ATTR function_next_screen(){
+  gDisplayValues.nextbutton = true;
+  gDisplayValues.option++; 
+  if (gDisplayValues.option > 2 ) { gDisplayValues.option = 1 ;}; 
+}
+
+/*
+gDisplayValues.screenstate == HIGH ){ // if right button is pressed or HTTP call 
+        if (digitalRead(TFT_PIN)==HIGH) {             // and the status flag is LOW
+          gDisplayValues.screenstate = LOW ;  
+          logging.start += loguptime(); 
+          logging.start += "Oled Off\r\n";   
+          digitalWrite(TFT_PIN,LOW);     // and turn Off the OLED
+          }                           // 
+        else {                        // otherwise...      
+          Serial.println("button left/bottom pressed");
+          gDisplayValues.screenstate = LOW ;
+          logging.start += loguptime(); 
+          logging.start += +"Oled On\r\n";   
+          digitalWrite(TFT_PIN,HIGH);      // and turn On  the OLED
+          if (config.ScreenTime !=0 ) {
+            timer = millis();
+          }
+        }
+      }*/

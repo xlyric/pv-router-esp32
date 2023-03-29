@@ -34,6 +34,9 @@ struct DisplayValues {
   bool task;
   bool porteuse; 
   bool screenstate; 
+  bool screenbutton;
+  bool nextbutton;
+  int option=0;
   String temperature;
   int Fronius_conso; 
   int Fronius_prod; 
