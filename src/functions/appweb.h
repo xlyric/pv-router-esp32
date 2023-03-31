@@ -398,6 +398,15 @@ void serial_read() {
         return; 
       }
 
+   /*   index = message_get.indexOf("HA");
+      if (index != -1 ){
+                  configmqtt.HA = !configmqtt.HA; 
+                  savemqtt(mqtt_conf, configmqtt);
+                  Serial.print("/r/n MQTT pour HA est maintenant :");
+                  Serial.println(String(configmqtt.HA).c_str());
+        return; 
+      }*/
+
       if (message_get.length() !=0){
         Serial.println("Commande disponibles :");
         Serial.println("'reboot' pour redémarrer le routeur ");
@@ -405,6 +414,7 @@ void serial_read() {
         Serial.println("'pass' pour changer le mdp wifi");
         Serial.println("'log' pour afficher les logs serial");
         Serial.println("'flip' pour retourner l'ecran");
+       // Serial.println("'HA' pour activer ou désactiver MQTT pour Home assistant");
       }
     }
  }

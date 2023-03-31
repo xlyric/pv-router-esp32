@@ -46,7 +46,8 @@ if ( !dallas.detect) {
 int starttemp = dimmerstate.indexOf(";"); 
 dimmerstate = dimmerstate.substring(starttemp+1);
 int lasttemp = dimmerstate.indexOf(";"); 
-dimmerstate[lasttemp] = '\0'; 
+//dimmerstate[lasttemp] = '\0'; 
+dimmerstate = dimmerstate.substring(0,lasttemp);
 
 gDisplayValues.temperature = dimmerstate; 
   if (logging.serial){
