@@ -166,9 +166,10 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
           dimmer_on();
           }
           else {
-            gDisplayValues.dimmer = 0 ;
+            //gDisplayValues.dimmer = 0 ;
             dimmer_hard.setPower(0); 
             ledcWrite(0, 0);
+            dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ;
           }
         }
         else { 
