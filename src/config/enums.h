@@ -43,6 +43,7 @@ struct DisplayValues {
   int Fronius_totalconso;
   float celsius;
   int page=1; 
+  int Shelly=-1;
 };
 
 struct Config {
@@ -80,6 +81,7 @@ struct Config {
   int relayon; 
   int relayoff;
   bool restart;
+  char topic_Shelly[100]; 
 };
 
 struct Configwifi {
@@ -119,10 +121,12 @@ struct Mqtt {
 struct Configmodule {
   char hostname[16];
   char port[5];
-  bool enphase_present; 
-  bool Fronius_present;
+  bool enphase_present=false; 
+  bool Fronius_present=false;
   char envoy[5];
-  bool pilote; 
+  //bool pilote=false; 
+  char version[2];
+  char token[425];
 };
 
 struct Logs {

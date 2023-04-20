@@ -359,57 +359,41 @@
 
 	  setInterval(function ( ) {
 
+  $.getJSON('/state', function(data) {
+// Récupérer les données du JSON
+      var state = data.state;
+      var watt = data.watt;
+      var dimmer = data.dimmer;
+      var temperature = data.temperature;
+      // Mettre à jour les éléments HTML
+      dataGaugePA.setValue(0, 0, state);
+      dataGaugePA.setValue(0, 1, watt);
 
+      dataGaugePApower.setValue(0, 0, "Power"); 
+		  dataGaugePApower.setValue(0, 1, dimmer);
 
-	var xhttpstate = $.get ({
-		url : '/state',
-		type : 'GET',
-		dataType: "text",
-		success: function ( result ) { 
-		var config = result.split(";");
-		
-		dataGaugePA.setValue(0, 0, config[0]); 
-		dataGaugePA.setValue(0, 1, config[1]);
-		
-		dataGaugePApower.setValue(0, 0, "Power"); 
-		dataGaugePApower.setValue(0, 1, config[2]);
+      dataGaugePAtemp.setValue(0, 0, "temp"); 
+      dataGaugePAtemp.setValue(0, 1, temperature);
 
-    dataGaugePAtemp.setValue(0, 0, "temp"); 
-    dataGaugePAtemp.setValue(0, 1, config[5]);
+      gaugePA.draw(dataGaugePA,optionsGauge);
+		  gaugePApower.draw(dataGaugePApower,optionsGaugepower);
+      gaugePAtemp.draw(dataGaugePAtemp,optionsGaugetemp);
 		
-		gaugePA.draw(dataGaugePA,optionsGauge);
-		gaugePApower.draw(dataGaugePApower,optionsGaugepower);
-    gaugePAtemp.draw(dataGaugePAtemp,optionsGaugetemp);
-		
-		document.getElementById("state").innerHTML = config[0];
-		document.getElementById("sigma").innerHTML = config[1];
-		
-	
-		},
-		async: true });
-		
+		  document.getElementById("state").innerHTML = state;
+		  document.getElementById("sigma").innerHTML = watt;
 
-  }, 2000 ) ;	
-				  
-	
-
-
-  			
-			var recupconfig = $.get ({
+    });
+  }, 2000);
+  
+ 			
+var recupconfig = $.get ({
 		url : '/config',
 		type : 'GET',
 		dataType: "text",
 		async: false }).responseText; 
 				  
-        var config = recupconfig.split(";");
+ var config = recupconfig.split(";");
 
-		//document.getElementById("domoticz").innerHTML = config[0];
-		//document.getElementById("port").innerHTML = config[1];	  
-		//document.getElementById("idx").innerHTML = config[2];
-		//document.getElementById("version").innerHTML = config[3];
-    //document.getElementById("screentime").value = config[21];	
-			  
-  
 }
 
 

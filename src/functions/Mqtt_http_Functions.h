@@ -97,13 +97,18 @@ Fonction MQTT callback
 *
 */
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
+char arrivage[100];
+
   for (int i=0;i<length;i++) {
-    Serial.print((char)payload[i]);
+    arrivage[i] = (char)payload[i];
   }
-  Serial.println();
+  arrivage[length] = '\0';
+  
+    if (strcmp( topic, config.topic_Shelly ) == 0 ) {
+        if (strcmp( arrivage , "unavailable" ) == 0 ) { gDisplayValues.Shelly = -2; }
+        else { gDisplayValues.Shelly = atoi(arrivage);  } 
+      } 
+
 }
 
 
@@ -127,7 +132,7 @@ void Mqtt_init() {
   //   client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
   //   Serial.println("MQTT_init : connecte a MQTT... Initialisation dimmer à 0");
      if (config.IDXdimmer != 0 ){ Mqtt_send(String(config.IDXdimmer),"0"); }
-    
+    if (strcmp(config.topic_Shelly,"none") != 0) client.subscribe(config.topic_Shelly);
   // }
   // else {
   //   Serial.println("MQTT_init : /! ECHEC !/ ");

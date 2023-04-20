@@ -46,35 +46,52 @@ void measureElectricity(void * parameter)
       long start = millis();
       
       
-      if ( configmodule.pilote == false ) {
-            injection2();
-            if ( gDisplayValues.porteuse == false ) {
-                  gDisplayValues.watt =0 ; 
-                  slowlog ++; 
-                  if (slowlog == TEMPOLOG) {     logging.start  += loguptime(); logging.start +=  String("--> No sinus, check 12AC power \r\n"); slowlog =0 ; }
+      if ( configmodule.enphase_present == false || configmodule.Fronius_present == false || (String(configmodule.envoy) == "R")) {
+            if (strcmp(config.topic_Shelly,"none") == 0) {
+                  injection2();
+                  if ( gDisplayValues.porteuse == false ) {
+                        gDisplayValues.watt =0 ; 
+                        slowlog ++; 
+                        if (slowlog == TEMPOLOG) {     logging.start  += loguptime(); logging.start +=  String("--> No sinus, check 12AC power \r\n"); slowlog =0 ; }
+
+                  }
+                  if (logging.serial){
+                  serial_println(int(gDisplayValues.watt)) ;
+                  }
 
             }
-            if (logging.serial){
-            serial_println(int(gDisplayValues.watt)) ;
-            }
-
       }
       else{
             gDisplayValues.porteuse = true;
+
       }
      
 
+
+
+
 if (!AP) {
+
+// shelly 
+      #ifdef NORMAL_FIRMWARE
+            if (strcmp(config.topic_Shelly,"none") != 0) { 
+            client.loop(); // on vérifie coté mqtt si nouvelle infi
+            gDisplayValues.watt = gDisplayValues.Shelly ;  // on met à jour
+            gDisplayValues.porteuse = true; // et c'est bon. 
+            }
+      #endif
+///enphase
       if (configmodule.enphase_present ) {
             Enphase_get();
-            if ( configmodule.pilote ) { 
+            //if ( configmodule.pilote ) { 
                   //// inversion des valeurs pour enphase piloteur
+                  if (String(configmodule.envoy) == "S") {
                   int tempo = gDisplayValues.watt; 
-                  gDisplayValues.watt = gDisplayValues.Fronius_conso ;
-                  gDisplayValues.Fronius_conso = tempo; 
-                  }
+                  gDisplayValues.watt = gDisplayValues.Fronius_conso ; 
+                  gDisplayValues.Fronius_conso = tempo; }
+              //    }
             }
-
+///enphase
       if (configmodule.Fronius_present ){
             Fronius_get();
             }           
@@ -134,9 +151,9 @@ if (!AP) {
 long end = millis();
 
       // Schedule the task to run again in 1 second (while
-      // taking into account how long measurement took)
-      if (configmodule.enphase_present && configmodule.pilote) {
-            vTaskDelay(3000 / portTICK_PERIOD_MS);
+      // taking into account how long measurement took) ///&& configmodule.pilote
+      if (configmodule.enphase_present) {
+            vTaskDelay(pdMS_TO_TICKS(5000));
       }
       else
       {      

@@ -82,7 +82,11 @@
       <span>OTA</span></a>
     </li>
 
-
+    <li class="nav-item active">
+      <a class="nav-link" href="/reboot">
+        <i class="fas fa-fw fa-power-off"></i>
+      <span>Reboot</span></a>
+    </li>
   
 
 
@@ -397,79 +401,40 @@
 
 
           <!-- Content Row -->
-
-
-   			
-				
-				  <script type='text/javascript'> 
-setInterval(function refreshsend( ) {
-var xhttpstate = $.get ({
-		url : '/state',
-		type : 'GET',
-		dataType: "text",
-		success: function ( result ) { 
-		var config = result.split(";");
 		
-		document.getElementById("state").innerHTML = config[0];
-		document.getElementById("sigma").innerHTML = config[1];
-		
-		
-	
-		},
-		async: true });
-  }, 5000 ) ;
+<script type='text/javascript'> 
+      //<!-- rafraichissement valeurs -->
+  setInterval(function refreshsend( ) {
+          $.getJSON('/state', function(data) {
+            // Récupérer les données du JSON
+              var state = data.state;
+              var watt = data.watt;
+            document.getElementById("state").innerHTML = state;
+            document.getElementById("sigma").innerHTML = watt;
+            });
+  }, 5000);
 
+  function sendservermode (mode) {
 
-	
-function sendmode (mode) {
+      $.get( "/get", { servermode: mode } )
+      .done(function(data) { 
+      $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+      var config = data.split(";");
+      }); 
+  }
 
-		$.get( "/get", { send: 	mode } )
-		.done(function(data) {
-		document.getElementById("sendmode").innerHTML = "Request sent";
-		document.getElementById("sendmode2").innerHTML = "Request sent";
-		});
-
-
-}
-
-function sendservermode (mode) {
-
-		$.get( "/get", { servermode: mode } )
-		.done(function(data) { 
-		$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
-		var config = data.split(";");
-		//document.getElementById("autonome").value = config[12];
-		//document.getElementById("UseDomoticz").value = config[10];
-		//document.getElementById("UseJeedom").value = config[11];
-		document.getElementById("dimmerlocal").value = config[14];
-		//document.getElementById("Usemqtt").value = config[16];
-    document.getElementById("polarity").value = config[20];
-    document.getElementById("screen").value = config[21];
-    document.getElementById("flip").value = config[22];
-		}); 
-
-
-}
-
-
-function save () {				  
-  		$.get( "/get", { save: "yes" } )
-		.done(function(data) {
-		
-		});		
-
-
-}
-
-		
-		</script >
-           
-
-
+  function save () {				  
+        $.get( "/get", { save: "yes" } )
+      .done(function(data) {
+      
+      });		
+  }
+</script >
+ 
 <script src="jquery.min.js"></script>
 
 <!-- de la doc -->
-  <script>
+<script>
           $( "div.delta" )
           .mouseover(function() {
             $( this ).find( "span" ).text( "La puissance du dimmer baissera au dessus de cette valeur" );
@@ -502,108 +467,56 @@ function save () {
             $( this ).find( "span" ).text( "Cosphi" );
           });
           
-  </script>
+</script>
 
 <script>
 
 
-<!-- sauvegarde de la configuration --> 
-$( "#save" ).click(function() {
+  <!-- sauvegarde de la configuration --> 
+  $( "#save" ).click(function() {
 
-  
-  		$.get( "/get", { save: "yes" } )
-		.done(function(data) {
-		$( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
-		});	
-		
+    
+        $.get( "/get", { save: "yes" } )
+      .done(function(data) {
+      $( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
+      });	
+      
 
-});
+  });
 
-$( "#formulaire" ).submit(function() {
+  $( "#formulaire" ).submit(function() {
 
-  var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(),'voltage':$('#voltage').val(), 'offset':$('#offset').val() } 
+    var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(),'voltage':$('#voltage').val(), 'offset':$('#offset').val() } 
 
-		
-        $.ajax({
-            type: "GET",
-            data: data,
-            url: "get",
+      
+          $.ajax({
+              type: "GET",
+              data: data,
+              url: "get",
 
-            success: function(retour){
-                $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
-                     
-            }
-        });
-  return false;
-});
+              success: function(retour){
+                  $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+                      
+              }
+          });
+    return false;
+  });
 
-
-
-
-var recupconfig = $.get ({
-		url : '/config',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-        var config = recupconfig.split(";");
-        i=0;
-
-i++;
-document.getElementById("Fusible").value = config[i];	  
-i++;
-
-i++;
-document.getElementById("version").innerHTML = config[i];
-
-document.getElementById("delta").value = config[5];
-
-document.getElementById("dimmer").value = config[7];
-document.getElementById("cosphi").value = config[8];
-
-//document.getElementById("autonome").checked = config[12];
-//document.getElementById("autonome").value = config[12];
-document.getElementById("dimmerlocal").checked = config[14];
-document.getElementById("dimmerlocal").value = config[14];
-i=15;
-document.getElementById("facteur").value = config[i];
-i++;
-//document.getElementById("Usemqtt").checked = config[i];
-//document.getElementById("Usemqtt").value = config[i];
-i++;
-i++;
-i++;
-document.getElementById("deltaneg").value = config[i];
-i++;
-document.getElementById("resistance").value = config[i];
-i++;
-document.getElementById("polarity").checked = config[i];
-document.getElementById("polarity").value = config[i];
-i++;
-document.getElementById("screentime").value = config[i];	  
-i++;
-document.getElementById("Fusiblelocal").value = config[i];	
-i++;
-document.getElementById("maxtemp").value = config[i];	  
-i++;
-		document.getElementById("voltage").value = config[i];	
-    i++;
-		document.getElementById("offset").value = config[i];	
-    i++;
-    document.getElementById("flip").checked = config[i];
-		document.getElementById("flip").value = config[i];
+  var recupconfig =  $.getJSON('/config', function(data) {
+    for (var key in data) {
+      if (data.hasOwnProperty(key)) {
+        var element = document.getElementById(key);
+        if (element) {
+          element.value = data[key];
+          if (element.type === 'checkbox') {
+            element.checked = data[key];
+          }
+        }
+      }
+    }
+  });
 
 </script>
-
-
-            
-				  
-
-				  
-                  
-
-				   
-				  
                 </div>
               </div>
             </div>
@@ -617,7 +530,7 @@ i++;
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2021</span>
+            <span>https://github.com/xlyric/  - 2023</span>
           </div>
         </div>
       </footer>
@@ -628,14 +541,7 @@ i++;
 
   </div>
   <!-- End of Page Wrapper -->
-
-
-
-
-
   <!-- Bootstrap core JavaScript-->
-
-  <script src="jquery.min.js"></script>
 
   <script src="bootstrap.bundle.min.js"></script>
 

@@ -9,11 +9,11 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Pv router - Wifi Configuration</title>
+  <title>Pv router - Enphase Configuration</title>
 
   <!-- Custom fonts for this template-->
  <link href="all.min.css" rel="stylesheet" type="text/css"> 
-  
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
   <link href="sb-admin-2.min.css" rel="stylesheet">
@@ -44,7 +44,7 @@
         <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span><br>
-		<span id="version"></span></a>
+		
 		  
       </li>
 
@@ -70,31 +70,13 @@
         <i class="fas fa-fw fa-cog"></i>
         <span>Configuration</span></a>
     </li>
-  
-    <li class="nav-item active">
-      <a class="nav-link" href="/mqtt.html">
-        <i class="fas fa-fw fa-book"></i>
-        <span>Configuration mqtt</span></a>
-    </li>
-
-    <li class="nav-item active">
-      <a class="nav-link" href="/log.html">
-        <i class="fas fa-fw fa-info"></i>
-      <span>Console logs</span></a>
-    </li>
-  
-    <li class="nav-item active">
-      <a class="nav-link" href="/update">
-        <i class="fas fa-fw fa-download"></i>
-      <span>OTA</span></a>
-    </li> 
 
     <li class="nav-item active">
       <a class="nav-link" href="/reboot">
-        <i class="fas fa-fw fa-power-off"></i>
-      <span>Reboot</span></a>
-    </li> 
-
+          <i class="fas fa-fw fa-power-off"></i>
+          <span>Reboot</span>
+      </a>
+    </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
@@ -136,15 +118,6 @@
 
               </div>
             </li>
-            <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
-              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Transmission mode <i class="fas fa-bell fa-fw"></i>
-                <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter"><span id="sendmode2" onclick="sendmode(this.innerHTML);" ></span></span>
-              </a>
-              
-            </li>
 
 
             
@@ -162,7 +135,7 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-		  <h1 class="h3 mb-2 text-gray-800">Configuration Wifi</h1>
+		  <h1 class="h3 mb-2 text-gray-800">Configuration Enphase</h1>
 
 		<div class="col-lg-6">
 
@@ -179,13 +152,33 @@
 
           <form class="user" id="formulaire" method="post" action=""  >
 			  
-          
+            <div class="col-sm-3">
+           <!--   <div class="custom-control custom-checkbox small">
+                <input type="checkbox" class="custom-control-input" id="MQTT">
+                <label class="custom-control-label" for="envoy" onclick="sendservermode(this.innerHTML);" >Envoy</label>
+              </div>--> 
+            </div>
+
+
             <div class="form-group">
-                SSID  :<input type="text" class="form-control form-control-user" id="ssid" placeholder="%SSID%">
+              Serveur  :<input type="text" class="form-control form-control-user" id="server" placeholder="N/A">
             </div>
 
             <div class="form-group">
-              Password :<input type="password" class="form-control form-control-user" id="password" placeholder="%PASSWORD%">
+              Serveur  :<input type="text" class="form-control form-control-user" id="port" placeholder="N/A">
+            </div>
+
+            <div class="form-group">
+              Modele :<input type="modele" class="form-control form-control-user" id="modele" placeholder="N/A">
+
+            </div>
+
+            <div class="form-group">
+              version :<input type="version" class="form-control form-control-user" id="version" placeholder="N/A">
+            </div>
+
+            <div class="form-group">
+              Token  :<input type="text" class="form-control form-control-user" id="token" placeholder="N/A">
             </div>
 
 				  
@@ -215,26 +208,7 @@
 
           <!-- Content Row -->
 
-
-   			
-				
-				  <script type='text/javascript'> 
-	
-
-function save () {				  
-  		$.get( "/getwifi", { save: "yes" } )
-		.done(function(data) {
-		});		
-
-
-}
-
-		
-		</script >
-           
-
-
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="/jquery.min.js"></script>
 
 <script>
 
@@ -243,7 +217,7 @@ function save () {
 $( "#save" ).click(function() {
 
   
-  		$.get( "getwifi", { save: "yes" } )
+  		$.get( "getmqtt", { save: "yes" } )
 		.done(function(data) {
 		$( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
 		});	
@@ -253,7 +227,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'ssid':$('#ssid').val(), 'password':$('#password').val()} 
+	 var data = {'envoyserver':$('#server').val(), 'envport':$('#port').val(), 'envmodele':$('#modele').val(), 'envversion':$('#version').val(), 'envtoken':$('#token').val()} 
 
         $.ajax({
             type: "GET",
@@ -268,20 +242,29 @@ $( "#formulaire" ).submit(function() {
   return false;
 });
 
+// Charger le fichier JSON
+    fetch('enphase.json')
+      .then(response => response.json())
+      .then(data => {
+        // Récupérer les valeurs du fichier JSON
+        let server = data.IP_ENPHASE;
+    let port = data.PORT_ENPHASE;
+    let modele = data.Type;
+    let version = data.version;
+    let token = data.token;
+
+    // Affecter les valeurs aux champs de formulaire
+    document.getElementById('server').value = server;
+    document.getElementById('port').value = port;
+    document.getElementById('modele').value = modele;
+    document.getElementById('version').value = version;
+    document.getElementById('token').value = token;
+      })
+      .catch(error => console.error('Erreur lors de la lecture du fichier JSON :', error));
+  </script>
 
 
 
-var recupconfig = $.get ({
-		url : 'getwifi',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-        var config = recupconfig.split(";");
-    i=0;
-		document.getElementById("ssid").value = config[i];
-    i++;
-		document.getElementById("password").value = config[i];	  
 </script>
 				  
                 </div>
@@ -313,6 +296,11 @@ var recupconfig = $.get ({
 
 
 
+  <!-- Bootstrap core JavaScript-->
+
+
+  <!-- Core plugin JavaScript-->
+  <!--<script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>--> 
 
   <!-- Custom scripts for all pages-->
   <script src="sb-admin-2.js"></script>

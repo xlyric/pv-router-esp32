@@ -89,6 +89,13 @@
       <span>OTA</span></a>
     </li>
 
+    <li class="nav-item active">
+      <a class="nav-link" href="/reboot">
+          <i class="fas fa-fw fa-power-off"></i>
+          <span>Reboot</span>
+      </a>
+    </li>  
+
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
@@ -431,26 +438,18 @@
 
    			
 				
-				  <script type='text/javascript'> 
-setInterval(function refreshsend( ) {
-var xhttpstate = $.get ({
-		url : '/state',
-		type : 'GET',
-		dataType: "text",
-		success: function ( result ) { 
-		var config = result.split(";");
-		
-		document.getElementById("state").innerHTML = config[0];
-		document.getElementById("sigma").innerHTML = config[1];
-		
-		
-	
-		},
-		async: true });
-  }, 5000 ) ;
+<script type='text/javascript'> 
+      //<!-- rafraichissement valeurs -->
+      setInterval(function refreshsend( ) {
+        $.getJSON('/state', function(data) {
+          // Récupérer les données du JSON
+            var state = data.state;
+            var watt = data.watt;
+          document.getElementById("state").innerHTML = state;
+          document.getElementById("sigma").innerHTML = watt;
+          });
+          }, 5000);
 
-
-	
 function sendmode (mode) {
 
 		$.get( "/get", { send: 	mode } )
@@ -467,29 +466,15 @@ function sendservermode (mode) {
 		$.get( "/get", { servermode: mode } )
 		.done(function(data) { 
 		$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
-		var config = data.split(";");
-		//document.getElementById("autonome").value = config[12];
-		//document.getElementById("UseDomoticz").value = config[10];
-		//document.getElementById("UseJeedom").value = config[11];
-		document.getElementById("dimmerlocal").value = config[14];
-		//document.getElementById("Usemqtt").value = config[16];
-    document.getElementById("polarity").value = config[20];
-    document.getElementById("screen").value = config[21];
-    document.getElementById("flip").value = config[22];
 		}); 
-
-
 }
-
 
 function save () {				  
   		$.get( "/get", { save: "yes" } )
 		.done(function(data) {
-		
 		});		
-
-
 }
+
 
 		
 		</script >
@@ -569,77 +554,22 @@ $( "#formulaire" ).submit(function() {
 
 
 
+var recupconfig =  $.getJSON('/config', function(data) {
+  for (var key in data) {
+    if (data.hasOwnProperty(key)) {
+      var element = document.getElementById(key);
+      if (element) {
+        element.value = data[key];
+        if (element.type === 'checkbox') {
+          element.checked = data[key];
+        }
+      }
+    }
+  }
+});
 
-var recupconfig = $.get ({
-		url : '/config',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-        var config = recupconfig.split(";");
-    i=0;
-
-    i++;
-		document.getElementById("Fusible").value = config[i];	  
-    i++;
-
-    i++;
-		document.getElementById("version").innerHTML = config[i];
-
-		document.getElementById("delta").value = config[5];
-		
-		document.getElementById("dimmer").value = config[7];
-		document.getElementById("cosphi").value = config[8];
-		
-		//document.getElementById("autonome").checked = config[12];
-		//document.getElementById("autonome").value = config[12];
-		document.getElementById("dimmerlocal").checked = config[14];
-		document.getElementById("dimmerlocal").value = config[14];
-    i=15;
-		document.getElementById("facteur").value = config[i];
-    i++;
-		//document.getElementById("Usemqtt").checked = config[i];
-		//document.getElementById("Usemqtt").value = config[i];
-    i++;
-    i++;
-    i++;
-    document.getElementById("deltaneg").value = config[i];
-    i++;
-		document.getElementById("resistance").value = config[i];
-    i++;
-    document.getElementById("polarity").checked = config[i];
-		document.getElementById("polarity").value = config[i];
-    i++;
-		document.getElementById("screentime").value = config[i];	  
-    i++;
-		document.getElementById("Fusiblelocal").value = config[i];	
-    i++;
-		document.getElementById("maxtemp").value = config[i];	
-    i++;
-		document.getElementById("voltage").value = config[i];	
-    i++;
-		document.getElementById("offset").value = config[i];	
-    i++;
-    document.getElementById("flip").checked = config[i];
-		document.getElementById("flip").value = config[i];
-    i++;
-    i++;
-    document.getElementById("relaystart").checked = config[i];
-		document.getElementById("relaystart").value = config[i];
-    i++;
-    document.getElementById("relaystop").checked = config[i];
-		document.getElementById("relaystop").value = config[i];
 </script>
-
-
-            
-				  
-
-				  
-                  
-
-				   
-				  
+	  
                 </div>
               </div>
             </div>
@@ -653,7 +583,7 @@ var recupconfig = $.get ({
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2022</span>
+            <span>https://github.com/xlyric/  - 2023</span>
           </div>
         </div>
       </footer>
@@ -664,10 +594,6 @@ var recupconfig = $.get ({
 
   </div>
   <!-- End of Page Wrapper -->
-
-
-
-
 
   <!-- Bootstrap core JavaScript-->
   <!-- Bootstrap core JavaScript-->

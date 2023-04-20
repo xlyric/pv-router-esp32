@@ -200,8 +200,9 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "version 20230405"
+#define VERSION "version 20230420"
 
+#define EnvoyJ "/auth/check_jwt"
 #define EnvoyR "/api/v1/production"
 #define EnvoyS "/production.json"
 
@@ -220,6 +221,9 @@ bool AP=true;
 //// JOTTA 
 #define JOTTA  2
 #define GRIDFREQ 90 ///PWM frequency
+
+
+
 
 #endif
 

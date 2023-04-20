@@ -66,35 +66,9 @@
           <span>Configuration</span></a>
       </li>
 
-    <!-- Divider -->
-      <hr class="sidebar-divider">
+
 	  
-      <div class="sidebar-heading">
-        tuning
-      </div>	  
-	  
-      <!-- Nav Item - Utilities Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-          <i class="fas fa-fw fa-wrench"></i>
-          <span>Debug</span>
-        </a>
-        <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Debug options</h6>
-            <a class="collapse-item" href="">free memory : <span id="memory">init</span></a>
-            <a class="collapse-item" href="">Trigger start : <span id="trigger">init</span></a>
-            <a class="collapse-item" href="">Middle point: <span id="middle">init</span></a>
-            <a class="collapse-item" href="">resistance: <span id="loop">init</span></a>
-			<a class="collapse-item" href="#collapserawdata" data-toggle="collapse" aria-controls="collapserawdata">Raw Data</a>
-          </div>
-        </div>
-      </li>
-
-  
-
-
-      <!-- Divider -->
+     <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
       <!-- Sidebar Toggler (Sidebar) -->
@@ -136,8 +110,6 @@
             </li>
 
 
-            </li>
-
             
 
             <div class="topbar-divider d-none d-sm-block"></div>
@@ -154,12 +126,12 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard - AP MODE</h1>
-            <p class="mb-4">In this mode, some screens may be disabled</p>
+            <h1 class="h3 mb-0 text-gray-800">Dashboard-AP mode</h1>
+           
           </div>
 
           <!-- Content Row -->
-          <div class="row">
+  <div class="row">
 
 <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
@@ -178,7 +150,7 @@
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
+            
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -194,7 +166,7 @@
                 </div>
               </div>
             </div>
-			
+
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
@@ -210,342 +182,54 @@
                 </div>
               </div>
             </div> 
-
-
-          </div>
+  </div>
 
           <!-- Content Row -->
 
-          <div class="row">
-
-            <!-- Area Chart -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Sigma</h6>
-				  </div>
-					<div class="card-body">
-					<div id='curve_chart2' style=' width: auto; height: 200px;'>
-										
-					</div>
-					</div>
-			</div>
-		</div>
-		
-		     <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Routed Power</h6>
-				  </div>
-					<div class="card-body">
-					<div id='curve_power' style=' width: auto; height: 200px;'>
-										
-					</div>
-					</div>
-			</div>
-		</div>
-			
-		<div class="col-xl-12 col-lg-7">
-            <div class="card shadow mb-4">
-			<a href="#collapseOscillo" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseOscillo">
-                  <h6 class="m-0 font-weight-bold text-primary">Oscillo</h6>
-                </a>
-                
-         
-
-
-				
-				
-                <!-- Card Body -->
-				<div class="collapse " id="collapseOscillo">
-                <div class="card-body">
-				<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script> 
-				
-				  <script type='text/javascript'> 
-				  
-				 
-				  
-				  google.charts.load('current', {'packages':['corechart','gauge','line']}); 
-				  google.charts.setOnLoadCallback(drawChart);
-				  
-				  var chart ;
-				  var options = { title: 'Oscilloscope Mode', curveType: 'function', legend: { position: 'bottom' } };
-				  var data ;
-				  var inc;
-				  
-				  function drawChart() {    
-
-					var optionsGauge = {           
-          redFrom: -100, 
-          redTo: -25,
-           
-          yellowFrom: 50, 
-          yellowTo: 400, 
-           
-          greenFrom: -50, 
-          greenTo: 50, 
-		  	  
-          minorTicks: 4,
-		  
-          min: -100, 
-          max: 400, 
-           
-          
-        };
-       
-	   
-	   var optionsGaugepower = {           
-          redFrom: 37.5, 
-          redTo: 50,
-           
-          yellowFrom: 25, 
-          yellowTo: 37.5, 
-           
-          greenFrom: 0, 
-          greenTo: 25, 
-		  	  
-          minorTicks: 5,
-		  
-          min: 0, 
-          max: 50, 
-           
-          
-        };
-				  
-				 			  
-				
-				  setInterval(function ( ) {
-				  
-					chart = new google.visualization.LineChart(document.getElementById('curve_chart'));  	 
-					data2 = new google.visualization.DataTable(); 
-					data2.addColumn('number', 'time');
-					data2.addColumn('number', 'half wave');
-					data2.addColumn('number', 'Analog out (Ampere)');
-				
-				 	var jsondata = $.ajax ({
-						url : '/chart.json',
-						type : 'GET',
-						dataType: "json",
-						async: false
-						 }).responseText; 
-					
-					data2.addRows( JSON.parse(jsondata)  );
-					chart.draw(data2, options);
-					document.getElementById("rawdata").innerHTML = jsondata;
-					
-					}, 8000 ) ;
-
-	
-		<!-- mise à jour de la jauge  --> 	
-		var gaugePA = new google.visualization.Gauge(document.getElementById('curve_chart2'));
-	    dataGaugePA = new google.visualization.DataTable();
-	    dataGaugePA.addColumn('string', 'Sigma');
-		dataGaugePA.addColumn('number', 'Value');
-		dataGaugePA.addRows(1);
-		
-		
-		<!-- mise à jour de la jauge  --> 	
-		var gaugePApower = new google.visualization.Gauge(document.getElementById('curve_power'));
-	    dataGaugePApower = new google.visualization.DataTable();
-	    dataGaugePApower.addColumn('string', 'Power');
-		dataGaugePApower.addColumn('number', 'Value');
-		dataGaugePApower.addRows(1);
-
-
-
-	<!-- <!-- récupération valeur sigma et State --> 	 -->
-	  setInterval(function ( ) {
-
-
-
-	var xhttpstate = $.get ({
-		url : '/state',
-		type : 'GET',
-		dataType: "text",
-		success: function ( result ) { 
-		var config = result.split(";");
-		
-		dataGaugePA.setValue(0, 0, config[0]); 
-		dataGaugePA.setValue(0, 1, config[1]);
-		
-		dataGaugePApower.setValue(0, 0, "Power"); 
-		dataGaugePApower.setValue(0, 1, config[2]);
-		
-		gaugePA.draw(dataGaugePA,optionsGauge);
-		gaugePApower.draw(dataGaugePApower,optionsGaugepower);
-		
-		document.getElementById("state").innerHTML = config[0];
-		document.getElementById("sigma").innerHTML = config[1];
-		
-	
-		},
-		async: true });
-		
-	    <!-- datahistoPA.addRows([  [ inc , inc ] ]); -->
-		<!-- histoPA.draw(datahistoPA,options); -->
-		<!-- inc++; -->
-		
-	<!-- var xhttpstate = $.get ({ -->
-		<!-- url : '/state', -->
-		<!-- type : 'GET', -->
-		<!-- dataType: "text", -->
-		<!-- async: false }).responseText;	 -->
-		
-		<!-- var config = xhttpstate.split(";"); -->
-		
-		<!-- dataGaugePA.setValue(0, 0, config[0]);  -->
-		<!-- dataGaugePA.setValue(0, 1, config[1]); -->
-		<!-- gaugePA.draw(dataGaugePA,optionsGauge); -->
-		<!-- document.getElementById("state").innerHTML = config[0]; -->
-		<!-- document.getElementById("sigma").innerHTML = config[1]; -->
-				
-      <!-- valeur dispo String(domotic_server) + ";" +  port + ";"  + IDX + ";"  +  VERSION +";" + middle +";"+ delta +";"+cycle ; --> 
-  }, 2000 ) ;	
-				  
-	
-
-<!-- récupération valeur sendmode --> 	
-  setInterval(function refreshsend( ) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-        document.getElementById("sendmode").innerHTML = this.responseText;
-		document.getElementById("sendmode2").innerHTML = this.responseText;
-		
-      }
-    };
-    xhttp.open("GET", "/sendmode", true);
-    xhttp.send();
-	
-  }, 10000 ) ;
-  			
-			var recupconfig = $.get ({
-		url : '/config',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-        var config = recupconfig.split(";");
-
-		//document.getElementById("domoticz").innerHTML = config[0];
-		//document.getElementById("port").innerHTML = config[1];	  
-		//document.getElementById("idx").innerHTML = config[2];
-		document.getElementById("version").innerHTML = config[3];
-    document.getElementById("screentime").value = config[21];	
-	
-				  
-<!-- récupération onclick sur send mode -->
-
-
-
-  
-}
-
-
-setInterval(function refreshsend( ) {
-var xhttpstate = $.get ({
-		url : '/debug',
-		type : 'GET',
-		dataType: "text",
-		success: function ( result ) { 
-		var config = result.split(";");
-		
-		document.getElementById("memory").innerHTML = config[0];
-		document.getElementById("trigger").innerHTML = config[1];
-		document.getElementById("middle").innerHTML = config[2];
-		document.getElementById("loop").innerHTML = config[4];
-		
-	
-		},
-		async: true });
-  }, 20000 ) ;
-
-
-	
-function sendmode (mode) {
-
-		$.get( "/get", { send: 	mode } )
-		.done(function(data) {
-		document.getElementById("sendmode").innerHTML = "Request sent";
-		document.getElementById("sendmode2").innerHTML = "Request sent";
-		});
-
-
-}
-
-				  
-function sendservermode (mode) {
-
-$.get( "/get", { servermode: mode } )
-.done(function(data) { 
-
-var config = data.split(";");
-document.getElementById("screen").value = config[21];
-}); 
-
-}
-
-
-		
-		</script >
-		
-  
-                     <div id='curve_chart' style=' width: auto; height: 500px;'>
-                  </div>
-		   </div>
-        </div>	
-	   </div>		
-	</div>	
-			
-			<div class="col-xl-12 col-lg-7">
-              			<!-- Collapsable Card Example -->
-			<div class="card shadow mb-4">
-                <!-- Card Header - Accordion -->
-                <a href="#collapserawdata" class="d-block card-header py-3 collapsed"" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapserawdata">
-                  <h6 class="m-0 font-weight-bold text-primary">Row Data</h6>
-                </a>
-                <!-- Card Content - Collapse -->
-                <div class="collapse " id="collapserawdata">
-                  <div class="card-body">
-                    <div id='rawdata' style=' width: auto; height: 500px;'>
-					
-                  </div>
-				  test
-					<form action="javascript:alert( 'success!' );">
-  <div>
-    <input type="text">
-    <input type="submit">
-  </div>
-</form>
-<script src="jquery.min.js"></script>
-<script>
-$( "form" ).submit(function( event ) {
-  if ( $( "input" ).first().val() === "correct" ) {
-    $( "span" ).text( "Validated..." ).show();
-    return;
-  }
- 
-  $( "span" ).text( "Not valid!" ).show().fadeOut( 1000 );
-  event.preventDefault();
-});
-</script>
-<span></span>
-                  </div>
-                </div>
+  <div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Routed Power</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="dimmer">%dimmer%</span></div>
             </div>
+            <div class="col-auto">
+              <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>			
+
+
+
+<script src="/jquery.min.js"></script>
+<script type='text/javascript'> 
+
+  setInterval(function ( ) {
+      $.getJSON('/state', function(data) {
+       // Récupérer les données du JSON
+          var state = data.state;
+          var watt = data.watt;
+          var dimmer = data.dimmer;
+      
+          document.getElementById("state").innerHTML = state;
+          document.getElementById("sigma").innerHTML = watt;
+          document.getElementById("dimmer").innerHTML = dimmer;
+
+      });
+  }, 2000);
+	
+</script >
+
+
 				                        
 		   </div>
-            
-				  
-				  </div>
-				  
-                  
-
-				   
-				  
-                </div>
+ 			  </div>
+             </div>
               </div>
             </div>
           </div>
@@ -558,7 +242,7 @@ $( "form" ).submit(function( event ) {
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2019</span>
+            <span>https://github.com/xlyric/  - 2023</span>
           </div>
         </div>
       </footer>
@@ -569,27 +253,9 @@ $( "form" ).submit(function( event ) {
 
   </div>
   <!-- End of Page Wrapper -->
-
-
-
-
-
   <!-- Bootstrap core JavaScript-->
-  <script src="/jquery.min.js"></script>
   <script src="/bootstrap.bundle.min.js"></script>
-
-  <!-- Core plugin JavaScript-->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --> 
-
   <!-- Custom scripts for all pages-->
   <script src="/sb-admin-2.js"></script>
- <script>
-
-
-
-
-</script>
-
 </body>
-
 </html>

@@ -11,6 +11,7 @@ extern Config config;
 extern Configwifi configwifi; 
 extern Mqtt configmqtt; 
 extern Logs logging;
+extern Configmodule configmodule; 
 #ifdef  TTGO
 #include <TFT_eSPI.h>
 #include <SPI.h>
@@ -93,10 +94,17 @@ String getState() {
   String state=STABLE; 
   if (gDisplayValues.watt >= config.delta  ) {   state = GRID; }
   if (gDisplayValues.watt <= config.deltaneg ) {   state = INJECTION; }
-  if (gDisplayValues.temperature == "" ) { gDisplayValues.temperature = "0";  }
-  state = state + ";" + int(gDisplayValues.watt) + ";" + gDisplayValues.dimmer + ";" + config.delta + ";" + config.deltaneg + ";" + gDisplayValues.temperature ;
+  if (gDisplayValues.temperature == NULL ) { gDisplayValues.temperature = "0";  }
+  DynamicJsonDocument doc(128);
+  doc["state"] = state;
+  doc["watt"] = int(gDisplayValues.watt);
+  doc["dimmer"] = gDisplayValues.dimmer;
+  doc["temperature"] = gDisplayValues.temperature;
+  state=""; 
+  serializeJson(doc, state);
   return String(state);
 }
+
 
 String stringbool(bool mybool){
   String truefalse = "true";
@@ -119,6 +127,8 @@ String getServermode(String Servermode) {
   if ( Servermode == "Dimmer local" ) {   config.dimmerlocal = !config.dimmerlocal; }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
   if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; }
+  if ( Servermode == "envoy" ) {   configmodule.enphase_present = !configmodule.enphase_present; }
+  if ( Servermode == "frontius" ) {   configmodule.Fronius_present = !configmodule.Fronius_present; }
 
   #ifndef LIGHT_FIRMWARE
     if ( Servermode == "HA" ) {   configmqtt.HA = !configmqtt.HA; 
@@ -155,6 +165,32 @@ String getpuissance() {
 }
 //***********************************
 String getconfig() {
+  String configweb; 
+  DynamicJsonDocument doc(512);
+  doc["Fusible"] = config.num_fuse;
+  doc["version"] = String(VERSION);
+  doc["delta"] = config.delta;
+  doc["deltaneg"] = config.deltaneg;
+  doc["dimmer"] = config.dimmer;
+  doc["cosphi"] = config.cosphi;
+  doc["dimmerlocal"] = config.dimmerlocal;
+  doc["facteur"] = config.facteur;
+  doc["resistance"] = config.resistance;
+  doc["polarity"] = config.polarity;
+  doc["screentime"] = config.ScreenTime;
+  doc["Fusiblelocal"] = config.localfuse;
+  doc["maxtemp"] = config.tmax;
+  doc["voltage"] = config.voltage;
+  doc["offset"] = config.offset;
+  doc["flip"] = config.flip;
+  doc["relaystart"] = config.relayon;
+  doc["relaystop"] = config.relayoff;
+
+  serializeJson(doc, configweb);
+  return String(configweb);
+}
+
+String getenvoy() {
   configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+config.relayon+";"+config.relayoff;
   return String(configweb);
 }
@@ -173,8 +209,19 @@ String getwifi() {
 }
 
 String getmqtt() {
-
-   String retour =String(config.mqttserver) + ";" + String(config.Publish) + ";" + String(configmqtt.username) + ";" + String(configmqtt.password) + ";" + stringbool(config.mqtt) + ";" + String(config.IDX) + ";" + String(config.IDXdimmer) + ";" + String(config.mqttport)+";"+stringbool(configmqtt.HA);
+  String retour; 
+  DynamicJsonDocument doc(512);
+  doc["server"] = config.mqttserver;
+  doc["topic"] = config.Publish;
+  doc["user"] = configmqtt.username;
+  doc["password"] = configmqtt.password;
+  doc["MQTT"] = config.mqtt;
+  doc["IDX"] = config.IDX;
+  doc["IDXDIMMER"] = config.IDXdimmer;
+  doc["port"] = config.mqttport;
+  doc["HA"] = configmqtt.HA;
+  doc["EM"] = config.topic_Shelly;
+  serializeJson(doc, retour);
   return String(retour) ;
 }
 

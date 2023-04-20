@@ -36,6 +36,7 @@ void notFound(AsyncWebServerRequest *request) {
 void compress_html(AsyncWebServerRequest *request,String filefs , String format ) {
       AsyncWebServerResponse *response = request->beginResponse(SPIFFS, filefs, format );
       response->addHeader("Content-Encoding", "gzip");
+      response->addHeader("Cache-Control", "max-age=604800");
       request->send(response);
 }
 
@@ -140,7 +141,15 @@ server.on("/mqtt.json", HTTP_GET, [](AsyncWebServerRequest *request){
 server.on("/config.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/config.json", "application/json");
   });
-  
+
+server.on("/envoy.html", HTTP_GET, [](AsyncWebServerRequest *request){
+    //request->send(SPIFFS, "/envoy.html", "text/html");
+    compress_html(request,"/envoy.html.gz", "text/html");
+  });
+
+server.on("/enphase.json", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/enphase.json", "application/json");
+  });
 
 server.on("/log.html", HTTP_ANY, [](AsyncWebServerRequest *request){
       compress_html(request,"/log.html.gz", "text/html");
@@ -149,11 +158,11 @@ server.on("/log.html", HTTP_ANY, [](AsyncWebServerRequest *request){
 ///// Pages 
 /// Appel de fonction 
 
-if (!configmodule.pilote) {
+//if (!configmodule.pilote) {
   server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "application/json", getchart().c_str());
   }); 
-}
+//}
 
 /*
 
@@ -192,18 +201,18 @@ if (!configmodule.pilote) {
   });
 */
   server.on("/state", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getState().c_str());
-    serveur_response(request, getState());
+    request->send_P(200, "application/json", getState().c_str());
+    //serveur_response(request, getState());
   });
 
-  server.on("/serial", HTTP_GET, [](AsyncWebServerRequest *request){
+/*  server.on("/serial", HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/plain", getState().c_str());
     serveur_response(request, getState());
-  });
+  });*/
   
   server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getconfig().c_str());
-    serveur_response(request, getconfig() );
+    request->send_P(200, "application/json", getconfig().c_str());
+    //serveur_response(request, getconfig() );
   });
 
 
@@ -212,11 +221,11 @@ server.on("/cosphi", HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/plain", getcosphi().c_str());
     serveur_response(request, getcosphi());
   });
-  
+/*
 server.on("/puissance", HTTP_GET, [](AsyncWebServerRequest *request){
    // request->send_P(200, "text/plain",  getpuissance().c_str());
      serveur_response(request, getpuissance());
-  });
+  });*/  
 
 ///////////////
 //// wifi
@@ -242,8 +251,8 @@ server.on("/mqtt.html", HTTP_GET, [](AsyncWebServerRequest *request){
   });
 
 server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
-  //request->send(200, "text/plain",  getmqtt().c_str()); 
-  serveur_response(request, getmqtt());
+  request->send(200, "application/json",  getmqtt().c_str()); 
+  //serveur_response(request, getmqtt());
 });
  /// il serait bien que /getmqtt et getwifi soit directement en processing de l'appel de la page 
 
@@ -313,12 +322,31 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toInt();}
    
    /// @brief  wifi
-   if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50);  }
+   bool wifimodif=false ; 
+   if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50); wifimodif=true; }
    if (request->hasParam("password")) { request->getParam("password")->value().toCharArray(configwifi.passwd,50);    
     logging.start += loguptime();
     logging.start += "saving wifi\r\n";
-   configwifi.sauve_wifi();
+    wifimodif=true; 
    }
+   if (wifimodif) { configwifi.sauve_wifi(); }
+
+    // Shelly
+   if (request->hasParam("EM")) { request->getParam("EM")->value().toCharArray(config.topic_Shelly,100);  
+      #ifdef NORMAL_FIRMWARE
+      if (strcmp(config.topic_Shelly,"none") != 0 )  client.subscribe(config.topic_Shelly);
+      else client.unsubscribe(config.topic_Shelly);
+      #endif
+   }
+
+   // enphase
+   bool enphasemodif=false ; 
+   if (request->hasParam("envoyserver")) { request->getParam("envoyserver")->value().toCharArray(configmodule.hostname,16); enphasemodif=true; }
+   if (request->hasParam("envport")) { request->getParam("envport")->value().toCharArray(configmodule.port,5);  enphasemodif=true;}
+   if (request->hasParam("envmodele")) { request->getParam("envmodele")->value().toCharArray(configmodule.envoy,2);  enphasemodif=true;}
+   if (request->hasParam("envversion")) { request->getParam("envversion")->value().toCharArray(configmodule.version,2); enphasemodif=true; }
+   if (request->hasParam("envtoken")) { request->getParam("envtoken")->value().toCharArray(configmodule.token,425); enphasemodif=true; }
+   if (enphasemodif) { saveenphase(enphase_conf, configmodule);}
 
    //// MQTT
    if (request->hasParam(PARAM_INPUT_mqttserver)) { request->getParam(PARAM_INPUT_mqttserver)->value().toCharArray(config.mqttserver,16);  }

@@ -24,7 +24,7 @@ if ( !dallas.detect) {
       httpdimmer.begin(String(config.dimmer),80,baseurl);   
       int httpResponseCode = httpdimmer.GET();
 
-      String dimmerstate = ""; 
+      String dimmerstate = "0"; 
 
 //  read request return
   if (httpResponseCode>0) {
@@ -38,18 +38,21 @@ if ( !dallas.detect) {
     Serial.print("Get Dimmer temp : Error code: ");
     Serial.println(httpResponseCode);
   }
+  
   // Free resources
   httpdimmer.end();
+  if (httpResponseCode>400) { gDisplayValues.temperature = "0";   }
+  else { 
+        // hash temp 
+        int starttemp = dimmerstate.indexOf(";"); 
+        dimmerstate = dimmerstate.substring(starttemp+1);
+        int lasttemp = dimmerstate.indexOf(";"); 
+        //dimmerstate[lasttemp] = '\0'; 
+        dimmerstate = dimmerstate.substring(0,lasttemp);
 
+        gDisplayValues.temperature = dimmerstate; 
+        }
 
-// hash temp 
-int starttemp = dimmerstate.indexOf(";"); 
-dimmerstate = dimmerstate.substring(starttemp+1);
-int lasttemp = dimmerstate.indexOf(";"); 
-//dimmerstate[lasttemp] = '\0'; 
-dimmerstate = dimmerstate.substring(0,lasttemp);
-
-gDisplayValues.temperature = dimmerstate; 
   if (logging.serial){
   Serial.println("temperature " + dimmerstate);
   }

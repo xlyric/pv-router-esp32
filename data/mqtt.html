@@ -89,6 +89,12 @@
       <span>OTA</span></a>
     </li> 
 
+    <li class="nav-item active">
+      <a class="nav-link" href="/reboot">
+          <i class="fas fa-fw fa-power-off"></i>
+          <span>Reboot</span>
+      </a>
+
 
   
 
@@ -231,6 +237,9 @@
                       <label class="custom-control-label" for="HA" onclick="sendservermode(this.innerHTML);" >HA</label>
                     </div>
                   </div>
+                  <div class="col-sm-6">
+                    Shelly EM topic (or none): <input type="text" class="form-control form-control-user" id="EM" placeholder="%EM%">
+                  </div>
                 </div>
               </div>
             </div>          
@@ -292,7 +301,7 @@ document.getElementById("HA").value = config[28];
            
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="jquery.min.js"></script>
 
 <script>
 
@@ -311,7 +320,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'mqttport':$('#port').val()} 
+	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'mqttport':$('#port').val(),'EM':$('#EM').val()} 
 
         $.ajax({
             type: "GET",
@@ -326,36 +335,20 @@ $( "#formulaire" ).submit(function() {
   return false;
 });
 
+var recupconfig =  $.getJSON('/getmqtt', function(data) {
+  for (var key in data) {
+    if (data.hasOwnProperty(key)) {
+      var element = document.getElementById(key);
+      if (element) {
+        element.value = data[key];
+        if (element.type === 'checkbox') {
+          element.checked = data[key];
+        }
+      }
+    }
+  }
+});
 
-
-
-var recupconfig = $.get ({
-		url : 'getmqtt',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-    var config = recupconfig.split(";");
-      i=0;
-      document.getElementById("server").value = config[i];
-      i++;
-      document.getElementById("topic").value = config[i];	
-      i++;  
-      document.getElementById("user").value = config[i];
-      i++;
-      document.getElementById("password").value = config[i];
-      i++;
-      document.getElementById("MQTT").checked = config[i];
-		  document.getElementById("MQTT").value = config[i];
-      i++;  
-      document.getElementById("IDX").value = config[i];
-      i++;
-      document.getElementById("IDXDIMMER").value = config[i];
-      i++;
-      document.getElementById("port").value = config[i];
-      i++;
-      document.getElementById("HA").checked = config[i];
-		  document.getElementById("HA").value = config[i];
 </script>
 				  
                 </div>
@@ -388,11 +381,8 @@ var recupconfig = $.get ({
 
 
   <!-- Bootstrap core JavaScript-->
-  <script src="jquery.min.js"></script>
-  <script src="bootstrap.bundle.min.js"></script>
 
-  <!-- Core plugin JavaScript-->
-  <!--<script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>--> 
+  <script src="bootstrap.bundle.min.js"></script>
 
   <!-- Custom scripts for all pages-->
   <script src="sb-admin-2.js"></script>

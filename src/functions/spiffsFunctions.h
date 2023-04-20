@@ -82,8 +82,8 @@ void loadConfiguration(const char *filename, Config &config) {
   config.flip = doc["flip"] | true;
   config.tmax = doc["tmax"] | 65;
   config.localfuse = doc["localfuse"] | 50;
-  config.voltage = doc["voltage"] | 230;
-  config.offset = doc["offset"] | 0;
+  config.voltage = doc["voltage"] | 233;
+  config.offset = doc["offset"] | -10;
   config.relayoff = doc["relayoff"] | 95;
   config.relayon = doc["relayon"] | 100;
 
@@ -99,6 +99,11 @@ void loadConfiguration(const char *filename, Config &config) {
           doc["Publish"] | "domoticz/in", // <- source
           sizeof(config.Publish));         // <- destination's mqtt
   config.ScreenTime = doc["screentime"] | 0 ; // timer to switch of screen
+   
+   strlcpy(config.topic_Shelly,                  // <- destination
+          doc["topic_Shelly"] | "none", // <- source
+          sizeof(config.topic_Shelly));
+
   configFile.close();
   logging.start += loguptime();
   logging.start += "config file loaded\r\n";
@@ -162,6 +167,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   
   doc["relayon"] = config.relayon; 
   doc["relayoff"] = config.relayoff; 
+  doc["topic_Shelly"] = config.topic_Shelly; 
 
 
   // Serialize JSON to file

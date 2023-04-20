@@ -24,6 +24,7 @@ extern TFT_eSPI display;
 
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule;
+extern Config config;
 
 void call_display(){
     //serial_println(F("lcd task"));
@@ -77,7 +78,10 @@ void affichage_normal(){
                         display.setCursor(30, 48, 2);
                         display.print("Dimmer (%)");
                         display.setCursor(150, 48, 2);
-                        display.print(OLEDPOW);
+
+                        if (strcmp(config.topic_Shelly,"none") == 0)   display.print(OLEDPOW);
+                        else display.print("Shelly");
+                        
                   #endif
 
                   // affichage de la température du dimmer

@@ -3,6 +3,7 @@ gzip -9 index.html -c > index.html.gz
 gzip -9 index-ap.html -c > index-ap.html.gz
 gzip -9 index-light.html -c > index-light.html.gz
 gzip -9 wifi.html -c > wifi.html.gz
+gzip -9 envoy.html -c > envoy.html.gz
 
 gzip -9 config.html -c > config.html.gz
 gzip -9 config-ap.html -c > config-ap.html.gz

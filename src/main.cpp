@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
-#include "WiFi.h"
+
+#include "WiFiClientSecure.h"
 
   #include <driver/adc.h>
   #include "config/config.h"
@@ -184,8 +185,8 @@ void setup()
   configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
 
   // test if Enphase is present ( and load conf )
-  configmodule.enphase_present = loadenphase(enphase_conf, configmodule);
-
+  loadenphase(enphase_conf, configmodule);
+ 
   /// recherche d'une sonde dallas
   #if DALLAS
   Serial.println("start 18b20");
@@ -582,9 +583,10 @@ void connect_to_wifi() {
           
               
               logging.init += "\r\n";
-              break;}
-      }
-
+              } 
+              break;
+        }
+    }
 
         //// timeout --> AP MODE 
         if ( timeoutwifi > 20 ) {
@@ -596,7 +598,7 @@ void connect_to_wifi() {
              // gDisplayValues.IP = String(WiFi.softAPIP().toString());
               APConnect(); 
         }
-    }
+
 
       serial_println("WiFi connected");
       logging.init += loguptime();
