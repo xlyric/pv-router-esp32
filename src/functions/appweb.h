@@ -174,7 +174,11 @@ String getconfig() {
   doc["dimmer"] = config.dimmer;
   doc["cosphi"] = config.cosphi;
   doc["dimmerlocal"] = config.dimmerlocal;
-  doc["facteur"] = config.facteur;
+  
+  char buffer[8];
+  dtostrf(config.facteur, 5, 2, buffer); 
+  doc["facteur"] = buffer;
+
   doc["resistance"] = config.resistance;
   doc["polarity"] = config.polarity;
   doc["screentime"] = config.ScreenTime;
