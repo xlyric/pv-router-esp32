@@ -45,12 +45,12 @@ void measureElectricity(void * parameter)
        /// vérification qu'une autre task ne va pas fausser les valeurs
       long start = millis();
       int porteuse; 
-      if ( configmodule.enphase_present || configmodule.Fronius_present || strcmp(config.topic_Shelly,"none") != 0 ) {
-            porteuse = false; 
-      }
+      /*if ( configmodule.enphase_present || configmodule.Fronius_present || strcmp(config.topic_Shelly,"none") != 0 ) {
+            porteuse = false; || (String(configmodule.envoy) == "R")
+      }*/ /// refaire des tests... 
       
-      if ( configmodule.enphase_present == false && configmodule.Fronius_present == false && (String(configmodule.envoy) == "R")) {  ///correction Fred 230423
-            if (porteuse) {
+      if ( configmodule.enphase_present == false && configmodule.Fronius_present == false ) {  ///correction Fred 230423--> marche pas 
+            if (strcmp(config.topic_Shelly,"none") == 0 ) {
                   injection2();
                   if ( gDisplayValues.porteuse == false  && configmodule.enphase_present == false && configmodule.Fronius_present == false) {
                         gDisplayValues.watt =0 ; 
@@ -77,8 +77,8 @@ if (!AP) {
 
 // shelly 
       #ifdef NORMAL_FIRMWARE
-            if (strcmp(config.topic_Shelly,"none") != 0) { 
-            client.loop(); // on vérifie coté mqtt si nouvelle infi
+            if (strcmp(config.topic_Shelly,"none") != 0)   { 
+            client.loop(); // on vérifie coté mqtt si nouvelle info
             gDisplayValues.watt = gDisplayValues.Shelly ;  // on met à jour
             gDisplayValues.porteuse = true; // et c'est bon. 
             }
@@ -92,6 +92,11 @@ if (!AP) {
                   int tempo = gDisplayValues.watt; 
                   gDisplayValues.watt = gDisplayValues.Fronius_conso ; 
                   gDisplayValues.Fronius_conso = tempo; }
+                  else 
+                  {  /// si c'est un modèle S, il ne fait pas les mesures. 
+                  injection2();
+                  }
+
               //    }
             }
 ///enphase

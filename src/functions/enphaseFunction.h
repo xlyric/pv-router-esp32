@@ -64,15 +64,16 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
           doc["token"] | "",            
           sizeof(configmodule.token));
   //configmodule.enphase_present = doc["enphase_present"] | false;
-  if (strcmp(configmodule.hostname,"") != 0) { configmodule.enphase_present = true; }
-
+  if (strcmp(configmodule.hostname,"") == 0) { configmodule.enphase_present=false ; configFile.close(); Serial.println("no enphase"); return false; } 
+  Serial.println(configmodule.hostname);
   configFile.close();
-
   Serial.println(" enphase config : " + String(configmodule.hostname));
   Serial.println(" enphase mode : " + String(configmodule.envoy));
   logging.init += loguptime();
   logging.init += "Enphase used type "+ String(configmodule.envoy) +"\r\n";
+  configmodule.enphase_present=true; 
   return true;
+
 }
 
 void saveenphase(const char *filename, const Configmodule &configmodule) {

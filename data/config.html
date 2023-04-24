@@ -44,7 +44,7 @@
         <a class="nav-link" href="/" target="_blank">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span><br>
-		<span id="version"></span></a>
+		      <span id="version"></span></a>
 		  </li>
 
 
@@ -451,8 +451,10 @@
           // Récupérer les données du JSON
             var state = data.state;
             var watt = data.watt;
+            var version = data.version;
           document.getElementById("state").innerHTML = state;
           document.getElementById("sigma").innerHTML = watt;
+          document.getElementById("version").innerHTML = version;
           });
           }, 5000);
 

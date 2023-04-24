@@ -100,6 +100,7 @@ String getState() {
   doc["watt"] = int(gDisplayValues.watt);
   doc["dimmer"] = gDisplayValues.dimmer;
   doc["temperature"] = gDisplayValues.temperature;
+  doc["version"] = VERSION;
   state=""; 
   serializeJson(doc, state);
   return String(state);
@@ -189,7 +190,7 @@ String getconfig() {
   doc["flip"] = config.flip;
   doc["relaystart"] = config.relayon;
   doc["relaystop"] = config.relayoff;
-
+  
   serializeJson(doc, configweb);
   return String(configweb);
 }

@@ -180,6 +180,9 @@ void setup()
        AP=false; 
   }
 
+ configmodule.enphase_present=false; 
+  configmodule.Fronius_present=false;
+
   loadmqtt(mqtt_conf ,configmqtt);
   // test if Fronius is present ( and load conf )
   configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
