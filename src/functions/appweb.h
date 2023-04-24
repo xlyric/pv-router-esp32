@@ -263,22 +263,22 @@ String getlogs() {
   }
 
 //***********************************
-String processor(const String& var){
+/*String processor(const String& var){
    Serial.println(var);
    if (var == "SIGMA"){
     return getSigma();
   }
-  /*else if (var == "SENDMODE"){
-  
-    return getSendmode();
-  }*/
-  else if (var == "STATE"){
-    
+  if (var == "STATE"){
     return getState();
-  }  
+  }
+  if (var == "VERSION"){
+    return VERSION;
+  }
+    
+
 return getState();
 }
-
+*/
 
 //***********************************
 //************* Fonction domotique 
