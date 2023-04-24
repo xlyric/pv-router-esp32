@@ -207,8 +207,7 @@ String getchart() {
 //***********************************
 //***********************************
 String getwifi() {
-
-   String retour =String(configwifi.SID) + ";" + String(configwifi.passwd)  ;
+  String retour =String(configwifi.SID) + ";" + String(SECURITEPASS)  ;
   return String(retour) ;
 }
 
@@ -218,7 +217,7 @@ String getmqtt() {
   doc["server"] = config.mqttserver;
   doc["topic"] = config.Publish;
   doc["user"] = configmqtt.username;
-  doc["password"] = configmqtt.password;
+  doc["password"] = SECURITEPASS;
   doc["MQTT"] = config.mqtt;
   doc["IDX"] = config.IDX;
   doc["IDXDIMMER"] = config.IDXdimmer;
@@ -228,6 +227,7 @@ String getmqtt() {
   serializeJson(doc, retour);
   return String(retour) ;
 }
+
 
 String getdebug() {
   configweb = "";

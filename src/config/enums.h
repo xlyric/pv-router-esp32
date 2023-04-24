@@ -9,6 +9,8 @@
 
 #include <Preferences.h> 
 
+#define SECURITEPASS "MyPassword"
+
 // The state in which the device can be. This mainly affects what
 // is drawn on the display.
 enum DEVICE_STATE {

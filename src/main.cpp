@@ -180,7 +180,7 @@ void setup()
        AP=false; 
   }
 
-   loadmqtt(mqtt_conf ,configmqtt);
+  loadmqtt(mqtt_conf ,configmqtt);
   // test if Fronius is present ( and load conf )
   configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
 
@@ -255,7 +255,6 @@ void setup()
 #if DIMMERLOCAL 
 Dimmer_setup();
 #endif
-
 
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html.gz")){

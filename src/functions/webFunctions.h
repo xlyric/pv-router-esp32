@@ -324,9 +324,16 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    /// @brief  wifi
    bool wifimodif=false ; 
    if (request->hasParam("ssid")) { request->getParam("ssid")->value().toCharArray(configwifi.SID,50); wifimodif=true; }
-   if (request->hasParam("password")) { request->getParam("password")->value().toCharArray(configwifi.passwd,50);    
-    logging.start += loguptime();
-    logging.start += "saving wifi\r\n";
+   if (request->hasParam("password")) { 
+    char password[50];  
+       request->getParam("password")->value().toCharArray(password,50);
+          if (strcmp(password,SECURITEPASS) != 0) {  ///sécurisation du mot de passe pas en clair     
+              request->getParam("password")->value().toCharArray(configwifi.passwd,50); 
+          }
+      
+    //request->getParam("password")->value().toCharArray(configwifi.passwd,50);  
+    //logging.start += loguptime();
+    //logging.start += "saving wifi\r\n";
     wifimodif=true; 
    }
    if (wifimodif) { configwifi.sauve_wifi(); }
@@ -354,8 +361,14 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
       saveConfiguration(filename_conf, config);   }
    if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,50);  }
    if (request->hasParam("mqttport")) { config.mqttport = request->getParam("mqttport")->value().toInt();}
-   if (request->hasParam("mqttpassword")) { request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
-      savemqtt(mqtt_conf, configmqtt); }
+   if (request->hasParam("mqttpassword")) { //request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
+       char password[50];  
+       request->getParam("mqttpassword")->value().toCharArray(password,50);
+          if (strcmp(password,SECURITEPASS) != 0) {  ///sécurisation du mot de passe pas en clair     
+              request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
+          }
+       savemqtt(mqtt_conf, configmqtt); 
+       }
 
   //// Dimmer local
     if (request->hasParam("Fusiblelocal")) { config.localfuse = request->getParam("Fusiblelocal")->value().toInt();}

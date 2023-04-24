@@ -44,12 +44,15 @@ void measureElectricity(void * parameter)
     //  serial_println("[ENERGY] Measuring...");
        /// vérification qu'une autre task ne va pas fausser les valeurs
       long start = millis();
+      int porteuse; 
+      if ( configmodule.enphase_present || configmodule.Fronius_present || strcmp(config.topic_Shelly,"none") != 0 ) {
+            porteuse = false; 
+      }
       
-      
-      if ( configmodule.enphase_present == false || configmodule.Fronius_present == false || (String(configmodule.envoy) == "R")) {
-            if (strcmp(config.topic_Shelly,"none") == 0) {
+      if ( configmodule.enphase_present == false && configmodule.Fronius_present == false && (String(configmodule.envoy) == "R")) {  ///correction Fred 230423
+            if (porteuse) {
                   injection2();
-                  if ( gDisplayValues.porteuse == false ) {
+                  if ( gDisplayValues.porteuse == false  && configmodule.enphase_present == false && configmodule.Fronius_present == false) {
                         gDisplayValues.watt =0 ; 
                         slowlog ++; 
                         if (slowlog == TEMPOLOG) {     logging.start  += loguptime(); logging.start +=  String("--> No sinus, check 12AC power \r\n"); slowlog =0 ; }
