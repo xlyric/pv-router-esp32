@@ -18,12 +18,12 @@ void GetDImmerTemp(void * parameter){
  for (;;){ 
 // create get request 
 
-if ( !dallas.detect) {
-    String baseurl; 
-      baseurl = "/state" ; 
-      httpdimmer.begin(String(config.dimmer),80,baseurl);   
-      int httpResponseCode = httpdimmer.GET();
-      String dimmerstate = "0"; 
+if ( !dallas.detect && String(config.dimmer) != "") {
+  String baseurl; 
+  baseurl = "/state" ; 
+  httpdimmer.begin(String(config.dimmer),80,baseurl);   
+  int httpResponseCode = httpdimmer.GET();
+  String dimmerstate = "0"; 
 
 //  read request return
   if (httpResponseCode>0) {
@@ -42,23 +42,21 @@ if ( !dallas.detect) {
   httpdimmer.end();
   if (httpResponseCode>400) { gDisplayValues.temperature = "0";   }
   else { 
-        // hash temp 
+    // hash temp 
+    DynamicJsonDocument doc(64);
+    deserializeJson(doc, dimmerstate);
+    gDisplayValues.temperature = doc["temperature"].as<String>();
+    /* int starttemp = dimmerstate.indexOf(";"); 
+      dimmerstate = dimmerstate.substring(starttemp+1);
+      int lasttemp = dimmerstate.indexOf(";"); 
+      //dimmerstate[lasttemp] = '\0'; 
+      dimmerstate = dimmerstate.substring(0,lasttemp);
 
-      DynamicJsonDocument doc(64);
-      deserializeJson(doc, dimmerstate);
-      gDisplayValues.temperature = doc["temperature"].as<String>();
-
-      /* int starttemp = dimmerstate.indexOf(";"); 
-        dimmerstate = dimmerstate.substring(starttemp+1);
-        int lasttemp = dimmerstate.indexOf(";"); 
-        //dimmerstate[lasttemp] = '\0'; 
-        dimmerstate = dimmerstate.substring(0,lasttemp);
-
-        gDisplayValues.temperature = dimmerstate; */
-        }
+      gDisplayValues.temperature = dimmerstate; */
+  }
 
   if (logging.serial){
-  Serial.println("temperature:" + gDisplayValues.temperature);
+    Serial.println("temperature:" + gDisplayValues.temperature);
   }
 }
 
