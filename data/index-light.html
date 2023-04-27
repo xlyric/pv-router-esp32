@@ -354,6 +354,7 @@ $.getJSON('/state', function(data) {
     var watt = data.watt;
     var dimmer = data.dimmer;
     var temperature = data.temperature;
+    if (temperature == null) { temperature = 0 ; }
     // Mettre à jour les éléments HTML
     dataGaugePA.setValue(0, 0, state);
     dataGaugePA.setValue(0, 1, watt);

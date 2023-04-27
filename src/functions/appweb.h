@@ -95,6 +95,7 @@ String getState() {
   if (gDisplayValues.watt >= config.delta  ) {   state = GRID; }
   if (gDisplayValues.watt <= config.deltaneg ) {   state = INJECTION; }
   if (gDisplayValues.temperature == NULL ) { gDisplayValues.temperature = "0";  }
+  if (gDisplayValues.temperature == "" ) { gDisplayValues.temperature = "0";  }
   DynamicJsonDocument doc(128);
   doc["state"] = state;
   doc["watt"] = int(gDisplayValues.watt);
