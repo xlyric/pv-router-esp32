@@ -34,9 +34,10 @@ void notFound(AsyncWebServerRequest *request) {
 }
 
 void compress_html(AsyncWebServerRequest *request,String filefs , String format ) {
-      AsyncWebServerResponse *response = request->beginResponse(SPIFFS, filefs, format );
+      AsyncWebServerResponse *response = request->beginResponse(SPIFFS, filefs, format);
       response->addHeader("Content-Encoding", "gzip");
       response->addHeader("Cache-Control", "max-age=604800");
+      //response-> addHeader("Content-Disposition", "inline; filename='file,index.html'");
       request->send(response);
 }
 
@@ -65,8 +66,9 @@ if (AP) {
       //request->send_P(200, "text/plain", SPIFFSNO ); 
       serveur_response(request, SPIFFSNO);
     }
-
   });
+
+
 }
 else {
   server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
@@ -101,6 +103,14 @@ else {
   });
 
 }
+
+  /*server.on("/config.html.gz",  HTTP_GET, [](AsyncWebServerRequest *request){  /// pour corriger le bug  safari
+      compress_html(request,"/config.html.gz", "text/html");   
+  });
+
+  server.on("/index.html.gz",  HTTP_GET, [](AsyncWebServerRequest *request){  /// pour corriger le bug  safari
+      compress_html(request,"/index.html.gz", "text/html");   
+  });*/
 
   server.on("/all.min.css",  HTTP_GET, [](AsyncWebServerRequest *request){
       compress_html(request,"/all.min.css.gz", "text/css");

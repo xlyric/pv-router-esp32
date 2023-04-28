@@ -44,7 +44,7 @@
 *   fonction d'envoie de commande au dimmer
 */
 
-void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
+void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puissance_dispo) {
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
   /*  if ( DIMMERLOCAL  ) {
       if ( dimmervalue <= config.num_fuse ){
@@ -59,7 +59,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
       /// control dimmer 
       if ( strcmp(config.dimmer,"none") != 0 ) {
       String baseurl; 
-        baseurl = "/?POWER=" + String(dimmervalue) ; 
+        baseurl = "/?POWER=" + String(dimmervalue) +"&puissance=" + String(puissance_dispo) ; 
         http.begin(dimmerurl,80,baseurl);   
         http.GET();
         http.end(); 
@@ -93,6 +93,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue) {
 void dimmer(){
 gDisplayValues.change = 0; 
    
+   int puissance_dispo = 0; 
    /// pour éviter les erreurs sur le site (inversion delta et deltaneg)
    if (config.delta < config.deltaneg){
    int temp_error_delta; 
@@ -103,11 +104,13 @@ gDisplayValues.change = 0;
 
   // 0 -> linky ; 1-> injection  ; 2-> stabilisé
 
-  /// Linky 
+// puissance dispo 
+puissance_dispo = -(gDisplayValues.watt-((config.delta+config.deltaneg)/2));
 
 if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
     //Serial.println("dimmer:" + String(gDisplayValues.dimmer));
     gDisplayValues.dimmer += -abs((gDisplayValues.watt-((config.delta+config.deltaneg)/2))*COMPENSATION/config.resistance); 
+    
     gDisplayValues.change = 1; 
 //debug    Serial.println(String(gDisplayValues.watt) + " " + String(config.delta) + " " + String(config.deltaneg) + " " + String(gDisplayValues.dimmer) );
     } 
@@ -169,7 +172,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
             //gDisplayValues.dimmer = 0 ;
             dimmer_hard.setPower(0); 
             ledcWrite(0, 0);
-            dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ;
+            dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,puissance_dispo) ;
           }
         }
         else { 
@@ -186,11 +189,11 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
             if (!security){  
                 /// fonctionnement du dimmer local 
                  
-                if ( gDisplayValues.dimmer < config.localfuse ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0 ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
+                if ( gDisplayValues.dimmer < config.localfuse ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
                 else {
                     dimmer_hard.setPower(config.localfuse); 
                     ledcWrite(0, config.localfuse*256/100);
-                    dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ) ) ;
+                    dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ),puissance_dispo ) ;
                 }
             }
           }
@@ -203,7 +206,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
     }
 
-    else { dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ;  }
+    else { dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer, puissance_dispo ) ;  }
  
   
   }

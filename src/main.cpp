@@ -449,7 +449,7 @@ Dimmer_setup();
 #endif
   //if ( config.autonome == true ) {
     gDisplayValues.dimmer = 0; 
-    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer ) ; 
+    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,0 ) ; 
   //}
 
 #endif
