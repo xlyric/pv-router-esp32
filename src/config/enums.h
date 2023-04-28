@@ -46,6 +46,10 @@ struct DisplayValues {
   float celsius;
   int page=1; 
   int Shelly=-1;
+  double enp_prod_whLifetime;
+  double enp_cons_whLifetime;
+  double enp_current_power_consumption;
+  double enp_current_power_production;
 };
 
 struct Config {

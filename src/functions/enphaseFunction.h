@@ -67,13 +67,20 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   if (strcmp(configmodule.hostname,"") == 0) { configmodule.enphase_present=false ; configFile.close(); Serial.println("no enphase"); return false; } 
   Serial.println(configmodule.hostname);
   configFile.close();
+
   Serial.println(" enphase config : " + String(configmodule.hostname));
+  Serial.println(" enphase version : " + String(configmodule.version));
   Serial.println(" enphase mode : " + String(configmodule.envoy));
+  if (configmodule.enphase_present == true) {
+    Serial.println(" enphase : actif");
+    Serial.println(" enphase token : " + String(configmodule.token));
+  } else {
+    Serial.println(" enphase : inactif");
+  }
   logging.init += loguptime();
   logging.init += "Enphase used type "+ String(configmodule.envoy) +"\r\n";
   configmodule.enphase_present=true; 
   return true;
-
 }
 
 void saveenphase(const char *filename, const Configmodule &configmodule) {
@@ -115,8 +122,14 @@ void saveenphase(const char *filename, const Configmodule &configmodule) {
 
 void Enphase_get(void) {
   if (String(configmodule.version) == "7") {
-    //Serial.println("Enphase version 7");
-    Enphase_get_7();
+    if (String(configmodule.token)!="") {
+      //Serial.println("Enphase version 7");
+      Enphase_get_7();
+    } else {
+      Serial.println("Enphase version 7 : pas de token");
+    }
+    
+    
   } else {
     //Serial.println("Enphase version 5");
     Enphase_get_5();
@@ -179,97 +192,110 @@ void Enphase_get_5(void) {
   Serial.println(" total conso: " + String(gDisplayValues.Fronius_totalconso));
 }
 
+HTTPClient https;
+bool initEnphase = true; // Permet de lancer le contrôle du token une fois au démarrage
+
+bool Enphase_get_7_Production(void){
+  
+  int httpCode;
+  bool retour = false;
+  String adr = String(configmodule.hostname);
+  String url = "/404.html" ;
+  if (String(configmodule.envoy) == "R") {
+    url = String(EnvoyR);
+    Serial.print("type R ");
+    Serial.println(url);
+  }
+  if (String(configmodule.envoy) == "S") {
+    url = String(EnvoyS);
+    Serial.print("type S ");
+    Serial.println(url);
+  }
+          
+  Serial.println("Enphase Get production : https://" + adr + url);
+  if (https.begin("http://" + adr + url)) { 
+    https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
+    https.addHeader("Authorization","Bearer "+String(configmodule.token));
+    https.addHeader("Accept-Encoding","gzip, deflate, br");
+    https.addHeader("User-Agent","PvRouter/1.1.1");
+    httpCode = https.GET();
+    if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+      String payload = https.getString();
+      //Serial.println(payload);
+      DynamicJsonDocument doc(2048);
+      deserializeJson(doc, payload);
+      if (String(configmodule.envoy) == "R") {
+        gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
+        gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]);
+      } else {
+        gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]);
+        gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]);
+        gDisplayValues.Fronius_totalconso = int(doc["consumption"][0]["wNow"]);
+        gDisplayValues.enp_prod_whLifetime = int(doc["production"][1]["whLifetime"]);;
+        gDisplayValues.enp_cons_whLifetime = int(doc["consumption"][0]["whLifetime"]);;
+        gDisplayValues.enp_current_power_consumption = gDisplayValues.Fronius_conso;
+        gDisplayValues.enp_current_power_production =  gDisplayValues.Fronius_prod;
+
+
+        //Serial.println("Prod : " + String(gDisplayValues.enp_prod_whLifetime));
+        //Serial.println("cons : " + String(gDisplayValues.enp_cons_whLifetime));
+      }
+      retour = true;
+      // debug
+      Serial.println("Enphase Get production > prod: " + String(gDisplayValues.Fronius_prod) + " conso: " + String(gDisplayValues.Fronius_conso) + " total conso: " + String(gDisplayValues.Fronius_totalconso));
+    } else {
+      Serial.println("[Enphase Get production] GET... failed, error: " + httpCode);
+    }
+    //https.end();
+  }
+  else {
+    Serial.println("[Enphase Get production] GET... failed, error: " + httpCode);
+  }
+  return retour;
+}
+
+bool Enphase_get_7_JWT(void) {
+  
+  bool retour = false;
+  String url = "/404.html";
+  url = String(EnvoyJ);
+  String adr = String(configmodule.hostname);
+  Serial.println("Enphase contrôle tocken : https://" + adr + url);
+  //Initializing an HTTPS communication using the secure client
+  if (https.begin("https://" + adr + url)) {
+    https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
+    https.addHeader("Authorization","Bearer "+String(configmodule.token));
+    https.addHeader("Accept-Encoding","gzip, deflate, br");
+    https.addHeader("User-Agent","PvRouter/1.1.1");
+    int httpCode = https.GET();
+    
+    // httpCode will be negative on error
+    //Serial.println("Enphase_Get_7 : httpcode : " + httpCode);
+    if (httpCode > 0) {
+      if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+        retour = true;
+        // Token valide
+        Serial.println("Enphase contrôle tocket : TOKEN VALIDE ");
+      } else {
+          Serial.println("Enphase contrôle tocket : TOKEN INVALIDE !!!");
+      }
+    }
+  }
+  //https.end();
+  return retour;
+}
 
 void Enphase_get_7(void) {
   if(WiFi.isConnected() and configmodule.token != "") {
     //create an HTTPClient instance
-
-    String url = "/404.html";
-    url = String(EnvoyJ);
-    String adr = String(configmodule.hostname);
-    Serial.println("Enphase_Get_7 : Start > https://" + adr + url);
-    //Initializing an HTTPS communication using the secure client
-//    if (strcmp(configmodule.port,"80") == 0 ) { configmodule.port = "443";}
-    if (httpenphase.begin("https://" + adr + url)) {
-      httpenphase.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
-      httpenphase.addHeader("Authorization","Bearer "+String(configmodule.token));
-      httpenphase.addHeader("Accept-Encoding","gzip, deflate, br");
-      httpenphase.addHeader("User-Agent","PvRouter/1.1.1");
-      int httpCode = httpenphase.GET();
-      // httpCode will be negative on error
-      Serial.println("Enphase_Get_7 : httpcode : " + httpCode);
-      if (httpCode > 0) {
-        if (httpCode == HTTP_CODE_FORBIDDEN) {
-          // Token invalide
-          //Enphase_TokenToConfig();
-          Serial.println("Enphase token invalide ou périmé");
-
-        } else if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-          // Token valide - on interroge la passerelle
-          String payload = httpenphase.getString();
-          if (String(configmodule.envoy) == "R") {
-            url = String(EnvoyR);
-            Serial.print("type R ");
-            Serial.println(url);
-          }
-          if (String(configmodule.envoy) == "S") {
-            url = String(EnvoyS);
-            Serial.print("type S ");
-            Serial.println(url);
-          }
-          httpenphase.end();
-          Serial.println("https://" + adr + url);
-          if (httpenphase.begin("http://" + adr + url)) { 
-            httpenphase.addHeader("Authorization","Bearer "+String(configmodule.token));
-            httpenphase.addHeader("Accept-Encoding","gzip, deflate, br");
-            /// httpenphase.addHeader("Connection","keep-alive");
-            httpenphase.addHeader("User-Agent","PvRouter/1.1.1");
-            httpCode = httpenphase.GET();
-            /// Serial.print(" httpcode/ fonction mesure: ");
-            /// Serial.println(httpCode);
-            
-            if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-              String payload = httpenphase.getString();
-              DynamicJsonDocument doc(1024);
-              deserializeJson(doc, payload);
-              //Serial.print(payload);
-              if (String(configmodule.envoy) == "R") {
-                gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
-                gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]);
-              } else {
-                gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]);
-                gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]);
-                gDisplayValues.Fronius_totalconso = int(doc["consumption"][0]["wNow"]);
-              }
-              // debug
-              Serial.print(" > prod: " + String(gDisplayValues.Fronius_prod));
-              Serial.print(" conso: " + String(gDisplayValues.Fronius_conso));
-              Serial.println(" total conso: " + String(gDisplayValues.Fronius_totalconso));
-              String test = doc["consumption"][0];
-              
-
-            } else {
-                  Serial.println("[HTTPS] GET... failed, error: " + httpCode);
-            }
-
-            httpenphase.end();
-
-          }
-          else {
-            Serial.println("[HTTPS] GET... failed, error: " + httpCode);
-          }
-          httpenphase.end();
-        } else {
-           //Enphase_TokenToConfig();
-        }  
-      }
-    } else {
-      Serial.println("Enphase_Get_7 : error");
-    
+    if (initEnphase == true) {
+      initEnphase = false;
+      Enphase_get_7_JWT();
     }
-    ///client->stop();
-    ///delay(5000);
-  
+    if (Enphase_get_7_Production() == false) {
+      Enphase_get_7_JWT();
+    }
+    vTaskDelay(pdMS_TO_TICKS(100));
   } else {
     if (configmodule.token == "")  {
       Serial.println("Enphase version 7 : Token vide");
@@ -277,6 +303,7 @@ void Enphase_get_7(void) {
   }
   
 }
+
 
 
 #endif

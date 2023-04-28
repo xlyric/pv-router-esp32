@@ -28,6 +28,11 @@ extern Logs Logging;
       extern HA power_vrms;
       extern HA power_irms;
       extern HA power_apparent;
+      extern HA enphase_cons_whLifetime;
+      extern HA enphase_prod_whLifetime;
+      extern HA enphase_current_power_consumption;
+      extern HA enphase_current_power_production;
+
 #endif
 
 int slowlog = TEMPOLOG - 1 ; 
@@ -119,35 +124,39 @@ if (!AP) {
                         power_vrms.send(String(int(Vrms)));
                         power_irms.send(String(Irms));
                         power_factor.send(String(PowerFactor));
+                        enphase_cons_whLifetime.send(String(int(gDisplayValues.enp_cons_whLifetime)));
+                        enphase_prod_whLifetime.send(String(int(gDisplayValues.enp_prod_whLifetime)));
+                        enphase_current_power_consumption.send(String(int(gDisplayValues.enp_current_power_consumption)));
+                        enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
                   }
 
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
-                  if (config.IDX != 0 && config.mqtt) {
-                  Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
-                  Mqtt_send(String(config.IDX), String("0") ,"grid");
-                  }
-                  if (configmqtt.HA) device_inject.send(String(int(-gDisplayValues.watt)));
-                  if (configmqtt.HA) device_grid.send(String("0"));
-                  WHtempgrid += wattheure; 
-                  if (configmqtt.HA) compteur_inject.send(String(WHtempgrid));
-                  
-                  
-                  if (configmqtt.HA)compteur_grid.send(String("0"));
+                        if (config.IDX != 0 && config.mqtt) {
+                              Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
+                              Mqtt_send(String(config.IDX), String("0") ,"grid");
+                        }
+                        if (configmqtt.HA) device_inject.send(String(int(-gDisplayValues.watt)));
+                        if (configmqtt.HA) device_grid.send(String("0"));
+                        WHtempgrid += wattheure; 
+                        if (configmqtt.HA) compteur_inject.send(String(WHtempgrid));
+                        
+
+                        if (configmqtt.HA)compteur_grid.send(String("0"));
                   }
                   else {
                         if (config.IDX != 0 && config.mqtt) {
-                  Mqtt_send(String(config.IDX), String("0"),"injection");
-                  Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                              Mqtt_send(String(config.IDX), String("0"),"injection");
+                              Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
                         }
-                  if (configmqtt.HA) device_grid.send(String(int(gDisplayValues.watt)));
-                  if (configmqtt.HA) device_inject.send(String("0"));
-                  if (configmqtt.HA) compteur_inject.send(String("0"));
-                  WHtempinject += wattheure;
-                  if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
-                  //maj 202030209
-                  if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
-                  Mqtt_send(String("temperature"), String(gDisplayValues.temperature) ); //  bug#11  remonté domoticz
+                        if (configmqtt.HA) device_grid.send(String(int(gDisplayValues.watt)));
+                        if (configmqtt.HA) device_inject.send(String("0"));
+                        if (configmqtt.HA) compteur_inject.send(String("0"));
+                        WHtempinject += wattheure;
+                        if (configmqtt.HA) compteur_grid.send(String(WHtempinject));
+                        //maj 202030209
+                        if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
+                        Mqtt_send(String("temperature"), String(gDisplayValues.temperature) ); //  bug#11  remonté domoticz
                   }
             #endif
                   beforetime = start; 

@@ -128,6 +128,10 @@ String loguptime();
     HA power_vrms;
     HA power_irms;
     HA power_apparent;
+    HA enphase_cons_whLifetime;
+    HA enphase_prod_whLifetime;
+    HA enphase_current_power_consumption;
+    HA enphase_current_power_production;
 #endif
 
 /***************************
