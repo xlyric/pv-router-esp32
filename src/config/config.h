@@ -200,7 +200,7 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "Version 20230428"
+#define VERSION "Version 20230430"
 
 #define EnvoyJ "/auth/check_jwt"
 #define EnvoyR "/api/v1/production"
@@ -222,7 +222,17 @@ bool AP=true;
 #define JOTTA  2
 #define GRIDFREQ 90 ///PWM frequency
 
-
+#ifdef S3
+    #define ADC_INPUT 10
+    #define INPUT 3
+    #define RELAY1 43
+    #define RELAY2 44
+    #define SWITCH 14
+    #define BUTTON_LEFT 0 // bouton droit ttgo
+    #define outputPin  1 // PSM on board
+    #define zerocross  2 // for boards with CHANGEBLE input pins // ZC on board
+    #define cooler 18 // Pin for cooler. (switch on dimmer)
+#endif
 
 
 #endif
