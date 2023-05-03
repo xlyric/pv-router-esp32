@@ -37,6 +37,7 @@
     extern Logs logging;
   #ifndef LIGHT_FIRMWARE
     extern HA device_dimmer; 
+    extern HA surplus_routeur;
   #endif
 
 
@@ -75,7 +76,10 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
             /// A vérifier que c'est necessaire ( envoie double ? )
             /// la valeur 0 doit quand meme être envoyé 
               Mqtt_send(String(dimmerIDX), String(dimmervalue));
-              if (configmqtt.HA) device_dimmer.send(String(dimmervalue));
+              if (configmqtt.HA) {
+                device_dimmer.send(String(dimmervalue)); 
+                surplus_routeur.send(String(puissance_dispo));
+                } 
             }
         }
       #endif

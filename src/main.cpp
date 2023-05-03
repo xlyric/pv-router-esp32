@@ -7,6 +7,9 @@
   #include "config/config.h"
   #include "config/enums.h"
   #include "config/traduction.h"
+  #ifdef S3
+  #include "pin_config.h"
+  #endif
 
   #if  NTP
   #include <NTPClient.h>
@@ -132,6 +135,7 @@ String loguptime();
     HA enphase_prod_whLifetime;
     HA enphase_current_power_consumption;
     HA enphase_current_power_production;
+    HA surplus_routeur;
 #endif
 
 /***************************
