@@ -265,7 +265,25 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
       
     }
 
-
+//// récupération de la valeur du dimmer distant
+int dimmer_getState() {
+  int dimmer = 0 ; 
+  ///connexion au json distant 
+  if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
+    HTTPClient http;  //Declare an object of class HTTPClient
+    http.begin("http://" + String(config.dimmer) + "/state");  //Specify request destination
+    int httpCode = http.GET();                                                                  //Send the request
+    if (httpCode > 0) { //Check the returning code
+      String payload = http.getString();   //Get the request response payload
+      //Serial.println(payload);                     //Print the response payload
+      DynamicJsonDocument doc(64);
+      deserializeJson(doc, payload);
+      dimmer = doc["dimmer"];
+    }
+    http.end();   //Close connection
+  }  
+  return dimmer ; 
+}
 
 
 #endif

@@ -159,7 +159,7 @@ bool discovery_temp = false;
  */
 #define LOCAL_MEASUREMENTS 30
 #define FACTEURPUISSANCE 10.50
-#define COMPENSATION 70 ///  % d'asservissement pour l'envoie de puissance au dimmer.
+#define COMPENSATION 100 ///  % d'asservissement pour l'envoie de puissance au dimmer.
 
 /**
  * Syncing time with an NTP server
@@ -200,7 +200,7 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "Version 20230430"
+#define VERSION "Version 20230504"
 
 #define EnvoyJ "/auth/check_jwt"
 #define EnvoyR "/api/v1/production"

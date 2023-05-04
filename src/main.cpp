@@ -536,8 +536,20 @@ void loop()
 #ifndef LIGHT_FIRMWARE
   client.publish("memory2", String(esp_get_free_heap_size()).c_str())   ;
 #endif
+
+  /// synchrisation de l'information entre le dimmer et l'affichage 
+  int dimmer1_state = dimmer_getState();
+  /// application uniquement si le dimmer est actif (Tmax non atteint)    
+  if (dimmer1_state != 0 ) {  
+  gDisplayValues.dimmer = dimmer1_state; 
+  }
+
   vTaskDelay(pdMS_TO_TICKS(10000));
 }
+
+
+
+
 
 void connect_to_wifi() {
   ///// AP WIFI INIT 
