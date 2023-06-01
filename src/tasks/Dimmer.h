@@ -7,8 +7,12 @@
     #include "../functions/dimmerFunction.h"
 
 
+extern HTTPClient http;
 
 extern DisplayValues gDisplayValues;
+extern  Config config;
+extern dimmerLamp dimmer_hard; 
+
 
 /**
  * Task: Modifier le dimmer en fonction de la production
@@ -16,6 +20,35 @@ extern DisplayValues gDisplayValues;
  * récupère les informations, conso ou injection et fait varier le dimmer en conséquence
  * 
  */
+void get_dimmer_child_power (){
+    /// récupération de la puissance du dimmer enfant en http
+     
+        String baseurl; 
+        baseurl = "/state";
+        http.begin(String(config.dimmer),80,baseurl);   
+        
+        int httpResponseCode = http.GET();
+        String dimmerstate = "0"; 
+        dimmerstate = http.getString();
+        http.end();
+        
+        if (httpResponseCode==200) {
+            DynamicJsonDocument doc(128);
+            deserializeJson(doc, dimmerstate);
+            //int ptotal = doc["Ptotal"];
+            
+            gDisplayValues.puissance_route = doc["Ptotal"];
+  
+            Serial.println(gDisplayValues.puissance_route);
+        }
+        else {
+            gDisplayValues.puissance_route = 0;
+        }
+     
+
+}
+
+
 void updateDimmer(void * parameter){
   for (;;){
   gDisplayValues.task = true;
@@ -32,6 +65,19 @@ void updateDimmer(void * parameter){
     }*/ 
     #endif
    
+    // si dimmer local alors calcul de puissance routée 
+    if (config.dimmerlocal) {
+       gDisplayValues.puissance_route = config.resistance * dimmer_hard.getPower(); 
+    }
+    // si dimmer distant alors calcul de puissance routée
+    else  {  
+      get_dimmer_child_power ();
+    }
+
+    
+
+
+
 #endif
     gDisplayValues.task = false;
    // Sleep for 5 seconds, avant de refaire une analyse

@@ -59,7 +59,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.UseJeedom = doc["UseJeedom"] | false; 
   config.IDX = doc["IDX"] | 100; 
   config.IDXdimmer = doc["IDXdimmer"] | 110; 
-  
+  config.IDXdallas = doc["IDXdallas"] | 900; 
   strlcpy(config.otapassword,                  // <- destination
           doc["otapassword"] | "Pvrouteur2", // <- source
           sizeof(config.otapassword));         // <- destination's capacity
@@ -137,6 +137,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["UseJeedom"] = config.UseJeedom;
   doc["IDX"] = config.IDX;
   doc["IDXdimmer"] = config.IDXdimmer;
+  doc["IDXdallas"] = config.IDXdallas;
   doc["otapassword"] = config.otapassword;
   doc["delta"] = config.delta;
   doc["deltaneg"] = config.deltaneg;

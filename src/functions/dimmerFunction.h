@@ -75,9 +75,9 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
             /// la valeur 0 doit quand meme être envoyé 
-              Mqtt_send(String(dimmerIDX), String(dimmervalue));
+              Mqtt_send(String(dimmerIDX), String(dimmervalue),"","dimmer"); 
               if (configmqtt.HA) {
-                device_dimmer.send(String(dimmervalue)); 
+                device_dimmer.send(String(gDisplayValues.puissance_route)); 
                 surplus_routeur.send(String(puissance_dispo));
                 } 
             }

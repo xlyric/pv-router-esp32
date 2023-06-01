@@ -50,6 +50,7 @@ struct DisplayValues {
   double enp_cons_whLifetime;
   double enp_current_power_consumption;
   double enp_current_power_production;
+  int puissance_route=0;
 };
 
 struct Config {
@@ -59,6 +60,7 @@ struct Config {
   bool UseDomoticz;
   bool UseJeedom;
   int IDX;
+  int IDXdallas; 
   char otapassword[64];
   int delta;
   int deltaneg;

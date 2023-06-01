@@ -18,11 +18,14 @@ IPAddress subnet(255,255,255,0);
 extern Config config; 
 extern Logs logging; 
 
+extern HTTPClient httpdimmer;
+
 void APConnect();
 void WiFiEvent(WiFiEvent_t event);
 String ipToString(IPAddress ip); 
 bool dimmeradress(IPAddress dimmertemp );
 void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info);
+void search_wifi_ssid();
 
 
 void WIFIDimmerIP(WiFiEvent_t event, WiFiEventInfo_t info) {
@@ -34,27 +37,29 @@ void WIFIDimmerIP(WiFiEvent_t event, WiFiEventInfo_t info) {
 }
 
 void APConnect() {
-  WiFi.onEvent(WiFiEvent);
-  WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED);
-  Serial.println(WiFi.macAddress());
-  String network = ssid + String('-') + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-  Serial.println(network);
-  
-  int net_len = network.length() + 1; 
-  char char_ssid[net_len];
-  network.toCharArray(char_ssid, net_len);
+  if (!AP) {
+    WiFi.onEvent(WiFiEvent);
+    WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED);
+    Serial.println(WiFi.macAddress());
+    String network = ssid + String('-') + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+    Serial.println(network);
+    
+    int net_len = network.length() + 1; 
+    char char_ssid[net_len];
+    network.toCharArray(char_ssid, net_len);
 
-  Serial.print("Setting AP-ROUTER configuration ... ");
-  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
+    Serial.print("Setting AP-ROUTER configuration ... ");
+    Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
 
-  Serial.print("Setting AP-ROUTER ... ");
-  Serial.println(WiFi.softAP(char_ssid,passphrase) ? "Ready" : "Failed!");
-  
-  Serial.print("Soft-AP IP address = ");
-  Serial.println(WiFi.softAPIP());
-  logging.init += loguptime();
-  logging.init += "New connexion on AP :" + String(WiFi.softAPIP()) +"\r\n";
-
+    Serial.print("Setting AP-ROUTER ... ");
+    Serial.println(WiFi.softAP(char_ssid,passphrase) ? "Ready" : "Failed!");
+    
+    Serial.print("Soft-AP IP address = ");
+    Serial.println(WiFi.softAPIP());
+    logging.init += loguptime();
+    logging.init += "New connexion on AP :" + String(WiFi.softAPIP()) +"\r\n";
+    AP = true;
+  }
 }
 
 void WiFiEvent(WiFiEvent_t event) {
@@ -224,5 +229,44 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info) {
 
   Serial.println(dimmertemp);
 }
+
+/// @brief callback for lost wifi connection
+void search_wifi_ssid(){
+    Serial.println("Scan des réseaux WiFi...");
+    int numNetworks = WiFi.scanNetworks();
+  if (numNetworks == 0) {
+    Serial.println("Aucun réseau WiFi trouvé.");
+  } else {
+    Serial.print(numNetworks);
+    Serial.println(" Recherche du wifi configuré :");
+    for (int i = 0; i < numNetworks; i++) {
+      if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0)
+      {
+        Serial.println("SSID trouvé reboot en cours");
+        ESP.restart();
+        /// reconnection wifi
+        /*AP=false;
+        WiFi.begin(configwifi.SID, configwifi.passwd); 
+        // deconnection du mode AP
+        WiFi.softAPdisconnect(true);
+        // reconnexion MQTT
+
+        if (config.mqtt) {
+          Mqtt_init();
+
+        // HA autoconf
+        if (configmqtt.HA) init_HA_sensor();
+          
+        }
+        */
+        break;
+      }
+
+    }
+  }
+
+}
+
+
 
 #endif

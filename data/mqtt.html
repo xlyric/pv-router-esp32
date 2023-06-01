@@ -211,11 +211,14 @@
               <div class="card-body">
 
                 <div class="form-group row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                             IDX Power: <input type="number"  step="1" class="form-control form-control-user" id="IDX" placeholder="%IDX%">
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                             IDX Dimmer: <input type="number" step="1" class="form-control form-control-user" id="IDXDIMMER" placeholder="%IDXDIMMER%">
+                    </div>
+                    <div class="col-sm-4">
+                      IDX Temperature: <input type="number" step="1" class="form-control form-control-user" id="IDXDALLAS" placeholder="%IDXDALLAS%">
                     </div>
                 </div>
               </div>
@@ -320,7 +323,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'mqttport':$('#port').val(),'EM':$('#EM').val()} 
+	 var data = {'mqttserver':$('#server').val(), 'publish':$('#topic').val(), 'mqttuser':$('#user').val(), 'mqttpassword':$('#password').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(), 'mqttport':$('#port').val(),'EM':$('#EM').val(), 'idxdallas':$('#IDXDALLAS').val()} 
 
         $.ajax({
             type: "GET",

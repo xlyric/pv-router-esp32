@@ -116,7 +116,7 @@ if (!AP) {
                   long timemesure = start-beforetime;
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
             #ifndef LIGHT_FIRMWARE
-                  if (config.IDX != 0 && config.mqtt ) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)));  }
+                  if (config.IDX != 0 && config.mqtt ) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"","watt");  }
 
                   if (configmqtt.HA) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
@@ -133,8 +133,8 @@ if (!AP) {
                   // send if injection
                   if (gDisplayValues.watt < 0 ){
                         if (config.IDX != 0 && config.mqtt) {
-                              Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection");
-                              Mqtt_send(String(config.IDX), String("0") ,"grid");
+                              Mqtt_send(String(config.IDX), String(int(-gDisplayValues.watt)),"injection","Reseau");
+                              Mqtt_send(String(config.IDX), String("0") ,"grid","Reseau");
                         }
                         if (configmqtt.HA) device_inject.send(String(int(-gDisplayValues.watt)));
                         if (configmqtt.HA) device_grid.send(String("0"));
@@ -146,8 +146,8 @@ if (!AP) {
                   }
                   else {
                         if (config.IDX != 0 && config.mqtt) {
-                              Mqtt_send(String(config.IDX), String("0"),"injection");
-                              Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid");
+                              Mqtt_send(String(config.IDX), String("0"),"injection","Reseau");
+                              Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid","Reseau");
                         }
                         if (configmqtt.HA) device_grid.send(String(int(gDisplayValues.watt)));
                         if (configmqtt.HA) device_inject.send(String("0"));
@@ -158,7 +158,7 @@ if (!AP) {
                   }
                   //maj 202030209
                   if (configmqtt.HA) temperature_HA.send(String(gDisplayValues.temperature));
-                  Mqtt_send(String("temperature"), String(gDisplayValues.temperature) ); //  bug#11  remonté domoticz
+                  Mqtt_send(String(config.IDXdallas), String(gDisplayValues.temperature),"","Dallas" ); //  bug#11  remonté domoticz
             #endif
                   beforetime = start; 
                   Pow_mqtt_send = 0 ;

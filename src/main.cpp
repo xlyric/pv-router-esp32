@@ -295,17 +295,29 @@ Dimmer_setup();
   // ----------------------------------------------------------------
   // TASK: Connect to WiFi & keep the connection alive.
   // ----------------------------------------------------------------
-  if (!AP){
+  /*if (!AP){
     xTaskCreate(
       keepWiFiAlive,
       "keepWiFiAlive",  // Task name
-      5000,            // Stack size (bytes)
+      8000,            // Stack size (bytes)
       NULL,             // Parameter
       5,                // Task priority
       NULL          // Task handle
       
     );  //pdMS_TO_TICKS(30000)
-    } 
+    } */
+
+    xTaskCreate(
+      keepWiFiAlive2,
+      "keepWiFiAlive",  // Task name
+      8000,            // Stack size (bytes)
+      NULL,             // Parameter
+      5,                // Task priority
+      NULL          // Task handle
+      
+    );
+
+    
   #endif
 
   // ----------------------------------------------------------------
@@ -556,8 +568,8 @@ void connect_to_wifi() {
    
 
   if (AP || strcmp(configwifi.SID,"AP") == 0 ) {
-      AP=true; 
       APConnect(); 
+      //AP=true; 
       gDisplayValues.currentState = UP;
       gDisplayValues.IP = String(WiFi.softAPIP().toString());
       btStop();
@@ -613,7 +625,7 @@ void connect_to_wifi() {
         //// timeout --> AP MODE 
         if ( timeoutwifi > 20 ) {
               WiFi.disconnect(); 
-              AP=true; 
+              //AP=true; 
               serial_println("timeout, go to AP mode ");
               
               gDisplayValues.currentState = UP;

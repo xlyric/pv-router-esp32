@@ -54,7 +54,7 @@ void reconnect();
 *    Fonction d'envoie info MQTT vers domoticz
 */
 
-void Mqtt_send ( String idx, String value, String otherpub = "" ) {
+void Mqtt_send ( String idx, String value, String otherpub = "" , String name = "") {
   
   String nvalue = "0" ; 
   
@@ -131,7 +131,7 @@ void Mqtt_init() {
   // if (client.connect(pvname,configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline")) {       //Connect to MQTT server
   //   client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
   //   Serial.println("MQTT_init : connecte a MQTT... Initialisation dimmer à 0");
-     if (config.IDXdimmer != 0 ){ Mqtt_send(String(config.IDXdimmer),"0"); }
+     if (config.IDXdimmer != 0 ){ Mqtt_send(String(config.IDXdimmer),"0","","Dimmer"); }
     if (strcmp(config.topic_Shelly,"none") != 0) client.subscribe(config.topic_Shelly);
   // }
   // else {

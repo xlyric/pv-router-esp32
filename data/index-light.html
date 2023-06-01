@@ -135,11 +135,11 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">State</div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Réseau</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state">%STATE%</span></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                      <i class="fas fa-leaf fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -152,11 +152,11 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Sigma</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Wattmètre</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma">%SIGMA%</span></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                      <i class="fas fa-plug fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
@@ -193,7 +193,7 @@
       <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Sigma</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Réseau</h6>
 				</div>
 				<div class="card-body">
 					<div id='curve_chart2' style=' width: auto; height: 200px;'>
@@ -207,7 +207,7 @@
       <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Routed Power</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Puissance Routée</h6>
 				</div>
 				<div class="card-body">
 					<div id='curve_power' style=' width: auto; height: 200px;'>
@@ -278,19 +278,19 @@
        
 	   
 	      var optionsGaugepower = {           
-          redFrom: 37.5, 
-          redTo: 50,
+          redFrom: 0, 
+          redTo: 250,
            
-          yellowFrom: 25, 
-          yellowTo: 37.5, 
+          yellowFrom: 250, 
+          yellowTo: 500, 
            
-          greenFrom: 0, 
-          greenTo: 25, 
+          greenFrom: 500, 
+          greenTo: 1500, 
 		  	  
           minorTicks: 5,
 		  
           min: 0, 
-          max: 50, 
+          max: 1500, 
           
         };
 				  
@@ -327,7 +327,7 @@
 		<!-- mise à jour de la jauge  --> 	
 		var gaugePA = new google.visualization.Gauge(document.getElementById('curve_chart2'));
 	    dataGaugePA = new google.visualization.DataTable();
-	    dataGaugePA.addColumn('string', 'Sigma');
+	    dataGaugePA.addColumn('string', 'Reseau');
 		dataGaugePA.addColumn('number', 'Value');
 		dataGaugePA.addRows(1);
 		
@@ -341,7 +341,7 @@
 
 		var gaugePAtemp = new google.visualization.Gauge(document.getElementById('curve_temp'));
 	    dataGaugePAtemp = new google.visualization.DataTable();
-	    dataGaugePAtemp.addColumn('string', 'temp');
+	    dataGaugePAtemp.addColumn('string', 'temp °C');
 		dataGaugePAtemp.addColumn('number', 'Value');
 		dataGaugePAtemp.addRows(1);
 
@@ -359,10 +359,10 @@ $.getJSON('/state', function(data) {
     dataGaugePA.setValue(0, 0, state);
     dataGaugePA.setValue(0, 1, watt);
 
-    dataGaugePApower.setValue(0, 0, "Power"); 
+    dataGaugePApower.setValue(0, 0, "Watt"); 
     dataGaugePApower.setValue(0, 1, dimmer);
 
-    dataGaugePAtemp.setValue(0, 0, "temp"); 
+    dataGaugePAtemp.setValue(0, 0, "Temp °C"); 
     dataGaugePAtemp.setValue(0, 1, temperature);
 
     gaugePA.draw(dataGaugePA,optionsGauge);

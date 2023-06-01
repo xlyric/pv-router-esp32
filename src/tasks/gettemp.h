@@ -43,7 +43,7 @@ if ( !dallas.detect && String(config.dimmer) != "") {
   if (httpResponseCode>400) { gDisplayValues.temperature = "0";   }
   else { 
     // hash temp 
-    DynamicJsonDocument doc(64);
+    DynamicJsonDocument doc(128);
     deserializeJson(doc, dimmerstate);
     gDisplayValues.temperature = doc["temperature"].as<String>();
     /* int starttemp = dimmerstate.indexOf(";"); 
@@ -59,6 +59,8 @@ if ( !dallas.detect && String(config.dimmer) != "") {
     Serial.println("temperature:" + gDisplayValues.temperature);
   }
 }
+
+
 
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(pdMS_TO_TICKS(15000));

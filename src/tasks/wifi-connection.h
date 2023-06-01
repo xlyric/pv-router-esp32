@@ -6,6 +6,7 @@
 #include "WiFi.h"
 #include "../config/enums.h"
 #include "../config/config.h"
+#include "../functions/WifiFunctions.h"
 
 
 
@@ -27,6 +28,7 @@ void keepWiFiAlive(void * parameter){
     for(;;){
         //serial_println(F("Wifi task"));
         if(WiFi.status() == WL_CONNECTED){
+                if (AP) { search_wifi_ssid(); }
             vTaskDelay(pdMS_TO_TICKS(30000));
             continue;
         }
@@ -67,5 +69,52 @@ void keepWiFiAlive(void * parameter){
     }
 }
 
+void keepWiFiAlive2(void * parameter){
+    for(;;){
+        //serial_println(F("Wifi task"));
+
+                if (AP) { search_wifi_ssid(); 
+                }
+        
+            vTaskDelay(pdMS_TO_TICKS(30000));
+            //continue;
+        }
+}
+/*
+        serial_println(F("[WIFI] Connecting"));
+        gDisplayValues.currentState = CONNECTING_WIFI;
+
+        WiFi.mode(WIFI_STA);
+        WiFi.setHostname(DEVICE_NAME);
+        WiFi.begin(configwifi.SID, configwifi.passwd); 
+        //else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
+        
+
+        unsigned long startAttemptTime = millis();
+
+        // Keep looping while we're not connected and haven't reached the timeout
+        while (WiFi.status() != WL_CONNECTED && 
+                millis() - startAttemptTime < WIFI_TIMEOUT){}
+
+        // Make sure that we're actually connected, otherwise go to deep sleep
+        if(WiFi.status() != WL_CONNECTED){
+            serial_println(F("[WIFI] FAILED"));
+            logging.start += loguptime(); 
+            logging.start += "Wifi disconnected\r\n";
+            vTaskDelay(WIFI_RECOVER_TIME_MS / portTICK_PERIOD_MS);
+        }
+
+        serial_print(F("[WIFI] Connected: "));
+        logging.start += loguptime(); 
+        logging.start += "Wifi reconnected\r\n";
+        serial_println(WiFi.localIP());
+        serial_print("force du signal:");
+        serial_print(WiFi.RSSI());
+        serial_print("dBm");
+        gDisplayValues.currentState = UP;
+        gDisplayValues.IP = String(WiFi.localIP().toString());
+        btStop();
+    } 
+}*/
 
 #endif

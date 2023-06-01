@@ -76,7 +76,7 @@ void affichage_normal(){
                         display.setTextColor(TFT_WHITE, TFT_BLACK);
                         display.setTextFont(4);
                         display.setCursor(30, 48, 2);
-                        display.print("Dimmer (%)");
+                        display.print("Routed (W)");
                         display.setCursor(150, 48, 2);
 
                         if (strcmp(config.topic_Shelly,"none") == 0)   display.print(OLEDPOW);
@@ -134,15 +134,13 @@ void affichage_normal(){
                   }
 
                   // Affichage des infos du dimmer
-                  // drawtext16(64,48, String(gDisplayValues.dimmer) + " %");
-
                   #ifdef DEVKIT1
                       // Affichage des infos du dimmer
-                      drawtext16(64, 48, String(gDisplayValues.dimmer) + " %");
+                      drawtext16(64, 48, String(gDisplayValues.puissance_route) + " %");
                       display.display();
                   #endif
                   #ifdef TTGO
-                      drawtext16TTGO(0, 70, String(gDisplayValues.dimmer), TFT_GREEN);
+                      drawtext16TTGO(0, 70, String(gDisplayValues.puissance_route), TFT_GREEN);
                   #endif
 
                   // display Fronius ligne du bas

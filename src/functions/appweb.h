@@ -101,7 +101,7 @@ String getState() {
   DynamicJsonDocument doc(128);
   doc["state"] = state;
   doc["watt"] = int(gDisplayValues.watt);
-  doc["dimmer"] = gDisplayValues.dimmer;
+  doc["dimmer"] = gDisplayValues.puissance_route;
   doc["temperature"] = gDisplayValues.temperature;
   doc["version"] = VERSION;
   state=""; 
@@ -228,6 +228,7 @@ String getmqtt() {
   doc["port"] = config.mqttport;
   doc["HA"] = configmqtt.HA;
   doc["EM"] = config.topic_Shelly;
+  doc["IDXDALLAS"] = config.IDXdallas;
   serializeJson(doc, retour);
   return String(retour) ;
 }
