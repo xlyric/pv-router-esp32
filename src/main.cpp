@@ -149,6 +149,9 @@ void setup()
 {
   #if DEBUG == true
     Serial.begin(115200);
+  #if CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
+    Serial.setDebugOutput(true);
+  #endif
   #endif 
   logging.init="197}11}1";
   logging.init += "#################  Restart reason  ###############\r\n";
@@ -188,7 +191,7 @@ void setup()
        AP=false; 
   }
 
- configmodule.enphase_present=false; 
+  configmodule.enphase_present=false;
   configmodule.Fronius_present=false;
 
   loadmqtt(mqtt_conf ,configmqtt);
@@ -411,6 +414,7 @@ Dimmer_setup();
     NULL                    // Task handle
   ); //pdMS_TO_TICKS(4000)
   
+  #if DALLAS
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------
@@ -423,6 +427,7 @@ Dimmer_setup();
     4,                      // Task priority
     NULL                    // Task handle
   );  //pdMS_TO_TICKS(15000)
+  #endif
   #endif
 
 #endif
@@ -641,7 +646,7 @@ void connect_to_wifi() {
       serial_println(WiFi.localIP());
         serial_print("force du signal:");
         serial_print(WiFi.RSSI());
-        serial_print("dBm");
+        serial_println("dBm");
       gDisplayValues.currentState = UP;
       gDisplayValues.IP = String(WiFi.localIP().toString());
       btStop();

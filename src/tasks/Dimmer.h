@@ -11,8 +11,9 @@ extern HTTPClient http;
 
 extern DisplayValues gDisplayValues;
 extern  Config config;
+#if DIMMERLOCAL 
 extern dimmerLamp dimmer_hard; 
-
+#endif
 
 /**
  * Task: Modifier le dimmer en fonction de la production
@@ -65,12 +66,16 @@ void updateDimmer(void * parameter){
     }*/ 
     #endif
    
+#if DIMMERLOCAL 
     // si dimmer local alors calcul de puissance routée 
-    if (config.dimmerlocal) {
+    if (config.dimmerlocal)
+    {
        gDisplayValues.puissance_route = config.resistance * dimmer_hard.getPower(); 
     }
     // si dimmer distant alors calcul de puissance routée
-    else  {  
+    else
+#endif
+    {  
       get_dimmer_child_power ();
     }
 
