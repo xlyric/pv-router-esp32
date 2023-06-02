@@ -25,6 +25,11 @@ void dallasread(void * parameter){
     if (dallas.detect) {
     gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
 
+        // réduction de la précision de la température
+      float floatValue = gDisplayValues.temperature.toFloat();
+      char buffer[5];
+      dtostrf(floatValue,2, 1, buffer); // conversion en n.1f 
+      gDisplayValues.temperature=String(buffer);
    } 
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(pdMS_TO_TICKS(10000));
