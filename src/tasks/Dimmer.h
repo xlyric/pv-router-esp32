@@ -67,7 +67,7 @@ void updateDimmer(void * parameter){
    
     // si dimmer local alors calcul de puissance routée 
     if (config.dimmerlocal) {
-       gDisplayValues.puissance_route = config.resistance * dimmer_hard.getPower(); 
+       gDisplayValues.puissance_route = config.resistance * dimmer_hard.getPower()/100; 
     }
     // si dimmer distant alors calcul de puissance routée
     else  {  
