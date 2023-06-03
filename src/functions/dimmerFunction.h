@@ -33,14 +33,12 @@
     extern DisplayValues gDisplayValues;
     extern Config config; 
     HTTPClient http;
-#if DIMMERLOCAL 
-    extern dimmerLamp dimmer_hard;
-#endif
+    extern dimmerLamp dimmer_hard; 
     extern Logs logging;
-#ifndef LIGHT_FIRMWARE
+  #ifndef LIGHT_FIRMWARE
     extern HA device_dimmer; 
     extern HA surplus_routeur;
-#endif
+  #endif
 
 
 /*
@@ -136,9 +134,9 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
     }
 
     /// valeur négative impossible
-  if ( gDisplayValues.dimmer < 0 ) {
+  if ( gDisplayValues.dimmer <= 0 && gDisplayValues.dimmer != 0 ) {
     gDisplayValues.dimmer = 0; 
-    gDisplayValues.change = 1 ;
+    gDisplayValues.change = 1 ; 
     }
     
     gDisplayValues.security ++ ;
@@ -152,15 +150,10 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
       }
     } 
 
-  if (gDisplayValues.dimmer_disengaged) {
-      gDisplayValues.dimmer = 0;
-      gDisplayValues.change = 1;
-     }
-
+  
   if  (gDisplayValues.change  )  {
 
 
-#if DIMMERLOCAL
     if (config.dimmerlocal) {
 
         /// Cooler 
@@ -217,15 +210,12 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
     }
 
-    else
-#endif
-    { dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer, puissance_dispo ) ;  }
+    else { dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer, puissance_dispo ) ;  }
  
   
   }
 }
 
-#if DIMMERLOCAL
 //// fonctions for local dimmer
 
  
@@ -274,7 +264,6 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
       return String(state);
       
     }
-#endif
 
 //// récupération de la valeur du dimmer distant
 int dimmer_getState() {

@@ -55,7 +55,7 @@ String oscilloscope() {
   int sigma = 0;
   String retour = "[[";
   
-  if (configmodule.enphase_present == false && configmodule.Fronius_present == false) {front();}
+  front();
   
   delayMicroseconds (config.cosphi*config.readtime); // correction décalage
   while ( timer < ( freqmesure ) )
@@ -205,8 +205,11 @@ String getenvoy() {
 //***********************************
 String getchart() {
   String retour ="" ;
+  //ne sert à rien si enphase en route
+  if (configmodule.enphase_present == false) {
     retour = oscilloscope() ;
-      return String(retour);
+  }
+        return String(retour);
 }
 //***********************************
 //***********************************

@@ -313,6 +313,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                             gDisplayValues.dimmer_disengaged = false;
                           }
                           request->send(200, "text/html", engagedimmer.c_str());}
+                          
 	   // /get?cycle=x
     if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
                           saveConfiguration(filename_conf, config);   

@@ -139,7 +139,12 @@ void affichage_normal(){
                       display.display();
                   #endif
                   #ifdef TTGO
+                      if (gDisplayValues.puissance_route < 10000 ) {
                       drawtext16TTGO(0, 70, String(gDisplayValues.puissance_route), TFT_GREEN);
+                      }
+                      else {
+                      drawtext16TTGO(0, 70, "9999", TFT_GREEN);
+                      }
                   #endif
 
                   // display Fronius ligne du bas
