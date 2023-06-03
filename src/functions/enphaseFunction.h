@@ -294,6 +294,7 @@ bool Enphase_get_7_JWT(void) {
         SessionId = https.header("Set-Cookie");
       } else {
           Serial.println("Enphase contrôle tocket : TOKEN INVALIDE !!!");
+          
       }
     }
   }

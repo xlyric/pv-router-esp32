@@ -191,7 +191,7 @@ void setup()
        AP=false; 
   }
 
-  configmodule.enphase_present=false;
+  configmodule.enphase_present=false; 
   configmodule.Fronius_present=false;
 
   loadmqtt(mqtt_conf ,configmqtt);
