@@ -236,9 +236,7 @@
               </div>
               <div class="card-body">
                 <div class="form-group row">
-                    <div class="col-sm-6"><span>Charge connectée</span>
-                      <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
-                    </div>
+
                     <div class="col-sm-6 limite"><span>Limiteur en %</span>
                         <input type="text" class="form-control form-control-user" id="Fusible" placeholder="%FUSE%">
                     </div>
@@ -279,12 +277,16 @@
                               <label class="custom-control-label" for="dimmerlocal" onclick="sendservermode(this.innerHTML);" >Dimmer local</label>
                       </div>
                     </div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-3">
                         Limiteur local : <input type="text" class="form-control form-control-user" id="Fusiblelocal" placeholder="%FUSELOCAL%">
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-3"><span>Charge connectée</span>
+                      <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
+                    </div>
+                    <div class="col-sm-3">
                       Max temp : <input type="text" class="form-control form-control-user" id="maxtemp" placeholder="%MAXTEMP%">
                   </div>
+
                 </div>
               </div>
             </div>
