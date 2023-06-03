@@ -62,7 +62,7 @@ void keepWiFiAlive(void * parameter){
         serial_println(WiFi.localIP());
         serial_print("force du signal:");
         serial_print(WiFi.RSSI());
-        serial_print("dBm");
+        serial_println("dBm");
         gDisplayValues.currentState = UP;
         gDisplayValues.IP = String(WiFi.localIP().toString());
         btStop();

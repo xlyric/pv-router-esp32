@@ -55,7 +55,7 @@ String oscilloscope() {
   int sigma = 0;
   String retour = "[[";
   
-  front();
+  if (configmodule.enphase_present == false && configmodule.Fronius_present == false) {front();}
   
   delayMicroseconds (config.cosphi*config.readtime); // correction décalage
   while ( timer < ( freqmesure ) )

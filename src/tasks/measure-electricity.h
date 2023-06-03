@@ -98,7 +98,7 @@ if (!AP) {
                   gDisplayValues.watt = gDisplayValues.Fronius_conso ; 
                   gDisplayValues.Fronius_conso = tempo; }
                   else 
-                  {  /// si c'est un modèle S, il ne fait pas les mesures. 
+                  {  /// si c'est un modèle R, il ne fait pas les mesures. 
                   injection2();
                   }
 
