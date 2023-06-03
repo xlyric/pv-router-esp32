@@ -239,7 +239,6 @@ bool Enphase_get_7_Production(void){
           // During night, Envoy measure a negative production
           gDisplayValues.Fronius_prod = 0;
         }
-        gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
         gDisplayValues.Fronius_totalconso = int(doc["consumption"][0]["wNow"]);
         gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
         gDisplayValues.enp_prod_whLifetime = int(doc["production"][1]["whLifetime"]);;
