@@ -414,6 +414,7 @@ Dimmer_setup();
     NULL                    // Task handle
   ); //pdMS_TO_TICKS(4000)
   
+  #if DALLAS
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------
@@ -426,6 +427,7 @@ Dimmer_setup();
     4,                      // Task priority
     NULL                    // Task handle
   );  //pdMS_TO_TICKS(15000)
+  #endif
   #endif
 
 #endif
