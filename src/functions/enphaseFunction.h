@@ -16,7 +16,8 @@ extern Configmodule configmodule;
 
 void Enphase_get_5(void);
 void Enphase_get_7(void);
-
+#define COOKIE "Set-Cookie"
+String SessionId;
 //////////////////// gestion FS
 
 
@@ -174,8 +175,13 @@ void Enphase_get_5(void) {
       gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
       gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]);
     } else {
-      gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]);
-      gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]);
+      //gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]);
+      //gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]);
+      if ((gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"])) < 0) {
+        // During night, Envoy measure a negative production
+        gDisplayValues.Fronius_prod = 0;
+      }
+      gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
       gDisplayValues.Fronius_totalconso = int(doc["consumption"][0]["wNow"]);
     }
 
@@ -215,9 +221,12 @@ bool Enphase_get_7_Production(void){
   Serial.println("Enphase Get production : https://" + adr + url);
   if (https.begin("http://" + adr + url)) { 
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
-    https.addHeader("Authorization","Bearer "+String(configmodule.token));
+    //https.addHeader("Authorization","Bearer "+String(configmodule.token));
     https.addHeader("Accept-Encoding","gzip, deflate, br");
     https.addHeader("User-Agent","PvRouter/1.1.1");
+    if (!SessionId.isEmpty()) {
+      https.addHeader("Cookie",SessionId);
+    }
     httpCode = https.GET();
     if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
       String payload = https.getString();
@@ -228,8 +237,13 @@ bool Enphase_get_7_Production(void){
         gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
         gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]);
       } else {
-        gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]);
-        gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]);
+        //gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"]);
+        //gDisplayValues.Fronius_conso = int(doc["consumption"][1]["wNow"]);
+        if ((gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"])) < 0) {
+          // During night, Envoy measure a negative production
+          gDisplayValues.Fronius_prod = 0;
+        }
+        gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
         gDisplayValues.Fronius_totalconso = int(doc["consumption"][0]["wNow"]);
         gDisplayValues.enp_prod_whLifetime = int(doc["production"][1]["whLifetime"]);;
         gDisplayValues.enp_cons_whLifetime = int(doc["consumption"][0]["whLifetime"]);;
@@ -244,7 +258,7 @@ bool Enphase_get_7_Production(void){
       // debug
       Serial.println("Enphase Get production > prod: " + String(gDisplayValues.Fronius_prod) + " conso: " + String(gDisplayValues.Fronius_conso) + " total conso: " + String(gDisplayValues.Fronius_totalconso));
     } else {
-      Serial.println("[Enphase Get production] GET... failed, error: " + httpCode);
+      Serial.println("[Enphase Get production] GET... failed, error: " + String(httpCode) );
     }
     //https.end();
   }
@@ -264,9 +278,13 @@ bool Enphase_get_7_JWT(void) {
   //Initializing an HTTPS communication using the secure client
   if (https.begin("https://" + adr + url)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
-    https.addHeader("Authorization","Bearer "+String(configmodule.token));
+    //https.addHeader("Authorization","Bearer "+String(configmodule.token));
+    https.setAuthorizationType("Bearer");
+    https.setAuthorization(configmodule.token);
     https.addHeader("Accept-Encoding","gzip, deflate, br");
     https.addHeader("User-Agent","PvRouter/1.1.1");
+    const char * headerkeys[] = {COOKIE};
+    https.collectHeaders(headerkeys, sizeof(headerkeys)/sizeof(char*));
     int httpCode = https.GET();
     
     // httpCode will be negative on error
@@ -276,8 +294,23 @@ bool Enphase_get_7_JWT(void) {
         retour = true;
         // Token valide
         Serial.println("Enphase contrôle tocket : TOKEN VALIDE ");
+                SessionId = https.header(COOKIE);
+        if (!SessionId.isEmpty()) {
+          int pos1 = SessionId.indexOf("sessionId");
+          if (pos1 < 0) {
+            SessionId.clear();
+          }
+          else {
+            SessionId.remove(0, pos1);
+            int pos2 = SessionId.indexOf(';', pos1);
+            if (pos2 > 0) {
+              SessionId.remove(pos2);
+            }
+          }
+        }
       } else {
           Serial.println("Enphase contrôle tocket : TOKEN INVALIDE !!!");
+          
       }
     }
   }

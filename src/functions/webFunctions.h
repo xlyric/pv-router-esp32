@@ -301,11 +301,19 @@ server.onNotFound(notFound);
 /////////////////////////
 
 server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
-      ///   /get?send=on
-   /* if (request->hasParam(PARAM_INPUT_1)) 		  { inputMessage = request->getParam(PARAM_INPUT_1)->value();
-													config.sending = 0; 
-													if ( inputMessage != "On" ) { config.sending = 1; }
-													request->send(200, "text/html", getSendmode().c_str()); 	}*/
+      ///   /get?disengage_dimmer=on
+    if (request->hasParam(PARAM_INPUT_1)) {
+                          String engagedimmer;
+                          if(request->getParam(PARAM_INPUT_1)->value() == "on") {
+                            engagedimmer = "dimmer disengaged";
+                            gDisplayValues.dimmer_disengaged = true;
+                          }
+                          else {
+                            engagedimmer = "dimmer engaged";
+                            gDisplayValues.dimmer_disengaged = false;
+                          }
+                          request->send(200, "text/html", engagedimmer.c_str());}
+                          
 	   // /get?cycle=x
     if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
                           saveConfiguration(filename_conf, config);   

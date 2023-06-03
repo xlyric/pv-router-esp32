@@ -19,7 +19,7 @@ extern TFT_eSPI display ;   // Invoke library
 #endif
 int middleoscillo = 1800;
 
-const char* PARAM_INPUT_1 = "send"; /// paramettre de retour sendmode
+const char* PARAM_INPUT_1 = "disengage_dimmer"; /// paramettre de retour sendmode
 const char* PARAM_INPUT_2 = "cycle"; /// paramettre de retour cycle
 const char* PARAM_INPUT_3 = "readtime"; /// paramettre de retour readtime
 const char* PARAM_INPUT_4 = "cosphi"; /// paramettre de retour cosphi
@@ -205,8 +205,11 @@ String getenvoy() {
 //***********************************
 String getchart() {
   String retour ="" ;
+  //ne sert à rien si enphase en route
+  if (configmodule.enphase_present == false) {
     retour = oscilloscope() ;
-      return String(retour);
+  }
+        return String(retour);
 }
 //***********************************
 //***********************************

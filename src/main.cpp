@@ -150,6 +150,9 @@ void setup()
   #if DEBUG == true
     Serial.begin(115200);
   #endif 
+  #if CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
+    Serial.setDebugOutput(true);
+  #endif
   logging.init="197}11}1";
   logging.init += "#################  Restart reason  ###############\r\n";
   esp_reset_reason_t reason = esp_reset_reason();
@@ -188,7 +191,7 @@ void setup()
        AP=false; 
   }
 
- configmodule.enphase_present=false; 
+  configmodule.enphase_present=false; 
   configmodule.Fronius_present=false;
 
   loadmqtt(mqtt_conf ,configmqtt);

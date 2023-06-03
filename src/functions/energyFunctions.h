@@ -23,7 +23,7 @@ void front() {
   while ( adc1_get_raw((adc1_channel_t)5) > margin  ) { 
   	delayMicroseconds (3);
     Watchdog++;
-    if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false; break; } 
+    if ( Watchdog > 2500  ) {  Serial.println(NO_SYNC); gDisplayValues.porteuse = false; break; } 
 
 	}
 
@@ -33,7 +33,7 @@ void front() {
   while ( adc1_get_raw((adc1_channel_t)5) == margin  ) {
   delayMicroseconds (3);  
     Watchdog++;
-    if ( Watchdog > 2500  ) {  Serial.print(NO_SYNC); gDisplayValues.porteuse = false ; break;}  
+    if ( Watchdog > 2500  ) {  Serial.println(NO_SYNC); gDisplayValues.porteuse = false ; break;}  
 	}
     
 }

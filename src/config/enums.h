@@ -51,6 +51,7 @@ struct DisplayValues {
   double enp_current_power_consumption;
   double enp_current_power_production;
   int puissance_route=0;
+  bool dimmer_disengaged=false;
 };
 
 struct Config {
