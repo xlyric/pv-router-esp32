@@ -301,19 +301,28 @@ server.onNotFound(notFound);
 /////////////////////////
 
 server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
-      ///   /get?disengage_dimmer=on
-    if (request->hasParam(PARAM_INPUT_1)) {
-                          String engagedimmer;
-                          if(request->getParam(PARAM_INPUT_1)->value() == "on") {
-                            engagedimmer = "dimmer disengaged";
-                            gDisplayValues.dimmer_disengaged = true;
+#if 0
+      ///   /get?disengage_dimmer=true
+    if (request->hasParam(PARAM_INPUT_1))
+                        {
+                          String disengagedimmer = request->getParam(PARAM_INPUT_1)->value();
+                          if (disengagedimmer.isEmpty()) {
+                            request->send(200, "text/html", String(gDisplayValues.dimmer_disengaged).c_str());                            
                           }
-                          else {
-                            engagedimmer = "dimmer engaged";
-                            gDisplayValues.dimmer_disengaged = false;
+                          else
+                          {
+                            if(disengagedimmer == "true" || disengagedimmer == "1" || disengagedimmer == "on") {
+                              disengagedimmer = "dimmer disengaged";
+                              gDisplayValues.dimmer_disengaged = true;
+                            }
+                            else {
+                              disengagedimmer = "dimmer engaged";
+                              gDisplayValues.dimmer_disengaged = false;
+                            }
                           }
-                          request->send(200, "text/html", engagedimmer.c_str());}
-                          
+                          request->send(200, "text/html", disengagedimmer.c_str());
+                        }
+#endif
 	   // /get?cycle=x
     if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
                           saveConfiguration(filename_conf, config);   
