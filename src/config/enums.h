@@ -111,7 +111,7 @@ struct Configwifi {
   public:bool recup_wifi() {
   preferences.begin("credentials", false);
   String tmp; 
-  tmp = preferences.getString("ssid", "");
+  tmp = preferences.getString("ssid", "AP");
   tmp.toCharArray(SID,32);
   tmp = preferences.getString("password", "");
   tmp.toCharArray(passwd,64);
