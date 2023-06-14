@@ -153,6 +153,7 @@ void setup()
   #if CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
     Serial.setDebugOutput(true);
   #endif
+  Serial.println("\n================== " + String(VERSION) + " ==================");
   logging.init="197}11}1";
   logging.init += "#################  Restart reason  ###############\r\n";
   esp_reset_reason_t reason = esp_reset_reason();

@@ -26,5 +26,6 @@
 	"resistance":1000,
 	"polarity":true,
 	"Publish":"domoticz/in",
-	"screentime":120
+	"screentime":120,
+	"flip":true
 }

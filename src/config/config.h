@@ -200,7 +200,12 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define VERSION "Version 20230612"
+#define RELEASE "Version 20230612"
+#ifdef LIGHT_FIRMWARE
+ #define VERSION "Light " RELEASE
+#else
+ #define VERSION RELEASE
+#endif
 
 #define EnvoyJ "/auth/check_jwt"
 #define EnvoyR "/api/v1/production"
