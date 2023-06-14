@@ -73,7 +73,7 @@ if (AP) {
 else {
   server.on("/",HTTP_GET, [](AsyncWebServerRequest *request){
     if(SPIFFS.exists("/index.html.gz") ){
-    #ifndef LIGHT_FIRMWARE
+    #if 1 //#ifndef LIGHT_FIRMWARE
       compress_html(request,"/index.html.gz", "text/html");
     #else
       compress_html(request,"/index-light.html.gz", "text/html");
@@ -91,7 +91,7 @@ else {
     #ifndef LIGHT_FIRMWARE
        compress_html(request,"/config.html.gz", "text/html");
     #else
-       compress_html(request,"/config-ap.html.gz", "text/html");
+       compress_html(request,"/config-light.html.gz", "text/html");
     #endif
 
     }
@@ -301,6 +301,7 @@ server.onNotFound(notFound);
 /////////////////////////
 
 server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+#if 0
       ///   /get?disengage_dimmer=on
     if (request->hasParam(PARAM_INPUT_1)) {
                           String engagedimmer;
@@ -313,6 +314,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                             gDisplayValues.dimmer_disengaged = false;
                           }
                           request->send(200, "text/html", engagedimmer.c_str());}
+#endif
                           
 	   // /get?cycle=x
     if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
@@ -368,7 +370,6 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    // enphase
    bool enphasemodif=false ; 
    if (request->hasParam("envoyserver")) { request->getParam("envoyserver")->value().toCharArray(configmodule.hostname,16); enphasemodif=true; }
-   if (request->hasParam("envport")) { request->getParam("envport")->value().toCharArray(configmodule.port,5);  enphasemodif=true;}
    if (request->hasParam("envmodele")) { request->getParam("envmodele")->value().toCharArray(configmodule.envoy,2);  enphasemodif=true;}
    if (request->hasParam("envversion")) { request->getParam("envversion")->value().toCharArray(configmodule.version,2); enphasemodif=true; }
    if (request->hasParam("envtoken")) { request->getParam("envtoken")->value().toCharArray(configmodule.token,425); enphasemodif=true; }

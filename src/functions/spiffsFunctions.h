@@ -75,7 +75,11 @@ void loadConfiguration(const char *filename, Config &config) {
   config.resistance = doc["resistance"] | 1000;
   config.sending = doc["sending"] | true;
   config.autonome = doc["autonome"] | true;
+#ifdef LIGHT_FIRMWARE
+  config.mqtt = false;
+#else
   config.mqtt = doc["mqtt"] | true;
+#endif
   config.mqttport = doc["mqttport"] | 1883;
   
   config.dimmerlocal = doc["dimmerlocal"] | false;

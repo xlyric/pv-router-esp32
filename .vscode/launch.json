@@ -12,9 +12,9 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug",
-            "executable": "D:/_DEV_ESP32/pv-router-esp32-1/.pio/build/ttgo-t-display/firmware.elf",
+            "executable": "e:/XLYRIC/pv-router-esp32/.pio/build/ttgo-t-display/firmware.elf",
             "projectEnvName": "ttgo-t-display",
-            "toolchainBinDir": "C:/Users/frede/.platformio/packages/toolchain-xtensa-esp32/bin",
+            "toolchainBinDir": "C:/Users/KRISS/.platformio/packages/toolchain-xtensa-esp32/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "preLaunchTask": {
                 "type": "PlatformIO",
@@ -25,18 +25,18 @@
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (skip Pre-Debug)",
-            "executable": "D:/_DEV_ESP32/pv-router-esp32-1/.pio/build/ttgo-t-display/firmware.elf",
+            "executable": "e:/XLYRIC/pv-router-esp32/.pio/build/ttgo-t-display/firmware.elf",
             "projectEnvName": "ttgo-t-display",
-            "toolchainBinDir": "C:/Users/frede/.platformio/packages/toolchain-xtensa-esp32/bin",
+            "toolchainBinDir": "C:/Users/KRISS/.platformio/packages/toolchain-xtensa-esp32/bin",
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
             "type": "platformio-debug",
             "request": "launch",
             "name": "PIO Debug (without uploading)",
-            "executable": "D:/_DEV_ESP32/pv-router-esp32-1/.pio/build/ttgo-t-display/firmware.elf",
+            "executable": "e:/XLYRIC/pv-router-esp32/.pio/build/ttgo-t-display/firmware.elf",
             "projectEnvName": "ttgo-t-display",
-            "toolchainBinDir": "C:/Users/frede/.platformio/packages/toolchain-xtensa-esp32/bin",
+            "toolchainBinDir": "C:/Users/KRISS/.platformio/packages/toolchain-xtensa-esp32/bin",
             "internalConsoleOptions": "openOnSessionStart",
             "loadMode": "manual"
         }
