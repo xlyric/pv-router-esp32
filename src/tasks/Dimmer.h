@@ -39,7 +39,7 @@ void get_dimmer_child_power (){
             
             gDisplayValues.puissance_route = doc["Ptotal"];
   
-            Serial.println(gDisplayValues.puissance_route);
+            Serial.println("Puissance routee: " + String(gDisplayValues.puissance_route));
         }
         else {
             gDisplayValues.puissance_route = 0;
