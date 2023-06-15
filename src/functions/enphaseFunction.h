@@ -165,7 +165,7 @@ void Enphase_get_5(void) {
   if (httpResponseCode == HTTP_CODE_OK) {
     String payload = httpenphase.getString();
 
-    DynamicJsonDocument doc(2048);
+    DynamicJsonDocument doc(3072);
     deserializeJson(doc, payload);
 
     if (String(configmodule.envoy) == "R") {
@@ -227,7 +227,7 @@ bool Enphase_get_7_Production(void){
     if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
       String payload = https.getString();
       //Serial.println(payload);
-      DynamicJsonDocument doc(2048);
+      DynamicJsonDocument doc(3072);
       deserializeJson(doc, payload);
       if (String(configmodule.envoy) == "R") {
         gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
