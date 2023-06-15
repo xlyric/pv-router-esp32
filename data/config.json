@@ -27,5 +27,5 @@
 	"polarity":true,
 	"Publish":"domoticz/in",
 	"screentime":120,
-	"flip":true
+	"flip":false
 }

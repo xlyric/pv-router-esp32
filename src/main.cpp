@@ -57,7 +57,7 @@
 #include "functions/dallasFunction.h"
 #endif
 
-#if DIMMERLOCAL 
+#if 1//DIMMERLOCAL 
 #include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
 #include "functions/dimmerFunction.h"
 #endif
@@ -114,7 +114,7 @@ unsigned char measureIndex = 0;
 //************* Dallas
 //***********************************
 #if DALLAS
-Dallas dallas; 
+Dallas dallas;
 #endif
 
 String loguptime();
@@ -141,7 +141,7 @@ String loguptime();
 /***************************
  *  Dimmer init
  **************************/
-#if DIMMERLOCAL
+#if 1//DIMMERLOCAL
 dimmerLamp dimmer_hard(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 #endif
 
@@ -288,7 +288,7 @@ void setup()
   ledcAttachPin(JOTTA, 0);
   ledcWrite(0, 0);
 
-#if DIMMERLOCAL 
+#if 1//DIMMERLOCAL 
 Dimmer_setup();
 #endif
 
@@ -435,7 +435,9 @@ Dimmer_setup();
     4,                      // Task priority
     NULL                    // Task handle
   ); //pdMS_TO_TICKS(4000)
+  #endif
   
+  #if DALLAS
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------

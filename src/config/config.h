@@ -102,14 +102,14 @@ float PowerFactor; //
  */
 
 #define DIMMER true
-#define DIMMERLOCAL true
-#define DALLAS true
+//#define DIMMERLOCAL true
+#define DALLAS false
 #define TRIGGER 10   /// 
 
 ///// PVROUTER false dans le cas d'un enphase en pilote full 
 #define PVROUTER true
 
-#if DIMMERLOCAL 
+#if 1//DIMMERLOCAL 
     #define outputPin  26 // PSM on board
     #define zerocross  27 // for boards with CHANGEBLE input pins // ZC on board
     #define cooler 12 // Pin for cooler. (switch on dimmer)
