@@ -23,6 +23,8 @@ extern TFT_eSPI display;
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule;
 
+extern SemaphoreHandle_t xSemaphore;
+
 #define TFT_PIN 4
 
 /**
@@ -35,7 +37,9 @@ void updateDisplay(void* parameter) {
       call_display();
       }
       // Sleep for 5 seconds, then update display again!
-      vTaskDelay(pdMS_TO_TICKS(5000));
+      //vTaskDelay(pdMS_TO_TICKS(5000));
+      // Wait for semaphore with 5s timeout
+      xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(5000));
   } // for
 } // updateDisplay
 

@@ -8,8 +8,11 @@
 #define LANG_EN false
 
 #define CLEAN false
+#ifdef  DEVKIT1
 #define NTP false
-
+#else
+#undef NTP
+#endif
 /**
  * WiFi credentials
  */

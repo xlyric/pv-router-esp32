@@ -16,6 +16,8 @@ extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
 extern Logs Logging;
 
+extern SemaphoreHandle_t xSemaphore;
+
 #ifndef LIGHT_FIRMWARE
       extern HA device_routeur; 
       extern HA device_grid; 
@@ -167,6 +169,9 @@ if (!AP) {
 }
 
 long end = millis();
+
+      // Release semaphore
+      xSemaphoreGive(xSemaphore);
 
       // Schedule the task to run again in 1 second (while
       // taking into account how long measurement took) ///&& configmodule.pilote

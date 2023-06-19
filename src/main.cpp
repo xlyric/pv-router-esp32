@@ -110,6 +110,8 @@ NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL
 unsigned short measurements[LOCAL_MEASUREMENTS];
 unsigned char measureIndex = 0;
 
+SemaphoreHandle_t xSemaphore = NULL;
+
 //***********************************
 //************* Dallas
 //***********************************
@@ -308,6 +310,9 @@ Dimmer_setup();
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
 
+  // Create mutex 
+  xSemaphore = xSemaphoreCreateBinary();
+
 #if WIFI_ACTIVE == true
   #if WEBSSERVER == true
   //***********************************
@@ -343,7 +348,7 @@ Dimmer_setup();
     );
 
     
-  #endif
+#endif
 
   // ----------------------------------------------------------------
   // TASK: Connect to AWS & keep the connection alive.
@@ -363,7 +368,7 @@ Dimmer_setup();
   //       This is pinned to the same core as Arduino
   //       because it would otherwise corrupt the OLED
   // ----------------------------------------------------------------
-  #if OLED_ON == true 
+#if OLED_ON == true
   xTaskCreatePinnedToCore(
     updateDisplay,
     "UpdateDisplay",  // Task name
@@ -373,7 +378,7 @@ Dimmer_setup();
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
   );  //pdMS_TO_TICKS(5000)
-  #endif
+#endif
 
 #if DALLAS
   // ----------------------------------------------------------------
@@ -405,7 +410,7 @@ Dimmer_setup();
     NULL                    // Task handle
   );  // pdMS_TO_TICKS(1000)
   
-  #endif
+#endif
 
 
 
@@ -473,17 +478,13 @@ Dimmer_setup();
       #endif
     #endif
   }
-    
-#endif
-
-#if WIFI_ACTIVE == true
 
 
-      #if WEBSSERVER == true
-        AsyncElegantOTA.begin(&server);
-        server.begin(); 
-      #endif
-#ifndef LIGHT_FIRMWARE
+  #if WEBSSERVER == true
+    AsyncElegantOTA.begin(&server);
+    server.begin(); 
+  #endif
+  #ifndef LIGHT_FIRMWARE
     if (!AP) {
         if (config.mqtt) {
           Mqtt_init();
@@ -493,7 +494,7 @@ Dimmer_setup();
           
         }
     }
-#endif
+  #endif
   //if ( config.autonome == true ) {
     gDisplayValues.dimmer = 0; 
     dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,0 ) ; 
@@ -501,11 +502,11 @@ Dimmer_setup();
 
 #endif
 
-  #if OLED_ON == true
-    #ifdef  DEVKIT1
+#if OLED_ON == true
+  #ifdef  DEVKIT1
       display.clear();
-    #endif
   #endif
+#endif
 
 esp_register_shutdown_handler( handler_before_reset );
 
@@ -557,22 +558,21 @@ void loop()
     }
   }
 #ifndef LIGHT_FIRMWARE
-    if (!AP) {
-      #if WIFI_ACTIVE == true
-          if (config.mqtt) {
-            if (!client.connected()) { reconnect(); }
-          client.loop();
-          
-          }
-          // TODO : désactivation MQTT en décochant la case, sans redémarrer
-          // else {
-          //     if (client.connected()) { client.disconnect(); }
-          // }  
+  if (!AP) {
+    #if WIFI_ACTIVE == true
+        if (config.mqtt) {
+          if (!client.connected()) { reconnect(); }
+        client.loop();
+        
+        }
+        // TODO : désactivation MQTT en décochant la case, sans redémarrer
+        // else {
+        //     if (client.connected()) { client.disconnect(); }
+        // }
 
-      #endif
-    }
-#endif
-#ifndef LIGHT_FIRMWARE
+    #endif
+  }
+
   client.publish("memory2", String(esp_get_free_heap_size()).c_str())   ;
 #endif
 

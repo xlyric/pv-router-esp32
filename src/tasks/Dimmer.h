@@ -13,6 +13,7 @@ extern DisplayValues gDisplayValues;
 extern  Config config;
 extern dimmerLamp dimmer_hard; 
 
+extern SemaphoreHandle_t xSemaphore;
 
 /**
  * Task: Modifier le dimmer en fonction de la production
@@ -52,9 +53,10 @@ void get_dimmer_child_power (){
 void updateDimmer(void * parameter){
   for (;;){
   gDisplayValues.task = true;
+    // Wait for semaphore with 5s timeout
+    xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(5000));
+
 #if WIFI_ACTIVE == true
-    dimmer();
-    
     #if CLEAN
     /*
     /// si changement à faire
@@ -75,13 +77,14 @@ void updateDimmer(void * parameter){
     }
 
     
+    dimmer();
 
 
 
 #endif
     gDisplayValues.task = false;
-   // Sleep for 5 seconds, avant de refaire une analyse
-    vTaskDelay(pdMS_TO_TICKS(4000));
+    // Sleep for 5 seconds, avant de refaire une analyse
+    //vTaskDelay(pdMS_TO_TICKS(4000));
     // 24/01/2023 changement de 5 à 4s 
   }
 }
