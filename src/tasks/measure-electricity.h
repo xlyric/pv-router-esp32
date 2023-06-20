@@ -171,7 +171,7 @@ long end = millis();
       // Schedule the task to run again in 1 second (while
       // taking into account how long measurement took) ///&& configmodule.pilote
       if (configmodule.enphase_present) {
-            vTaskDelay(pdMS_TO_TICKS(5000));
+            vTaskDelay(pdMS_TO_TICKS(4000));
       }
       else
       {      

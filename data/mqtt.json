@@ -1,1 +1,1 @@
-{"MQTT_USER":"mosquitto","MQTT_PASSWORD":"test-123"}
+{"MQTT_USER":"mosquitto","MQTT_PASSWORD":"test-123","HA":true}

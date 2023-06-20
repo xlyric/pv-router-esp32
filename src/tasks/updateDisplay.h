@@ -35,7 +35,7 @@ void updateDisplay(void* parameter) {
       call_display();
       }
       // Sleep for 5 seconds, then update display again!
-      vTaskDelay(pdMS_TO_TICKS(5000));
+      vTaskDelay(pdMS_TO_TICKS(4000));
   } // for
 } // updateDisplay
 

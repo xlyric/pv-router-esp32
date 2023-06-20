@@ -125,7 +125,7 @@ void Enphase_get(void) {
       //Serial.println("Enphase version 7");
       Enphase_get_7();
     } else {
-      Serial.println("Enphase version 7 : pas de token");
+      Serial.println("Enphase version 7 : Token vide");
     }
     
     
@@ -166,7 +166,7 @@ void Enphase_get_5(void) {
   if (httpResponseCode == HTTP_CODE_OK) {
     String payload = httpenphase.getString();
 
-    DynamicJsonDocument doc(2048);
+    DynamicJsonDocument doc(3072);
     deserializeJson(doc, payload);
 
     if (String(configmodule.envoy) == "R") {
@@ -229,7 +229,7 @@ bool Enphase_get_7_Production(void){
     if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
       String payload = https.getString();
       //Serial.println(payload);
-      DynamicJsonDocument doc(2048);
+      DynamicJsonDocument doc(3072);
       deserializeJson(doc, payload);
       if (String(configmodule.envoy) == "R") {
         gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
@@ -257,6 +257,7 @@ bool Enphase_get_7_Production(void){
   else {
     Serial.println("[Enphase Get production] GET... failed, error: " + String(httpCode));
   }
+  https.end();
   return retour;
 }
 
@@ -289,7 +290,7 @@ bool Enphase_get_7_JWT(void) {
         SessionId = https.header("Set-Cookie");
       } else {
           Serial.println("Enphase contrôle tocket : TOKEN INVALIDE !!!");
-          
+          https.end();
       }
     }
   }
@@ -298,21 +299,15 @@ bool Enphase_get_7_JWT(void) {
 }
 
 void Enphase_get_7(void) {
-  if(WiFi.isConnected() and configmodule.token != "") {
+  if(WiFi.isConnected() ) {
     //create an HTTPClient instance
-    if (initEnphase == true) {
-      initEnphase = false;
+    if (SessionId.isEmpty() || Enphase_get_7_Production() == false) { // Permet de lancer le contrôle du token une fois au démarrage (Empty SessionId)
+      SessionId.clear();
       Enphase_get_7_JWT();
     }
-    if (Enphase_get_7_Production() == false) {
-      Enphase_get_7_JWT();
-    }
-    vTaskDelay(pdMS_TO_TICKS(100));
   } else {
-    if (configmodule.token == "")  {
-      Serial.println("Enphase version 7 : Token vide");
-    }
-  }
+    Serial.println("Enphase version 7 : ERROR");
+  } 
   
 }
 

@@ -51,10 +51,10 @@
   #include <driver/adc.h>
 #if DALLAS
 // Dallas 18b20
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include "tasks/dallas.h"
-#include "functions/dallasFunction.h"
+  #include <OneWire.h>
+  #include <DallasTemperature.h>
+  #include "tasks/dallas.h"
+  #include "functions/dallasFunction.h"
 #endif
 
 #if DIMMERLOCAL 
@@ -153,6 +153,7 @@ void setup()
   #if CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
     Serial.setDebugOutput(true);
   #endif
+  Serial.println("\n================== " + String(VERSION) + " ==================");
   logging.init="197}11}1";
   logging.init += "#################  Restart reason  ###############\r\n";
   esp_reset_reason_t reason = esp_reset_reason();
@@ -162,7 +163,29 @@ void setup()
   Serial.println("start SPIFFS");
   logging.init += loguptime();
   logging.init += "Start Filesystem\r\n";
-  SPIFFS.begin();
+  if (!SPIFFS.begin(true)) {
+    Serial.println("SPIFFS Initialization failed!");
+    return;
+  }
+
+  /// Program & FS size
+    // size of the compiled program
+    uint32_t program_size = ESP.getSketchSize();
+
+    // size of the file system
+    uint32_t file_system_size = SPIFFS.totalBytes();
+
+    // used size of the file system
+    uint32_t file_system_used = SPIFFS.usedBytes();
+
+    // free size in the flash memory
+    uint32_t free_size = ESP.getFlashChipSize() - program_size - file_system_size + file_system_used;
+
+    Serial.println("Program size: " + String(program_size) + " bytes");
+    Serial.println("File system size: " + String(file_system_size) + " bytes");
+    Serial.println ("File system used: " + String(file_system_used) + " bytes");
+    Serial.println("Free space: " + String(free_size) + " bytes");
+
 
 /// test ACD 
 
