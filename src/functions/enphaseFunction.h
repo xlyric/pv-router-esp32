@@ -9,6 +9,10 @@
 #include "SPIFFS.h"
 #include "config/enums.h"
 
+#define EnvoyJ "/auth/check_jwt"
+#define EnvoyR "/api/v1/production"
+#define EnvoyS "/production.json"
+
 HTTPClient httpenphase;
 
 const char *enphase_conf = "/enphase.json";

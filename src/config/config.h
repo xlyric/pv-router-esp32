@@ -34,9 +34,9 @@
  * Switch Screnn button and time on
  * 
  */
-#define SWITCH 35
+#define SWITCH 0
 //#define SWITCHTIMER 0   // 0 : always ON  / other : time in sec 
-#define BUTTON_LEFT 0 // bouton droit ttgo
+#define BUTTON_LEFT 35 // bouton droit ttgo
 #define NB_PAGES 1 // nombre de pages d'affichages codées
 
 /**
@@ -209,10 +209,6 @@ bool discovery_temp = false;
 #else
  #define VERSION RELEASE
 #endif
-
-#define EnvoyJ "/auth/check_jwt"
-#define EnvoyR "/api/v1/production"
-#define EnvoyS "/production.json"
 
 bool AP=true; 
 
