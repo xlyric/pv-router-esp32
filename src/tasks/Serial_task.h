@@ -11,11 +11,11 @@ extern Configwifi configwifi;
 void serial_read_task(void * parameter){
   for (;;){
         serial_read();
-   } 
    // Sleep for 5 seconds, avant de refaire une analyse
     //vTaskDelay(5000 / portTICK_PERIOD_MS);
     vTaskDelay(pdMS_TO_TICKS(5000));
- vTaskDelete(NULL); //task destructor in case task jumps the stack
+  }
+  vTaskDelete(NULL); //task destructor in case task jumps the stack
 }
 
 #endif
