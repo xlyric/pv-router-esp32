@@ -125,7 +125,7 @@ void saveenphase(const char *filename, const Configmodule &configmodule) {
 
 void Enphase_get(void) {
   if (String(configmodule.version) == "7") {
-    if (String(configmodule.token)!="") {
+    if (!String(configmodule.token).isEmpty()) {
       //Serial.println("Enphase version 7");
       Enphase_get_7();
     } else {
