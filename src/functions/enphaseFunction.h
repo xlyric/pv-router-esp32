@@ -274,6 +274,7 @@ bool Enphase_get_7_JWT(void) {
     https.addHeader("User-Agent","PvRouter/1.1.1");
     const char * headerkeys[] = {"Set-Cookie"};
     https.collectHeaders(headerkeys, sizeof(headerkeys)/sizeof(char*));
+    https.setReuse(true);
     int httpCode = https.GET();
     
     // httpCode will be negative on error
@@ -282,11 +283,20 @@ bool Enphase_get_7_JWT(void) {
       if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
         retour = true;
         // Token valide
-        Serial.println("Enphase contrôle tocket : TOKEN VALIDE ");
+        Serial.println("Enphase contrôle token : TOKEN VALIDE ");
         SessionId.clear();
         SessionId = https.header("Set-Cookie");
+        if (/*SessionId.isEmpty() || */SessionId.indexOf("sessionId") < 0) {
+          retour=false;
+          SessionId.clear();
+          Serial.println("Enphase contrôle token : PAS DE SESSION ID !!!");
+        } else {
+          SessionId.remove(0, SessionId.indexOf("sessionId"));
+          if (SessionId.indexOf(";")) {SessionId.remove(SessionId.indexOf(";"));}
+          Serial.println("Enphase contrôle token : " + SessionId);
+        }
       } else {
-          Serial.println("Enphase contrôle tocket : TOKEN INVALIDE !!!");
+          Serial.println("Enphase contrôle token : TOKEN INVALIDE !!!");
       }
     }
   }
