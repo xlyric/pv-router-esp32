@@ -315,7 +315,6 @@ void Enphase_get_7(void) {
       SessionId.clear();
       Enphase_get_7_JWT();
     }
-//    vTaskDelay(pdMS_TO_TICKS(100));
   } else {
     Serial.println("Enphase version 7 : ERROR");
   } 
