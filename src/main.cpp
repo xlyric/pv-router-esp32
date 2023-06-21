@@ -170,21 +170,6 @@ void setup()
     return;
   }
 
-<<<<<<< HEAD
-/// Program & FS size
-    // size of the compiled program
-    uint32_t program_size = ESP.getSketchSize();
-    
-    // size of the file system
-    uint32_t file_system_size = SPIFFS.totalBytes();
-    
-    // used size of the file system
-    uint32_t file_system_used = SPIFFS.usedBytes();
-    
-    // free size in the flash memory
-    uint32_t free_size = ESP.getFlashChipSize() - program_size - file_system_size + file_system_used;
-    
-=======
   /// Program & FS size
     // size of the compiled program
     uint32_t program_size = ESP.getSketchSize();
@@ -198,15 +183,10 @@ void setup()
     // free size in the flash memory
     uint32_t free_size = ESP.getFlashChipSize() - program_size - file_system_size + file_system_used;
 
->>>>>>> upstream/main
     Serial.println("Program size: " + String(program_size) + " bytes");
     Serial.println("File system size: " + String(file_system_size) + " bytes");
     Serial.println ("File system used: " + String(file_system_used) + " bytes");
     Serial.println("Free space: " + String(free_size) + " bytes");
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/main
 
 /// test ACD 
 

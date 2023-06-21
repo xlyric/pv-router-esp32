@@ -89,7 +89,7 @@ else {
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
     if(SPIFFS.exists("/config.html.gz")){
     #ifndef LIGHT_FIRMWARE
-       compress_html(request,"/config-light.html.gz", "text/html");
+       compress_html(request,"/config.html.gz", "text/html");
     #else
        compress_html(request,"/config-light.html.gz", "text/html");
     #endif
