@@ -47,15 +47,15 @@ int Pow_mqtt_send = 0;
 
 void measureElectricity(void * parameter)
 {
-    for(;;){
-    //  serial_println("[ENERGY] Measuring...");
-       /// vérification qu'une autre task ne va pas fausser les valeurs
+  for(;;){
+      //  serial_println("[ENERGY] Measuring...");
+            /// vérification qu'une autre task ne va pas fausser les valeurs
       long start = millis();
       int porteuse; 
       /*if ( configmodule.enphase_present || configmodule.Fronius_present || strcmp(config.topic_Shelly,"none") != 0 ) {
             porteuse = false; || (String(configmodule.envoy) == "R")
       }*/ /// refaire des tests... 
-      
+
       if ( configmodule.enphase_present == false && configmodule.Fronius_present == false ) {  ///correction Fred 230423--> marche pas 
             if (strcmp(config.topic_Shelly,"none") == 0 ) {
                   injection2();
@@ -75,23 +75,23 @@ void measureElectricity(void * parameter)
             gDisplayValues.porteuse = true;
 
       }
-     
 
 
 
 
-if (!AP) {
 
-// shelly 
+      if (!AP) {
+
       #ifdef NORMAL_FIRMWARE
+            // shelly 
             if (strcmp(config.topic_Shelly,"none") != 0)   { 
             client.loop(); // on vérifie coté mqtt si nouvelle info
             gDisplayValues.watt = gDisplayValues.Shelly ;  // on met à jour
             gDisplayValues.porteuse = true; // et c'est bon. 
             }
       #endif
-///enphase
-      if (configmodule.enphase_present ) {
+            ///enphase
+            if (configmodule.enphase_present ) {
             Enphase_get();
             //if ( configmodule.pilote ) { 
                   //// inversion des valeurs pour enphase piloteur
@@ -104,21 +104,21 @@ if (!AP) {
                   injection2();
                   }
 
-              //    }
+                  //    }
             }
-///enphase
-      if (configmodule.Fronius_present ){
+            ///enphase
+            if (configmodule.Fronius_present ){
             Fronius_get();
-            }           
+            }          
 
 
       #if WIFI_ACTIVE == true
-                  Pow_mqtt_send ++ ;
-                  if ( Pow_mqtt_send > 5 ) {
+            Pow_mqtt_send ++ ;
+            if ( Pow_mqtt_send > 5 ) {
                   long timemesure = start-beforetime;
                   float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli) ;  
             #ifndef LIGHT_FIRMWARE
-                  if (config.IDX != 0 && config.mqtt ) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"","watt");  }
+            if (config.IDX != 0 && config.mqtt ) {Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"","watt");  }
 
                   if (configmqtt.HA) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
@@ -164,11 +164,11 @@ if (!AP) {
             #endif
                   beforetime = start; 
                   Pow_mqtt_send = 0 ;
-                  }
+            }
       #endif
-}
+      }
 
-long end = millis();
+      long end = millis();
 
       // Release semaphore
       xSemaphoreGive(xSemaphore);
@@ -183,7 +183,8 @@ long end = millis();
             vTaskDelay(pdMS_TO_TICKS(2000));
       }
 
-    }    
+  }
+  vTaskDelete(NULL); //task destructor in case task jumps the stack
 }
 
 #endif

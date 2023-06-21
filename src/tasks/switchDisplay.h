@@ -25,14 +25,14 @@ void switchDisplay(void * parameter){
         }
     }
 
-  /// réinit du compteur si bouton option pressé
+    /// réinit du compteur si bouton option pressé
     if ( gDisplayValues.nextbutton ) {
       gDisplayValues.nextbutton = false; 
       digitalWrite(TFT_PIN,HIGH);
       call_display(); 
       timeroptions = millis();  
       timer = millis();
-      }
+    }
 
     /// si option = 0 --> on/off écran 
     if (gDisplayValues.option == 0 ) {
@@ -42,7 +42,7 @@ void switchDisplay(void * parameter){
             logging.start += loguptime(); 
             logging.start += "Oled Off\r\n";   
             digitalWrite(TFT_PIN,LOW);     // and turn Off the OLED
-            }                           // 
+          }
           else {                        // otherwise...      
             Serial.println("button left/bottom pressed");
             gDisplayValues.screenstate = LOW ;
@@ -97,5 +97,6 @@ void switchDisplay(void * parameter){
 
     vTaskDelay(pdMS_TO_TICKS(1000));  
   } 
+  vTaskDelete(NULL); //task destructor in case task jumps the stack
 } //switchDisplay
 #endif

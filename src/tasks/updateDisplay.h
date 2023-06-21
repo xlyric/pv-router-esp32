@@ -41,6 +41,7 @@ void updateDisplay(void* parameter) {
       // Wait for semaphore with 5s timeout
       xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(5000));
   } // for
+  vTaskDelete(NULL); //task destructor in case task jumps the stack
 } // updateDisplay
 
 

@@ -52,7 +52,7 @@ void get_dimmer_child_power (){
 
 void updateDimmer(void * parameter){
   for (;;){
-  gDisplayValues.task = true;
+    gDisplayValues.task = true;
     // Wait for semaphore with 5s timeout
     xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(5000));
 
@@ -87,5 +87,6 @@ void updateDimmer(void * parameter){
     //vTaskDelay(pdMS_TO_TICKS(4000));
     // 24/01/2023 changement de 5 à 4s 
   }
+  vTaskDelete(NULL); //task destructor in case task jumps the stack
 }
 #endif

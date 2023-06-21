@@ -79,6 +79,7 @@ void keepWiFiAlive2(void * parameter){
             vTaskDelay(pdMS_TO_TICKS(30000));
             //continue;
         }
+    vTaskDelete(NULL); //task destructor in case task jumps the stack
 }
 /*
         serial_println(F("[WIFI] Connecting"));

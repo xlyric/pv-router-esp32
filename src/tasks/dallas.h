@@ -23,7 +23,7 @@ extern Dallas dallas ;
 void dallasread(void * parameter){
   for (;;){
     if (dallas.detect) {
-    gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
+      gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
 
         // réduction de la précision de la température
       float floatValue = gDisplayValues.temperature.toFloat();
@@ -34,5 +34,6 @@ void dallasread(void * parameter){
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(pdMS_TO_TICKS(10000));
   }
+  vTaskDelete(NULL); //task destructor in case task jumps the stack
 }
 #endif

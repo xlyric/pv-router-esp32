@@ -65,6 +65,7 @@
             // Sleep for a minute before checking again
             vTaskDelay(NTP_UPDATE_INTERVAL_MS / portTICK_PERIOD_MS);
         }
+        vTaskDelete(NULL); //task destructor in case task jumps the stack
     }
 
         #endif

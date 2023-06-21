@@ -65,7 +65,7 @@ if ( !dallas.detect && String(config.dimmer) != "") {
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(pdMS_TO_TICKS(15000));
   }
-
+vTaskDelete(NULL); //task destructor in case task jumps the stack
 }
 
 #endif
