@@ -89,7 +89,7 @@ else {
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
     if(SPIFFS.exists("/config.html.gz")){
     #ifndef LIGHT_FIRMWARE
-       compress_html(request,"/config.html.gz", "text/html");
+       compress_html(request,"/config-light.html.gz", "text/html");
     #else
        compress_html(request,"/config-light.html.gz", "text/html");
     #endif
@@ -370,6 +370,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    // enphase
    bool enphasemodif=false ; 
    if (request->hasParam("envoyserver")) { request->getParam("envoyserver")->value().toCharArray(configmodule.hostname,16); enphasemodif=true; }
+   //if (request->hasParam("envport")) { request->getParam("envport")->value().toCharArray(configmodule.port,5);  enphasemodif=true;}
    if (request->hasParam("envmodele")) { request->getParam("envmodele")->value().toCharArray(configmodule.envoy,2);  enphasemodif=true;}
    if (request->hasParam("envversion")) { request->getParam("envversion")->value().toCharArray(configmodule.version,2); enphasemodif=true; }
    if (request->hasParam("envtoken")) { request->getParam("envtoken")->value().toCharArray(configmodule.token,425); enphasemodif=true; }

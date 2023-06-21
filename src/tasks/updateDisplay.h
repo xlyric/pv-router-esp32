@@ -36,8 +36,6 @@ void updateDisplay(void* parameter) {
      if ( gDisplayValues.option == 0 && digitalRead(TFT_PIN)==HIGH){
       call_display();
       }
-      // Sleep for 5 seconds, then update display again!
-      //vTaskDelay(pdMS_TO_TICKS(5000));
       // Wait for semaphore with 5s timeout
       xSemaphoreTake(xSemaphore, pdMS_TO_TICKS(5000));
   } // for
