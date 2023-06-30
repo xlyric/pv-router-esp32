@@ -56,40 +56,42 @@ void reconnect();
 
 void Mqtt_send ( String idx, String value, String otherpub = "" , String name = "") {
   
-  String nvalue = "0" ; 
-  
-  if ( value != "0" ) { 
-      nvalue = "2" ; 
-      }
-  
-  String message; 
-  if (otherpub == "" ) {
-    message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
-  }
+  if (idx != "0" || idx != "" ) { /// si IDX = 0 ou vide on ne fait rien
 
-  String jdompub = String(config.Publish) + "/"+idx ;
-  if (otherpub != "" ) {jdompub += "/"+otherpub; }
-  
-
-
-  client.loop();
+    String nvalue = "0" ; 
+    
+    if ( value != "0" ) { 
+        nvalue = "2" ; 
+        }
+    
+    String message; 
     if (otherpub == "" ) {
-      if (client.publish(config.Publish, String(message).c_str(), true)) {
-     //   Serial.println("MQTT_send : MQTT sent to domoticz");
-      }
-
-      else {
-        Serial.println("MQTT_send : error publish to domoticz ");
-      }
+      message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
     }
-  if (client.publish(jdompub.c_str() , value.c_str(), true)){
-  //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
-  }
-  else {
-Serial.println("MQTT_send : error publish to Jeedom ");
-  }
-  
 
+    String jdompub = String(config.Publish) + "/"+idx ;
+    if (otherpub != "" ) {jdompub += "/"+otherpub; }
+    
+
+
+    client.loop();
+      if (otherpub == "" ) {
+        if (client.publish(config.Publish, String(message).c_str(), true)) {
+      //   Serial.println("MQTT_send : MQTT sent to domoticz");
+        }
+
+        else {
+          Serial.println("MQTT_send : error publish to domoticz ");
+        }
+      }
+    if (client.publish(jdompub.c_str() , value.c_str(), true)){
+    //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
+    }
+    else {
+  Serial.println("MQTT_send : error publish to Jeedom ");
+    }
+    
+  }
 }
 
 /*
