@@ -35,6 +35,7 @@ void reconnect();
       while (!client.connected()) {
         Serial.println("-----------------------------");
         Serial.println("Attempting MQTT reconnection...");
+
         // Attempt to connect
 
         if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
@@ -44,6 +45,10 @@ void reconnect();
           Serial.print("MQTT reconnect : failed, retcode="); 
           Serial.print(client.state());
           Serial.println(" try again in 2 seconds");
+          ///dans le doute si le mode AP est actif on le coupe
+          if(WiFi.softAPIP() == IPAddress(192,168,4,1)) {
+            ESP.restart();
+          }
           // Wait 2 seconds before retrying
           delay(2000);  // 24/01/2023 passage de 5 à 2s 
         }

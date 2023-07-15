@@ -240,17 +240,29 @@ void search_wifi_ssid(){
     Serial.print(numNetworks);
     Serial.println(" Recherche du wifi configuré :");
     for (int i = 0; i < numNetworks; i++) {
+      Serial.println(WiFi.SSID(i));
       if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0)
       {
         Serial.println("SSID trouvé reboot en cours");
-        ESP.restart();
+        //ESP.restart();
         /// reconnection wifi
-        /*AP=false;
+        AP=false;
         WiFi.begin(configwifi.SID, configwifi.passwd); 
-        // deconnection du mode AP
-        WiFi.softAPdisconnect(true);
-        // reconnexion MQTT
+        delay(1500);
+        /// test si le wifi est connecté sur le mon SSID, on déconnecte le mode AP  
+        if(WiFi.status() == WL_CONNECTED) { 
+        
+          if (WiFi.SSID() == configwifi.SID) {
+          Serial.println("WiFi connecté");
+          WiFi.softAPdisconnect(true);
+          }    
+        }
+          
 
+        // deconnection du mode AP
+        //WiFi.softAPdisconnect(true);
+        // reconnexion MQTT
+        /*
         if (config.mqtt) {
           Mqtt_init();
 

@@ -76,6 +76,8 @@ void keepWiFiAlive2(void * parameter){
                 if (AP) { search_wifi_ssid(); 
                 }
         
+                
+
             vTaskDelay(pdMS_TO_TICKS(30000));
             //continue;
         }

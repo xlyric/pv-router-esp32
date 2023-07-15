@@ -62,7 +62,11 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
       /// control dimmer 
       if ( strcmp(config.dimmer,"none") != 0 ) {
       String baseurl; 
+        #ifndef POURCENTAGE
         baseurl = "/?POWER=" + String(dimmervalue) +"&puissance=" + String(puissance_dispo) ; 
+        #else
+        baseurl = "/?POWER=" + String(dimmervalue) ;
+        #endif
         http.begin(dimmerurl,80,baseurl);   
         http.GET();
         http.end(); 

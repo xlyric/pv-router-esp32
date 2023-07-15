@@ -71,7 +71,11 @@ void updateDimmer(void * parameter){
     }
     // si dimmer distant alors calcul de puissance routée
     else  {  
-      get_dimmer_child_power ();
+        #ifndef POURCENTAGE
+            get_dimmer_child_power ();
+        #else
+            gDisplayValues.puissance_route = config.resistance * gDisplayValues.dimmer/100;
+        #endif
     }
 
     
