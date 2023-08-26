@@ -6,10 +6,13 @@
 #include <ESPAsyncWebServer.h>
 #include "appweb.h"
 
+#include "functions/minuteur.h"
+
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
 extern Configwifi configwifi; 
 extern Logs logging;
+extern Programme programme; 
 
 //***********************************
 //************* Gestion du serveur WEB
@@ -28,6 +31,8 @@ AsyncWebServer server(80);
 		//***********************************
 		//************* Setup - Web pages
 		//***********************************
+
+String getMinuteur(const Programme& minuteur);
 
 void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
@@ -163,6 +168,10 @@ server.on("/enphase.json", HTTP_GET, [](AsyncWebServerRequest *request){
 
 server.on("/log.html", HTTP_ANY, [](AsyncWebServerRequest *request){
       compress_html(request,"/log.html.gz", "text/html");
+  });
+
+server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/minuteur.html", "text/html");
   });
 
 ///// Pages 
@@ -418,9 +427,43 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
     if (request->hasParam("relaystart")) { config.relayon = request->getParam("relaystart")->value().toInt();}
     if (request->hasParam("relaystop")) { config.relayoff = request->getParam("relaystop")->value().toInt();}
 
+    //// minuteur 
+   if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme.heure_demarrage,6);  }
+   if (request->hasParam("heure_arret")) { request->getParam("heure_arret")->value().toCharArray(programme.heure_arret,6);  }
+   if (request->hasParam("temperature")) { programme.temperature = request->getParam("temperature")->value().toInt();  programme.saveProgramme(); }
+
     //request->send(200, "text/html", getconfig().c_str());
     serveur_response(request,  getconfig());
 	}); 
 
+  server.on("/getminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+    if (request->hasParam("dimmer")) { request->send(200, "application/json",  getMinuteur(programme));  }
+ 
+    //request->send(200, "application/json",  getminuteur(programme_relay2).c_str()); 
+  });
+
+  server.on("/setminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+      String name; 
+      if (request->hasParam("dimmer")) { 
+              if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme.heure_demarrage,6);  }
+              if (request->hasParam("heure_arret")) { request->getParam("heure_arret")->value().toCharArray(programme.heure_arret,6);  }
+              if (request->hasParam("temperature")) { programme.temperature = request->getParam("temperature")->value().toInt();   }
+              programme.saveProgramme();
+        request->send(200, "application/json",  getMinuteur(programme));  
+      }
+  });
+
 }
 
+String getMinuteur(const Programme& minuteur) {
+    DynamicJsonDocument doc(128);
+    doc["heure_demarrage"] = minuteur.heure_demarrage;
+    doc["heure_arret"] = minuteur.heure_arret;
+    doc["temperature"] = minuteur.temperature;
+    doc["heure"] = timeClient.getHours();
+    doc["minute"] = timeClient.getMinutes();
+
+    String retour;
+    serializeJson(doc, retour);
+    return retour;
+}

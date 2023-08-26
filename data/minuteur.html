@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Pv Routeur  - minuteur Configuration</title>
+        <!-- Custom fonts for this template-->
+        <link href="all.min.css" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+        <!-- Custom styles for this template-->
+        <link href="https://ota.apper-solaire.org/css/sb-admin-2.min.css" rel="stylesheet">
+        <<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+        <!--<link rel="stylesheet" href="/resources/demos/style.css">-->
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script>
+        $( function() {
+          $( "#tabs" ).tabs();
+        } );
+        </script>
+    </head>
+    <body id="page-top">
+        <!-- Page Wrapper -->
+        <div id="wrapper">
+            <!-- Sidebar -->
+            <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                <!-- Sidebar - Brand -->
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <i class="fas fa-laugh-wink"></i>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">Pv Routeur</div>
+                </a>
+                <!-- Divider -->
+                <hr class="sidebar-divider my-0">
+                <!-- Nav Item - Dashboard -->
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                        <br>
+                        <span id="version"></span>
+                    </a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider">
+                <!-- Heading -->
+                <div class="sidebar-heading">
+                    Interface
+                </div>
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">
+                        <i class="fas fa-fw fa-plug"></i>
+                        <span>retour conso</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="config.html">
+                        <i class="fas fa-fw fa-cog"></i>
+                        <span>Configuration</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/reboot">
+                        <i class="fas fa-fw fa-power-off"></i>
+                        <span>Reboot</span>
+                    </a>
+                </li>
+                <!-- Divider -->
+                <hr class="sidebar-divider d-none d-md-block">
+                <!-- Sidebar Toggler (Sidebar) -->
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
+            </ul>
+            <!-- End of Sidebar -->
+            <!-- Content Wrapper -->
+            <div id="content-wrapper" class="d-flex flex-column">
+                <!-- Main Content -->
+                <div id="content">
+                    <!-- Topbar -->
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <!-- Sidebar Toggle (Topbar) -->
+                        <!--       <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+
+          <!-- Topbar Navbar -->
+                        <ul class="navbar-nav ml-auto">
+                            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+                            <li class="nav-item dropdown no-arrow d-sm-none">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    id="searchDropdown"
+                                    role="button"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <i class="fas fa-search fa-fw"></i>
+                                </a>
+                                <!-- Dropdown - Messages -->
+                                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown"></div>
+                            </li>
+                            <!-- Nav Item - Alerts -->
+                            <li class="nav-item mx-1">
+                                <a
+                                    id="heure"
+                                >
+                                </a>
+                            </li>
+                            <div class="topbar-divider d-none d-sm-block"></div>
+                        </ul>
+                    </nav>
+                    <!-- End of Topbar -->
+                    <!-- Begin Page Content -->
+                    <div class="container-fluid">
+                        <!-- Page Heading -->
+                        <h1 class="h3 mb-2 text-gray-800">Configuration minuteur d'appoint</h1>
+                        <div class="col-lg-6">
+                            <div id="tabs">
+                                <ul class="nav nav-tabs">
+                                  <li class="nav-item"><a class="nav-link" href="#dimmer">Configuration dimmer</a></li>
+                               <!--   <li class="nav-item"><a class="nav-link" href="#relay1">Configuration relay1</a></li>
+                                  <li class="nav-item"><a class="nav-link" href="#relay2">Configuration relay2</a></li>-->
+                                </ul>
+
+                                <div id="dimmer">
+                                    <form class="user" id="dimmer-form" method="post" action="">
+                                      <div class="form-group">
+                                        Heure de démarrage: (format hh:mm)
+                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_dimmer" placeholder="%heure_demarrage%">
+                                      </div>
+                                      <div class="form-group">
+                                        Heure d'arrêt:
+                                        <input type="text" class="form-control form-control-user" id="heure_arret_dimmer" placeholder="%heure_arret%">
+                                      </div>
+                                      <div class="form-group">
+                                        Température de consigne (°C):
+                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_dimmer" placeholder="%temperature%">
+                                      </div>
+                                      <input type="submit" value="Application des paramètres dimmer" class="btn btn-primary btn-user btn-block">
+                                    </form>
+                                  </div>
+<!--
+                                  <div id="relay1">
+                                    <form class="user" id="relay1-form" method="post" action="">
+                                      <div class="form-group">
+                                        Heure de démarrage: (format hh:mm)
+                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_relay1" placeholder="%heure_demarrage%">
+                                      </div>
+                                      <div class="form-group">
+                                        Heure d'arrêt:
+                                        <input type="text" class="form-control form-control-user" id="heure_arret_relay1" placeholder="%heure_arret%">
+                                      </div>
+                                      <div class="form-group">
+                                        Température de consigne (°C):
+                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_relay1" placeholder="%temperature%">
+                                      </div>
+                                      <input type="submit" value="Application des paramètres relay1" class="btn btn-primary btn-user btn-block">
+                                    </form>
+                                  </div>
+
+                                  <div id="relay2">
+                                    <form class="user" id="relay2-form" method="post" action="">
+                                      <div class="form-group">
+                                        Heure de démarrage: (format hh:mm)
+                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_relay2" placeholder="%heure_demarrage%">
+                                      </div>
+                                      <div class="form-group">
+                                        Heure d'arrêt:
+                                        <input type="text" class="form-control form-control-user" id="heure_arret_relay2" placeholder="%heure_arret%">
+                                      </div>
+                                      <div class="form-group">
+                                        Température de consigne (°C):
+                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_relay2" placeholder="%temperature%">
+                                      </div>
+                                       <input type="submit" value="Application des paramètres relay2" class="btn btn-primary btn-user btn-block">
+                                    </form>
+                                  </div>
+                                  -->
+                    </div>
+                </div>
+            </div>
+            <!-- Content Row -->
+<script>
+  $(document).ready(function() {
+    // Récupération des heures de démarrage et d'arrêt depuis le serveur
+    $.get("/getminiteur?dimmer", function(data) {
+      $("#heure_demarrage_dimmer").val(data.heure_demarrage);
+      $("#heure_arret_dimmer").val(data.heure_arret);
+      $("#temperature_dimmer").val(data.temperature);
+      var heure = data.heure;
+      var minute = data.minute;
+      $("#heure").html( heure + ":" + minute );
+    });
+
+    // Envoi des données de formulaire au serveur lors de la soumission du formulaire
+    $("#dimmer-form").submit(function(event) {
+      event.preventDefault();
+      var heure_demarrage = $("#heure_demarrage_dimmer").val();
+      var heure_arret = $("#heure_arret_dimmer").val();
+      var temperature = $("#temperature_dimmer").val();
+      $.get("/setminiteur?dimmer", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
+    });
+  
+  });
+</script>
+
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<!-- /.container-fluid -->
+</div>
+<!-- End of Main Content -->
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>https://github.com/xlyric/  - 2023</span>
+        </div>
+    </div>
+</footer>
+<!-- End of Footer -->
+</div>
+<!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+<!-- Bootstrap core JavaScript-->
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>-->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+<!-- Core plugin JavaScript-->
+<script src="https://ota.apper-solaire.org/css/jquery.easing.min.js"></script>
+<!-- Custom scripts for all pages-->
+<script src="https://ota.apper-solaire.org/css/sb-admin-2.js"></script>
+<script></script>
+</body>
+</html>

@@ -46,9 +46,15 @@ void reconnect();
           Serial.print(client.state());
           Serial.println(" try again in 2 seconds");
           ///dans le doute si le mode AP est actif on le coupe
-          if(WiFi.softAPIP() == IPAddress(192,168,4,1)) {
+          Serial.println(WiFi.status());
+
+          ////la suite causait un bug si MQTT mal configuré ( reboot toute les 2 secondes.)
+         /* if((WiFi.softAPIP() == IPAddress(192,168,4,1)) && (WiFi.status() == WL_IDLE_STATUS ) ) {
+            Serial.println("MQTT reconnect : AP encore actif, on redémarre l'ESP");
+            Serial.println(WiFi.softAPIP());
             ESP.restart();
-          }
+          }*/
+
           // Wait 2 seconds before retrying
           delay(2000);  // 24/01/2023 passage de 5 à 2s 
         }

@@ -112,7 +112,7 @@ float PowerFactor; //
 #if DIMMERLOCAL 
     #define outputPin  26 // PSM on board
     #define zerocross  27 // for boards with CHANGEBLE input pins // ZC on board
-    #define cooler 12 // Pin for cooler. (switch on dimmer)
+    #define COOLER 12 // Pin for COOLER. (switch on dimmer)
 
 #endif
 
@@ -236,9 +236,14 @@ bool AP=true;
     #define BUTTON_LEFT 0 // bouton droit ttgo
     #define outputPin  1 // PSM on board
     #define zerocross  2 // for boards with CHANGEBLE input pins // ZC on board
-    #define cooler 18 // Pin for cooler. (switch on dimmer)
+    #define COOLER 18 // Pin for COOLER. (switch on dimmer)
 #endif
 
+  #ifdef Debug
+    #define DEBUG_PRINTLN(x) Serial.println(x)
+  #else
+    #define DEBUG_PRINTLN(x)
+  #endif
 
 #endif
 

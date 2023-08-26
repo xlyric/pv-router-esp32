@@ -6,10 +6,11 @@
 #include "../config/config.h"
 #include "../functions/spiffsFunctions.h"
 #include "../functions/Mqtt_http_Functions.h"
+#include "../functions/minuteur.h"
 #include <RBDdimmer.h>
 #include "HTTPClient.h"
 
-
+extern Programme programme; 
 
 #if DIMMERLOCAL 
 
@@ -162,9 +163,9 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
     if (config.dimmerlocal) {
 
-        /// Cooler 
-        if ( gDisplayValues.dimmer > 10 ) { digitalWrite(cooler, HIGH); } // start cooler at 10%  }
-        else { digitalWrite(cooler, LOW); }
+        /// COOLER 
+        if ( gDisplayValues.dimmer > 10 ) { digitalWrite(COOLER, HIGH); } // start COOLER at 10%  }
+        else { digitalWrite(COOLER, LOW); }
 
 
             
@@ -181,6 +182,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
           else {
             //gDisplayValues.dimmer = 0 ;
             dimmer_hard.setPower(0); 
+            programme.run=false;
             ledcWrite(0, 0);
             dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,puissance_dispo) ;
           }
@@ -199,7 +201,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
             if (!security){  
                 /// fonctionnement du dimmer local 
                  
-                if ( gDisplayValues.dimmer < config.localfuse ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
+                if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
                 else {
                     dimmer_hard.setPower(config.localfuse); 
                     ledcWrite(0, config.localfuse*256/100);
@@ -229,8 +231,8 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
       /// Correction issue full power at start
       pinMode(outputPin, OUTPUT); 
       
-      pinMode(cooler, OUTPUT);
-      digitalWrite(cooler, LOW);
+      pinMode(COOLER, OUTPUT);
+      digitalWrite(COOLER, LOW);
 
       //digitalWrite(outputPin, HIGH);
       // configuration dimmer
@@ -245,6 +247,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
     /// fonction pour mettre en pause ou allumer le dimmer 
     void dimmer_on()
     {
+
       if (dimmer_hard.getState()==0) {
         dimmer_hard.setState(ON);
         delay(50);

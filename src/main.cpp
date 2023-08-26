@@ -47,6 +47,8 @@
   #include "functions/WifiFunctions.h"
   #include "functions/homeassistant.h"
 
+  #include "functions/minuteur.h"
+
   #include "uptime.h"
   #include <driver/adc.h>
 #if DALLAS
@@ -87,6 +89,8 @@ Config config;
 Configwifi configwifi; 
 Configmodule configmodule; 
 
+///déclaration des programmateurs 
+Programme programme; 
 
 /// declare logs 
 Logs logging;
@@ -284,6 +288,9 @@ void setup()
     #endif
 #endif
 
+/// init du NTP
+ntpinit(); 
+
 //Jotta
   ledcSetup(0, GRIDFREQ , 8);
   ledcAttachPin(JOTTA, 0);
@@ -305,6 +312,12 @@ Dimmer_setup();
     logging.init += loguptime();
     logging.init += CONFNO;
   }
+
+/// chargement des conf de minuteries
+  Serial.println("Loading minuterie");
+  programme.name="/dimmer";
+  programme.loadProgramme();
+  programme.saveProgramme();
 
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
@@ -482,17 +495,17 @@ Dimmer_setup();
         AsyncElegantOTA.begin(&server);
         server.begin(); 
       #endif
-#ifndef LIGHT_FIRMWARE
-    if (!AP) {
-        if (config.mqtt) {
-          Mqtt_init();
+  #ifndef LIGHT_FIRMWARE
+      if (!AP) {
+          if (config.mqtt) {
+            Mqtt_init();
 
-        // HA autoconf
-        if (configmqtt.HA) init_HA_sensor();
-          
-        }
-    }
-#endif
+          // HA autoconf
+          if (configmqtt.HA) init_HA_sensor();
+            
+          }
+      }
+  #endif
   //if ( config.autonome == true ) {
     gDisplayValues.dimmer = 0; 
     dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,0 ) ; 
@@ -506,6 +519,10 @@ Dimmer_setup();
     #endif
   #endif
 
+
+
+
+
 esp_register_shutdown_handler( handler_before_reset );
 
 logging.power=true; logging.sct=true; logging.sinus=true; 
@@ -513,9 +530,10 @@ logging.power=true; logging.sct=true; logging.sinus=true;
 //WebSerial.begin(&server);
 //WebSerial.msgCallback(recvMsg);
 
-
 }
 
+
+/// @brief / Loop function
 void loop()
 {
 //// si perte du wifi après  6h, reboot
@@ -582,10 +600,62 @@ void loop()
   gDisplayValues.dimmer = dimmer1_state; 
   }
 
-  vTaskDelay(pdMS_TO_TICKS(10000));
+
+if (config.dimmerlocal) {
+  ///////////////// gestion des activité minuteur 
+  //// Dimmer 
+    Serial.println(dimmer_hard.getPower());
+    if (programme.run) { 
+        //  minuteur en cours
+        if (programme.stop_progr()) { 
+          dimmer_hard.setPower(0); 
+          dimmer_off();
+          DEBUG_PRINTLN("programme.run");
+          //sysvar.puissance=0;
+          Serial.println("stop minuteur dimmer");
+          //arret du ventilateur
+          digitalWrite(COOLER, LOW);
+          /// remonté MQTT
+          #ifndef LIGHT_FIRMWARE
+            Mqtt_send(String(config.IDX), String(dimmer_hard.getPower()),"pourcent"); // remonté MQTT de la commande réelle
+            if (configmqtt.HA) {
+              int instant_power = dimmer_hard.getPower();
+              device_dimmer.send(String(instant_power * config.resistance/100));
+            } 
+          #endif
+        } 
+    } 
+    else { 
+      // minuteur à l'arret
+      if (programme.start_progr()){ 
+        //sysvar.puissance=config.localfuse; 
+        dimmer_on();
+        dimmer_hard.setPower(config.localfuse); 
+        delay (50);
+        Serial.println("start minuteur ");
+        //demarrage du ventilateur 
+        digitalWrite(COOLER, HIGH);
+        
+        /// remonté MQTT
+        #ifndef LIGHT_FIRMWARE
+          Mqtt_send(String(config.IDX), String(dimmer_hard.getPower()),"pourcent"); // remonté MQTT de la commande réelle
+          if (configmqtt.HA) {
+            int instant_power = dimmer_hard.getPower();
+            device_dimmer.send(String(instant_power * config.resistance/100));
+          } 
+        #endif
+        offset_heure_ete(); // on corrige l'heure d'été si besoin
+      }
+    }
 }
 
 
+
+
+  vTaskDelay(pdMS_TO_TICKS(10000));
+}
+
+/// @brief / end Loop function
 
 
 
