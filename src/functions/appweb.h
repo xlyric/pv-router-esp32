@@ -4,6 +4,7 @@
 #include "energyFunctions.h"
 #include "homeassistant.h"
 #include "spiffsFunctions.h"
+#include <RBDdimmer.h>
 
 String configweb; 
 extern DisplayValues gDisplayValues;
@@ -12,6 +13,7 @@ extern Configwifi configwifi;
 extern Mqtt configmqtt; 
 extern Logs logging;
 extern Configmodule configmodule; 
+extern dimmerLamp dimmer_hard; 
 #ifdef  TTGO
 #include <TFT_eSPI.h>
 #include <SPI.h>
@@ -128,7 +130,12 @@ String getServermode(String Servermode) {
   if ( Servermode == "screen" ) {  gDisplayValues.screenstate = !gDisplayValues.screenstate; }
   if ( Servermode == "Jeedom" ) {   config.UseJeedom = !config.UseJeedom;}
   if ( Servermode == "Autonome" ) {   config.autonome = !config.autonome; }
-  if ( Servermode == "Dimmer local" ) {   config.dimmerlocal = !config.dimmerlocal; }
+  if ( Servermode == "Dimmer local" ) {   
+                    config.dimmerlocal = !config.dimmerlocal;  
+                    /// correction bug #26 
+                    dimmer_hard.setPower(0); 
+                    
+  }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
   if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; }
   if ( Servermode == "envoy" ) {   configmodule.enphase_present = !configmodule.enphase_present; }
