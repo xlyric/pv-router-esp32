@@ -134,7 +134,13 @@ struct Programme {
 bool start_progr() {
   int heures, minutes;
   sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
-      
+  
+  // si heure_demarrage == heure_arret alors on retourne false
+  if (strcmp(heure_demarrage, heure_arret) == 0) {
+        return false;
+  }
+    
+  // quand c'est l'heure de démarrer le programme    
   if(timeClient.isTimeSet()) {
     if (heures == timeClient.getHours() && minutes == timeClient.getMinutes()) {
         run=true; 
