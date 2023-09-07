@@ -482,6 +482,7 @@ Dimmer_setup();
           2,                // Task priority
           NULL              // Task handle
         );
+        
       #endif
     #endif
   }
@@ -554,8 +555,7 @@ void loop()
   }
  
 
-//serial_println(F("loop")); 
-
+// vérification de la connexion wifi 
   if ( WiFi.status() != WL_CONNECTED ) {
       connect_to_wifi();
       }
@@ -573,6 +573,7 @@ void loop()
 
     }
   }
+/// connexion MQTT
 #ifndef LIGHT_FIRMWARE
     if (!AP) {
       #if WIFI_ACTIVE == true
@@ -589,6 +590,7 @@ void loop()
       #endif
     }
 #endif
+//// surveillance des fuites mémoires 
 #ifndef LIGHT_FIRMWARE
   client.publish("memory2", String(esp_get_free_heap_size()).c_str())   ;
 #endif
@@ -649,7 +651,11 @@ if (config.dimmerlocal) {
     }
 }
 
+/// fonction de reboot hebdomadaire ( lundi 00:00 )
 
+if (!AP) {
+    time_reboot();
+}
 
 
   vTaskDelay(pdMS_TO_TICKS(10000));

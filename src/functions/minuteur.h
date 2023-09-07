@@ -179,4 +179,14 @@ bool stop_progr() {
 
 };
 
+//// fonction de reboot de l'ESP tous les lundi à  00h00  
+void time_reboot() {
+  if(timeClient.isTimeSet()) {
+    if (timeClient.getDay() == 1 && timeClient.getHours() == 0 && timeClient.getMinutes() == 0 && timeClient.getSeconds() <= 15) {
+      ESP.restart();
+    }
+  }
+}
+
+
 #endif

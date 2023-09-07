@@ -44,13 +44,13 @@
                 timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
             }
 
-
+ /*   modifié et reboot tous les lundi à 00:00 pour ne pas avoir des erreurs dans les calculs de puissance
             // reboot de précaution nettoyage mémoire ( dimanche 4:00:00 )
             int uptime = esp_timer_get_time()/ 1000000; 
             if ( uptime > 600000 ) {
                 ESP.restart(); 
             }
-
+*/
 
             serial_println("[NTP] Updating...");
             timeClient.update();
