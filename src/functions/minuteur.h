@@ -142,7 +142,7 @@ bool start_progr() {
     
   // quand c'est l'heure de démarrer le programme    
   if(timeClient.isTimeSet()) {
-    if (heures == timeClient.getHours() && minutes == timeClient.getMinutes()) {
+    if (heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature.toFloat() ) {
         run=true; 
         timeClient.update();
         return true; 
