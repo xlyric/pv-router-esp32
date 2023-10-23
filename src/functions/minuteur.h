@@ -143,8 +143,11 @@ bool start_progr() {
   // quand c'est l'heure de démarrer le programme    
   if(timeClient.isTimeSet()) {
     if (heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature.toFloat() ) {
+        // demarrage du cooler
+        digitalWrite(COOLER, HIGH);
         run=true; 
         timeClient.update();
+        logging.start += "minuteur: start\r\n";
         return true; 
     }
   }
@@ -155,6 +158,8 @@ bool stop_progr() {
   int heures, minutes;
   /// sécurité temp
   if ( gDisplayValues.temperature.toFloat() >= config.tmax ) { 
+    digitalWrite(COOLER, LOW);
+    logging.start += "minuteur: stop\r\n";
     run=false; 
      // protection flicking
     sscanf(heure_demarrage, "%d:%d", &heures, &minutes);  
@@ -167,6 +172,8 @@ bool stop_progr() {
   sscanf(heure_arret, "%d:%d", &heures, &minutes);
   if(timeClient.isTimeSet()) {
     if (heures == timeClient.getHours() && minutes == timeClient.getMinutes()) {
+        logging.start += "minuteur: stop\r\n";
+        digitalWrite(COOLER, LOW);
         run=false; 
         timeClient.update();
         offset_heure_ete();     

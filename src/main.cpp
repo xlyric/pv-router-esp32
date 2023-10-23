@@ -190,7 +190,9 @@ void setup()
     Serial.println ("File system used: " + String(file_system_used) + " bytes");
     Serial.println("Free space: " + String(free_size) + " bytes");
 
-
+    pinMode(COOLER, OUTPUT);
+    digitalWrite(COOLER, HIGH);
+    
 /// test ACD 
 
     adc1_config_width(ADC_WIDTH_BIT_12);

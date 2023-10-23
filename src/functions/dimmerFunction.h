@@ -164,7 +164,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
     if (config.dimmerlocal) {
 
         /// COOLER 
-        if ( gDisplayValues.dimmer > 10 ) { digitalWrite(COOLER, HIGH); } // start COOLER at 10%  }
+        if ( gDisplayValues.dimmer > 10  || programme.run ) { digitalWrite(COOLER, HIGH); } // start COOLER at 10%  }
         else { digitalWrite(COOLER, LOW); }
 
 
