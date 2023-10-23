@@ -22,7 +22,12 @@ extern dimmerLamp dimmer_hard;
  */
 void get_dimmer_child_power (){
     /// récupération de la puissance du dimmer enfant en http
-     
+        // si config.dimmer = none  alors pas de dimmer enfant
+        if ( strcmp(config.dimmer,"none") == 0 ) { {
+            gDisplayValues.puissance_route = 0;
+            return;
+        }
+
         String baseurl; 
         baseurl = "/state";
         http.begin(String(config.dimmer),80,baseurl);   
