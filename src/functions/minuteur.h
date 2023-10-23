@@ -18,6 +18,7 @@
 
 #include "config/config.h"
 
+
 extern DisplayValues gDisplayValues;
 extern Config config; 
 
@@ -157,10 +158,11 @@ return false;
 bool stop_progr() {
   int heures, minutes;
   /// sécurité temp
-  if ( gDisplayValues.temperature.toFloat() >= config.tmax ) { 
+  if ( gDisplayValues.temperature.toFloat() >= config.tmax  || gDisplayValues.temperature.toFloat() >= temperature ) { 
     digitalWrite(COOLER, LOW);
     logging.start += "minuteur: stop\r\n";
     run=false; 
+
      // protection flicking
     sscanf(heure_demarrage, "%d:%d", &heures, &minutes);  
     if (heures == timeClient.getHours() && minutes == timeClient.getMinutes()) {
