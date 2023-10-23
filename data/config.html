@@ -44,7 +44,8 @@
         <a class="nav-link" href="/" target="_blank">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span><br>
-          <span id="version">Version: </span>
+          <span id="version">Version: </span><br>
+          <span id="RSSI">RSSI (dB): </span>
         </a>
 		  </li>
 
@@ -461,9 +462,11 @@
             var state = data.state;
             var watt = data.watt;
             var version = data.version;
+            var rssi = data.RSSI;
           document.getElementById("state").innerHTML = state;
           document.getElementById("sigma").innerHTML = watt;
           document.getElementById("version").innerHTML = version;
+          document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi  + ' dBm';
           });
           }, 5000);
 

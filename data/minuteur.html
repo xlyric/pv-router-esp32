@@ -195,8 +195,8 @@
       $("#heure_demarrage_dimmer").val(data.heure_demarrage);
       $("#heure_arret_dimmer").val(data.heure_arret);
       $("#temperature_dimmer").val(data.temperature);
-      var heure = data.heure;
-      var minute = data.minute;
+      var heure = data.heure < 10 ? "0" + data.heure : data.heure;
+      var minute = data.minute < 10 ? "0" + data.minute : data.minute;
       $("#heure").html( heure + ":" + minute );
     });
 

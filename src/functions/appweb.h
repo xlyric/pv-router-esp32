@@ -106,6 +106,7 @@ String getState() {
   doc["dimmer"] = gDisplayValues.puissance_route;
   doc["temperature"] = gDisplayValues.temperature;
   doc["version"] = VERSION;
+  doc["RSSI"] = WiFi.RSSI();
   state=""; 
   serializeJson(doc, state);
   return String(state);
@@ -200,6 +201,7 @@ String getconfig() {
   doc["flip"] = config.flip;
   doc["relaystart"] = config.relayon;
   doc["relaystop"] = config.relayoff;
+  
   
   serializeJson(doc, configweb);
   return String(configweb);

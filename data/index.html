@@ -44,7 +44,8 @@
         <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span><br>
-		<span id="version">Version: </span>
+		<span id="version">Version: </span><br>
+    <span id="RSSI">RSSI : </span>
 </a> 
 		  
       </li>
@@ -367,6 +368,7 @@
       var temperature = data.temperature;
       if (temperature == null) { temperature = 0 ; }
       var version = data.version; 
+      var rssi = data.RSSI;
       // Mettre à jour les éléments HTML
       dataGaugePA.setValue(0, 0, state);
       dataGaugePA.setValue(0, 1, watt);
@@ -384,6 +386,7 @@
 		  document.getElementById("state").innerHTML = state;
 		  document.getElementById("sigma").innerHTML = watt;
       document.getElementById("version").innerHTML = version;
+      document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi + ' dBm';
 
     });
   }, 2000);
