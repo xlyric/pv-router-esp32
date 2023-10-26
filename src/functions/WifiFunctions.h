@@ -41,12 +41,12 @@ void APConnect() {
     WiFi.onEvent(WiFiEvent);
     WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED);
     Serial.println(WiFi.macAddress());
-    String network = ssid + String('-') + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-    Serial.println(network);
+    //String network = ssid + String('-') + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+    Serial.println(gDisplayValues.pvname);
     
-    int net_len = network.length() + 1; 
+    int net_len = gDisplayValues.pvname.length() + 1; 
     char char_ssid[net_len];
-    network.toCharArray(char_ssid, net_len);
+    gDisplayValues.pvname.toCharArray(char_ssid, net_len);
 
     Serial.print("Setting AP-ROUTER configuration ... ");
     Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");

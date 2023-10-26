@@ -209,6 +209,7 @@ server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/plain", getmemory().c_str());
     serveur_response(request, getmemory() );
   });
+  
   server.on("/debug", HTTP_GET, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/plain", getdebug().c_str());
     serveur_response(request, getdebug() );

@@ -108,11 +108,6 @@ void init_HA_sensor(){
         enphase_current_power_production.Set_stat_cla("measurement");
         enphase_current_power_production.Set_dev_cla("power");
 
-        surplus_routeur.Set_name("usable");
-        surplus_routeur.Set_unit_of_meas("W");
-        surplus_routeur.Set_stat_cla("measurement");
-        surplus_routeur.Set_dev_cla("power");
-
         client.setBufferSize(1024);
         device_routeur.discovery();
         device_dimmer.discovery();
@@ -125,6 +120,7 @@ void init_HA_sensor(){
         enphase_current_power_consumption.discovery();
         enphase_current_power_production.discovery();
         surplus_routeur.discovery();
+
 
         // temperature_HA.discovery();
         // switch_1.discovery(); 

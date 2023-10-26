@@ -33,7 +33,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Pv router</div>
+        <div class="sidebar-brand-text mx-3" id="name">Pv router</div>
       </a>
 
       <!-- Divider -->
@@ -463,10 +463,12 @@
             var watt = data.watt;
             var version = data.version;
             var rssi = data.RSSI;
+            var name = data.name;
           document.getElementById("state").innerHTML = state;
           document.getElementById("sigma").innerHTML = watt;
           document.getElementById("version").innerHTML = version;
           document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi  + ' dBm';
+          document.getElementById("name").innerHTML = name  ;
           });
           }, 5000);
 

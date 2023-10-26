@@ -140,6 +140,7 @@ String loguptime();
     HA enphase_current_power_consumption;
     HA enphase_current_power_production;
     HA surplus_routeur;
+    HA device_state; 
 #endif
 
 /***************************
@@ -552,7 +553,7 @@ void loop()
   }
 
 /// vérification du buffer log 
-  if (logging.start.length() > LOG_MAX_STRING_LENGTH ) { 
+  if (logging.start.length() > LOG_MAX_STRING_LENGTH - 5 ) { 
     logging.start = "";
   }
  
@@ -594,7 +595,7 @@ void loop()
 #endif
 //// surveillance des fuites mémoires 
 #ifndef LIGHT_FIRMWARE
-  client.publish("memory2", String(esp_get_free_heap_size()).c_str())   ;
+  client.publish(gDisplayValues.pvname.c_str(), String(esp_get_free_heap_size()).c_str()) ;
 #endif
 
   /// synchrisation de l'information entre le dimmer et l'affichage 

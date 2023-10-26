@@ -29,8 +29,8 @@ void reconnect();
  */
 
     void reconnect() {
-      String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-      String topic = "homeassistant/sensor/"+ pvname +"/status";
+      //String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
+      String topic = "homeassistant/sensor/"+ gDisplayValues.pvname +"/status";
       // Loop until we're reconnected
       while (!client.connected()) {
         Serial.println("-----------------------------");
@@ -38,7 +38,7 @@ void reconnect();
 
         // Attempt to connect
 
-        if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
+        if (client.connect(gDisplayValues.pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
           client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
           Serial.println("MQTT reconnect : connected");
         } else {

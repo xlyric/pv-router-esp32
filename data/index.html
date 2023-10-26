@@ -33,7 +33,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Pv router</div>
+        <div class="sidebar-brand-text mx-3" id="name">Pv router</div>
       </a>
 
       <!-- Divider -->
@@ -369,6 +369,7 @@
       if (temperature == null) { temperature = 0 ; }
       var version = data.version; 
       var rssi = data.RSSI;
+      var name = data.name;
       // Mettre à jour les éléments HTML
       dataGaugePA.setValue(0, 0, state);
       dataGaugePA.setValue(0, 1, watt);
@@ -387,6 +388,7 @@
 		  document.getElementById("sigma").innerHTML = watt;
       document.getElementById("version").innerHTML = version;
       document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi + ' dBm';
+      document.getElementById("name").innerHTML = name  ;
 
     });
   }, 2000);

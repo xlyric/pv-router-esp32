@@ -52,6 +52,7 @@ struct DisplayValues {
   double enp_current_power_production;
   int puissance_route=0;
   bool dimmer_disengaged=false;
+  String pvname = "PV ROUTER " + WiFi.macAddress().substring(12,14) + WiFi.macAddress().substring(15,17);
 };
 
 struct Config {
