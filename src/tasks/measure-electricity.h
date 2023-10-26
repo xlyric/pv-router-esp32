@@ -60,7 +60,10 @@ void measureElectricity(void * parameter)
                   if ( gDisplayValues.porteuse == false  && configmodule.enphase_present == false && configmodule.Fronius_present == false) {
                         gDisplayValues.watt =0 ; 
                         slowlog ++; 
-                        if (slowlog == TEMPOLOG) {     logging.start  += loguptime(); logging.start +=  String("--> No sinus, check 12AC power \r\n"); slowlog =0 ; }
+                        if (slowlog == TEMPOLOG) {     
+                              strcat(logging.log_init,"--> No sinus, check 12AC power \r\n");
+                              slowlog =0 ; 
+                        }
 
                   }
                   if (logging.serial){

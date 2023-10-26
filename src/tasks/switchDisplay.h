@@ -39,15 +39,15 @@ void switchDisplay(void * parameter){
       if (gDisplayValues.screenbutton || gDisplayValues.screenstate == HIGH ){ // if right button is pressed or HTTP call 
           if (digitalRead(TFT_PIN)==HIGH) {             // and the status flag is LOW
             gDisplayValues.screenstate = LOW ;  
-            logging.start += loguptime(); 
-            logging.start += "Oled Off\r\n";   
+            strcat(logging.log_init,loguptime2());
+            strcat(logging.log_init,"Oled Off\r\n");
             digitalWrite(TFT_PIN,LOW);     // and turn Off the OLED
             }                           // 
           else {                        // otherwise...      
             Serial.println("button left/bottom pressed");
             gDisplayValues.screenstate = LOW ;
-            logging.start += loguptime(); 
-            logging.start += +"Oled On\r\n";   
+            strcat(logging.log_init,loguptime2()); 
+            strcat(logging.log_init,"Oled On\r\n");
             digitalWrite(TFT_PIN,HIGH);      // and turn On  the OLED
             if (config.ScreenTime !=0 ) {
               timer = millis();

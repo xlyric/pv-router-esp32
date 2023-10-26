@@ -8,7 +8,8 @@ extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Logs logging;
 
-extern String loguptime(); 
+//extern String loguptime(); 
+extern char *loguptime2();
 
 // ***********************************
 // ** recherche du point 0. temps 20 ms max ... 
@@ -269,7 +270,9 @@ positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle *
 
 
 if ( zero > 75 ) { 
-  if (logging.sct) {     logging.start  += loguptime(); logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
+  if (logging.sct) {    
+    strcat(logging.log_init,"--> SCT013 Prob not connected  ?\r\n");
+    logging.sct = false; }
 }
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
 
@@ -548,11 +551,11 @@ positive = PW + config.offset ;
 
 
 if ( zero > 75 ) { 
-  if (logging.sct) { logging.start += loguptime() + "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
+ // if (logging.sct) { logging.start += loguptime() + "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
 }
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
- logging.start += loguptime();
- logging.start +=  "Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
+ strcat(logging.log_init,loguptime2());
+// logging.start +=  "Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
 
 
 bool nolog =false; 
@@ -784,7 +787,7 @@ if ( zero > 75 ) {
   if (logging.sct) { logging.start += "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
 }
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
- logging.start +="Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
+ //logging.start +="Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
 
 
 bool nolog =false; 

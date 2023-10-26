@@ -283,9 +283,13 @@ server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 
 server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/plain", getlogs().c_str());
-    serveur_response(request,  getlogs());
-    logging.init="197}11}1";
-    logging.start = "";
+    //serveur_response(request,  getlogs());
+    strcat(logging.log_init,"}1");
+    serveur_response(request, logging.log_init);
+    // reinit de logging.log_init 
+    logging.log_init[0]='\0';
+    strcat(logging.log_init,"197}11}1");
+    //logging.start = "";
   });
 
 /*
@@ -360,9 +364,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
               request->getParam("password")->value().toCharArray(configwifi.passwd,50); 
           }
       
-    //request->getParam("password")->value().toCharArray(configwifi.passwd,50);  
-    //logging.start += loguptime();
-    //logging.start += "saving wifi\r\n";
+
     wifimodif=true; 
    }
    if (wifimodif) { configwifi.sauve_wifi(); }

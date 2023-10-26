@@ -148,7 +148,7 @@ bool start_progr() {
         digitalWrite(COOLER, HIGH);
         run=true; 
         timeClient.update();
-        logging.start += "minuteur: start\r\n";
+        strcat(logging.log_init,"minuteur: start\r\n");
         return true; 
     }
   }
@@ -160,7 +160,7 @@ bool stop_progr() {
   /// sécurité temp
   if ( gDisplayValues.temperature.toFloat() >= config.tmax  || gDisplayValues.temperature.toFloat() >= temperature ) { 
     digitalWrite(COOLER, LOW);
-    logging.start += "minuteur: stop\r\n";
+    strcat(logging.log_init,"minuteur: stop\r\n");
     run=false; 
 
      // protection flicking
@@ -174,7 +174,7 @@ bool stop_progr() {
   sscanf(heure_arret, "%d:%d", &heures, &minutes);
   if(timeClient.isTimeSet()) {
     if (heures == timeClient.getHours() && minutes == timeClient.getMinutes()) {
-        logging.start += "minuteur: stop\r\n";
+        strcat(logging.log_init,"minuteur: stop\r\n");
         digitalWrite(COOLER, LOW);
         run=false; 
         timeClient.update();

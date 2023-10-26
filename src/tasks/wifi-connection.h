@@ -51,14 +51,14 @@ void keepWiFiAlive(void * parameter){
         // Make sure that we're actually connected, otherwise go to deep sleep
         if(WiFi.status() != WL_CONNECTED){
             serial_println(F("[WIFI] FAILED"));
-            logging.start += loguptime(); 
-            logging.start += "Wifi disconnected\r\n";
+            strcat(logging.log_init,loguptime2()); 
+            strcat(logging.log_init,"Wifi disconnected\r\n");
             vTaskDelay(WIFI_RECOVER_TIME_MS / portTICK_PERIOD_MS);
         }
 
         serial_print(F("[WIFI] Connected: "));
-        logging.start += loguptime(); 
-        logging.start += "Wifi reconnected\r\n";
+        strcat(logging.log_init,loguptime2()); 
+        strcat(logging.log_init,"Wifi reconnected\r\n");
         serial_println(WiFi.localIP());
         serial_print("force du signal:");
         serial_print(WiFi.RSSI());
@@ -82,41 +82,5 @@ void keepWiFiAlive2(void * parameter){
             //continue;
         }
 }
-/*
-        serial_println(F("[WIFI] Connecting"));
-        gDisplayValues.currentState = CONNECTING_WIFI;
-
-        WiFi.mode(WIFI_STA);
-        WiFi.setHostname(DEVICE_NAME);
-        WiFi.begin(configwifi.SID, configwifi.passwd); 
-        //else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
-        
-
-        unsigned long startAttemptTime = millis();
-
-        // Keep looping while we're not connected and haven't reached the timeout
-        while (WiFi.status() != WL_CONNECTED && 
-                millis() - startAttemptTime < WIFI_TIMEOUT){}
-
-        // Make sure that we're actually connected, otherwise go to deep sleep
-        if(WiFi.status() != WL_CONNECTED){
-            serial_println(F("[WIFI] FAILED"));
-            logging.start += loguptime(); 
-            logging.start += "Wifi disconnected\r\n";
-            vTaskDelay(WIFI_RECOVER_TIME_MS / portTICK_PERIOD_MS);
-        }
-
-        serial_print(F("[WIFI] Connected: "));
-        logging.start += loguptime(); 
-        logging.start += "Wifi reconnected\r\n";
-        serial_println(WiFi.localIP());
-        serial_print("force du signal:");
-        serial_print(WiFi.RSSI());
-        serial_print("dBm");
-        gDisplayValues.currentState = UP;
-        gDisplayValues.IP = String(WiFi.localIP().toString());
-        btStop();
-    } 
-}*/
 
 #endif

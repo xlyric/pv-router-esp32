@@ -275,12 +275,13 @@ String getmemory() {
   }
 
 //***********************************
-String getlogs() {
-    logging.start = logging.init + logging.start  + "}1"; 
-    logging.power = true ; logging.sct = true; logging.sinus = true; 
+/*String getlogs() {
+   // logging.start = logging.init + logging.start  + "}1"; 
+  //  logging.power = true ; logging.sct = true; logging.sinus = true; 
     return logging.start ; 
-  }
-
+   
+  } 
+*/
 //***********************************
 /*String processor(const String& var){
    Serial.println(var);

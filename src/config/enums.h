@@ -140,8 +140,8 @@ struct Configmodule {
 };
 
 struct Logs {
-  String init;
-  String start;
+  char log_init[650];
+  //String start;
   bool sct;
   bool sinus;
   bool power;
