@@ -139,6 +139,7 @@ struct Configmodule {
   char token[425];
 };
 
+/// @brief  partie délicate car pas mal d'action sur la variable log_init et donc protection de la variable ( pour éviter les pb mémoire )
 struct Logs {
   private:char log_init[650];
   public:bool sct;
