@@ -24,8 +24,8 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   File configFile = SPIFFS.open(enphase_conf, "r");
   if (!configFile) {
     Serial.println(NOT_ENPHASE);
-    strcat(logging.log_init,loguptime2());
-    strcat(logging.log_init,NOT_ENPHASE);
+    logging.Set_log_init(loguptime2());
+    logging.Set_log_init(NOT_ENPHASE);
     return false;
   }
 
@@ -38,8 +38,8 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(NOT_ENPHASE);
-    strcat(logging.log_init,loguptime2());
-    strcat(logging.log_init,NOT_ENPHASE);
+    logging.Set_log_init(loguptime2());
+    logging.Set_log_init(NOT_ENPHASE);
     return false;
   }
 
@@ -74,11 +74,11 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   } else {
     Serial.println(" enphase : inactif");
   }
-  strcat(logging.log_init,loguptime2());
-  strcat(logging.log_init,"Enphase used type ");
-  strcat(logging.log_init,String(configmodule.envoy).c_str());
-  strcat(logging.log_init,"\r\n");
-  strcat(logging.log_init,"");
+  logging.Set_log_init(loguptime2());
+  logging.Set_log_init("Enphase used type ");
+  logging.Set_log_init(String(configmodule.envoy).c_str());
+  logging.Set_log_init("\r\n");
+  logging.Set_log_init("");
   configmodule.enphase_present=true; 
   return true;
 }
@@ -89,9 +89,9 @@ void saveenphase(const char *filename, const Configmodule &configmodule) {
    File configFile = SPIFFS.open(enphase_conf, "w");
   if (!configFile) {
     Serial.println(F("Failed to open enphase file "));
-    strcat(logging.log_init,loguptime2());
+    logging.Set_log_init(loguptime2());
 
-    strcat(logging.log_init,"Failed to open enphase file \r\n");
+    logging.Set_log_init("Failed to open enphase file \r\n");
     return;
   } 
 

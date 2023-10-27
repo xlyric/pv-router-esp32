@@ -271,7 +271,7 @@ positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle *
 
 if ( zero > 75 ) { 
   if (logging.sct) {    
-    strcat(logging.log_init,"--> SCT013 Prob not connected  ?\r\n");
+    logging.Set_log_init("--> SCT013 Prob not connected  ?\r\n");
     logging.sct = false; }
 }
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
@@ -554,7 +554,7 @@ if ( zero > 75 ) {
  // if (logging.sct) { logging.start += loguptime() + "--> SCT013 Prob not connected  ?\r\n" ; logging.sct = false; }
 }
 //logging.start += "zero detected : " + String(zero) +   "\r\n" ;
- strcat(logging.log_init,loguptime2());
+ logging.Set_log_init(loguptime2());
 // logging.start +=  "Vrms-->" + String(Vrms) +"V.  Irms-->" + String(Irms) + "A.  ApparentPower--> " + String(PVA) + "VA.  PF--> " + String(PowerFactor) + "  PW--> " + String(PW) + "\r\n" ;
 
 

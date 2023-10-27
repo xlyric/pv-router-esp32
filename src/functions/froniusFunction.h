@@ -25,8 +25,8 @@ bool loadfronius(const char *filename, Configmodule &configmodule) {
   File configFile = SPIFFS.open(fronius_conf, "r");
   if (!configFile) {
     Serial.println(NOT_FRONIUS);
-    strcat(logging.log_init,loguptime2());
-    strcat(logging.log_init,NOT_FRONIUS);
+    logging.Set_log_init(loguptime2());
+    logging.Set_log_init(NOT_FRONIUS);
 
       return false;
     }
@@ -40,8 +40,8 @@ bool loadfronius(const char *filename, Configmodule &configmodule) {
   DeserializationError error = deserializeJson(doc, configFile);
   if (error) {
     Serial.println(NOT_FRONIUS);
-    strcat(logging.log_init,loguptime2());
-    strcat(logging.log_init,NOT_FRONIUS);
+    logging.Set_log_init(loguptime2());
+    logging.Set_log_init(NOT_FRONIUS);
 
     return false;
   }
@@ -56,8 +56,8 @@ bool loadfronius(const char *filename, Configmodule &configmodule) {
   configFile.close();
 
 Serial.println(" Fronius config : " + String(configmodule.hostname));
-strcat(logging.log_init,loguptime2());
-strcat(logging.log_init,"Fronius used\r\n");
+logging.Set_log_init(loguptime2());
+logging.Set_log_init("Fronius used\r\n");
 return true;
 }
 

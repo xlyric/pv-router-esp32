@@ -140,12 +140,34 @@ struct Configmodule {
 };
 
 struct Logs {
-  char log_init[650];
+  private:char log_init[650];
   //String start;
-  bool sct;
-  bool sinus;
-  bool power;
-  bool serial=false; 
+  public:bool sct;
+  public:bool sinus;
+  public:bool power;
+  public:bool serial=false; 
+
+  ///setter log_init
+  public:void Set_log_init(String setter) {strcat(log_init,setter.c_str()); }
+
+  ///getter log_init
+  public:String Get_log_init() {return log_init; }
+
+  //clean log_init
+  public:void clean_log_init() {
+      if (strlen(log_init) > 600 ) {
+      log_init[0] = '\0';
+      strcat(log_init,"197}11}1");
+      }
+  }
+
+  //reset log_init
+  public:void reset_log_init() {
+      log_init[0] = '\0';
+      strcat(log_init,"197}11}1");
+  }
+
+  
 };
 
 #if DEBUG == true

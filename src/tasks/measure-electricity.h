@@ -61,7 +61,7 @@ void measureElectricity(void * parameter)
                         gDisplayValues.watt =0 ; 
                         slowlog ++; 
                         if (slowlog == TEMPOLOG) {     
-                              strcat(logging.log_init,"--> No sinus, check 12AC power \r\n");
+                              logging.Set_log_init("--> No sinus, check 12AC power \r\n");
                               slowlog =0 ; 
                         }
 

@@ -51,14 +51,14 @@ void keepWiFiAlive(void * parameter){
         // Make sure that we're actually connected, otherwise go to deep sleep
         if(WiFi.status() != WL_CONNECTED){
             serial_println(F("[WIFI] FAILED"));
-            strcat(logging.log_init,loguptime2()); 
-            strcat(logging.log_init,"Wifi disconnected\r\n");
+            logging.Set_log_init(loguptime2()); 
+            logging.Set_log_init("Wifi disconnected\r\n");
             vTaskDelay(WIFI_RECOVER_TIME_MS / portTICK_PERIOD_MS);
         }
 
         serial_print(F("[WIFI] Connected: "));
-        strcat(logging.log_init,loguptime2()); 
-        strcat(logging.log_init,"Wifi reconnected\r\n");
+        logging.Set_log_init(loguptime2()); 
+        logging.Set_log_init("Wifi reconnected\r\n");
         serial_println(WiFi.localIP());
         serial_print("force du signal:");
         serial_print(WiFi.RSSI());

@@ -284,12 +284,11 @@ server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
     //request->send_P(200, "text/plain", getlogs().c_str());
     //serveur_response(request,  getlogs());
-    strcat(logging.log_init,"}1");
-    serveur_response(request, logging.log_init);
+    logging.Set_log_init("}1");
+    serveur_response(request, logging.Get_log_init().c_str());
     // reinit de logging.log_init 
-    logging.log_init[0]='\0';
-    strcat(logging.log_init,"197}11}1");
-    //logging.start = "";
+    logging.reset_log_init(); 
+
   });
 
 /*

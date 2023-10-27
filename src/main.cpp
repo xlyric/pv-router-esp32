@@ -160,16 +160,16 @@ void setup()
     Serial.setDebugOutput(true);
   #endif
   Serial.println("\n================== " + String(VERSION) + " ==================");
-  strcat(logging.log_init,"197}11}1");
-  strcat(logging.log_init,"#################  Restart reason  ###############\r\n");
+  logging.Set_log_init("197}11}1");
+  logging.Set_log_init("#################  Restart reason  ###############\r\n");
   esp_reset_reason_t reason = esp_reset_reason();
-  strcat(logging.log_init,String(reason).c_str());
-  strcat(logging.log_init,"\r\n#################  Starting System  ###############\r\n");
+  logging.Set_log_init(String(reason).c_str());
+  logging.Set_log_init("\r\n#################  Starting System  ###############\r\n");
     
   //démarrage file system
   Serial.println("start SPIFFS");
-  strcat(logging.log_init,loguptime2());
-  strcat(logging.log_init,"Start Filesystem\r\n");
+  logging.Set_log_init(loguptime2());
+  logging.Set_log_init("Start Filesystem\r\n");
   
   if (!SPIFFS.begin(true)) {
     Serial.println("SPIFFS Initialization failed!");
@@ -219,8 +219,8 @@ void setup()
     AP=false; 
   }*/
   if (configwifi.recup_wifi()){
-     strcat(logging.log_init,loguptime2());
-     strcat(logging.log_init,"Wifi config \r\n");
+     logging.Set_log_init(loguptime2());
+     logging.Set_log_init("Wifi config \r\n");
        AP=false; 
   }
 
@@ -309,14 +309,14 @@ Dimmer_setup();
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html.gz")){
     Serial.println(SPIFFSNO);  
-    strcat(logging.log_init,loguptime2());
-    strcat(logging.log_init,SPIFFSNO);
+    logging.Set_log_init(loguptime2());
+    logging.Set_log_init(SPIFFSNO);
   }
 
   if(!SPIFFS.exists(filename_conf)){
     Serial.println(CONFNO);  
-    strcat(logging.log_init,loguptime2());
-    strcat(logging.log_init,CONFNO);
+    logging.Set_log_init(loguptime2());
+    logging.Set_log_init(CONFNO);
 
   }
 
@@ -563,10 +563,7 @@ void loop()
   //}
    ///  vérification de la tailld du buffer log_init ( 600 caractères max ) il est créé à 650 caractères ( enums.h )
    /// pour éviter les buffer overflow et fuite mémoire. 
-   if (strlen(logging.log_init) > 600 ) {
-    logging.log_init[0] = '\0';
-    strcat(logging.log_init,"197}11}1");
-   }
+  logging.clean_log_init();
 // affichage en mode serial de la taille de la chaine de caractère logging.log_init
 //Serial.print( "log_init : " );
 //Serial.println( strlen(logging.log_init) );
@@ -702,10 +699,10 @@ void connect_to_wifi() {
       WiFi.setSleep(false);
       WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
-      strcat(logging.log_init,loguptime2());
-      strcat(logging.log_init,"Start Wifi Network");
-      strcat(logging.log_init,String(configwifi.SID).c_str());
-      strcat(logging.log_init,"\r\n");
+      logging.Set_log_init(loguptime2());
+      logging.Set_log_init("Start Wifi Network");
+      logging.Set_log_init(String(configwifi.SID).c_str());
+      logging.Set_log_init("\r\n");
       
       while ( WiFi.status() != WL_CONNECTED ) {
         delay(500);
@@ -713,30 +710,30 @@ void connect_to_wifi() {
         timeoutwifi++; 
 
         if (timeoutwifi > 20 ) {
-              strcat(logging.log_init,loguptime2());
-              strcat(logging.log_init,"timeout, go to AP mode \r\n");
-              strcat(logging.log_init,loguptime2());
-              strcat(logging.log_init,"Wifi State :");
-              strcat(logging.log_init,loguptime2());
+              logging.Set_log_init(loguptime2());
+              logging.Set_log_init("timeout, go to AP mode \r\n");
+              logging.Set_log_init(loguptime2());
+              logging.Set_log_init("Wifi State :");
+              logging.Set_log_init(loguptime2());
               
               switch (WiFi.status()) {
                   case 1:
-                      strcat(logging.log_init,"SSID is not available");
+                      logging.Set_log_init("SSID is not available");
                       break;
                   case 4:
 
-                      strcat(logging.log_init,"The connection fails for all the attempts");
+                      logging.Set_log_init("The connection fails for all the attempts");
                       break;
                   case 5:
-                      strcat(logging.log_init,"The connection is lost");
+                      logging.Set_log_init("The connection is lost");
                       break;
                   case 6:
-                      strcat(logging.log_init,"Disconnected from the network");
+                      logging.Set_log_init("Disconnected from the network");
                       break;
                   default:
                       break;
           
-              strcat(logging.log_init,"\r\n");
+              logging.Set_log_init("\r\n");
               } 
               break;
         }
@@ -755,8 +752,8 @@ void connect_to_wifi() {
 
 
       serial_println("WiFi connected");
-      strcat(logging.log_init,loguptime2());
-      strcat(logging.log_init,"Wifi connected\r\n");
+      logging.Set_log_init(loguptime2());
+      logging.Set_log_init("Wifi connected\r\n");
       serial_println("IP address: ");
       serial_println(WiFi.localIP());
         serial_print("force du signal:");

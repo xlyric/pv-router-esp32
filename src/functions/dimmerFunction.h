@@ -75,10 +75,10 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
             Serial.println(POWER_COMMAND + String(dimmervalue));
             }
         if (logging.power) {    
-            strcat(logging.log_init,loguptime2());
-            strcat(logging.log_init,POWER_COMMAND);
-            strcat(logging.log_init,String(dimmervalue).c_str());
-            strcat(logging.log_init,"\r\n");
+            logging.Set_log_init(loguptime2());
+            logging.Set_log_init(POWER_COMMAND);
+            logging.Set_log_init(String(dimmervalue).c_str());
+            logging.Set_log_init("\r\n");
             logging.power = false;}
       }
       //// Mqtt send information
