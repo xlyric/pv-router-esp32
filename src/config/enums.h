@@ -141,7 +141,7 @@ struct Configmodule {
 
 /// @brief  partie délicate car pas mal d'action sur la variable log_init et donc protection de la variable ( pour éviter les pb mémoire )
 struct Logs {
-  private:char log_init[650];
+  private:char log_init[LOG_MAX_STRING_LENGTH];
   public:bool sct;
   public:bool sinus;
   public:bool power;
@@ -155,7 +155,7 @@ struct Logs {
 
   //clean log_init
   public:void clean_log_init() {
-      if (strlen(log_init) > 600 ) {
+      if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/10)) ) {
       log_init[0] = '\0';
       strcat(log_init,"197}11}1");
       }
