@@ -141,7 +141,6 @@ struct Configmodule {
 
 struct Logs {
   private:char log_init[650];
-  //String start;
   public:bool sct;
   public:bool sinus;
   public:bool power;
