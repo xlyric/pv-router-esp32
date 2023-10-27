@@ -606,8 +606,8 @@ void loop()
 #endif
 //// surveillance des fuites mémoires 
 #ifndef LIGHT_FIRMWARE
-  client.publish(gDisplayValues.pvname.c_str(), String(esp_get_free_heap_size()).c_str()) ;
-  client.publish((gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
+  client.publish(("memory/"+gDisplayValues.pvname).c_str(), String(esp_get_free_heap_size()).c_str()) ;
+  client.publish(("memory/"+gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
 #endif
 
   /// synchrisation de l'information entre le dimmer et l'affichage 
