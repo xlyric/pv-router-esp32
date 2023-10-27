@@ -70,12 +70,17 @@ struct Programme {
   public:bool run; 
   public:int heure;
   public:int minute;
-  public:String name;
+  //public:String name2;
+  public:char name[12]; 
   
+  // setter name 
+  public:void Set_name(String setter) {strlcpy(name, setter.c_str(), sizeof(name)); }
+
+
   /// @brief sauvegarde
   /// @param programme_conf 
   public:void saveProgramme() {
-        const char * c_file = name.c_str();
+        //const char * c_file = name;
         //Serial.println(c_file);
         DynamicJsonDocument doc(192);
       
@@ -85,7 +90,7 @@ struct Programme {
         doc["temperature"] = temperature;
         
           // Open file for writing
-        File configFile = SPIFFS.open(c_file, "w");
+        File configFile = SPIFFS.open(name, "w");
         if (!configFile) {
           Serial.println(F("Failed to open config file for writing"));
           return;
@@ -104,8 +109,8 @@ struct Programme {
   
 
   public:bool loadProgramme() {
-        const char * c_file = name.c_str();
-        File configFile = SPIFFS.open(c_file, "r");
+        //const char * c_file = name;
+        File configFile = SPIFFS.open(name, "r");
 
         // Allocate a temporary JsonDocument
         // Don't forget to change the capacity to match your requirements.
