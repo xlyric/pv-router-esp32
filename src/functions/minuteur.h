@@ -71,10 +71,10 @@ struct Programme {
   public:int heure;
   public:int minute;
   //public:String name2;
-  public:char name[12]; 
+  private:char name_minuteur[12]; 
   
   // setter name 
-  public:void Set_name(String setter) {strlcpy(name, setter.c_str(), sizeof(name)); }
+  public:void Set_name(String setter) {strlcpy(name_minuteur, setter.c_str(), sizeof(name_minuteur)); }
 
 
   /// @brief sauvegarde
@@ -90,7 +90,7 @@ struct Programme {
         doc["temperature"] = temperature;
         
           // Open file for writing
-        File configFile = SPIFFS.open(name, "w");
+        File configFile = SPIFFS.open(name_minuteur, "w");
         if (!configFile) {
           Serial.println(F("Failed to open config file for writing"));
           return;
@@ -110,7 +110,7 @@ struct Programme {
 
   public:bool loadProgramme() {
         //const char * c_file = name;
-        File configFile = SPIFFS.open(name, "r");
+        File configFile = SPIFFS.open(name_minuteur, "r");
 
         // Allocate a temporary JsonDocument
         // Don't forget to change the capacity to match your requirements.

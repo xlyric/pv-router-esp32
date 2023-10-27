@@ -322,7 +322,7 @@ Dimmer_setup();
 
 /// chargement des conf de minuteries
   Serial.println("Loading minuterie");
-  programme.name="/dimmer";
+  programme.Set_name("/dimmer");
   programme.loadProgramme();
   programme.saveProgramme();
 

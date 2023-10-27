@@ -41,7 +41,7 @@
                 }
                 else{
                 //C'est l'été
-                timeClient.setTimeOffset(NTP_OFFSET_SECONDS*2); 
+                timeClient.setTimeOffset(NTP_OFFSET_SECONDS*1); 
             }
 
  /*   modifié et reboot tous les lundi à 00:00 pour ne pas avoir des erreurs dans les calculs de puissance
