@@ -160,6 +160,8 @@ bool start_progr() {
 return false; 
 }
 
+/// @brief  stop du programme
+/// @return 
 bool stop_progr() {
   int heures, minutes;
   /// sécurité temp

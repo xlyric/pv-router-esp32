@@ -11,6 +11,7 @@
 #include "HTTPClient.h"
 
 extern Programme programme; 
+extern Dallas dallas ;
 
 #if DIMMERLOCAL 
 
@@ -21,7 +22,7 @@ extern Programme programme;
 
     int dimmer_security = 60;  // coupe le dimmer toute les X minutes en cas de probleme externe. 
     int dimmer_security_count = 0; 
-    bool security=false;
+    //bool security=false;
 
   void dimmer_on();
   void dimmer_off();
@@ -139,9 +140,15 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
     } 
 
-    /// test puissance de sécurité 
-  if ( gDisplayValues.dimmer >= config.num_fuse ) {
+    /// test puissance de sécurité mode normal
+  if ( gDisplayValues.dimmer >= config.num_fuse && !config.dimmerlocal) {
     gDisplayValues.dimmer = config.num_fuse; 
+    gDisplayValues.change = 1 ; 
+    }
+  
+      /// test puissance de sécurité mode local
+  if ( gDisplayValues.dimmer >= config.localfuse && config.dimmerlocal ) {
+    gDisplayValues.dimmer = config.localfuse; 
     gDisplayValues.change = 1 ; 
     }
 
@@ -174,10 +181,14 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
 
             
-        int dallas_int = gDisplayValues.temperature.toInt(); 
-        if (security) {
-          if ( dallas_int <= (config.tmax - (config.tmax*TRIGGER/100)) ) {  
-          security = false ; // retrait securité si inférieur au trigger
+        float dallas_int = gDisplayValues.temperature.toFloat();
+        if (dallas.security) {
+          float temp_trigger = float(config.tmax) - float(config.tmax*TRIGGER/100) ;
+          if ( dallas_int < temp_trigger ) {  
+          dallas.security = false ; // retrait securité si inférieur au trigger
+          ///affichage dans les logs de l état sécurité
+          logging.Set_log_init("Security off\r\n");
+
           gDisplayValues.dimmer = 0 ; 
           dimmer_hard.setPower(gDisplayValues.dimmer);
           ledcWrite(0, gDisplayValues.dimmer*256/100);
@@ -198,12 +209,13 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
             dimmer_hard.setPower(0); 
             ledcWrite(0, 0);
             gDisplayValues.dimmer = 0 ;
-            security = true ;   /// mise en place sécurité thermique
+            dallas.security = true ;   /// mise en place sécurité thermique
             Serial.println("security off -> on ");
+            logging.Set_log_init("Security On\r\n");
             dimmer_off();
           }
           else {
-            if (!security){  
+            if (!dallas.security){  
                 /// fonctionnement du dimmer local 
                  
                 if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }

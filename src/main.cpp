@@ -29,13 +29,13 @@
  
   //#include "tasks/mqtt-aws.h"
   #include "tasks/wifi-connection.h"
-  //#include "tasks/wifi-update-signalstrength.h"
   #include "tasks/measure-electricity.h"
   //#include "tasks/mqtt-home-assistant.h"
   #include "tasks/Dimmer.h"
   #include "tasks/gettemp.h"
 
   #include "tasks/Serial_task.h"
+  #include "tasks/send-mqtt.h"
 
   //#include "functions/otaFunctions.h"
   #include "functions/spiffsFunctions.h"
@@ -353,10 +353,11 @@ Dimmer_setup();
     );  //pdMS_TO_TICKS(30000)
     } */
 
+     //// task pour remettre le wifi en route en cas de passage en mode AP
     xTaskCreate(
       keepWiFiAlive2,
       "keepWiFiAlive",  // Task name
-      8000,            // Stack size (bytes)
+      5000,            // Stack size (bytes)
       NULL,             // Parameter
       5,                // Task priority
       NULL          // Task handle
@@ -388,7 +389,7 @@ Dimmer_setup();
   xTaskCreatePinnedToCore(
     updateDisplay,
     "UpdateDisplay",  // Task name
-    10000,            // Stack size (bytes)
+    4000,            // Stack size (bytes)
     NULL,             // Parameter
     2,                // Task priority
     NULL,             // Task handle
@@ -403,7 +404,7 @@ Dimmer_setup();
   xTaskCreate(
     dallasread,
     "Dallas temp",  // Task name
-    2000,                  // Stack size (bytes)
+    4000,                  // Stack size (bytes)
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
@@ -436,7 +437,7 @@ Dimmer_setup();
   xTaskCreate(
     measureElectricity,
     "Measure electricity",  // Task name
-    15000,                  // Stack size (bytes)
+    5000,                  // Stack size (bytes)
     NULL,                   // Parameter
     7,                      // Task priority
     NULL                    // Task handle
@@ -451,7 +452,7 @@ Dimmer_setup();
   xTaskCreate(
     updateDimmer,
     "Update Dimmer",  // Task name
-    5000,                  // Stack size (bytes)
+    4000,                  // Stack size (bytes)
     NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
@@ -469,6 +470,21 @@ Dimmer_setup();
     4,                      // Task priority
     NULL                    // Task handle
   );  //pdMS_TO_TICKS(15000)
+
+// ----------------------------------------------------------------
+  // Task: MQTT send
+  // ----------------------------------------------------------------
+
+    xTaskCreate(
+    send_to_mqtt,
+    "Update MQTT",  // Task name
+    5000,                  // Stack size (bytes)
+    NULL,                   // Parameter
+    4,                      // Task priority
+    NULL                    // Task handle
+  );  //pdMS_TO_TICKS(10000)
+
+
   #endif
 
 #endif

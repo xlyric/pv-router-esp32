@@ -116,11 +116,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){
        tempC = gDisplayValues.temperature.toFloat(); 
       }
   } else {
-    Serial.print(" Temp C: ");
-    Serial.println(tempC);
-    logging.Set_log_init("temp :");
-    logging.Set_log_init(String(tempC).c_str());
-    logging.Set_log_init(" \r\n");
+
     return (tempC); 
    
     

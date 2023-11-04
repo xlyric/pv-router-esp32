@@ -60,7 +60,7 @@ if ( !dallas.detect && String(config.dimmer) != "") {
   }
 }
 
-
+//printf("\n\r[3] Min available stack size %d * %d bytes\n\r", uxTaskGetStackHighWaterMark(NULL), sizeof(portBASE_TYPE));
 
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(pdMS_TO_TICKS(15000));

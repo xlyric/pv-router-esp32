@@ -69,6 +69,9 @@ void keepWiFiAlive(void * parameter){
     }
 }
 
+
+/// @brief  task qui permet de rechercher le wifi configuré en cas de passage en mode AP et reboot si trouvé
+/// @param parameter 
 void keepWiFiAlive2(void * parameter){
     for(;;){
         //serial_println(F("Wifi task"));
