@@ -23,6 +23,7 @@ extern Dallas dallas ;
 void dallasread(void * parameter){
   for (;;){
     if (dallas.detect) {
+    String Old_temperature = gDisplayValues.temperature;
     gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
 
         // réduction de la précision de la température
@@ -30,6 +31,16 @@ void dallasread(void * parameter){
       char buffer[5];
       dtostrf(floatValue,2, 1, buffer); // conversion en n.1f 
       gDisplayValues.temperature=String(buffer);
+
+    /// pour éviter le spam dans les logs
+    if (Old_temperature != gDisplayValues.temperature) {
+      Serial.print(" Temp C: ");
+      Serial.println(gDisplayValues.temperature);
+      logging.Set_log_init("temp :");
+      logging.Set_log_init(String(gDisplayValues.temperature).c_str());
+      logging.Set_log_init(" \r\n");
+    }
+
    } 
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(pdMS_TO_TICKS(10000));

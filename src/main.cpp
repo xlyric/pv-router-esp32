@@ -536,6 +536,12 @@ esp_register_shutdown_handler( handler_before_reset );
 
 logging.power=true; logging.sct=true; logging.sinus=true; 
 
+/// affichage de l'heure  GMT +1 dans la log
+logging.Set_log_init("fin du demarrage: ");
+logging.Set_log_init(timeClient.getFormattedTime());
+logging.Set_log_init("\r\n");
+
+
 //WebSerial.begin(&server);
 //WebSerial.msgCallback(recvMsg);
 
@@ -632,6 +638,10 @@ if (config.dimmerlocal) {
           Serial.println("stop minuteur dimmer");
           //arret du ventilateur
           digitalWrite(COOLER, LOW);
+          /// retrait de la securité dallas
+          #if DALLAS
+          dallas.security=false;
+          #endif
           /// remonté MQTT
           #ifndef LIGHT_FIRMWARE
             Mqtt_send(String(config.IDX), String(dimmer_hard.getPower()),"pourcent"); // remonté MQTT de la commande réelle
@@ -700,8 +710,8 @@ void connect_to_wifi() {
       WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
       logging.Set_log_init(loguptime2());
-      logging.Set_log_init("Start Wifi Network");
-      logging.Set_log_init(String(configwifi.SID).c_str());
+      logging.Set_log_init("Start Wifi Network ");
+      logging.Set_log_init(configwifi.SID);
       logging.Set_log_init("\r\n");
       
       while ( WiFi.status() != WL_CONNECTED ) {
