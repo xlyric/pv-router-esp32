@@ -44,11 +44,16 @@ float WHtempgrid=0;
 float WHtempinject=0;
 long beforetime; 
 #define timemilli 3.6e+6 
+extern Memory task_mem; 
 
 void send_to_mqtt(void * parameter){
   for (;;){
-    /// vérification que l'envoie mqtt est souhaité
-    if (config.mqtt && (WiFi.status() == WL_CONNECTED ) ){
+    /// vérification que l'envoie mqtt est souhaité et les connexions actives
+    #ifndef LIGHT_FIRMWARE
+    if (config.mqtt && (WiFi.status() == WL_CONNECTED ) && client.connected() ){
+    #else
+      if (config.mqtt && (WiFi.status() == WL_CONNECTED ) ){
+    #endif
         long start = millis();
     
          #if WIFI_ACTIVE == true
@@ -111,7 +116,7 @@ void send_to_mqtt(void * parameter){
                   }
       #endif   
       } 
-      //printf("\n\r[3] Min available stack size %d * %d bytes\n\r", uxTaskGetStackHighWaterMark(NULL), sizeof(portBASE_TYPE));
+      task_mem.task_send_mqtt = uxTaskGetStackHighWaterMark(NULL);
    // Sleep for 10 seconds
     vTaskDelay(pdMS_TO_TICKS(10000));
   }

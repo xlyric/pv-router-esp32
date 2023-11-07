@@ -13,6 +13,7 @@ extern Configmodule configmodule;
 extern Configwifi configwifi; 
 extern Logs logging;
 extern Programme programme; 
+extern Memory task_mem; 
 
 //***********************************
 //************* Gestion du serveur WEB
@@ -33,6 +34,7 @@ AsyncWebServer server(80);
 		//***********************************
 
 String getMinuteur(const Programme& minuteur);
+String return_Memory();
 
 void notFound(AsyncWebServerRequest *request) {
     request->send(404, "text/plain", "Not found");
@@ -444,6 +446,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
     //request->send(200, "application/json",  getminuteur(programme_relay2).c_str()); 
   });
 
+
   server.on("/setminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
       String name; 
       if (request->hasParam("dimmer")) { 
@@ -455,6 +458,10 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
       }
   });
 
+  server.on("/getmemory", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+    request->send(200, "application/json",  return_Memory());
+  });
+
 }
 
 String getMinuteur(const Programme& minuteur) {
@@ -464,6 +471,24 @@ String getMinuteur(const Programme& minuteur) {
     doc["temperature"] = minuteur.temperature;
     doc["heure"] = timeClient.getHours();
     doc["minute"] = timeClient.getMinutes();
+
+    String retour;
+    serializeJson(doc, retour);
+    return retour;
+}
+
+String return_Memory() {
+    DynamicJsonDocument doc(512);
+    doc["task_GetDImmerTemp"] = task_mem.task_GetDImmerTemp;
+    doc["task_dallas_read"] = task_mem.task_dallas_read;
+    doc["task_keepWiFiAlive2"] = task_mem.task_keepWiFiAlive2;
+    doc["task_measure_electricity"] = task_mem.task_measure_electricity;
+    doc["task_send_mqtt"] = task_mem.task_send_mqtt;
+    doc["task_serial_read_task"] = task_mem.task_serial_read_task;
+    doc["task_switchDisplay"] = task_mem.task_switchDisplay;
+    doc["task_updateDimmer"] = task_mem.task_updateDimmer;
+    doc["task_updateDisplay"] = task_mem.task_updateDisplay;
+    doc["task_loop"] = task_mem.task_loop;
 
     String retour;
     serializeJson(doc, retour);

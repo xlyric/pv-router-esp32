@@ -113,6 +113,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){
       if ( (tempC == -127.00) || (tempC == -255.00) ) {
       Serial.print("Error getting temperature");
        logging.Set_log_init("Dallas on error\r\n");
+       /// si erreur on reprends l'ancienne valeur
        tempC = gDisplayValues.temperature.toFloat(); 
       }
   } else {

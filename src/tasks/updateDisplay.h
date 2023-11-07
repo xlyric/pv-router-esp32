@@ -29,12 +29,14 @@ extern Configmodule configmodule;
  * Metafunction that takes care of drawing all the different
  * parts of the display (or not if it's turned off).
  */
+extern Memory task_mem; 
+
 void updateDisplay(void* parameter) {
   for (;;) {
      if ( gDisplayValues.option == 0 && digitalRead(TFT_PIN)==HIGH){
       call_display();
       }
-      
+      task_mem.task_updateDisplay = uxTaskGetStackHighWaterMark(NULL);
       // Sleep for 5 seconds, then update display again!
       vTaskDelay(pdMS_TO_TICKS(4000));
   } // for

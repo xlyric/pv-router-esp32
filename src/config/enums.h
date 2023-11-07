@@ -128,6 +128,24 @@ struct Mqtt {
   bool HA;
 };
 
+struct Memory {
+  int task_keepWiFiAlive2=5000;   
+  int task_serial_read_task=5000;
+
+  int task_dallas_read=5000;
+  int task_updateDimmer=5000;; 
+  int task_GetDImmerTemp=5000;
+
+  int task_measure_electricity=5000;
+ 
+  int task_send_mqtt=5000;
+
+  int task_switchDisplay=5000;
+  int task_updateDisplay=5000;
+  int task_loop=5000; 
+};
+
+
 struct Configmodule {
   char hostname[16];
   char port[5];

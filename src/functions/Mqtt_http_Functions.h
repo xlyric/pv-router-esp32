@@ -19,6 +19,7 @@ WiFiClient espClient;
 extern Config config;
 extern DisplayValues gDisplayValues;
 extern Mqtt configmqtt;
+extern Logs logging;
 
 #ifndef LIGHT_FIRMWARE
 
@@ -35,11 +36,15 @@ void reconnect();
       while (!client.connected()) {
         Serial.println("-----------------------------");
         Serial.println("Attempting MQTT reconnection...");
-
+        logging.Set_log_init(loguptime2());
+        logging.Set_log_init("MQTT reconnect : attempting reconnection\r\n");
         // Attempt to connect
 
         if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
           client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
+          client.setKeepAlive(10);
+          logging.Set_log_init(loguptime2());
+          logging.Set_log_init("MQTT reconnect : Reconnected\r\n");
           Serial.println("MQTT reconnect : connected");
         } else {
           Serial.print("MQTT reconnect : failed, retcode="); 

@@ -13,6 +13,7 @@ HTTPClient httpdimmer;
 extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Dallas dallas ;
+extern Memory task_mem; 
 
 void GetDImmerTemp(void * parameter){
  for (;;){ 
@@ -59,8 +60,7 @@ if ( !dallas.detect && String(config.dimmer) != "") {
     Serial.println("temperature:" + gDisplayValues.temperature);
   }
 }
-
-//printf("\n\r[3] Min available stack size %d * %d bytes\n\r", uxTaskGetStackHighWaterMark(NULL), sizeof(portBASE_TYPE));
+task_mem.task_GetDImmerTemp = uxTaskGetStackHighWaterMark(NULL);
 
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(pdMS_TO_TICKS(15000));
