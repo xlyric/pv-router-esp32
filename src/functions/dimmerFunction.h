@@ -190,10 +190,11 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
           logging.Set_log_init("Security off\r\n");
 
           gDisplayValues.dimmer = 0 ; 
+          dimmer_on();
           dimmer_hard.setPower(gDisplayValues.dimmer);
           ledcWrite(0, gDisplayValues.dimmer*256/100);
           Serial.println("security on -> off");
-          dimmer_on();
+          
           }
           else {
             //gDisplayValues.dimmer = 0 ;
@@ -220,6 +221,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
                  
                 if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
                 else {
+                    dimmer_on();
                     dimmer_hard.setPower(config.localfuse); 
                     ledcWrite(0, config.localfuse*256/100);
                     dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ),puissance_dispo ) ;
@@ -227,7 +229,6 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
             }
           }
         }
-
         /// Relay
 
         if ( gDisplayValues.dimmer >= config.relayon ) {   digitalWrite(RELAY1, HIGH); }

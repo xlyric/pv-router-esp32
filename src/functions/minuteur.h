@@ -83,6 +83,10 @@ struct Programme {
         //const char * c_file = name;
         //Serial.println(c_file);
         DynamicJsonDocument doc(192);
+
+              ////vérification cohérence des données
+        if (check_data(heure_demarrage)) {strcpy(heure_demarrage, "00:00"); }
+        if (check_data(heure_arret)) {strcpy(heure_arret, "00:00"); }
       
         // Set the values in the document
         doc["heure_demarrage"] = heure_demarrage;
@@ -192,6 +196,20 @@ bool stop_progr() {
   return false; 
 }
 
+ /// vérification de la conformité de la donnée heure_demarrage[6]; 
+ bool check_data(char data[6]){
+  int heures, minutes;
+  int result = sscanf(data, "%d:%d", &heures, &minutes);
+  if (result != 2) {
+    Serial.println("Erreur de lecture de l'heure");
+    return true;
+  }
+  if (heures >= 0 && heures <= 23 && minutes >= 0 && minutes <= 59) {
+      return false;
+    }
+  Serial.println("Erreur de lecture de l'heure");
+  return true;
+ }
 
 };
 
