@@ -77,6 +77,8 @@ void send_to_mqtt(void * parameter){
                         enphase_current_power_consumption.send(String(int(gDisplayValues.enp_current_power_consumption)));
                         enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
                         temperature_HA.send(String(gDisplayValues.temperature));
+                        device_dimmer.send(String(gDisplayValues.puissance_route));
+                        
                   }
 
                     /// remonté énergie domoticz et jeedom
