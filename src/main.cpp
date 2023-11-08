@@ -805,13 +805,6 @@ void connect_to_wifi() {
       #endif
   }
 }
-/*
-String loguptime() {
-  String uptime_stamp;
-  uptime::calculateUptime();
-  uptime_stamp = String(uptime::getDays())+":"+String(uptime::getHours())+":"+String(uptime::getMinutes())+":"+String(uptime::getSeconds())+ "\t";
-  return uptime_stamp;
-} */
 
 
 char *loguptime2() {
