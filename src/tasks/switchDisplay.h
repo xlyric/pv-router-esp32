@@ -14,6 +14,7 @@
 
 extern DisplayValues gDisplayValues;
 extern Config config; 
+extern Memory task_mem; 
 
 void switchDisplay(void * parameter){
   int timer = millis();
@@ -94,7 +95,7 @@ void switchDisplay(void * parameter){
         gDisplayValues.option = 0 ; 
       }
     }
-
+    task_mem.task_switchDisplay = uxTaskGetStackHighWaterMark(NULL);
     vTaskDelay(pdMS_TO_TICKS(1000));  
   } 
 } //switchDisplay

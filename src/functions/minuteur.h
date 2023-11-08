@@ -161,6 +161,12 @@ bool start_progr() {
         return true; 
     }
   }
+
+  // protection fuite mémoire 
+  if (temperature > 500) {
+    ESP.restart(); 
+  }
+
 return false; 
 }
 

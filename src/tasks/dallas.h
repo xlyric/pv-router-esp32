@@ -18,6 +18,8 @@ extern Dallas dallas ;
  * Task: Lecture de la sonde de température Dallas toute les 10s
  * 
   */
+extern Memory task_mem; 
+
 void dallasread(void * parameter){
   for (;;){
     if (dallas.detect) {
@@ -40,7 +42,7 @@ void dallasread(void * parameter){
     }
 
    } 
-   
+   task_mem.task_dallas_read = uxTaskGetStackHighWaterMark(NULL);
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(pdMS_TO_TICKS(10000));
   }
