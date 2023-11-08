@@ -173,9 +173,14 @@ struct Logs {
 
   //clean log_init
   public:void clean_log_init() {
-      if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/10)) ) {
+      if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/20)) ) {
       log_init[0] = '\0';
       strcat(log_init,"197}11}1");
+      }
+
+      ///si risque de fuite mémoire
+      if (strlen(log_init) >(LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/5)) ) {
+      ESP.restart();  
       }
   }
 

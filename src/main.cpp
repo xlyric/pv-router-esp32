@@ -360,7 +360,7 @@ Dimmer_setup();
     xTaskCreate(
       watchdog_memory,
       "watchdog_memory",  // Task name
-      5000,            // Stack size (bytes)
+      6000,            // Stack size (bytes)
       NULL,             // Parameter
       5,                // Task priority
       NULL          // Task handle
@@ -371,7 +371,7 @@ Dimmer_setup();
     xTaskCreate(
       keepWiFiAlive2,
       "keepWiFiAlive",  // Task name
-      5000,            // Stack size (bytes)
+      6000,            // Stack size (bytes)
       NULL,             // Parameter
       5,                // Task priority
       NULL          // Task handle
@@ -387,7 +387,7 @@ Dimmer_setup();
     xTaskCreate(
       serial_read_task,
       "Serial Read",      // Task name
-      3000,            // Stack size (bytes)
+      4000,            // Stack size (bytes)
       NULL,             // Parameter
       1,                // Task priority
       NULL              // Task handle
@@ -403,7 +403,7 @@ Dimmer_setup();
   xTaskCreatePinnedToCore(
     updateDisplay,
     "UpdateDisplay",  // Task name
-    4000,            // Stack size (bytes)
+    5000,            // Stack size (bytes)
     NULL,             // Parameter
     2,                // Task priority
     NULL,             // Task handle
@@ -418,7 +418,7 @@ Dimmer_setup();
   xTaskCreate(
     dallasread,
     "Dallas local temp",  // Task name
-    4000,                  // Stack size (bytes)
+    5000,                  // Stack size (bytes)
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
@@ -435,7 +435,7 @@ Dimmer_setup();
   xTaskCreate( 
     switchDisplay,
     "Swith Oled",  // Task name
-    4000,                  // Stack size (bytes)
+    5000,                  // Stack size (bytes)
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
@@ -451,7 +451,7 @@ Dimmer_setup();
   xTaskCreate(
     measureElectricity,
     "Measure electricity",  // Task name
-    5000,                  // Stack size (bytes)
+    6000,                  // Stack size (bytes)
     NULL,                   // Parameter
     7,                      // Task priority
     NULL                    // Task handle
@@ -466,7 +466,7 @@ Dimmer_setup();
   xTaskCreate(
     updateDimmer,
     "Update Dimmer",  // Task name
-    4000,                  // Stack size (bytes)
+    5000,                  // Stack size (bytes)
     NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
@@ -479,7 +479,7 @@ Dimmer_setup();
     xTaskCreate(
     GetDImmerTemp,
     "Update temp",  // Task name
-    5000,                  // Stack size (bytes)
+    6000,                  // Stack size (bytes)
     NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
@@ -492,7 +492,7 @@ Dimmer_setup();
     xTaskCreate(
     send_to_mqtt,
     "Update MQTT",  // Task name
-    7000,                  // Stack size (bytes)
+    8000,                  // Stack size (bytes)
     NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
@@ -805,13 +805,6 @@ void connect_to_wifi() {
       #endif
   }
 }
-/*
-String loguptime() {
-  String uptime_stamp;
-  uptime::calculateUptime();
-  uptime_stamp = String(uptime::getDays())+":"+String(uptime::getHours())+":"+String(uptime::getMinutes())+":"+String(uptime::getSeconds())+ "\t";
-  return uptime_stamp;
-} */
 
 
 char *loguptime2() {

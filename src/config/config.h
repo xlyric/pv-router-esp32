@@ -220,7 +220,7 @@ bool AP=true;
 #define RELAY2 15
 
 /// taille max des logs stockée
-#define LOG_MAX_STRING_LENGTH 650 
+#define LOG_MAX_STRING_LENGTH 1000 
 
 //// JOTTA 
 #define JOTTA  2
