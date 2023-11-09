@@ -341,6 +341,7 @@ String injection_type() {
 /*
 *  récupération de la température sur le dimmer 
 */
+/*
 String Dimmer_temp(char* host) {
 WiFiClient client;
   
@@ -361,7 +362,7 @@ WiFiClient client;
 
   return (line);
    
-}
+}*/
 /* //// la fonction prend 100 octets de plus .
 void processMessage(String message_get ) {
   
