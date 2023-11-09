@@ -260,6 +260,7 @@ void search_wifi_ssid(){
           if (WiFi.SSID() == configwifi.SID) {
           Serial.println("WiFi connecté");
           WiFi.softAPdisconnect(true);
+          savelogs("-- reboot Wifi retrouvé -- ");
           ESP.restart();
           }    
         }
