@@ -14,6 +14,7 @@ extern Mqtt configmqtt;
 extern Logs logging;
 extern Configmodule configmodule; 
 extern dimmerLamp dimmer_hard; 
+
 #ifdef  TTGO
 #include <TFT_eSPI.h>
 #include <SPI.h>
@@ -433,6 +434,7 @@ void serial_read() {
       int index = message_get.indexOf("reboot");
       if (index != -1 ){
         Serial.println("commande reboot reçue");
+        savelogs("-- reboot Serial commande -- ");
         ESP.restart();
       }
 

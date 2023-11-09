@@ -20,6 +20,7 @@
 extern char *loguptime2();
 
 const char *filename_conf = "/config.json";
+const char *log_conf = "/log.txt";
 extern Config config; 
 
 
@@ -258,79 +259,41 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   configFile.close();
 }
 
+/// sauvegarde des logs avant reboot
 
-///////////////////////////////////
-///// config Wifi 
-///////////////////////////////////
-//const char *wifi_conf = "/wifi.json";
-//extern Configwifi configwifi; 
-//extern Logs logging;
-/*
-bool loadwifi(const char *filename, Configwifi &configwifi) {
-  // Open file for reading
-  File configFile = SPIFFS.open(wifi_conf, "r");
-
-  // Allocate a temporary JsonDocument
-  // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(512);
-
-  // Deserialize the JSON document
-  DeserializationError error = deserializeJson(doc, configFile);
-  if (error) {
-    Serial.println(F("Failed to read wifi config, AP mode activated "));
-    logging.Set_log_init(loguptime2());
-    logging.init += "Failed to read wifi config, AP mode activated\r\n";
-
-    return false;
-  }
-  
-  // Copy values from the JsonDocument to the Config
-  
-  strlcpy(configwifi.SID,                  // <- destination
-          doc["SID"] | "xxx", // <- source
-          sizeof(configwifi.SID));         // <- destination's capacity
-  
-  strlcpy(configwifi.passwd,                  // <- destination
-          doc["passwd"] | "xxx", // <- source
-          sizeof(configwifi.passwd));         // <- destination's capacity
-  configFile.close();
-
-return true;    
-}
-
-void saveWifi(const char *filenamewifi, const Configwifi &configwifi) {
+void savelogs(String log) {
   
   // Open file for writing
-   File configFile = SPIFFS.open(wifi_conf, "w");
+   File configFile = SPIFFS.open(log_conf, "w");
   if (!configFile) {
-    Serial.println(F("Failed to open config file for writing in function wifi configuration"));
+    Serial.println(F("Failed to open config file for logs"));
     logging.Set_log_init(loguptime2());
-    logging.init += "Failed to open config file for writing in function wifi configuration\r\n";
+    logging.Set_log_init("Failed to open config file for logs\r\n");
     return;
   } 
 
-  // Allocate a temporary JsonDocument
-  // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/assistant to compute the capacity.
-  DynamicJsonDocument doc(1024);
-
-  // Set the values in the document
-  doc["SID"] = configwifi.SID;
-  doc["passwd"] = configwifi.passwd;
+  // ajout dans le fichier les logs 
+  configFile.println(log);
   
-  // Serialize JSON to file
-  if (serializeJson(doc, configFile) == 0) {
-    Serial.println(F("Failed to write to file in function Save configuration "));
-    logging.Set_log_init(loguptime2());
-    logging.init += "Failed to write to file in function Save configuration\r\n";
-    
-  }
-
   // Close the file
   configFile.close();
 }
-*/
+
+/// chargement des logs
+void loadlogs() {
+  // Open file for reading
+  File configFile = SPIFFS.open(log_conf, "r");
+
+/// chargement de la log jusqu'a la fin du fichier EOF
+  while (configFile.available()) {
+    logging.Set_log_init(configFile.readStringUntil('\n'));
+  }
+  configFile.close();
+  logging.Set_log_init(loguptime2());
+  logging.Set_log_init("logs loaded\r\n");
+   
+
+}
 
 
 #endif

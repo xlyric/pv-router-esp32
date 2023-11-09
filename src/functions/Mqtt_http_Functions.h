@@ -39,13 +39,14 @@ void reconnect();
         logging.Set_log_init(loguptime2());
         logging.Set_log_init("MQTT attempting reco \r\n");
         //affichage du RSSI
-        logging.Set_log_init(String(WiFi.RSSI()));
+        logging.Set_log_init(String(WiFi.RSSI())+" dBm\r\n");
 
         // Attempt to connect
 
         if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
           client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
-          client.setKeepAlive(10);
+          client.setKeepAlive(30);
+          //client.setSocketTimeout(30);
           logging.Set_log_init(loguptime2());
           logging.Set_log_init("MQTT : Reconnected\r\n");
           Serial.println("MQTT connected");

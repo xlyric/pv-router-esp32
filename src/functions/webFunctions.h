@@ -276,6 +276,12 @@ server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(200, "application/json",  getmqtt().c_str()); 
   //serveur_response(request, getmqtt());
 });
+
+server.on("/log.txt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+  request->send(SPIFFS, "/log.txt", "text/plain"); 
+  
+  //serveur_response(request, getmqtt());
+});
  /// il serait bien que /getmqtt et getwifi soit directement en processing de l'appel de la page 
 
 

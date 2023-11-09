@@ -78,6 +78,7 @@ void send_to_mqtt(void * parameter){
                         enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
                         temperature_HA.send(String(gDisplayValues.temperature));
                         device_dimmer.send(String(gDisplayValues.puissance_route));
+                        //surplus_routeur.send(String(puissance_dispo));
                         
                   }
 
@@ -120,7 +121,7 @@ void send_to_mqtt(void * parameter){
       } 
       task_mem.task_send_mqtt = uxTaskGetStackHighWaterMark(NULL);
    // Sleep for 10 seconds
-    vTaskDelay(pdMS_TO_TICKS(1500));
+    vTaskDelay(pdMS_TO_TICKS(4500));
   }
 }
 
