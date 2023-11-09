@@ -101,7 +101,7 @@ String getState() {
   if (gDisplayValues.temperature == "null" ) { gDisplayValues.temperature = "0";  }
   if (gDisplayValues.temperature == "" ) { gDisplayValues.temperature = "0";  }
   //Serial.println(gDisplayValues.temperature);  
-  String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+  const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
   DynamicJsonDocument doc(156);
   doc["state"] = state;
   doc["watt"] = int(gDisplayValues.watt);
@@ -304,32 +304,16 @@ return getState();
 //***********************************
 //************* Fonction domotique 
 //***********************************
-
+/* 
 void SendToDomotic(String Svalue){
   String baseurl; 
   Serial.print("connecting to mqtt & dimmer");
   Serial.println(config.hostname);
   
- /* if ( config.mqtt == 1 ) {     mqtt(config.IDX,Svalue);  }*/
   Serial.println(baseurl);
 
-  // http.begin(config.hostname,config.port,baseurl);
-  //int httpCode = http.GET();
-  //Serial.println("closing connection");
-  //http.end();
-/*
-  if ( config.autonome == 1 && change == 1   ) {  baseurl = "/?POWER=" + String(dimmer_power) ; http.begin(config.dimmer,80,baseurl);   int httpCode = http.GET();
-    http.end(); 
-    if ( config.mqtt == 1 ) { mqtt(config.IDXdimmer, String(dimmer_power));  }
-    delay (3000); // delay de transmission réseau dimmer et application de la charge
-    */  
-    
-    //}
-
-
- 
 }
-
+*/ 
 /*
 void mqtt(String idx, String value)
 {

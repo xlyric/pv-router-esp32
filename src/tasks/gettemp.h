@@ -20,8 +20,7 @@ void GetDImmerTemp(void * parameter){
 // create get request 
 
 if ( !dallas.detect && String(config.dimmer) != "") {
-  String baseurl; 
-  baseurl = "/state" ; 
+  const String baseurl = "/state" ; 
   httpdimmer.begin(String(config.dimmer),80,baseurl);   
   int httpResponseCode = httpdimmer.GET();
   String dimmerstate = "0"; 

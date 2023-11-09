@@ -191,10 +191,8 @@ String ipToString(IPAddress ip){
 }
 
 bool dimmeradress(IPAddress dimmertemp ){
-  String baseurl; 
-  baseurl = "/state" ; 
+  const String baseurl = "/state" ; 
   String ipaddress= ipToString(dimmertemp);
-
 
   httpdimmer.begin(ipaddress,80,baseurl);   
   int httpResponseCode = httpdimmer.GET();  

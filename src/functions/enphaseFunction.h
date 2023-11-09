@@ -184,7 +184,7 @@ void Enphase_get_5(void) {
       gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
     }
 
-    String test = doc["consumption"][0];
+    //String test = doc["consumption"][0];
   } else {
     Serial.println("timeout");
   }

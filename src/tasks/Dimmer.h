@@ -28,8 +28,8 @@ void get_dimmer_child_power (){
             return;
         }
 
-        String baseurl; 
-        baseurl = "/state";
+        
+        const String baseurl = "/state";
         http.begin(String(config.dimmer),80,baseurl);   
         
         int httpResponseCode = http.GET();

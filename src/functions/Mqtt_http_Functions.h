@@ -30,8 +30,8 @@ void reconnect();
  */
 
     void reconnect() {
-      String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-      String topic = "homeassistant/sensor/"+ pvname +"/status";
+      const String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
+      const String topic = "homeassistant/sensor/"+ pvname +"/status";
       // Loop until we're reconnected
       while (!client.connected()) {
         Serial.println("-----------------------------");
