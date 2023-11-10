@@ -403,7 +403,7 @@ void processMessage(String message_get ) {
 
 */
 void serial_read() {
-  String message_get; 
+  String message_get =""; 
   int watchdog; 
 
     while (Serial.available() > 0 || watchdog > 255 )
@@ -414,6 +414,8 @@ void serial_read() {
       watchdog ++;
     }
 
+    watchdog = 0;
+    
     if (message_get.length() !=0 ) {
       /// test du message 
       int index = message_get.indexOf("reboot");
@@ -423,21 +425,28 @@ void serial_read() {
         ESP.restart();
       }
 
+/// recupération du SSID
       index = message_get.indexOf("ssid");
       if (index != -1 ){
-        String wifitemp=message_get.substring(5, message_get.length());
-        Serial.println("ssid enregistré: " + wifitemp);
-        wifitemp.toCharArray(configwifi.SID,50);
+        // Extraire le SSID de message_get
+        char ssidArray[51];  
+        int ssidLength = message_get.length() - 4;  // Longueur du SSID à partir de l'index 5
+        message_get.toCharArray(ssidArray, ssidLength, 5);
+        Serial.println("ssid enregistré: " + String(ssidArray));
+        strcpy(configwifi.SID, ssidArray);
         configwifi.sauve_wifi(); 
         return;
       }
 
+// récupération du mot de passe
       index = message_get.indexOf("pass");
       if (index != -1 ){
-        Serial.println("password enregistré :");
-        String passtemp=message_get.substring(5, message_get.length());
-        passtemp.toCharArray(configwifi.passwd,50);
-        configwifi.sauve_wifi(); 
+        char passArray[60];  
+        int passLength = message_get.length() - 4;  // Longueur du PASS à partir de l'index 5
+        message_get.toCharArray(passArray, passLength, 5);
+        Serial.println("password enregistré ");
+        strcpy(configwifi.passwd, passArray);
+        configwifi.sauve_wifi();
         return;
       }
 
@@ -457,15 +466,6 @@ void serial_read() {
         return; 
       }
 
-   /*   index = message_get.indexOf("HA");
-      if (index != -1 ){
-                  configmqtt.HA = !configmqtt.HA; 
-                  savemqtt(mqtt_conf, configmqtt);
-                  Serial.print("/r/n MQTT pour HA est maintenant :");
-                  Serial.println(String(configmqtt.HA).c_str());
-        return; 
-      }*/
-
       if (message_get.length() !=0){
         Serial.println("Commande disponibles :");
         Serial.println("'reboot' pour redémarrer le routeur ");
@@ -473,7 +473,7 @@ void serial_read() {
         Serial.println("'pass' pour changer le mdp wifi");
         Serial.println("'log' pour afficher les logs serial");
         Serial.println("'flip' pour retourner l'ecran");
-       // Serial.println("'HA' pour activer ou désactiver MQTT pour Home assistant");
+
       }
     }
  }
