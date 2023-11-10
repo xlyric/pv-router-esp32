@@ -40,12 +40,12 @@ if ( !dallas.detect && String(config.dimmer) != "") {
   
   // Free resources
   httpdimmer.end();
-  if (httpResponseCode>400) { gDisplayValues.temperature = "0";   }
+  if (httpResponseCode>400) { gDisplayValues.temperature = 0;   }
   else { 
     // hash temp 
     DynamicJsonDocument doc(128);
     deserializeJson(doc, dimmerstate);
-    gDisplayValues.temperature = doc["temperature"].as<String>();
+    gDisplayValues.temperature = doc["temperature"].as<String>().toFloat();
     /* int starttemp = dimmerstate.indexOf(";"); 
       dimmerstate = dimmerstate.substring(starttemp+1);
       int lasttemp = dimmerstate.indexOf(";"); 
@@ -56,7 +56,7 @@ if ( !dallas.detect && String(config.dimmer) != "") {
   }
 
   if (logging.serial){
-    Serial.println("temperature:" + gDisplayValues.temperature);
+    Serial.println("temperature:" + String(gDisplayValues.temperature));
   }
 }
 task_mem.task_GetDImmerTemp = uxTaskGetStackHighWaterMark(NULL);

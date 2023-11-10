@@ -40,7 +40,7 @@ struct DisplayValues {
   bool screenbutton;
   bool nextbutton;
   int option=0;
-  String temperature;
+  float temperature = 0.0 ;
   int Fronius_conso; 
   int Fronius_prod; 
   int Fronius_totalconso;

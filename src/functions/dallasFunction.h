@@ -76,7 +76,7 @@ if ( !ds.search(dallas.addr)) {
   dallas.present = ds.reset();    ///  byte 0 > 1 si present
   ds.select(dallas.addr);    
   ds.write(0xBE);         // Read Scratchpad
-
+  
   Serial.print("  present = ");
   Serial.println(dallas.present, HEX);
       logging.Set_log_init(loguptime2());
@@ -101,23 +101,26 @@ if ( !ds.search(dallas.addr)) {
 
 float CheckTemperature(String label, byte deviceAddress[12]){
   sensors.requestTemperatures(); 
+   
 
   float tempC = sensors.getTempC(deviceAddress);
   Serial.print(label);
   //logging.init += loguptime();
-    if ( (tempC == -127.00) || (tempC == -255.00) ) {
+    if ( (tempC == -127.0) || (tempC == -255.0) ) {
     
     //// cas d'une sonde trop longue à préparer les valeurs 
     delay(187); /// attente de 187ms ( temps de réponse de la sonde )
     tempC = sensors.getTempC(deviceAddress);
-      if ( (tempC == -127.00) || (tempC == -255.00) ) {
+      if ( (tempC == -127.0) || (tempC == -255.0) ) {
       Serial.print("Error getting temperature");
        logging.Set_log_init("Dallas on error\r\n");
        /// si erreur on reprends l'ancienne valeur
-       tempC = gDisplayValues.temperature.toFloat(); 
+       tempC = gDisplayValues.temperature; 
       }
   } else {
-
+    //réduction du retour à 1 décimale 
+    tempC = (int(tempC*10))/10.0;
+      
     return (tempC); 
    
     

@@ -179,7 +179,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
 
             
-        float dallas_int = gDisplayValues.temperature.toFloat();
+        float dallas_int = gDisplayValues.temperature;
         if (dallas.security) {
           float temp_trigger = float(config.tmax) - float(config.tmax*TRIGGER/100) ;
           if ( dallas_int < temp_trigger ) {  

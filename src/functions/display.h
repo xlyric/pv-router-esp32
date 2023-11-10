@@ -86,15 +86,15 @@ void affichage_normal(){
 
                   // affichage de la température du dimmer
                   #ifdef TTGO
-                        if (gDisplayValues.temperature.toInt() != 0) {
+                        if (int(gDisplayValues.temperature) != 0) {
                           ////// retrait à 1 décimale après la virgule
                           
-                          if (gDisplayValues.temperature.toInt() > 40) {
-                            drawtext10TTGO(150, 16, gDisplayValues.temperature, TFT_GREEN);
-                          } else if (gDisplayValues.temperature.toInt() < 25) {
-                            drawtext10TTGO(150, 16, gDisplayValues.temperature, TFT_BLUE);
+                          if (int(gDisplayValues.temperature) > 40) {
+                            drawtext10TTGO(150, 16, String(gDisplayValues.temperature,1), TFT_GREEN);
+                          } else if (int(gDisplayValues.temperature) < 25) {
+                            drawtext10TTGO(150, 16, String(gDisplayValues.temperature,1), TFT_BLUE);
                           } else {
-                            drawtext10TTGO(150, 16, gDisplayValues.temperature, TFT_WHITE);
+                            drawtext10TTGO(150, 16, String(gDisplayValues.temperature,1), TFT_WHITE);
                           }
                         }
                   #endif

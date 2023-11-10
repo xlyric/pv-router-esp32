@@ -23,14 +23,13 @@ extern Memory task_mem;
 void dallasread(void * parameter){
   for (;;){
     if (dallas.detect) {
-    String Old_temperature = gDisplayValues.temperature;
+    float Old_temperature = gDisplayValues.temperature;
     gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
 
-        // réduction de la précision de la température
-      float floatValue = gDisplayValues.temperature.toFloat();
-      char buffer[5];
-      dtostrf(floatValue,2, 1, buffer); // conversion en n.1f 
-      gDisplayValues.temperature=String(buffer);
+      // réduction de la précision de la température
+      //char buffer[5];
+      //dtostrf(gDisplayValues.temperature,2, 1, buffer); // conversion en n.1f 
+      //gDisplayValues.temperature=buffer;
 
     /// pour éviter le spam dans les logs
     if (Old_temperature != gDisplayValues.temperature) {

@@ -98,8 +98,8 @@ String getState() {
   if (gDisplayValues.watt >= config.delta  ) {   state = GRID; }
   if (gDisplayValues.watt <= config.deltaneg ) {   state = INJECTION; }
   //Serial.println(gDisplayValues.temperature);  
-  if (gDisplayValues.temperature == "null" ) { gDisplayValues.temperature = "0";  }
-  if (gDisplayValues.temperature == "" ) { gDisplayValues.temperature = "0";  }
+  //if (gDisplayValues.temperature == "null" ) { gDisplayValues.temperature = "0";  }
+  // if (gDisplayValues.temperature == "" ) { gDisplayValues.temperature = "0";  }
   //Serial.println(gDisplayValues.temperature);  
   const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
   DynamicJsonDocument doc(156);
