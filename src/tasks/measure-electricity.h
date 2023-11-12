@@ -65,15 +65,19 @@ if (!AP) {
 
 // shelly 
       #ifdef NORMAL_FIRMWARE
+         if (client.connected() && (WiFi.status() == WL_CONNECTED ))  {
             if (strcmp(config.topic_Shelly,"none") != 0)   { 
             client.loop(); // on vérifie coté mqtt si nouvelle info
             gDisplayValues.watt = gDisplayValues.Shelly ;  // on met à jour
             gDisplayValues.porteuse = true; // et c'est bon. 
             }
+         }
       #endif
 ///enphase
       if (configmodule.enphase_present ) {
-            Enphase_get();
+            if (WiFi.status() == WL_CONNECTED )  {
+                  Enphase_get();
+            }
             //if ( configmodule.pilote ) { 
                   //// inversion des valeurs pour enphase piloteur
                   if (String(configmodule.envoy) == "S") {
@@ -86,12 +90,13 @@ if (!AP) {
                   }
 
               //    }
-            }
-///enphase
+      }
+///fronius
       if (configmodule.Fronius_present ){
-            Fronius_get();
-            }           
-
+            if (WiFi.status() == WL_CONNECTED )  {
+                  Fronius_get();
+            }
+      }           
 
 
 }

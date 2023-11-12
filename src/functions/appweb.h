@@ -418,6 +418,8 @@ void serial_read() {
     
     if (message_get.length() !=0 ) {
       /// test du message 
+      // reinint du compteur de timeout
+
       int index = message_get.indexOf("reboot");
       if (index != -1 ){
         Serial.println("commande reboot reçue");

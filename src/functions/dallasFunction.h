@@ -102,9 +102,10 @@ if ( !ds.search(dallas.addr)) {
 float CheckTemperature(String label, byte deviceAddress[12]){
   sensors.requestTemperatures(); 
    
+  delay(400); // conseillé 375 ms pour une 18b20
 
   float tempC = sensors.getTempC(deviceAddress);
-  Serial.print(label);
+  //Serial.print(label);
   //logging.init += loguptime();
     if ( (tempC == -127.0) || (tempC == -255.0) ) {
     

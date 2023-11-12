@@ -151,7 +151,7 @@ void Enphase_get_5(void) {
     Serial.print(url);
   }
 
-  //httpenphase.begin(String(configmodule.hostname), atoi(configmodule.port), url);
+
   httpenphase.begin(String(configmodule.hostname), 80 , url);
   // int httpResponseCode = httpenphase.GET();
 

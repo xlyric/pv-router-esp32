@@ -89,8 +89,8 @@ void watchdog_memory(void * parameter){
       savelogs(timeClient.getFormattedTime() +"-- reboot watchdog memoire -- ");
       ESP.restart();
     } 
-    // Sleep for 5 seconds, avant de refaire une analyse
-    vTaskDelay(pdMS_TO_TICKS(10000));
+    // Sleep for 10 seconds, avant de refaire une analyse
+    vTaskDelay(pdMS_TO_TICKS(20000));
   }
 }
 
