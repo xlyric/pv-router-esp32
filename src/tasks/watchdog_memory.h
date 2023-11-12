@@ -8,15 +8,14 @@
 
 extern Memory task_mem; 
 extern Logs logging;
-
+/*
 //envoie http si la mémoire est trop basse
 void send_alerte_http(String task_name){
     // envoie d'un message sur la page web https://ota.apper-solaire.org/alerte.html
     // pour signaler un problème de mémoire
     // envoie d'un message sur la page web https://ota.apper-solaire.org/alerte.html
     // pour signaler un problème de mémoire
-    String baseurl;
-    baseurl = "https://ota.apper-solaire.org/alerte.php?task=";
+    const String baseurl = "https://ota.apper-solaire.org/alerte.php?task=";
     baseurl += task_name;
    //envoie du message
     HTTPClient http;
@@ -28,7 +27,7 @@ void send_alerte_http(String task_name){
     logging.Set_log_init(task_name);
     logging.Set_log_init("\r\n");
 }
-
+*/
 
 void watchdog_memory(void * parameter){
   for (;;){
@@ -90,8 +89,8 @@ void watchdog_memory(void * parameter){
       savelogs(timeClient.getFormattedTime() +"-- reboot watchdog memoire -- ");
       ESP.restart();
     } 
-    // Sleep for 5 seconds, avant de refaire une analyse
-    vTaskDelay(pdMS_TO_TICKS(10000));
+    // Sleep for 10 seconds, avant de refaire une analyse
+    vTaskDelay(pdMS_TO_TICKS(20000));
   }
 }
 

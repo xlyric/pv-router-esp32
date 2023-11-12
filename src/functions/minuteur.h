@@ -152,7 +152,7 @@ bool start_progr() {
     
   // quand c'est l'heure de démarrer le programme    
   if(timeClient.isTimeSet()) {
-    if (heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature.toFloat() ) {
+    if (heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature ) {
         // demarrage du cooler
         digitalWrite(COOLER, HIGH);
         run=true; 
@@ -176,7 +176,7 @@ return false;
 bool stop_progr() {
   int heures, minutes;
   /// sécurité temp
-  if ( gDisplayValues.temperature.toFloat() >= config.tmax  || gDisplayValues.temperature.toFloat() >= temperature ) { 
+  if ( gDisplayValues.temperature >= config.tmax  || gDisplayValues.temperature >= temperature ) { 
     digitalWrite(COOLER, LOW);
     logging.Set_log_init("minuteur: stop\r\n");
     run=false; 

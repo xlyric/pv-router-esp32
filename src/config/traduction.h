@@ -1,5 +1,5 @@
 
-#ifdef LANG_EN
+#if LANG_EN 
 
 #define GRID "Grid"
 #define INJECTION "Injection"
@@ -20,7 +20,7 @@
 
 #endif
 
-#ifdef LANG_FR
+#if LANG_FR
 
 #define GRID "Reseau"
 #define INJECTION "Injection"

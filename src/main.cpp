@@ -117,6 +117,9 @@ NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL
 unsigned short measurements[LOCAL_MEASUREMENTS];
 unsigned char measureIndex = 0;
 
+///gestion des tasks
+TaskHandle_t serialTaskHandle = NULL;
+
 //***********************************
 //************* Dallas
 //***********************************
@@ -385,9 +388,10 @@ Dimmer_setup();
   #endif
 
   // ----------------------------------------------------------------
-  // TASK: Connect to AWS & keep the connection alive.
+  // TASK: envoie d'information série
   // ----------------------------------------------------------------
-    xTaskCreate(
+   //// la task a un timeout et le mode série ne répond plus après 2 minutes ce qui laisse le temps de faire les reglages wifi sur l'OTA
+      xTaskCreate(
       serial_read_task,
       "Serial Read",      // Task name
       4000,            // Stack size (bytes)
@@ -414,18 +418,21 @@ Dimmer_setup();
   );  //pdMS_TO_TICKS(5000)
   #endif
 
+
 #if DALLAS
-  // ----------------------------------------------------------------
-  // Task: Read Dallas Temp
-  // ----------------------------------------------------------------
-  xTaskCreate(
-    dallasread,
-    "Dallas local temp",  // Task name
-    5000,                  // Stack size (bytes)
-    NULL,                   // Parameter
-    2,                      // Task priority
-    NULL                    // Task handle
-  );  //pdMS_TO_TICKS(10000)
+  if (dallas.detect) {
+    // ----------------------------------------------------------------
+    // Task: Read Dallas Temp
+    // ----------------------------------------------------------------
+    xTaskCreate(
+      dallasread,
+      "Dallas local temp",  // Task name
+      5000,                  // Stack size (bytes)
+      NULL,                   // Parameter
+      2,                      // Task priority
+      NULL       // Task handle
+    );  //pdMS_TO_TICKS(10000)
+  }
 #endif
 
 #ifdef  TTGO
@@ -478,15 +485,16 @@ Dimmer_setup();
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------
-
-    xTaskCreate(
-    GetDImmerTemp,
-    "Update temp",  // Task name
-    6000,                  // Stack size (bytes)
-    NULL,                   // Parameter
-    4,                      // Task priority
-    NULL                    // Task handle
-  );  //pdMS_TO_TICKS(15000)
+  if (!dallas.detect) {
+      xTaskCreate(
+        GetDImmerTemp,
+        "Update temp",  // Task name
+        6000,                  // Stack size (bytes)
+        NULL,                   // Parameter
+        4,                      // Task priority
+        NULL                    // Task handle
+      );  //pdMS_TO_TICKS(15000)
+  }
 
 // ----------------------------------------------------------------
   // Task: MQTT send
@@ -716,6 +724,8 @@ if (!AP) {
     time_reboot();
 }
 
+
+
   task_mem.task_loop = uxTaskGetStackHighWaterMark(NULL);
   vTaskDelay(pdMS_TO_TICKS(10000));
 }
@@ -753,7 +763,7 @@ void connect_to_wifi() {
         Serial.print(".");
         timeoutwifi++; 
 
-        if (timeoutwifi > 20 ) {
+        if (timeoutwifi > 40 ) {
               logging.Set_log_init(loguptime2());
               logging.Set_log_init("timeout, go to AP mode \r\n");
               logging.Set_log_init(loguptime2());
@@ -784,7 +794,7 @@ void connect_to_wifi() {
     }
 
         //// timeout --> AP MODE 
-        if ( timeoutwifi > 20 ) {
+        if ( timeoutwifi > 40 ) {
               WiFi.disconnect(); 
               //AP=true; 
               serial_println("timeout, go to AP mode ");

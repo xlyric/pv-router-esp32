@@ -151,7 +151,7 @@ void Enphase_get_5(void) {
     Serial.print(url);
   }
 
-  //httpenphase.begin(String(configmodule.hostname), atoi(configmodule.port), url);
+
   httpenphase.begin(String(configmodule.hostname), 80 , url);
   // int httpResponseCode = httpenphase.GET();
 
@@ -184,7 +184,7 @@ void Enphase_get_5(void) {
       gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
     }
 
-    String test = doc["consumption"][0];
+    //String test = doc["consumption"][0];
   } else {
     Serial.println("timeout");
   }

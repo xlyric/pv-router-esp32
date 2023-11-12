@@ -30,8 +30,8 @@ void reconnect();
  */
 
     void reconnect() {
-      String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-      String topic = "homeassistant/sensor/"+ pvname +"/status";
+      const String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
+      const String topic = "homeassistant/sensor/"+ pvname +"/status";
       // Loop until we're reconnected
       while (!client.connected()) {
         Serial.println("-----------------------------");
@@ -93,24 +93,24 @@ void Mqtt_send ( String idx, String value, String otherpub = "" , String name = 
     if (otherpub != "" ) {jdompub += "/"+otherpub; }
     
 
+    if (client.connected() && (WiFi.status() == WL_CONNECTED ))  {
+      client.loop();
+        if (otherpub == "" ) {
+          if (client.publish(config.Publish, String(message).c_str(), true)) {
+        //   Serial.println("MQTT_send : MQTT sent to domoticz");
+          }
 
-    client.loop();
-      if (otherpub == "" ) {
-        if (client.publish(config.Publish, String(message).c_str(), true)) {
-      //   Serial.println("MQTT_send : MQTT sent to domoticz");
+          else {
+            Serial.println("MQTT_send : error publish to domoticz ");
+          }
         }
-
-        else {
-          Serial.println("MQTT_send : error publish to domoticz ");
-        }
+      if (client.publish(jdompub.c_str() , value.c_str(), true)){
+      //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
       }
-    if (client.publish(jdompub.c_str() , value.c_str(), true)){
-    //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
+      else {
+    Serial.println("MQTT_send : error publish to Jeedom ");
+      }
     }
-    else {
-  Serial.println("MQTT_send : error publish to Jeedom ");
-    }
-    
   }
 }
 
@@ -119,16 +119,30 @@ Fonction MQTT callback
 *
 */
 void callback(char* topic, byte* payload, unsigned int length) {
-char arrivage[100];
+char arrivage[length+1]; // Ajout d'un espace pour le caractère nul
 
   for (int i=0;i<length;i++) {
     arrivage[i] = (char)payload[i];
   }
-  arrivage[length] = '\0';
+  arrivage[length] = '\0'; // Ajouter le caractère nul à la fin
   
     if (strcmp( topic, config.topic_Shelly ) == 0 ) {
-        if (strcmp( arrivage , "unavailable" ) == 0 ) { gDisplayValues.Shelly = -2; }
-        else { gDisplayValues.Shelly = atoi(arrivage);  } 
+        if (strcmp( arrivage , "unavailable" ) == 0 ) { 
+            gDisplayValues.Shelly = -2; 
+        }
+        else { 
+         DEBUG_PRINTLN("MQTT callback : Shelly = "+String(arrivage));
+      // Utiliser strtol pour une conversion plus robuste
+          char* endPtr;
+          double shellyValue = strtod(arrivage, &endPtr);
+
+          if (endPtr != arrivage && *endPtr == '\0') {
+            // La conversion s'est déroulée avec succès
+            gDisplayValues.Shelly = shellyValue;
+          } else {
+            DEBUG_PRINTLN("Erreur : Conversion de la chaîne en virgule flottante a échoué");
+          } 
+        } 
       } 
 
 }

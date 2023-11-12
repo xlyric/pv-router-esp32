@@ -65,8 +65,8 @@ return true;
 
 void Fronius_get(void) {
 
-String url = "/solar_api/v1/GetInverterRealtimeData.cgi?Scope=System";
-String url2 = "/solar_api/v1/GetMeterRealtimeData.cgi?Scope=System";
+const String url = "/solar_api/v1/GetInverterRealtimeData.cgi?Scope=System";
+const String url2 = "/solar_api/v1/GetMeterRealtimeData.cgi?Scope=System";
 httpfronius.begin(String(configmodule.hostname),80,url);
 int httpResponseCode = httpfronius.GET();
 // start connection and send HTTP header

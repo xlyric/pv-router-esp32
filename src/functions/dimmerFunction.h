@@ -63,11 +63,10 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
       #if WIFI_ACTIVE == true
       /// control dimmer 
       if ( strcmp(config.dimmer,"none") != 0 ) {
-      String baseurl; 
         #ifndef POURCENTAGE
-        baseurl = "/?POWER=" + String(dimmervalue) +"&puissance=" + String(puissance_dispo) ; 
+      const String  baseurl = "/?POWER=" + String(dimmervalue) +"&puissance=" + String(puissance_dispo) ; 
         #else
-        baseurl = "/?POWER=" + String(dimmervalue) ;
+      const String baseurl = "/?POWER=" + String(dimmervalue) ;
         #endif
         http.begin(dimmerurl,80,baseurl);   
         http.GET();
@@ -180,7 +179,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
 
             
-        float dallas_int = gDisplayValues.temperature.toFloat();
+        float dallas_int = gDisplayValues.temperature;
         if (dallas.security) {
           float temp_trigger = float(config.tmax) - float(config.tmax*TRIGGER/100) ;
           if ( dallas_int < temp_trigger ) {  

@@ -10,6 +10,7 @@
 #include <Preferences.h> 
 #include <TimeLib.h>
 
+
 #define SECURITEPASS "MyPassword"
 
 // The state in which the device can be. This mainly affects what
@@ -40,7 +41,7 @@ struct DisplayValues {
   bool screenbutton;
   bool nextbutton;
   int option=0;
-  String temperature;
+  float temperature = 0.0 ;
   int Fronius_conso; 
   int Fronius_prod; 
   int Fronius_totalconso;
@@ -53,7 +54,8 @@ struct DisplayValues {
   double enp_current_power_production;
   int puissance_route=0;
   bool dimmer_disengaged=false;
-  String pvname = "PV ROUTER " + WiFi.macAddress().substring(12,14) + WiFi.macAddress().substring(15,17);
+  const String pvname = "PV ROUTER " + WiFi.macAddress().substring(12,14) + WiFi.macAddress().substring(15,17);
+  int serial_timeout = 0 ; ///arret du service serial après x loop d'inactivité
 };
 
 struct Config {
@@ -250,10 +252,10 @@ struct Dallas{
           private:String avty_t;
 
           
-          private:String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-          private:String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-          private:String node_id = String("PvRouter-") + node_mac; 
-          private:String topic = "homeassistant/sensor/"+ node_id +"/";
+          private:const String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+          private:const String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+          private:const String node_id = String("PvRouter-") + node_mac; 
+          private:const String topic = "homeassistant/sensor/"+ node_id +"/";
           private:String device_declare() { 
                     String info =         "\"dev\": {"
                     "\"ids\": \""+ node_id + "\","
