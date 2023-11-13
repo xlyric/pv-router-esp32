@@ -224,7 +224,7 @@ bool stop_progr() {
 void time_reboot() {
   if(timeClient.isTimeSet()) {
     if (timeClient.getDay() == 1 && timeClient.getHours() == 0 && timeClient.getMinutes() == 0 && timeClient.getSeconds() <= 15) {
-      savelogs(timeClient.getFormattedTime() +"-- reboot fuite mémoire time -- ");
+      savelogs(timeClient.getFormattedTime() +"-- Reboot du Lundi matin -- ");
       ESP.restart();
     }
   }

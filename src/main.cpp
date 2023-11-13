@@ -581,6 +581,7 @@ logging.power=true; logging.sct=true; logging.sinus=true;
 logging.Set_log_init("-- fin du demarrage: ");
 logging.Set_log_init(timeClient.getFormattedTime());
 logging.Set_log_init(" --\r\n");
+savelogs(timeClient.getFormattedTime() + "-- fin du précédent reboot -- ");
 
 
 //WebSerial.begin(&server);
