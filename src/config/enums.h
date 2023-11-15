@@ -9,7 +9,11 @@
 
 #include <Preferences.h> 
 #include <TimeLib.h>
+#include <NTPClient.h>
 
+//// NTP 
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
 
 #define SECURITEPASS "MyPassword"
 
@@ -168,17 +172,25 @@ struct Logs {
   public:bool power;
   public:bool serial=false; 
 
-  ///setter log_init
-  public:void Set_log_init(String setter) {strcat(log_init,setter.c_str()); }
+  ///setter log_init --> ajout du texte dans la log
+  public:void Set_log_init(String setter, bool logtime=false) {
+    // vérification qu'il y ai encore de la taille pour stocker la log 
+    if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/50)) ) {
+      reset_log_init();
+    }
+    if ((strlen(setter.c_str()) + strlen(log_init) > LOG_MAX_STRING_LENGTH)) { return; } // si la taille de la log est trop grande, on ne fait rien )*
+    if (logtime) { strcat(log_init,loguptime()); }
+    strcat(log_init,setter.c_str()); 
+  }
+
 
   ///getter log_init
   public:String Get_log_init() {return log_init; }
 
   //clean log_init
   public:void clean_log_init() {
-      if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/20)) ) {
-      log_init[0] = '\0';
-      strcat(log_init,"197}11}1");
+      if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/50)) ) {
+      reset_log_init();
       }
 
       ///si risque de fuite mémoire
@@ -194,7 +206,11 @@ struct Logs {
       strcat(log_init,"197}11}1");
   }
 
-  
+  char *loguptime() {
+    static char uptime_stamp[20]; // Vous devrez définir une taille suffisamment grande pour stocker votre temps
+    snprintf(uptime_stamp, sizeof(uptime_stamp), "%s\t", timeClient.getFormattedTime().c_str());
+    return uptime_stamp;
+  }
 };
 
 #if DEBUG == true

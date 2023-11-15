@@ -44,6 +44,12 @@
      */
     void keepHAConnectionAlive(void * parameter){
         for(;;){
+
+            if(!WiFi.isConnected()){
+                vTaskDelay(1000 / portTICK_PERIOD_MS);
+                continue;
+            }
+
             // When we are connected, loop the MQTT client and sleep for 0,5s
             if(HA_mqtt.connected()){
                 HA_mqtt.loop();
@@ -51,10 +57,6 @@
                 continue;
             }
 
-            if(!WiFi.isConnected()){
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
-                continue;
-            }
 
             serial_println(F("[MQTT] Connecting to HA..."));
             HA_mqtt.begin(HA_ADDRESS, HA_PORT, HA_net);

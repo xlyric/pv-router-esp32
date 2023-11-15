@@ -25,7 +25,7 @@ void serial_read_task(void * parameter){
       gDisplayValues.serial_timeout ++ ;
     }
 
-
+    logging.clean_log_init();
 
    // Sleep for 5 seconds, avant de refaire une analyse
     //vTaskDelay(5000 / portTICK_PERIOD_MS);

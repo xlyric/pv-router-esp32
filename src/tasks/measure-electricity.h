@@ -11,6 +11,7 @@
 #include "functions/drawFunctions.h"
 #include "functions/enphaseFunction.h"
 #include "functions/froniusFunction.h"
+#include "functions/shelly.h" 
 
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
@@ -32,9 +33,21 @@ void measureElectricity(void * parameter)
       /*if ( configmodule.enphase_present || configmodule.Fronius_present || strcmp(config.topic_Shelly,"none") != 0 ) {
             porteuse = false; || (String(configmodule.envoy) == "R")
       }*/ /// refaire des tests... 
-      
-      if ( configmodule.enphase_present == false && configmodule.Fronius_present == false ) {  ///correction Fred 230423--> marche pas 
-            if (strcmp(config.topic_Shelly,"none") == 0 ) {
+
+      //// recherche du mode de fonctionnement
+      int mode = 0;   /// 0 = porteuse  ; 1 = shelly , 2 = enphase 3 = fronius
+      if (strcmp(config.topic_Shelly,"none") != 0) {
+            mode = 1; 
+      }
+      else if (configmodule.enphase_present && String(configmodule.envoy) == "S") {
+            mode = 2; 
+      }
+      else if (configmodule.Fronius_present) {
+            mode = 3; 
+      }
+
+            /// SCT 013 
+      if (mode == 0 ) { 
                   injection2();
                   if ( gDisplayValues.porteuse == false  && configmodule.enphase_present == false && configmodule.Fronius_present == false) {
                         gDisplayValues.watt =0 ; 
@@ -49,63 +62,68 @@ void measureElectricity(void * parameter)
                   serial_println(int(gDisplayValues.watt)) ;
                 
                   }
-                    
-            }
       }
-      else{
-            gDisplayValues.porteuse = true;
 
-      }
-     
+      /// que dans les cas sans mode AP
+      if (!AP) {
+            /// shelly
+            if (mode == 1 ) { 
+                  if (WiFi.status() == WL_CONNECTED )  {
+                        /// on vérifie si config.topic_Shelly est une IP ou un topic mqtt
+                        if (checkIP(config.topic_Shelly)) {
+                              gDisplayValues.watt = shelly_get_data(config.topic_Shelly);
+                        }
+                        #ifdef NORMAL_FIRMWARE
+                        else {
+                              
+                              client.loop();
+                              gDisplayValues.watt = gDisplayValues.Shelly ;
+                            
+                        }
+                        #endif
+                        //  // on met à jour
+                        gDisplayValues.porteuse = true; // et c'est bon. 
 
-
-
-
-if (!AP) {
-
-// shelly 
-      #ifdef NORMAL_FIRMWARE
-         if (client.connected() && (WiFi.status() == WL_CONNECTED ))  {
-            if (strcmp(config.topic_Shelly,"none") != 0)   { 
-            client.loop(); // on vérifie coté mqtt si nouvelle info
-            gDisplayValues.watt = gDisplayValues.Shelly ;  // on met à jour
-            gDisplayValues.porteuse = true; // et c'est bon. 
+                  }
             }
-         }
-      #endif
-///enphase
-      if (configmodule.enphase_present ) {
-            if (WiFi.status() == WL_CONNECTED )  {
-                  Enphase_get();
-            }
-            //if ( configmodule.pilote ) { 
-                  //// inversion des valeurs pour enphase piloteur
-                  if (String(configmodule.envoy) == "S") {
-                  int tempo = gDisplayValues.watt; 
-                  gDisplayValues.watt = gDisplayValues.Fronius_conso ; 
-                  gDisplayValues.Fronius_conso = tempo; }
-                  else 
-                  {  /// si c'est un modèle R, il ne fait pas les mesures. 
-                  injection2();
+
+            /// enphase
+            if (mode == 2 ) { 
+                  if (WiFi.status() == WL_CONNECTED )  {
+                        //// inversion des valeurs pour enphase piloteur
+                        Enphase_get();
+                        int tempo = gDisplayValues.watt; 
+                        gDisplayValues.watt = gDisplayValues.Fronius_conso ; 
+                        gDisplayValues.Fronius_conso = tempo; 
                   }
 
-              //    }
-      }
-///fronius
-      if (configmodule.Fronius_present ){
-            if (WiFi.status() == WL_CONNECTED )  {
-                  Fronius_get();
             }
-      }           
 
 
-}
+            /// fronius
+            if (mode == 3 ) { 
+                  if (WiFi.status() == WL_CONNECTED )  {
+                        Fronius_get();
+                  }
+            }
+      }
+
+
+
+
+
+// shelly quand c était en mqtt
+      #ifdef NORMAL_FIRMWARE
+
+      #endif
+
+
 
 long end = millis();
       task_mem.task_measure_electricity = uxTaskGetStackHighWaterMark(NULL);
       // Schedule the task to run again in 1 second (while
       // taking into account how long measurement took) ///&& configmodule.pilote
-      if (configmodule.enphase_present) {
+      if (mode != 0 ) {
             vTaskDelay(pdMS_TO_TICKS(5000));
       }
       else

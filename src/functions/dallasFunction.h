@@ -28,11 +28,12 @@ DeviceAddress insideThermometer;
 byte i;
 
 bool dallaspresent () {
+logging.clean_log_init();
 
 if ( !ds.search(dallas.addr)) {
     Serial.println("Dallas not connected");
-    logging.Set_log_init(loguptime2());
-    logging.Set_log_init("Dallas not connected\r\n");
+    
+    logging.Set_log_init("Dallas not connected\r\n",true);
     Serial.println();
     ds.reset_search();
     delay(250);
@@ -79,8 +80,8 @@ if ( !ds.search(dallas.addr)) {
   
   Serial.print("  present = ");
   Serial.println(dallas.present, HEX);
-      logging.Set_log_init(loguptime2());
-      logging.Set_log_init("Dallas present at address");
+      
+      logging.Set_log_init("Dallas present at address",true);
       logging.Set_log_init(String(dallas.present, HEX).c_str());
       logging.Set_log_init("\r\n");
 

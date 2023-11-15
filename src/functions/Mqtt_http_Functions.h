@@ -30,14 +30,21 @@ void reconnect();
  */
 
     void reconnect() {
+      
+        if (strcmp(config.mqttserver,"none") == 0) {
+        Serial.println("MQTT_init : MQTT désactivé");
+        return;
+        }
+
       const String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
       const String topic = "homeassistant/sensor/"+ pvname +"/status";
       // Loop until we're reconnected
       while (!client.connected()) {
+        logging.clean_log_init();
         Serial.println("-----------------------------");
         Serial.println("Attempting MQTT reconnection...");
-        logging.Set_log_init(loguptime2());
-        logging.Set_log_init("MQTT attempting reco \r\n");
+        
+        logging.Set_log_init("MQTT attempting reco \r\n",true);
         //affichage du RSSI
         logging.Set_log_init(String(WiFi.RSSI())+" dBm\r\n");
 
@@ -47,8 +54,8 @@ void reconnect();
           client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
           client.setKeepAlive(30);
           //client.setSocketTimeout(30);
-          logging.Set_log_init(loguptime2());
-          logging.Set_log_init("MQTT : Reconnected\r\n");
+          
+          logging.Set_log_init("MQTT : Reconnected\r\n",true);
           Serial.println("MQTT connected");
         } else {
           Serial.print("MQTT failed, retcode="); 
@@ -156,7 +163,12 @@ void Mqtt_init() {
   // String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
   // String topic = "homeassistant/sensor/"+ pvname +"/status";
 
-  // debug
+  // comparaison de config.mqttserver avec none 
+  if (strcmp(config.mqttserver,"none") == 0) {
+    Serial.println("MQTT_init : MQTT désactivé");
+    return;
+  }
+
   Serial.println("MQTT_init : server="+String(config.mqttserver));
   Serial.println("MQTT_init : port="+String(config.mqttport));
   

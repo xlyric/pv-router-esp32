@@ -75,8 +75,8 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
             Serial.println(POWER_COMMAND + String(dimmervalue));
             }
         if (logging.power) {    
-            logging.Set_log_init(loguptime2());
-            logging.Set_log_init(POWER_COMMAND);
+            
+            logging.Set_log_init(POWER_COMMAND,true);
             logging.Set_log_init(String(dimmervalue).c_str());
             logging.Set_log_init("\r\n");
             logging.power = false;}

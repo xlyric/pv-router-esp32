@@ -23,8 +23,8 @@ extern DisplayValues gDisplayValues;
 extern Config config; 
 
 //// NTP 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+//WiFiUDP ntpUDP;
+//NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
 
 void offset_heure_ete();
 void timeclientEpoch_to_date(time_t epoch) ;

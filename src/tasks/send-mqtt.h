@@ -48,6 +48,11 @@ extern Memory task_mem;
 
 void send_to_mqtt(void * parameter){
   for (;;){
+            if(!WiFi.isConnected()){   /// si pas de connexion Wifi test dans 10 s 
+                vTaskDelay(10*1000 / portTICK_PERIOD_MS);
+                continue;
+            }
+
     /// vérification que l'envoie mqtt est souhaité et les connexions actives
     #ifndef LIGHT_FIRMWARE
     if (config.mqtt && (WiFi.status() == WL_CONNECTED ) && client.connected() ){
