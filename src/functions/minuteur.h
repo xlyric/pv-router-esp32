@@ -140,40 +140,66 @@ struct Programme {
       return true;    
   }
 
-
-bool start_progr() {
-  int heures, minutes;
-  sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
-  
-  // si heure_demarrage == heure_arret alors on retourne false
-  if (strcmp(heure_demarrage, heure_arret) == 0) {
-        return false;
+  void commande_run(){
+          digitalWrite(COOLER, HIGH);
+          run=true; 
+          timeClient.update();
+          logging.Set_log_init("minuteur: start\r\n");
   }
-    
-  // quand c'est l'heure de démarrer le programme    
-  if(timeClient.isTimeSet()) {
-    if (heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature ) {
-        // demarrage du cooler
-        digitalWrite(COOLER, HIGH);
-        run=true; 
-        timeClient.update();
-        logging.Set_log_init("minuteur: start\r\n");
-        return true; 
+
+   public:bool start_progr() {
+      int heures, minutes;
+      sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
+      int heures_fin, minutes_fin;
+      sscanf(heure_arret, "%d:%d", &heures_fin, &minutes_fin);
+      
+      // si heure_demarrage == heure_arret alors on retourne false
+      if (strcmp(heure_demarrage, heure_arret) == 0) {
+            return false;
+      }
+      
+      // quand c'est l'heure de démarrer le programme    
+
+      ///vérification que le ntp est synchronisé
+      if(timeClient.isTimeSet()) {
+        if (heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature ) {
+            // demarrage du cooler
+            commande_run();
+            return true; 
+        }
+      }
+
+      // remise en route en cas de reboot et si l'heure est dépassée
+      if (timeClient.getHours() >= heures && timeClient.getMinutes() >= minutes && run == false && heures <= heures_fin) {
+        if (timeClient.getHours() <= heures_fin && timeClient.getMinutes() <= minutes_fin) {
+          commande_run();
+          return true; 
+        }
+
+        sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
+        if(timeClient.isTimeSet()) {
+          if (heures < timeClient.getHours() && minutes < timeClient.getMinutes()) {
+            commande_run();
+            return true; 
+          }
+        }
+      }
+
+      // protection fuite mémoire 
+      if (temperature > 500) {
+        savelogs(timeClient.getFormattedTime() +"-- reboot problème de fuite memoire -- ");
+        ESP.restart(); 
+      }
+
+    return false; 
     }
-  }
 
-  // protection fuite mémoire 
-  if (temperature > 500) {
-    savelogs(timeClient.getFormattedTime() +"-- reboot problème de fuite memoire -- ");
-    ESP.restart(); 
-  }
 
-return false; 
-}
+
 
 /// @brief  stop du programme
 /// @return 
-bool stop_progr() {
+public:bool stop_progr() {
   int heures, minutes;
   /// sécurité temp
   if ( gDisplayValues.temperature >= config.tmax  || gDisplayValues.temperature >= temperature ) { 
