@@ -18,6 +18,10 @@ extern Memory task_mem;
 void GetDImmerTemp(void * parameter){
  for (;;){ 
 // create get request 
+            if(WiFi.status() != WL_CONNECTED){   /// si pas de connexion Wifi test dans 10 s 
+                vTaskDelay(10*1000 / portTICK_PERIOD_MS);
+                continue;
+            }
 
 if ( !dallas.detect && String(config.dimmer) != "") {
   const String baseurl = "/state" ; 

@@ -17,7 +17,7 @@
 
   <!-- Custom styles for this template-->
   <link href="sb-admin-2.min.css" rel="stylesheet">
-
+  
 </head>
 
 <body id="page-top">
@@ -156,7 +156,7 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-		  <h1 class="h3 mb-2 text-gray-800">Configuration MQTT ( tout changement dans cette page necessite un reboot )</h1>
+		  <h1 class="h3 mb-2 text-gray-800">Configuration MQTT (Tout changement dans cette page necessite un reboot)</h1>
 
 		<div class="col-lg-6">
 
@@ -190,7 +190,7 @@
             </div>
 
             <div class="form-group">
-              Topic  :<input type="text" class="form-control form-control-user" id="topic" placeholder="%TOPIC%">
+              <a data-toggle="popover" title="Aide" data-content="Utile dans le cas d'un serveur Domoticz ou Jeedom"> Topic ℹ </a> :<input type="text" class="form-control form-control-user" id="topic" placeholder="%TOPIC%">
             </div>
 
             <div class="form-group">
@@ -205,7 +205,7 @@
 
             <div class="card position-relative">
               <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">MQTT Domoticz</h6>
+                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" data-placement="top" title="Aide" data-content="Index pour les remontés Domoticz ou Jeedom">MQTT Domoticz ℹ</h6>
                   <span id="saveform"></span>
               </div>
               <div class="card-body">
@@ -226,7 +226,7 @@
             <br>
             <div class="card position-relative">
               <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">HA MQTT ( Envoie d'info MQTT sur topic HA )</h6>
+                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" title="Aide" data-placement="top" data-content="Cochez pour une remonté sur Home Assistant">HA MQTT ( Envoie d'info MQTT sur topic HA ) ℹ</h6>
                   <span id="saveform"></span>
               </div>
               <div class="card-body">
@@ -240,13 +240,22 @@
                       <label class="custom-control-label" for="HA" onclick="sendservermode(this.innerHTML);" >HA</label>
                     </div>
                   </div>
-                  <div class="col-sm-6">
-                    Shelly EM topic (or none): <input type="text" class="form-control form-control-user" id="EM" placeholder="%EM%">
-                  </div>
+
                 </div>
               </div>
-            </div>          
-				  
+            </div>    
+            <br>      
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Shelly</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="col-sm-6">
+                <a data-toggle="popover" title="Aide" data-content="Si vous n'utilisez pas de Shelly laissez à 'none'. Pour le Shelly en passant par MQTT, renseignez le topic MQTT, sinon Spécifiez l'Ip du Shelly, la 1ere entrée du Shelly sera capturé">Shelly EM topic ℹ (or none): </a> <input type="text" class="form-control form-control-user" id="EM" placeholder="%EM%">
+                <div class="info-text"></div>
+              </div>
+            </div>
+
 		    </div>
 				
       </div> 
@@ -277,7 +286,10 @@
    			
 				
 				  <script type='text/javascript'> 
-	
+
+            
+
+
 
 function save () {				  
   		$.get( "/getmqtt", { save: "yes" } )
@@ -307,6 +319,9 @@ document.getElementById("HA").value = config[28];
 <script src="jquery.min.js"></script>
 
 <script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
 
 <!-- sauvegarde de la configuration --> 
 
@@ -367,7 +382,7 @@ var recupconfig =  $.getJSON('/getmqtt', function(data) {
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2022</span>
+            <span>https://github.com/xlyric/  - 2023</span>
           </div>
         </div>
       </footer>

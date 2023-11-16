@@ -108,10 +108,10 @@ void reboot_after_lost_wifi(int timeafterlost);
 void IRAM_ATTR function_off_screen();
 void IRAM_ATTR function_next_screen();
 
-#if  NTP
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
-#endif
+//#if  NTP
+//WiFiUDP ntpUDP;
+//extern NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
+//#endif
 
 // Place to store local measurements before sending them off to AWS
 unsigned short measurements[LOCAL_MEASUREMENTS];
@@ -174,8 +174,8 @@ void setup()
     
   //démarrage file system
   Serial.println("start SPIFFS");
-  logging.Set_log_init(loguptime2());
-  logging.Set_log_init("Start Filesystem\r\n");
+  
+  logging.Set_log_init("Start Filesystem\r\n",true);
   
   if (!SPIFFS.begin(true)) {
     Serial.println("SPIFFS Initialization failed!");
@@ -228,8 +228,8 @@ void setup()
     AP=false; 
   }*/
   if (configwifi.recup_wifi()){
-     logging.Set_log_init(loguptime2());
-     logging.Set_log_init("Wifi config \r\n");
+     
+     logging.Set_log_init("Wifi config \r\n",true);
        AP=false; 
   }
 
@@ -237,6 +237,14 @@ void setup()
   configmodule.Fronius_present=false;
 
   loadmqtt(mqtt_conf ,configmqtt);
+  // vérification que le nom du serveur MQTT est différent de none
+  if (strcmp(config.mqttserver,"none") == 0 ) {
+    config.mqtt = false; 
+  }
+  else {
+    config.mqtt = true; 
+  }
+  
   // test if Fronius is present ( and load conf )
   configmodule.Fronius_present = loadfronius(fronius_conf, configmodule);
 
@@ -318,14 +326,14 @@ Dimmer_setup();
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html.gz")){
     Serial.println(SPIFFSNO);  
-    logging.Set_log_init(loguptime2());
-    logging.Set_log_init(SPIFFSNO);
+    
+    logging.Set_log_init(SPIFFSNO,true);
   }
 
   if(!SPIFFS.exists(filename_conf)){
     Serial.println(CONFNO);  
-    logging.Set_log_init(loguptime2());
-    logging.Set_log_init(CONFNO);
+    
+    logging.Set_log_init(CONFNO,true);
 
   }
 
@@ -581,6 +589,7 @@ logging.power=true; logging.sct=true; logging.sinus=true;
 logging.Set_log_init("-- fin du demarrage: ");
 logging.Set_log_init(timeClient.getFormattedTime());
 logging.Set_log_init(" --\r\n");
+savelogs(timeClient.getFormattedTime() + "-- fin du précédent reboot -- ");
 
 
 //WebSerial.begin(&server);
@@ -753,8 +762,8 @@ void connect_to_wifi() {
       WiFi.setSleep(false);
       WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
-      logging.Set_log_init(loguptime2());
-      logging.Set_log_init("Start Wifi Network ");
+      
+      logging.Set_log_init("Start Wifi Network ",true);
       logging.Set_log_init(configwifi.SID);
       logging.Set_log_init("\r\n");
       
@@ -764,11 +773,11 @@ void connect_to_wifi() {
         timeoutwifi++; 
 
         if (timeoutwifi > 40 ) {
-              logging.Set_log_init(loguptime2());
-              logging.Set_log_init("timeout, go to AP mode \r\n");
-              logging.Set_log_init(loguptime2());
-              logging.Set_log_init("Wifi State :");
-              logging.Set_log_init(loguptime2());
+              
+              logging.Set_log_init("timeout, go to AP mode \r\n",true);
+              
+              logging.Set_log_init("Wifi State :",true);
+              logging.Set_log_init("",true);
               
               switch (WiFi.status()) {
                   case 1:
