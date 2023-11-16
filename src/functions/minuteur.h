@@ -169,13 +169,23 @@ struct Programme {
         }
       }
 
-
+      // remise en route en cas de reboot et si l'heure est dépassée  
+      // recherche si l'heure est passée 
+      bool heure_passee = false;
+      if (timeClient.getHours() > heures || (timeClient.getHours() == heures && timeClient.getMinutes() > minutes )) {
+                          heure_passee = true; 
+      }
+      // recherche si l'heure d'arret est est passée
+      bool heure_arret_passee = false;
+      if (timeClient.getHours() > heures_fin || (timeClient.getHours() == heures_fin && timeClient.getMinutes() >= minutes_fin )) {
+                          heure_arret_passee = true; 
+      }
 
         // remise en route en cas de reboot et si l'heure est dépassée
-        if (timeClient.getHours() >= heures && timeClient.getHours() <= heures_fin && timeClient.getMinutes() < minutes_fin) {
-           commande_run();
-            return true; 
-        }
+      if (heure_passee && !heure_arret_passee && temperature > gDisplayValues.temperature ) {
+              commande_run();
+                return true; 
+      }
         /// ??? doublon ?
     //    if(timeClient.isTimeSet()) {
     //      if (heures < timeClient.getHours() && minutes < timeClient.getMinutes()) {
