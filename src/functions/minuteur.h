@@ -162,28 +162,28 @@ struct Programme {
 
       ///vérification que le ntp est synchronisé
       if(timeClient.isTimeSet()) {
-        if (heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature ) {
+        if ( heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature ) {
             // demarrage du cooler
             commande_run();
             return true; 
         }
       }
 
-      // remise en route en cas de reboot et si l'heure est dépassée
-      if (timeClient.getHours() >= heures && timeClient.getMinutes() >= minutes && run == false && heures <= heures_fin) {
-        if (timeClient.getHours() <= heures_fin && timeClient.getMinutes() <= minutes_fin) {
-          commande_run();
-          return true; 
-        }
 
-        sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
-        if(timeClient.isTimeSet()) {
-          if (heures < timeClient.getHours() && minutes < timeClient.getMinutes()) {
-            commande_run();
+
+        // remise en route en cas de reboot et si l'heure est dépassée
+        if (timeClient.getHours() >= heures && timeClient.getHours() <= heures_fin && timeClient.getMinutes() < minutes_fin) {
+           commande_run();
             return true; 
-          }
         }
-      }
+        /// ??? doublon ?
+    //    if(timeClient.isTimeSet()) {
+    //      if (heures < timeClient.getHours() && minutes < timeClient.getMinutes()) {
+    //        commande_run();
+    //        return true; 
+     //     }
+     //   }
+       
 
       // protection fuite mémoire 
       if (temperature > 500) {
