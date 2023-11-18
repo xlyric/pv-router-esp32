@@ -41,6 +41,7 @@ For European countries, shipping costs are included in the price.
 
 # 02 - Router principle <a name="router-principle"></a>
 
+The router take the measurements and [controls the remote](https://github.com/xlyric/PV-discharge-Dimmer-AC-Dimmer-KIT-Robotdyn) or local dimmers 
 Simpler than a long speech:
 
 ![](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-09/scaled-1680-/image-1695222326034.jpg)
