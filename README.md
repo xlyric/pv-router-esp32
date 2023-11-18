@@ -30,7 +30,9 @@ It's the opensource Pv router from the French association APPER, the board is op
 but you can order it directly from the association and the association being recognized as being of general interest in view of French taxes, it generates a tax credit for French individuals. (60%)
 
 I do not receive any euros from the sale of the cards and all the work of developing the cards and the software is purely voluntary.
-But a little encouragement is always nice [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V3MURX2)
+But a little encouragement is always nice.
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V3MURX2)
 
 **The DIN format card**: is [available to order on Helloassos](https://www.helloasso.com/associations/apper/formulaires/6) (the TTGO is not provided and the appearance of the card may vary a little) and it is supplied with the DIN support.  
 For European countries, shipping costs are included in the price.
@@ -41,7 +43,8 @@ For European countries, shipping costs are included in the price.
 
 # 02 - Router principle <a name="router-principle"></a>
 
-The router take the measurements and [controls the remote](https://github.com/xlyric/PV-discharge-Dimmer-AC-Dimmer-KIT-Robotdyn) or local dimmers 
+The router take the measurements and [controls the remote](https://github.com/xlyric/PV-discharge-Dimmer-AC-Dimmer-KIT-Robotdyn) or local dimmers.
+
 Simpler than a long speech:
 
 ![](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-09/scaled-1680-/image-1695222326034.jpg)
