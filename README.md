@@ -1,21 +1,28 @@
-# Readme routeur-EN
-
-# Pv router Version 2023 TTGO T display
+# Photovoltaic Router C_Lyric Version 2023 for TTGO T display
 
 The wiki Documentation is [here in French](https://pvrouteur.apper-solaire.org/wiki.apper-solaire.org)
 
 # Photovoltaic router
 
-## 00 - **Safety reminder**
+## **Safety reminder**
 
-When connecting a photovoltaic control board to the electrical grid, be sure to comply with local electrical safety standards.  
-Use properly insulated cables to avoid short circuits.  
-Install protective devices, such as circuit breakers, to prevent overloads and short circuits.  
-Call a qualified professional to ensure safe installation that complies with current regulations (if you don't know what you're doing.)  
-We will not be held responsible if you clearly do anything without thinking and you look for someone to blame so as not to take responsibility for having made a mistake. (it hasn’t happened yet, but you never know XD)  
-Always provide Dallas probes to monitor temperatures, even if you are downstream from the control card of your balloon. Better “belt/suspender” than “haphazard/lucky”
+Before connecting the photovoltaic control board to the electrical grid, ensure compliance with local electrical safety standards:
 
-# 01 - History
+- Use properly insulated cables to avoid short circuits.
+- Install protective devices, such as circuit breakers, to prevent overloads and short circuits.
+- If unsure, seek the assistance of a qualified professional for installation.
+- Always use Dallas probes to monitor temperatures.
+
+## Table of Contents
+
+1. [History](#history)
+2. [Router Principle](#router-principle)
+3. [Code Upload](#code-upload)
+4. [Router Operation](#router-operation)
+5. [Router Connection](#router-connection)
+6. [Miscellaneous Information](#miscellaneous-information)
+
+# 01 - History <a name="history"></a> 
 
 Welcome to the official documentation of Cyril's photovoltaic router (C\_lyric). This comprehensive resource has been designed to help you install your Photovoltaic router
 
@@ -23,19 +30,22 @@ It's the opensource Pv router from the French association APPER, the board is op
 but you can order it directly from the association and the association being recognized as being of general interest in view of French taxes, it generates a tax credit for French individuals. (60%)
 
 I do not receive any euros from the sale of the cards and all the work of developing the cards and the software is purely voluntary.
+But a little encouragement is always nice [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/V7V3MURX2)
 
 **The DIN format card**: is [available to order on Helloassos](https://www.helloasso.com/associations/apper/formulaires/6) (the TTGO is not provided and the appearance of the card may vary a little) and it is supplied with the DIN support.  
 For European countries, shipping costs are included in the price.
 
 [![image-1685646688128.jpg](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-06/scaled-1680-/image-1685646688128.jpg)](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-06/image-1685646688128.jpg)
 
-# 02 - Router principe 
+[Back to Top](#table-of-contents)
+
+# 02 - Router principle <a name="router-principle"></a>
 
 Simpler than a long speech:
 
 ![](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-09/scaled-1680-/image-1695222326034.jpg)
 
-# 03 - Code Upload 
+# 03 - Code Upload  <a name="code-upload"></a>
 
 For practical reasons, programming the router is done directly from a web page, from a compatible browser (Chrome or Edge) go to the page: [https://ota.apper-solaire.org/ota.php](https://ota.apper-solaire.org/ota.php)
 
@@ -70,7 +80,9 @@ Once programming is done, choose “Log &amp; console”
 From there you can use a series of commands to configure your wifi:
 
 ```
-ssid your_ssid<br></br>pass your_ssid_pass<br></br>reboot
+ssid your_ssid
+pass your_ssid_pass
+reboot
 ```
 
 Vous pourrez alors voir en direct si vos informations wifi sont bonnes
@@ -82,11 +94,13 @@ You will be able to consult IP and the wifi power level directly on the TTGo dis
 \- in orange below -70dBm  
 \- in red below -80dBm
 
-# 04 - Router operation
+[Back to Top](#table-of-contents)
+
+# 04 - web configuration <a name="router-operation"></a>
 
 ### Generality
 
-he Photovoltaic Router is responsible for analyzing the direction of the current at the electric meter using the probe (SCT013) placed on the Phase wire.  
+The Photovoltaic Router is responsible for analyzing the direction of the current at the electric meter using the probe (SCT013) placed on the Phase wire.  
 If the current is positive, the house consumes current from the electrical network.  
 If the current is negative, the installed solar panels provide more energy than the house currently consumes.
 
@@ -133,16 +147,21 @@ This page allows you to configure all the features of the router.
 
 [![image-1695289940033.png](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-09/scaled-1680-/image-1695289940033.png)](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-09/image-1695289940033.png)
 
-# 05 - Router operation
+[Back to Top](#table-of-contents)
+
+# 05 - Router operation <a name="router-connection"></a>
+
 
 # Router connection
 
 #### Safety Reminder:
 
-When connecting a photovoltaic control card to the electrical network, be sure to comply with local electrical safety standards.  
-Use properly insulated cables to avoid short circuits.  
-Install protective devices, such as circuit breakers, to prevent overloads and short circuits.  
-Call a qualified professional to ensure safe installation that complies with current regulations (if you don't know what you're doing.)
+Before connecting the photovoltaic control board to the electrical grid, ensure compliance with local electrical safety standards:
+
+- Use properly insulated cables to avoid short circuits.
+- Install protective devices, such as circuit breakers, to prevent overloads and short circuits.
+- If unsure, seek the assistance of a qualified professional for installation.
+- Always use Dallas probes to monitor temperatures.
 
 #### Schematic diagram :
 
@@ -174,7 +193,10 @@ The regulation of the tank by the dimmers (SSR or Robotdyn) is done by chopping 
 The values ​​announced in terms of admissible amperage on the dimmers are fanciful. Connecting too high a load can also lead to excessive heating of the regulation part of the dimmer (tryac) and no longer be controllable by the control part. It is therefore advisable either to limit the power connected to it or to ventilate the radiator to increase heat dissipation. (the more resistant SSRs are a little less impacted than the Robotdyn dimmers)  
 This is why I recommend taking the largest Robotdyn dimmer (20A) or SSR Random 40A minimum.
 
-#### 06 - Miscellaneous information
+[Back to Top](#table-of-contents)
+# 06 - Miscellaneous information <a name="miscellaneous-information"></a>
 
 The router is compatible with MQTT, HA, Jeedom and domoticz.  
 It can also interface with an external power calculation source such as Shelly EM
+
+[Back to Top](#table-of-contents)
