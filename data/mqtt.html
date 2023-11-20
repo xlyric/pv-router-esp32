@@ -156,7 +156,7 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-		  <h1 class="h3 mb-2 text-gray-800">Configuration MQTT (Tout changement dans cette page necessite un reboot)</h1>
+		  <h1 class="h3 mb-2 text-gray-800">Configuration MQTT (Tout changement dans cette page nécessite un reboot)</h1>
 
 		<div class="col-lg-6">
 
@@ -251,7 +251,7 @@
                   <span id="saveform"></span>
               </div>
               <div class="col-sm-6">
-                <a data-toggle="popover" title="Aide" data-content="Si vous n'utilisez pas de Shelly laissez à 'none'. Pour le Shelly en passant par MQTT, renseignez le topic MQTT, sinon Spécifiez l'Ip du Shelly, la 1ere entrée du Shelly sera capturé">Shelly EM topic ℹ (or none): </a> <input type="text" class="form-control form-control-user" id="EM" placeholder="%EM%">
+                <a data-toggle="popover" title="Aide" data-content="Si vous n'utilisez pas de Shelly laissez à 'none'. Pour le Shelly en passant par MQTT, renseignez le topic MQTT, sinon Spécifiez l'Ip du Shelly, la 1ere entrée du Shelly sera capturée">Shelly EM topic ℹ (or none): </a> <input type="text" class="form-control form-control-user" id="EM" placeholder="%EM%">
                 <div class="info-text"></div>
               </div>
             </div>
@@ -260,7 +260,7 @@
 				
       </div> 
 				
-				<input type="submit" value=" Application des parametres" class="btn btn-primary btn-user btn-block">
+				<input type="submit" value=" Application des paramètres" class="btn btn-primary btn-user btn-block">
 				
 
 
@@ -303,7 +303,7 @@ function sendservermode (mode) {
 
 $.get( "/get", { servermode: mode } )
 .done(function(data) { 
-$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+$( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
 var config = data.split(";");
 document.getElementById("MQTT").value = config[16];
 document.getElementById("HA").value = config[28];
@@ -346,7 +346,7 @@ $( "#formulaire" ).submit(function() {
             url: "get",
 
             success: function(retour){
-                $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+                $( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
                      
             }
         });

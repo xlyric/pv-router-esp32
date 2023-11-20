@@ -170,8 +170,8 @@
 
           <!-- Page Heading -->
 		  <h1 class="h3 mb-2 text-gray-800">Configuration</h1>
-          <p class="mb-4">Page de configuration de votre pv routeur, pensez à sauvegarder votre configuration sur la flash après l'avoir appliqué.</p>
-		  <p class="mb-4">page rapide d'aide : <a href="https://pvrouteur.apper-solaire.org/shelves/fr-documentation" target="_blank"> ici </a></p>
+      <p class="mb-4">Page de configuration de votre pv routeur, pensez à sauvegarder votre configuration sur la flash après l'avoir appliquée.</p>
+		  <p class="mb-4">page rapide d'aide : <a href="https://wiki.apper-solaire.org/" target="_blank"> ici </a></p>
   
 
           <!-- Content Row -->
@@ -432,7 +432,7 @@
 				
 	
 				
-				<input type="submit" value=" Application des parametres" class="btn btn-primary btn-user btn-block">
+				<input type="submit" value=" Application des paramètres" class="btn btn-primary btn-user btn-block">
 				
                 <hr>
 
@@ -461,7 +461,8 @@
             var version = data.version;
             var rssi = data.RSSI;
             var name = data.name;
-          document.getElementById("state").innerHTML = state;
+          document.getElementById("state").innerHTML = state; 
+                  if (state == 'Reseau') {state = 'Réseau' ; }
           document.getElementById("sigma").innerHTML = watt;
           document.getElementById("version").innerHTML = version;
           document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi  + ' dBm';
@@ -484,7 +485,7 @@ function sendservermode (mode) {
 
 		$.get( "/get", { servermode: mode } )
 		.done(function(data) { 
-		$( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+		$( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
 		}); 
 }
 
@@ -538,7 +539,7 @@ $( "#formulaire" ).submit(function() {
             url: "get",
 
             success: function(retour){
-                $( "#saveform" ).text( "Configuration appliqué" ).show().fadeOut( 5000 );
+                $( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
                      
             }
         });
