@@ -162,7 +162,7 @@ struct Configmodule {
   char envoy[5];
   //bool pilote=false; 
   char version[2];
-  char token[425];
+  char token[512]; //correction suite remonté de multinet
 };
 
 /// @brief  partie délicate car pas mal d'action sur la variable log_init et donc protection de la variable ( pour éviter les pb mémoire )
