@@ -17,6 +17,7 @@ NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL
 
 #define SECURITEPASS "MyPassword"
 
+
 // The state in which the device can be. This mainly affects what
 // is drawn on the display.
 enum DEVICE_STATE {
@@ -309,9 +310,17 @@ struct Dallas{
                   + device_declare() + 
                 "}";
                 if (dev_cla =="" ) { dev_cla = name; }
+                //Serial.println(strlen(name.c_str()));
+                if (strlen(name.c_str()) != 0 ) {
                 client.publish((topic+name+"/config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
-                //Serial.println(device.c_str());
-                Serial.println(name + "HA discovery");
+                //Serial.println(topic+name+"/config");
+                }
+                else 
+                {
+                  client.publish((topic+"config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
+                  //Serial.println(topic+"config");
+                }
+
                 // online();
                 // send("0");
                 
