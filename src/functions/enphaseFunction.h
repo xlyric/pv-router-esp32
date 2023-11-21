@@ -284,11 +284,11 @@ bool Enphase_get_7_JWT(void) {
       if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
         retour = true;
         // Token valide
-        Serial.println("Enphase contrôle tocket : TOKEN VALIDE ");
+        Serial.println("Enphase contrôle token : TOKEN VALIDE ");
         SessionId.clear();
         SessionId = https.header("Set-Cookie");
       } else {
-          Serial.println("Enphase contrôle tocket : TOKEN INVALIDE !!!");
+          Serial.println("Enphase contrôle token : TOKEN INVALIDE !!!");
           https.end();
       }
     }
