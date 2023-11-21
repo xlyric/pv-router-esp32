@@ -62,24 +62,21 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
           sizeof(configmodule.token));
   //configmodule.enphase_present = doc["enphase_present"] | false;
   if (strcmp(configmodule.hostname,"") == 0) { configmodule.enphase_present=false ; configFile.close(); Serial.println("no enphase"); return false; } 
+  configmodule.enphase_present=true; 
   Serial.println(configmodule.hostname);
   configFile.close();
 
   Serial.println(" enphase config : " + String(configmodule.hostname));
   Serial.println(" enphase version : " + String(configmodule.version));
   Serial.println(" enphase mode : " + String(configmodule.envoy));
-  if (configmodule.enphase_present == true) {
-    Serial.println(" enphase : actif");
-    Serial.println(" enphase token : " + String(configmodule.token));
-  } else {
-    Serial.println(" enphase : inactif");
-  }
+  Serial.println(" enphase : actif");
+  Serial.println(" enphase token : " + String(configmodule.token));
   
   logging.Set_log_init("Enphase used type ",true);
   logging.Set_log_init(String(configmodule.envoy).c_str());
   logging.Set_log_init("\r\n");
   logging.Set_log_init("");
-  configmodule.enphase_present=true; 
+  
   return true;
 }
 
@@ -269,7 +266,7 @@ bool Enphase_get_7_JWT(void) {
   String url = "/404.html";
   url = String(EnvoyJ);
   String adr = String(configmodule.hostname);
-  Serial.println("Enphase contrôle tocken : https://" + adr + url);
+  Serial.println("Enphase contrôle token : https://" + adr + url);
   //Initializing an HTTPS communication using the secure client
   if (https.begin("https://" + adr + url)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
