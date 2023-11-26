@@ -245,6 +245,7 @@ bool Enphase_get_7_Production(void){
         gDisplayValues.enp_current_power_consumption = gDisplayValues.Fronius_conso;
         gDisplayValues.enp_current_power_production =  gDisplayValues.Fronius_prod;
       }
+      gDisplayValues.porteuse = true; // si FALSE affiche No-Sin sur l'ecran
       retour = true;
       // debug
       Serial.println("Enphase Get production > prod: " + String(gDisplayValues.Fronius_prod) + " conso: " + String(gDisplayValues.Fronius_conso) + " total conso: " + String(gDisplayValues.Fronius_totalconso));
