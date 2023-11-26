@@ -16,6 +16,8 @@ extern Configmodule configmodule;
 
 void Enphase_get_5(void);
 void Enphase_get_7(void);
+bool Enphase_get_7_JWT();
+
 String SessionId;
 //////////////////// gestion FS
 
@@ -198,7 +200,7 @@ HTTPClient https;
 bool initEnphase = true; // Permet de lancer le contrôle du token une fois au démarrage
 
 bool Enphase_get_7_Production(void){
-  
+ 
   int httpCode;
   bool retour = false;
   String adr = String(configmodule.hostname);
@@ -213,9 +215,9 @@ bool Enphase_get_7_Production(void){
     Serial.print("type S ");
     Serial.println(url);
   }
-          
+         
   Serial.println("Enphase Get production : https://" + adr + url);
-  if (https.begin("http://" + adr + url)) { 
+  if (https.begin("http://" + adr + url)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
     https.setAuthorizationType("Bearer");
     https.setAuthorization(configmodule.token);
@@ -245,19 +247,29 @@ bool Enphase_get_7_Production(void){
         gDisplayValues.enp_current_power_consumption = gDisplayValues.Fronius_conso;
         gDisplayValues.enp_current_power_production =  gDisplayValues.Fronius_prod;
       }
+      // NEW
       gDisplayValues.porteuse = true; // si FALSE affiche No-Sin sur l'ecran
+      // FIN NEW
       retour = true;
       // debug
       Serial.println("Enphase Get production > prod: " + String(gDisplayValues.Fronius_prod) + " conso: " + String(gDisplayValues.Fronius_conso) + " total conso: " + String(gDisplayValues.Fronius_totalconso));
     } else {
-      Serial.println("[Enphase Get production] GET... failed, error: " + String(httpCode));
+      Serial.println("[1.Enphase Get production] GET... failed, error: " + String(httpCode));
+      // NEW
+      https.end();
+      Enphase_get_7_JWT(); // pour reconnexion enphase
+      // FIN NEW
     }
-    //https.end();
+    https.end();
   }
   else {
-    Serial.println("[Enphase Get production] GET... failed, error: " + String(httpCode));
+    https.end();
+    Serial.println("[2.Enphase Get production] GET... failed, error: " + String(httpCode));     
+    // NEW
+    Enphase_get_7_JWT(); // pour reconnexion enphase
+    // FIN NEW
   }
-  https.end();
+  //https.end();
   return retour;
 }
 
