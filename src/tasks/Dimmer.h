@@ -38,7 +38,7 @@ void get_dimmer_child_power (){
         http.end();
         
         if (httpResponseCode==200) {
-            DynamicJsonDocument doc(128);
+            DynamicJsonDocument doc(256);
             DeserializationError error = deserializeJson(doc, dimmerstate);
             if (error) {
                 Serial.print(F("get_dimmer_child_power() failed: "));

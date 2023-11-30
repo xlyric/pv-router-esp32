@@ -47,7 +47,7 @@ if ( !dallas.detect && String(config.dimmer) != "") {
   if (httpResponseCode>400) { gDisplayValues.temperature = 0;   }
   else { 
     // hash temp 
-    DynamicJsonDocument doc(128);
+    DynamicJsonDocument doc(256);
     DeserializationError error = deserializeJson(doc, dimmerstate);
     if (error) {
       Serial.print(F("gettemp() failed: "));
