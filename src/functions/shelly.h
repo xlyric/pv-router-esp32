@@ -15,39 +15,49 @@ extern DisplayValues gDisplayValues;
 
 int shelly_get_data(String url) {
  /// récupération en wget des informations du shelly 
-HTTPClient http_shelly;
-  int watt_shelly = 0;
+HTTPClient shelly_http;
+  int shelly_watt = 0;
   
   if (WiFi.status() == WL_CONNECTED) {   // si connecté on wget
 //    const String baseurl = "/status" ; 
     const String baseurl = "/emeter/0" ; 
-    http_shelly.begin(String(url),80,baseurl);   
+    shelly_http.begin(String(url),80,baseurl);   
         
-        int httpResponseCode = http_shelly.GET();
-        String shellystate = "0"; 
-        shellystate = http_shelly.getString();
-        http_shelly.end();
+        int httpResponseCode = shelly_http.GET();
+        String shelly_state = "0"; 
+        shelly_state = shelly_http.getString();
+        shelly_http.end();
         if (httpResponseCode==200) {
-            watt_shelly = 0;
+            shelly_watt = 0;
             DynamicJsonDocument doc(1024);
-            deserializeJson(doc, shellystate);
+            DeserializationError error = deserializeJson(doc, shelly_state);
+
+            /// protection de la validité du json
+            if (error) {
+                Serial.print(F("deserializeJson() failed: "));
+                logging.Set_log_init("deserializeJson() failed: ",true);
+                Serial.println(error.c_str());
+                shelly_watt = 0;
+                return shelly_watt;
+            }
+
             auto powerValue = doc["power"];
             /// protection de la donnée
             if (powerValue.is<int>() || powerValue.is<float>()) {
-                watt_shelly = powerValue.as<int>();
+                shelly_watt = powerValue.as<int>();
             }
             else {
-                watt_shelly = 0;
+                shelly_watt = 0;
             }
            
-            //Serial.println("shelly : " + String(watt_shelly));
+            //Serial.println("shelly : " + String(shelly_watt));
         }
         else {
-            watt_shelly = 0;
+            shelly_watt = 0;
         }
     } 
 
-return watt_shelly; 
+return shelly_watt; 
 
 }
 

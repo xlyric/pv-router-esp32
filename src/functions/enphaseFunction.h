@@ -168,7 +168,13 @@ void Enphase_get_5(void) {
     String payload = httpenphase.getString();
 
     DynamicJsonDocument doc(3072);
-    deserializeJson(doc, payload);
+    DeserializationError error = deserializeJson(doc, payload);
+    if (error) {
+      Serial.print(F("Enphase_get_5() failed: "));
+      logging.Set_log_init("Enphase_get_5() failed: ",true);
+      Serial.println(error.c_str());
+      return;
+    }
 
     if (String(configmodule.envoy) == "R") {
       gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
@@ -231,7 +237,14 @@ bool Enphase_get_7_Production(void){
       String payload = https.getString();
       //Serial.println(payload);
       DynamicJsonDocument doc(3072);
-      deserializeJson(doc, payload);
+      DeserializationError error = deserializeJson(doc, payload);
+      if (error) {
+        Serial.print(F("Enphase_get_7_Production() failed: "));
+        logging.Set_log_init("Enphase_get_7_Production() failed: ",true);
+        Serial.println(error.c_str());
+        return false;
+      }
+      
       if (String(configmodule.envoy) == "R") {
         gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
         gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]);

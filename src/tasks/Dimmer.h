@@ -39,7 +39,14 @@ void get_dimmer_child_power (){
         
         if (httpResponseCode==200) {
             DynamicJsonDocument doc(128);
-            deserializeJson(doc, dimmerstate);
+            DeserializationError error = deserializeJson(doc, dimmerstate);
+            if (error) {
+                Serial.print(F("get_dimmer_child_power() failed: "));
+                logging.Set_log_init("get_dimmer_child_power() failed: ",true);
+                Serial.println(error.c_str());
+                gDisplayValues.puissance_route = 0;
+                return;
+            }
             //int ptotal = doc["Ptotal"];
             
             gDisplayValues.puissance_route = doc["Ptotal"];

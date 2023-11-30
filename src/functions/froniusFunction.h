@@ -79,7 +79,13 @@ Serial.println(httpResponseCode);
     String payload = httpfronius.getString();
     DynamicJsonDocument doc(900);
     DeserializationError error = deserializeJson(doc, payload);
-
+    if (error) {
+        Serial.print(F("Fronius_get() failed: "));
+        logging.Set_log_init("Fronius_get() failed: ",true);
+        Serial.println(error.c_str());
+        return;
+    }
+    
     int generatedPower = int(doc["Body"]["Data"]["PAC"]["Values"]["1"]);
     gDisplayValues.Fronius_prod = generatedPower;
 
@@ -96,6 +102,12 @@ httpResponseCode = httpfronius.GET();
     payload = http2.getString();
     DynamicJsonDocument doc2(2048);
     error = deserializeJson(doc2, payload);
+    if (error) {
+        Serial.print(F("Fronius_get() failed: "));
+        logging.Set_log_init("Fronius_get() failed: ",true);
+        Serial.println(error.c_str());
+        return;
+    }
     int generatedPower2 = int(doc2["Body"]["Data"]["0"]["PowerReal_P_Sum"]);
     gDisplayValues.Fronius_conso = generatedPower2;
 

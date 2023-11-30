@@ -302,7 +302,13 @@ int dimmer_getState() {
       String payload = http.getString();   //Get the request response payload
       //Serial.println(payload);                     //Print the response payload
       DynamicJsonDocument doc(64);
-      deserializeJson(doc, payload);
+      DeserializationError error = deserializeJson(doc, payload);
+      if (error) {
+        Serial.print(F("get state() failed: "));
+        Serial.println(error.c_str());
+        return 0;
+      }
+    
       dimmer = doc["dimmer"];
     }
     http.end();   //Close connection
