@@ -199,7 +199,7 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20231130"
+#define RELEASE "Version 20231201"
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE
         #else

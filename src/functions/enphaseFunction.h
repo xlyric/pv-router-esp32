@@ -9,8 +9,6 @@
 #include "SPIFFS.h"
 #include "config/enums.h"
 
-HTTPClient httpenphase;
-
 const char *enphase_conf = "/enphase.json";
 extern Configmodule configmodule;
 
@@ -18,7 +16,11 @@ void Enphase_get_5(void);
 void Enphase_get_7(void);
 bool Enphase_get_7_JWT();
 
+bool initEnphase = true; // Permet de lancer le contrôle du token une fois au démarrage
 String SessionId;
+int nbErreurCtrlTocken = 0;
+int nbErreurGetJsonProd = 0;
+bool TockenValide=false;
 //////////////////// gestion FS
 
 bool loadenphase(const char *filename, Configmodule &configmodule) {
@@ -119,7 +121,6 @@ void saveenphase(const char *filename, const Configmodule &configmodule) {
 
 //////////////////////////////////// récupération des valeurs 
 
-
 void Enphase_get(void) {
   if (String(configmodule.version) == "7") {
     if (String(configmodule.token)!="") {
@@ -137,6 +138,7 @@ void Enphase_get(void) {
 }
 
 void Enphase_get_5(void) {
+  HTTPClient httpenphase; 
   String url = "/404.html";
   Serial.println("Enphase_get : envoy type=" + String(configmodule.envoy));
   if (String(configmodule.envoy) == "R") {
@@ -149,7 +151,6 @@ void Enphase_get_5(void) {
     Serial.print("type S");
     Serial.print(url);
   }
-
 
   httpenphase.begin(String(configmodule.hostname), 80 , url);
   // int httpResponseCode = httpenphase.GET();
@@ -167,7 +168,7 @@ void Enphase_get_5(void) {
   if (httpResponseCode == HTTP_CODE_OK) {
     String payload = httpenphase.getString();
 
-    DynamicJsonDocument doc(3072);
+    DynamicJsonDocument doc(1800); ///passé de 3200 à 1800 
     DeserializationError error = deserializeJson(doc, payload);
     if (error) {
       Serial.print(F("Enphase_get_5() failed: "));
@@ -189,6 +190,7 @@ void Enphase_get_5(void) {
       gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
     }
 
+    gDisplayValues.porteuse = true; // si FALSE affiche No-Sin sur l'ecran
     //String test = doc["consumption"][0];
   } else {
     Serial.println("timeout");
@@ -202,15 +204,16 @@ void Enphase_get_5(void) {
   Serial.println(" total conso: " + String(gDisplayValues.Fronius_totalconso));
 }
 
-HTTPClient https;
-bool initEnphase = true; // Permet de lancer le contrôle du token une fois au démarrage
-
 bool Enphase_get_7_Production(void){
- 
+  HTTPClient https;
   int httpCode;
   bool retour = false;
   String adr = String(configmodule.hostname);
   String url = "/404.html" ;
+
+  Serial.println();
+  Serial.println(timeClient.getFormattedTime());
+
   if (String(configmodule.envoy) == "R") {
     url = String(EnvoyR);
     Serial.print("type R ");
@@ -223,6 +226,8 @@ bool Enphase_get_7_Production(void){
   }
          
   Serial.println("Enphase Get production : https://" + adr + url);
+  Serial.println("With SessionId : " + SessionId);
+
   if (https.begin("http://" + adr + url)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
     https.setAuthorizationType("Bearer");
@@ -235,14 +240,31 @@ bool Enphase_get_7_Production(void){
     httpCode = https.GET();
     if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
       String payload = https.getString();
-      //Serial.println(payload);
-      DynamicJsonDocument doc(3072);
+      if (httpCode == HTTP_CODE_OK )
+        Serial.println(payload);
+      if (httpCode == HTTP_CODE_MOVED_PERMANENTLY)
+        Serial.println(https.getLocation());
+        
+      DynamicJsonDocument doc(1600); ///passé de 3072 à 1600
       DeserializationError error = deserializeJson(doc, payload);
-      if (error) {
-        Serial.print(F("Enphase_get_7_Production() failed: "));
-        logging.Set_log_init("Enphase_get_7_Production() failed: ",true);
-        Serial.println(error.c_str());
-        return false;
+      switch (error.code()) {
+          case DeserializationError::Ok:
+              break;
+          case DeserializationError::InvalidInput:
+              Serial.print(F("Deserialization error : Invalid input!"));
+              logging.Set_log_init("Deserialization error : Invalid input!",true);
+              return false;
+              break;
+          case DeserializationError::NoMemory:
+              Serial.print(F("Deserialization error : Not enough memory"));
+              logging.Set_log_init("Deserialization error : Not enough memory",true);
+              return false;
+              break;
+          default:
+              Serial.print(F("Deserialization error : Deserialization failed"));
+              logging.Set_log_init("Deserialization error : Deserialization failed",true);
+              return false;
+              break;
       }
       
       if (String(configmodule.envoy) == "R") {
@@ -262,12 +284,14 @@ bool Enphase_get_7_Production(void){
       }
       // NEW
       gDisplayValues.porteuse = true; // si FALSE affiche No-Sin sur l'ecran
+      nbErreurGetJsonProd=0;
       // FIN NEW
       retour = true;
       // debug
       Serial.println("Enphase Get production > prod: " + String(gDisplayValues.Fronius_prod) + " conso: " + String(gDisplayValues.Fronius_conso) + " total conso: " + String(gDisplayValues.Fronius_totalconso));
     } else {
       Serial.println("[1.Enphase Get production] GET... failed, error: " + String(httpCode));
+      nbErreurGetJsonProd++;
       // NEW
       https.end();
       Enphase_get_7_JWT(); // pour reconnexion enphase
@@ -278,6 +302,7 @@ bool Enphase_get_7_Production(void){
   else {
     https.end();
     Serial.println("[2.Enphase Get production] GET... failed, error: " + String(httpCode));     
+    nbErreurGetJsonProd++;
     // NEW
     Enphase_get_7_JWT(); // pour reconnexion enphase
     // FIN NEW
@@ -287,12 +312,17 @@ bool Enphase_get_7_Production(void){
 }
 
 bool Enphase_get_7_JWT(void) {
-  
+  HTTPClient https;
   bool retour = false;
   String url = "/404.html";
   url = String(EnvoyJ);
   String adr = String(configmodule.hostname);
-  Serial.println("Enphase contrôle token : https://" + adr + url);
+ 
+  // Ne redemmande pas le tocken a chaque fois
+  if (TockenValide)
+    return true;
+
+  Serial.println("Enphase contrôle tocken : https://" + adr + url);
   //Initializing an HTTPS communication using the secure client
   if (https.begin("https://" + adr + url)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
@@ -302,8 +332,9 @@ bool Enphase_get_7_JWT(void) {
     https.addHeader("User-Agent","PvRouter/1.1.1");
     const char * headerkeys[] = {"Set-Cookie"};
     https.collectHeaders(headerkeys, sizeof(headerkeys)/sizeof(char*));
+    https.setReuse(true);
     int httpCode = https.GET();
-    
+   
     // httpCode will be negative on error
     //Serial.println("Enphase_Get_7 : httpcode : " + httpCode);
     if (httpCode > 0) {
@@ -311,23 +342,50 @@ bool Enphase_get_7_JWT(void) {
         retour = true;
         // Token valide
         Serial.println("Enphase contrôle token : TOKEN VALIDE ");
+        TockenValide=true;
         SessionId.clear();
         SessionId = https.header("Set-Cookie");
+        if (/*SessionId.isEmpty() || */SessionId.indexOf("sessionId") < 0) {
+          retour=false;
+          SessionId.clear();
+          Serial.println("Enphase contrôle token : PAS DE SESSION ID !!!");
+        } else {
+          SessionId.remove(0, SessionId.indexOf("sessionId"));
+          if (SessionId.indexOf(";")) {SessionId.remove(SessionId.indexOf(";"));}
+          Serial.println("Enphase contrôle token : " + SessionId);
+        }
       } else {
           Serial.println("Enphase contrôle token : TOKEN INVALIDE !!!");
-          https.end();
       }
+    }
+    else {
+      Serial.println("Error code : " + String(httpCode));
     }
   }
   //https.end();
+  nbErreurCtrlTocken++;
+  if (  nbErreurCtrlTocken == 10 )  {
+      Serial.println("Trop d'erreur  : redemmarrage");
+      ESP.restart();
+    }
   return retour;
 }
+
 
 void Enphase_get_7(void) {
   if(WiFi.isConnected() ) {
     //create an HTTPClient instance
-    if (SessionId.isEmpty() || Enphase_get_7_Production() == false) { // Permet de lancer le contrôle du token une fois au démarrage (Empty SessionId)
+     if (SessionId.isEmpty() || ( (Enphase_get_7_Production() == false) && (nbErreurGetJsonProd > 10) ) ) { // Permet de lancer le contrôle du token une fois au démarrage (Empty SessionId)
+      //DEBUG
+      if (SessionId.isEmpty() ) {
+        Serial.println("SessionId.isEmpty() return TRUE ==> Clean SessionId, get next token ");     
+      }
+      else {
+        Serial.println("Enphase_get_7_production() return FALSE ==> Clean SessionId, get next token ");
+      }   
+      nbErreurGetJsonProd=0;
       SessionId.clear();
+      TockenValide=false;
       Enphase_get_7_JWT();
     }
   } else {
