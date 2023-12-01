@@ -228,7 +228,7 @@ bool Enphase_get_7_Production(void){
   Serial.println("Enphase Get production : https://" + adr + url);
   Serial.println("With SessionId : " + SessionId);
 
-  if (https.begin("http://" + adr + url)) {
+  if (https.begin("https://" + adr + url)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
     https.setAuthorizationType("Bearer");
     https.setAuthorization(configmodule.token);
@@ -294,17 +294,17 @@ bool Enphase_get_7_Production(void){
       nbErreurGetJsonProd++;
       // NEW
       https.end();
-      Enphase_get_7_JWT(); // pour reconnexion enphase
+      //Enphase_get_7_JWT(); // pour reconnexion enphase
       // FIN NEW
     }
     https.end();
   }
   else {
-    https.end();
-    Serial.println("[2.Enphase Get production] GET... failed, error: " + String(httpCode));     
+    //https.end();
+    //Serial.println("[2.Enphase Get production] GET... failed, error: " + String(httpCode));     
     nbErreurGetJsonProd++;
     // NEW
-    Enphase_get_7_JWT(); // pour reconnexion enphase
+    //Enphase_get_7_JWT(); // pour reconnexion enphase
     // FIN NEW
   }
   //https.end();
