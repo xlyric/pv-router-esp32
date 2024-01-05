@@ -244,49 +244,61 @@ void search_wifi_ssid(){
     int numNetworks = WiFi.scanNetworks();
   if (numNetworks == 0) {
     Serial.println("Aucun réseau WiFi trouvé.");
-  } else {
+  }
+  else
+  {
     Serial.print(numNetworks);
     Serial.println(" Recherche du wifi configuré :");
-    for (int i = 0; i < numNetworks; i++) {
+    // Find best signal
+    int strength=INT_MIN;
+    int id=-1;
+    int channel=-1;
+    for (int i = 0; i < numNetworks; i++) 
+    {
       Serial.println(WiFi.SSID(i));
-      if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0)
+      if (!strcmp(configwifi.SID, WiFi.SSID(i).c_str()) )
       {
-        Serial.println("SSID trouvé reboot en cours");
-        //ESP.restart();
-        /// reconnection wifi
-        AP=false;
-        WiFi.begin(configwifi.SID, configwifi.passwd); 
-        delay(1500);
-        /// test si le wifi est connecté sur le mon SSID, on déconnecte le mode AP  
-        if(WiFi.status() == WL_CONNECTED) { 
-        
-          if (WiFi.SSID() == configwifi.SID) {
+        if (id>=0 && WiFi.RSSI(i) > strength)
+        {
+          id = i;
+          strength = WiFi.RSSI(i);
+          channel = WiFi.channel(i);
+        }
+        else
+        {
+          id = i;
+          strength = WiFi.RSSI(i);
+          channel = WiFi.channel(i);          
+        }
+      }
+    }
+    if(id!=-1)
+    {
+      Serial.println(WiFi.SSID(id));      
+      Serial.println("SSID trouvé reboot en cours");
+      //ESP.restart();
+      /// reconnection wifi
+      AP=false;
+      WiFi.begin(configwifi.SID, configwifi.passwd,channel); 
+      delay(1500);
+      /// test si le wifi est connecté sur le mon SSID, on déconnecte le mode AP  
+      if(WiFi.status() == WL_CONNECTED)
+      {      
+        if (WiFi.SSID() == configwifi.SID)
+        {
           Serial.println("WiFi connecté");
           WiFi.softAPdisconnect(true);
-          savelogs("-- reboot Wifi retrouvé -- ");
           ESP.restart();
-          }    
-        }
-          
-
-        // deconnection du mode AP
-        //WiFi.softAPdisconnect(true);
-        // reconnexion MQTT
-        /*
-        if (config.mqtt) {
-          Mqtt_init();
-
-        // HA autoconf
-        if (configmqtt.HA) init_HA_sensor();
-          
-        }
-        */
-        break;
+        }    
       }
-
+    }
+    else
+    {
+      Serial.print("Reseau ");
+      Serial.print(configwifi.SID);
+      Serial.println(" non trouvé!");
     }
   }
-
 }
 
 

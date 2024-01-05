@@ -103,31 +103,10 @@ struct Config {
 };
 
 struct Configwifi {
-  
-  Preferences preferences;
 
   char SID[32];
   char passwd[64];
 
-  public:bool sauve_wifi() {
-  preferences.begin("credentials", false);
-  preferences.putString("ssid",SID);
-  preferences.putString("password",passwd);
-  preferences.end();
-  return true; 
-  }
-
-  public:bool recup_wifi() {
-  preferences.begin("credentials", false);
-  String tmp; 
-  tmp = preferences.getString("ssid", "AP");
-  tmp.toCharArray(SID,32);
-  tmp = preferences.getString("password", "");
-  tmp.toCharArray(passwd,64);
-  preferences.end();
-  if (strcmp(SID,"") == 0) { return false; }
-  return true;
-  }
 };
 
 struct Mqtt {

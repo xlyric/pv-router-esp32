@@ -436,7 +436,7 @@ void serial_read() {
         message_get.toCharArray(ssidArray, ssidLength, 5);
         Serial.println("ssid enregistré: " + String(ssidArray));
         strcpy(configwifi.SID, ssidArray);
-        configwifi.sauve_wifi(); 
+        saveWifi(wifi_conf,configwifi); 
         return;
       }
 
@@ -448,7 +448,7 @@ void serial_read() {
         message_get.toCharArray(passArray, passLength, 5);
         Serial.println("password enregistré ");
         strcpy(configwifi.passwd, passArray);
-        configwifi.sauve_wifi();
+        saveWifi(wifi_conf,configwifi);  
         return;
       }
 

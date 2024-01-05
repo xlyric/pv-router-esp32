@@ -224,12 +224,8 @@ void setup()
   loadlogs();
     
     ///define if AP mode or load configuration
-  /*if (loadwifi(wifi_conf, configwifi)) {
-    AP=false; 
-  }*/
-  if (configwifi.recup_wifi()){
-     
-     logging.Set_log_init("Wifi config \r\n",true);
+  if (loadwifi(wifi_conf, configwifi)) {
+        logging.Set_log_init("Wifi config \r\n",true);
        AP=false; 
   }
 

@@ -374,7 +374,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 
     wifimodif=true; 
    }
-   if (wifimodif) { configwifi.sauve_wifi(); }
+   if (wifimodif) { saveWifi(wifi_conf, configwifi); }
 
     // Shelly
    if (request->hasParam("EM")) { request->getParam("EM")->value().toCharArray(config.topic_Shelly,100);  

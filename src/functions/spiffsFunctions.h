@@ -259,6 +259,76 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
   configFile.close();
 }
 
+
+///////////////////////////////////
+///// config Wifi 
+///////////////////////////////////
+const char *wifi_conf = "/wifi.json";
+extern Configwifi configwifi; 
+extern Logs logging;
+
+bool loadwifi(const char *filename, Configwifi &configwifi) {
+  // Open file for reading
+  File configFile = SPIFFS.open(wifi_conf, "r");
+
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
+  DynamicJsonDocument doc(512);
+
+  // Deserialize the JSON document
+  DeserializationError error = deserializeJson(doc, configFile);
+  if (error) {
+    Serial.println(F("Failed to read wifi config, AP mode activated "));   
+    logging.Set_log_init("Failed to read wifi config, AP mode activated\r\n",true);
+
+    return false;
+  }
+  
+  // Copy values from the JsonDocument to the Config
+  
+  strlcpy(configwifi.SID,                  // <- destination
+          doc["SID"] | "xxx", // <- source
+          sizeof(configwifi.SID));         // <- destination's capacity
+  
+  strlcpy(configwifi.passwd,                  // <- destination
+          doc["passwd"] | "xxx", // <- source
+          sizeof(configwifi.passwd));         // <- destination's capacity
+  configFile.close();
+
+return true;    
+}
+
+void saveWifi(const char *filenamewifi, const Configwifi &configwifi) {
+  
+  // Open file for writing
+   File configFile = SPIFFS.open(wifi_conf, "w");
+  if (!configFile) {
+    Serial.println(F("Failed to open config file for writing in function wifi configuration"));    
+    logging.Set_log_init("Failed to open config file for writing in function wifi configuration\r\n",true);
+    return;
+  } 
+
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/assistant to compute the capacity.
+  DynamicJsonDocument doc(1024);
+
+  // Set the values in the document
+  doc["SID"] = configwifi.SID;
+  doc["passwd"] = configwifi.passwd;
+  
+  // Serialize JSON to file
+  if (serializeJson(doc, configFile) == 0) {
+    Serial.println(F("Failed to write to file in function Save configuration "));    
+    logging.Set_log_init("Failed to write to file in function Save configuration\r\n",true);
+    
+  }
+
+  // Close the file
+  configFile.close();
+}
+
 /// sauvegarde des logs avant reboot
 
 void savelogs(String log) {
