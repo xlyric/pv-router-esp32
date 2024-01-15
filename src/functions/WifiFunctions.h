@@ -258,17 +258,20 @@ void search_wifi_ssid(){
       Serial.println(WiFi.SSID(i));
       if (!strcmp(configwifi.SID, WiFi.SSID(i).c_str()) )
       {
-        if (id>=0 && WiFi.RSSI(i) > strength)
+        if (id>=0)
         {
-          id = i;
-          strength = WiFi.RSSI(i);
-          channel = WiFi.channel(i);
+          if (WiFi.RSSI(i) > strength)
+          {
+            id = i;
+            strength = WiFi.RSSI(i);
+            channel = WiFi.channel(i);
+          }
         }
         else
         {
           id = i;
           strength = WiFi.RSSI(i);
-          channel = WiFi.channel(i);          
+          channel = WiFi.channel(i);
         }
       }
     }
