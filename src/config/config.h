@@ -43,7 +43,7 @@
 /**
  * Set this to false to disable Serial logging
  */
-#define DEBUG true
+#define DEBUG false
 //#define configMAX_PRIORITIES 1024
 
 
@@ -199,7 +199,7 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20231201"
+#define RELEASE "Version 20240225"
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE
         #else

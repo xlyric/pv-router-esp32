@@ -19,6 +19,11 @@ extern Configmodule configmodule;
 extern Logs Logging;
 extern Mqtt configmqtt;
 
+#ifndef LIGHT_FIRMWARE
+  #include <PubSubClient.h>
+  extern PubSubClient client;
+#endif
+
 
 #ifndef LIGHT_FIRMWARE
       extern HA device_routeur; 
@@ -40,8 +45,8 @@ extern Mqtt configmqtt;
 #endif
 
 int Pow_mqtt_send = 0;
-float WHtempgrid=0;
-float WHtempinject=0;
+float WHtempgrid;
+float WHtempinject;
 long beforetime; 
 #define timemilli 3.6e+6 
 extern Memory task_mem; 
@@ -96,10 +101,14 @@ void send_to_mqtt(void * parameter){
                         }
                         if (configmqtt.HA) {
                         device_inject.send(String(int(-gDisplayValues.watt)));
-                        device_grid.send(String("0"));
+                        device_grid.send(String(WHtempinject));
                         WHtempgrid += wattheure; 
                         compteur_inject.send(String(WHtempgrid));
-                        compteur_grid.send(String("0"));
+                            //envoie vers mqtt des état injection et consommation 
+    
+                        client.publish(("memory/"+compteur_grid.topic+compteur_grid.Get_name()).c_str(), String(WHtempgrid).c_str(),true); 
+                      
+                        //compteur_grid.send(String("0"));
                         }
                   }
                   else {
@@ -110,9 +119,10 @@ void send_to_mqtt(void * parameter){
                         if (configmqtt.HA) {
                         device_grid.send(String(int(gDisplayValues.watt)));
                         device_inject.send(String("0"));
-                        compteur_inject.send(String("0"));
+                        compteur_inject.send(String(WHtempgrid));
                         WHtempinject += wattheure;
                         compteur_grid.send(String(WHtempinject));
+                        client.publish(("memory/"+compteur_inject.topic+compteur_inject.Get_name()).c_str(), String(WHtempinject).c_str(),true);
                         }
 
                   }

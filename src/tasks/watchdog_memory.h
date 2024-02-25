@@ -90,6 +90,7 @@ void watchdog_memory(void * parameter){
       ESP.restart();
     } 
     // Sleep for 10 seconds, avant de refaire une analyse
+
     vTaskDelay(pdMS_TO_TICKS(20000));
   }
 }

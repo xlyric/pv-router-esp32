@@ -20,7 +20,8 @@ extern Config config;
 extern DisplayValues gDisplayValues;
 extern Mqtt configmqtt;
 extern Logs logging;
-
+extern float WHtempgrid; 
+extern float WHtempinject;
 #ifndef LIGHT_FIRMWARE
 
 // void Mqtt_HA_hello(); // non utilisé maintenant 
@@ -50,7 +51,8 @@ void reconnect();
 
         // Attempt to connect
 
-        if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
+        //if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
+        if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password)) {
           client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
           client.setKeepAlive(30);
           //client.setSocketTimeout(30);
@@ -127,6 +129,8 @@ Fonction MQTT callback
 */
 void callback(char* topic, byte* payload, unsigned int length) {
 char arrivage[length+1]; // Ajout d'un espace pour le caractère nul
+//Serial.println("MQTT callback : "+String(topic));
+int recup = 0;
 
   for (int i=0;i<length;i++) {
     arrivage[i] = (char)payload[i];
@@ -150,8 +154,46 @@ char arrivage[length+1]; // Ajout d'un espace pour le caractère nul
             DEBUG_PRINTLN("Erreur : Conversion de la chaîne en virgule flottante a échoué");
           } 
         } 
-      } 
+      }
 
+    if (strcmp( topic, ("memory/"+compteur_grid.topic+compteur_grid.Get_name()).c_str() ) == 0 ) {
+      
+      Serial.println("MQTT callback : compteur_grid = "+String(arrivage));
+      // Utiliser strtol pour une conversion plus robuste
+          char* endPtr;
+          double mqttValue = strtod(arrivage, &endPtr);
+
+          if (endPtr != arrivage && *endPtr == '\0') {
+            // La conversion s'est déroulée avec succès
+            WHtempgrid = mqttValue;
+            recup ++;
+            /// mise à jour topic officiel
+            client.publish((compteur_grid.topic+compteur_grid.Get_name()).c_str(), String(WHtempgrid).c_str(),true);
+          } else {
+            DEBUG_PRINTLN("Erreur : Conversion de la chaîne en virgule flottante a échoué");
+          }
+    }
+
+    if (strcmp( topic, ("memory/"+compteur_inject.topic+compteur_inject.Get_name()).c_str() ) == 0 ) {
+   
+      Serial.println("MQTT callback : compteur_inject = "+String(arrivage));
+      // Utiliser strtol pour une conversion plus robuste
+          char* endPtr;
+          double mqttValue = strtod(arrivage, &endPtr);
+
+          if (endPtr != arrivage && *endPtr == '\0') {
+            // La conversion s'est déroulée avec succès
+             WHtempinject= mqttValue;
+             recup ++;
+             /// mise à jour topic officiel
+             client.publish((compteur_inject.topic+compteur_inject.Get_name()).c_str(), String(WHtempinject).c_str(),true);
+             
+          } else {
+            DEBUG_PRINTLN("Erreur : Conversion de la chaîne en virgule flottante a échoué");
+          }
+      
+    }
+  if (WHtempgrid != 0 && WHtempinject !=0 ) { client.unsubscribe(("memory/"+compteur_grid.topic+"#").c_str()); }
 }
 
 
@@ -174,8 +216,19 @@ void Mqtt_init() {
   
   client.setServer(config.mqttserver, config.mqttport);
   client.setCallback(callback);
+  
+  
   Serial.println("MQTT_init : connexion...");
   reconnect();
+
+  // récupération des topics des anciennes valeurs 
+  Serial.println("récupération des anciennes valeurs de consommation...");
+  Serial.println(("memory/"+compteur_grid.topic+"#").c_str());
+  Serial.println("memory/"+compteur_grid.topic+compteur_grid.Get_name()) ;
+
+  client.subscribe(("memory/"+compteur_grid.topic+"#").c_str());
+  client.loop();
+
   // if (client.connect(pvname,configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline")) {       //Connect to MQTT server
   //   client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
   //   Serial.println("MQTT_init : connecte a MQTT... Initialisation dimmer à 0");
