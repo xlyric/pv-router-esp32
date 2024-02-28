@@ -245,6 +245,7 @@ struct Dallas{
             /* HA */
           private:String name; 
           public:void Set_name(String setter) {name=setter; }
+          public:String Get_name() {return name;}
 
           private:String dev_cla; 
           public:void Set_dev_cla(String setter) {dev_cla=setter; }
@@ -272,7 +273,7 @@ struct Dallas{
           private:const String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
           private:const String node_ids = WiFi.macAddress().substring(0,2)+ WiFi.macAddress().substring(4,6)+ WiFi.macAddress().substring(8,10) + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
           private:const String node_id = String("PvRouter-") + node_mac; 
-          private:const String topic = "homeassistant/sensor/"+ node_id +"/";
+          public:const String topic = "homeassistant/sensor/"+ node_id +"/";
           private:String device_declare() { 
                     String info =         "\"dev\": {"
                     "\"ids\": \""+ node_id + "\","
@@ -325,6 +326,22 @@ struct Dallas{
                 // send("0");
                 
           }
+
+        /*public:float get_last_mqtt_value(){
+            /// récupération sur le serveur MQTT de la dernière valeur transmise
+            client.publish((topic+"state"+name).c_str() , "", true); // false for exp_aft in discovery
+            delay(1000);
+            
+            String valueStr = client.();
+              float value = valueStr.toFloat();
+              Serial.print("La valeur actuelle est : ");
+              Serial.println(value);
+              
+            }
+          return value; 
+          }
+*/
+
 
           public:void send(String value){
             String message = "  { \""+name+"\" : \"" + value.c_str() + "\"  } ";
