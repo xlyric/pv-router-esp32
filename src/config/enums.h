@@ -360,4 +360,7 @@ struct epoc {
   public:int annee;
 };
 
+#define TABLEAU_SIZE 7
+int tableaudemo[TABLEAU_SIZE] = {180, 3, -150, 4, 150, 5, -180};
+
 #endif
