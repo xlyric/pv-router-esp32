@@ -101,14 +101,14 @@ void send_to_mqtt(void * parameter){
                         }
                         if (configmqtt.HA) {
                         device_inject.send(String(int(-gDisplayValues.watt)));
-                        device_grid.send(String(WHtempinject));
+                        device_grid.send(String("0"));
                         WHtempgrid += wattheure; 
                         compteur_inject.send(String(WHtempgrid));
                             //envoie vers mqtt des état injection et consommation 
     
                         client.publish(("memory/"+compteur_grid.topic+compteur_grid.Get_name()).c_str(), String(WHtempgrid).c_str(),true); 
                       
-                        //compteur_grid.send(String("0"));
+                        compteur_grid.send(String("0"));
                         }
                   }
                   else {
@@ -119,7 +119,7 @@ void send_to_mqtt(void * parameter){
                         if (configmqtt.HA) {
                         device_grid.send(String(int(gDisplayValues.watt)));
                         device_inject.send(String("0"));
-                        compteur_inject.send(String(WHtempgrid));
+                        compteur_inject.send(String("0"));
                         WHtempinject += wattheure;
                         compteur_grid.send(String(WHtempinject));
                         client.publish(("memory/"+compteur_inject.topic+compteur_inject.Get_name()).c_str(), String(WHtempinject).c_str(),true);

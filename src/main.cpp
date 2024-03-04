@@ -466,10 +466,10 @@ Dimmer_setup();
   // ----------------------------------------------------------------
   // Task: measure electricity consumption ;)
   // ----------------------------------------------------------------
-  xTaskCreate(
+   xTaskCreate(
     measureElectricity,
     "Measure electricity",  // Task name
-    6000,                  // Stack size (bytes)
+    8000,                  // Stack size (bytes)
     NULL,                   // Parameter
     7,                      // Task priority
     NULL                    // Task handle
@@ -601,6 +601,12 @@ savelogs(timeClient.getFormattedTime() + "-- fin du précédent reboot -- ");
 /// @brief / Loop function
 void loop()
 {
+
+
+
+
+
+
 //// si perte du wifi après  6h, reboot
   if (AP) {
     reboot_after_lost_wifi(6);
