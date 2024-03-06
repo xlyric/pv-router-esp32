@@ -190,12 +190,12 @@ struct Logs {
 
   //clean log_init
   public:void clean_log_init() {
-      if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/50)) ) {
+      if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/5)) ) {
       reset_log_init();
       }
 
       ///si risque de fuite mémoire
-      if (strlen(log_init) >(LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/5)) ) {
+      if (strlen(log_init) >(LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/50)) ) {
       //savelogs("-- reboot Suite problème de taille logs -- ");   //--> vu que dans une struc, c'est compliqué à mettre en place
       ESP.restart();  
       }
