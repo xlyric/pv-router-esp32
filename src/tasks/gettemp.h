@@ -23,7 +23,9 @@ void GetDImmerTemp(void * parameter){
                 continue;
             }
 
-if ( !dallas.detect && String(config.dimmer) != "") {
+/// Modif RV - 20240303 - rajout de "none"
+/// if ( !dallas.detect &&  String(config.dimmer) != "" ) {
+if ( !dallas.detect && ( String(config.dimmer) != "" || String(config.dimmer) != "none")) {
   const String baseurl = "/state" ; 
   httpdimmer.begin(String(config.dimmer),80,baseurl);   
   int httpResponseCode = httpdimmer.GET();

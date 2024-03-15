@@ -28,6 +28,8 @@ extern Mqtt configmqtt;
 #ifndef LIGHT_FIRMWARE
       extern HA device_routeur; 
       extern HA device_grid; 
+      extern HA device_routed; // Ajout RV - 20230304
+      extern HA device_dimmer; // Ajout RV - 20230304
       extern HA device_inject; 
       extern HA compteur_inject;
       extern HA compteur_grid;
@@ -78,6 +80,8 @@ void send_to_mqtt(void * parameter){
             // HA
                   if (configmqtt.HA) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
+                        device_routed.send(String(gDisplayValues.puissance_route));
+                        device_dimmer_power.send(String(int((dimmer_hard.getPower()) * config.resistance/100)));
                         power_apparent.send(String(int(PVA)));
                         power_vrms.send(String(int(Vrms)));
                         power_irms.send(String(Irms));
@@ -87,7 +91,8 @@ void send_to_mqtt(void * parameter){
                         enphase_current_power_consumption.send(String(int(gDisplayValues.enp_current_power_consumption)));
                         enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
                         temperature_HA.send(String(gDisplayValues.temperature));
-                        device_dimmer.send(String(gDisplayValues.puissance_route));
+                        device_dimmer.send(String(int(dimmer_hard.getPower()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
+                        //device_dimmer.send(String(gDisplayValues.puissance_route)); // puissance_route est maintenant remontée par device_routed
                         //surplus_routeur.send(String(puissance_dispo));
                         
                   }

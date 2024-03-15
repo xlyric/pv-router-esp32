@@ -71,6 +71,7 @@
 #define ADC_MIDDLE 1893  /// en dessous laquelle on considère une valeur négative
 
 
+int dimmer_getState_interval = 0; // On requête la puissance du dimmer régulièrement, mais pas trop souvent
 
 #define ADC_BITS    12
 #define ADC_COUNTS  (1<<ADC_BITS)
@@ -199,7 +200,7 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20240306"
+#define RELEASE "Version 20240315"
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE
         #else

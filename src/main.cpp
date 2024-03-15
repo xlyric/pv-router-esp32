@@ -132,6 +132,8 @@ char *loguptime2();
 #ifndef LIGHT_FIRMWARE
     HA device_dimmer; 
     HA device_routeur; 
+    HA device_routed; // Ajout envoi MQTT puissance routée totale (local + distants)
+    HA device_dimmer_power; // Ajout MQTT envoi puissance du dimmer local
     HA device_grid;
     HA device_inject;
     HA compteur_inject;
@@ -589,8 +591,15 @@ logging.power=true; logging.sct=true; logging.sinus=true;
 logging.Set_log_init("-- fin du demarrage: ");
 logging.Set_log_init(timeClient.getFormattedTime());
 logging.Set_log_init(" --\r\n");
-savelogs(timeClient.getFormattedTime() + "-- fin du précédent reboot -- ");
+//savelogs(timeClient.getDay() + " " + timeClient.getFormattedTime() + " -- fin du précédent reboot -- ");
 
+/// envoie de l'info de reboot
+const int bufferSize = 150; // Taille du tampon pour stocker le message
+char raison[bufferSize];
+            
+snprintf(raison, bufferSize, "restart : %s", timeClient.getFormattedTime().c_str()); 
+  
+client.publish("memory/Routeur", raison, true);
 
 //WebSerial.begin(&server);
 //WebSerial.msgCallback(recvMsg);
@@ -674,12 +683,7 @@ void loop()
   
 #endif
 
-  /// synchrisation de l'information entre le dimmer et l'affichage 
-  int dimmer1_state = dimmer_getState();
-  /// application uniquement si le dimmer est actif (Tmax non atteint)    
-  if (dimmer1_state != 0 ) {  
-  gDisplayValues.dimmer = dimmer1_state; 
-  }
+ 
 
 
 if (config.dimmerlocal) {
@@ -853,7 +857,11 @@ char *loguptime2() {
 
 void handler_before_reset() {
   #ifndef LIGHT_FIRMWARE
-  client.publish("panic", " ESP reboot" ) ;
+  const int bufferSize = 150; // Taille du tampon pour stocker le message
+  char raison[bufferSize];
+  snprintf(raison, bufferSize, "reboot handler: %s ",timeClient.getFormattedTime().c_str()); 
+  
+  client.publish("memory/Routeur", raison, true);
   #endif
 }
 

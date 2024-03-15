@@ -8,7 +8,9 @@
 
 
 extern HA device_dimmer; 
+extern HA device_dimmer_power; // Ajout RV - pourcentage de puissance du dimmer local
 extern HA device_routeur; 
+extern HA device_routed; // Ajout RV - puissance totale routée : locale + distante
 extern HA device_grid;
 extern HA device_inject;
 extern HA compteur_inject;
@@ -27,12 +29,23 @@ extern HA surplus_routeur;
 
 void init_HA_sensor(){
 
-        device_dimmer.Set_name("Routed");
-        device_dimmer.Set_unit_of_meas("W");
+        device_dimmer.Set_name("Puissance");
+        device_dimmer.Set_unit_of_meas("%");
         device_dimmer.Set_stat_cla("measurement");
-        //device_dimmer.Set_dev_cla("power");
-        device_dimmer.Set_dev_cla("power"); // Correct : is using native unit of measurement '%' which is not a valid unit for the device class ('power') it is using
-        device_dimmer.Set_icon("mdi:leaf");
+        device_dimmer.Set_dev_cla("power_factor"); // Correct : is using native unit of measurement '%' which is not a valid unit for the device class ('power') it is using
+        device_dimmer.Set_icon("mdi:percent");
+
+        device_dimmer_power.Set_name("Watt");
+        device_dimmer_power.Set_unit_of_meas("W");
+        device_dimmer_power.Set_stat_cla("measurement");
+        device_dimmer_power.Set_dev_cla("power"); // Correct : is using native unit of measurement '%' which is not a valid unit for the device class ('power') it is using
+        device_dimmer_power.Set_icon("mdi:home-lightning-bolt-outline");
+
+        device_routed.Set_name("Routed");
+        device_routed.Set_unit_of_meas("W");
+        device_routed.Set_stat_cla("measurement");
+        device_routed.Set_dev_cla("power"); // Correct : is using native unit of measurement '%' which is not a valid unit for the device class ('power') it is using
+        device_routed.Set_icon("mdi:leaf");
         
         device_routeur.Set_name("power");
         device_routeur.Set_unit_of_meas("W");
@@ -110,7 +123,9 @@ void init_HA_sensor(){
 
         client.setBufferSize(1024);
         device_routeur.discovery();
+        device_routed.discovery();
         device_dimmer.discovery();
+        device_dimmer_power.discovery();
         device_grid.discovery();
         device_inject.discovery();
         compteur_inject.discovery();

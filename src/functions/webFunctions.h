@@ -309,7 +309,12 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
 */
   server.on("/reboot", HTTP_ANY, [](AsyncWebServerRequest *request){
    #ifndef LIGHT_FIRMWARE
-   client.publish("panic", "/reboot appelé") ;
+    const int bufferSize = 150; // Taille du tampon pour stocker le message
+    char raison[bufferSize];
+            
+    snprintf(raison, bufferSize, "reboot manuel: %s", timeClient.getFormattedTime().c_str()); 
+  
+   client.publish("memory/Routeur", raison, true);
    #endif
    request->redirect("/");
    config.restart = true;

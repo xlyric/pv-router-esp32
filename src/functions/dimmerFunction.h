@@ -46,7 +46,10 @@ extern Dallas dallas ;
 /*
 *   fonction d'envoie de commande au dimmer
 */
-#define FACTEUR_REGULATION 0.9 
+/// Modif RV 20240219 
+/// Plus besoin !
+//#define FACTEUR_REGULATION 0.9 
+#define FACTEUR_REGULATION 1
 void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puissance_dispo) {
 
   puissance_dispo= int(puissance_dispo*FACTEUR_REGULATION);
@@ -62,7 +65,8 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
     else {*/
       #if WIFI_ACTIVE == true
       /// control dimmer 
-      if ( strcmp(config.dimmer,"none") != 0 ) {
+
+if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
         #ifndef POURCENTAGE
       const String  baseurl = "/?POWER=" + String(dimmervalue) +"&puissance=" + String(puissance_dispo) ; 
         #else
@@ -78,8 +82,9 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
             
             logging.Set_log_init(POWER_COMMAND,true);
             logging.Set_log_init(String(dimmervalue).c_str());
-            logging.Set_log_init("\r\n");
-            logging.power = false;}
+            logging.Set_log_init("% \r\n");
+            //logging.power = false;
+        }
       }
       //// Mqtt send information
       #ifndef LIGHT_FIRMWARE
@@ -107,6 +112,15 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
 
 void dimmer(){
 gDisplayValues.change = 0; 
+
+
+  if (!gDisplayValues.wattIsValid){
+    return;
+  }
+  else {
+   gDisplayValues.wattIsValid = false ;
+
+  }
    
    int puissance_dispo = 0; 
    /// pour éviter les erreurs sur le site (inversion delta et deltaneg)
@@ -119,36 +133,56 @@ gDisplayValues.change = 0;
 
   // 0 -> linky ; 1-> injection  ; 2-> stabilisé
 
+
+	/// Ajout de la variable delta_cible pour réutilisations multiples
+	int delta_cible = (config.delta+config.deltaneg)/2;
 // puissance dispo 
-puissance_dispo = -(gDisplayValues.watt-((config.delta+config.deltaneg)/2));
+  puissance_dispo = -(gDisplayValues.watt-delta_cible);
 
 if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
     //Serial.println("dimmer:" + String(gDisplayValues.dimmer));
-    gDisplayValues.dimmer += -abs((gDisplayValues.watt-((config.delta+config.deltaneg)/2))*COMPENSATION/config.resistance); 
+    gDisplayValues.dimmer += -abs((gDisplayValues.watt-delta_cible)*COMPENSATION/config.resistance); 
     
+    
+    gDisplayValues.dimmer += 1 ;
     gDisplayValues.change = 1; 
 //debug    Serial.println(String(gDisplayValues.watt) + " " + String(config.delta) + " " + String(config.deltaneg) + " " + String(gDisplayValues.dimmer) );
     } 
 
     // injection 
     /// si grosse injection on augmente la puissance par extrapolation
-  else if ( gDisplayValues.watt <= (config.deltaneg) ) {   
-    gDisplayValues.dimmer += abs((((config.delta+config.deltaneg)/2)-gDisplayValues.watt)*COMPENSATION/config.resistance) ; 
+  else if ( gDisplayValues.watt <= config.deltaneg ) {   
+    
+gDisplayValues.dimmer += abs((delta_cible-gDisplayValues.watt)*COMPENSATION/config.resistance) ; 
     gDisplayValues.change = 1 ; 
 
     } 
 
-    /// test puissance de sécurité mode normal
-  if ( gDisplayValues.dimmer >= config.num_fuse && !config.dimmerlocal) {
+    /// test puissance de sécurité mode dimmer distant uniquement
+
+if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
     gDisplayValues.dimmer = config.num_fuse; 
     gDisplayValues.change = 1 ; 
     }
   
       /// test puissance de sécurité mode local
-  if ( gDisplayValues.dimmer >= config.localfuse && config.dimmerlocal ) {
+  /// Modif RV - j'inverse le sens de la condition, ça consommera moins de CPU
+
+  if ( config.dimmerlocal && gDisplayValues.dimmer >= config.localfuse ) {
+    
+    /// Modif RV 20240219
+    /// Si et seulement si on n'a pas de dimmer enfant, sinon on ne lui routerait aucune puissance !!!!!
+    /// Modification du if() qui ne fonctionnait pas à tous les coups
+	/// gDisplayValues.dimmer = config.localfuse; 
+    if ( strcmp(config.dimmer,"") == 0 || strcmp(config.dimmer,"none") == 0 ){ // Si pas de dimmer fils, on bride la puissance 
     gDisplayValues.dimmer = config.localfuse; 
     gDisplayValues.change = 1 ; 
     }
+    else if ( gDisplayValues.dimmer >= ( config.localfuse + config.num_fuse ) ) {
+      gDisplayValues.dimmer = config.localfuse + config.num_fuse; 
+      gDisplayValues.change = 1 ;
+    }
+  }
 
     /// valeur négative impossible
   if ( gDisplayValues.dimmer <= 0 && gDisplayValues.dimmer != 0 ) {
@@ -197,17 +231,29 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
           else {
             //gDisplayValues.dimmer = 0 ;
             dimmer_hard.setPower(0); 
+
+            dimmer_off(); 
             programme.run=false;
             ledcWrite(0, 0);
+/// Modif RV 20240219 - ajout du test pour ne pas chercher à envoyer une requête vers un fils non configuré
+          if ( strcmp(config.dimmer,"") != 0 && strcmp(config.dimmer,"none") != 0 ) {
             dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,puissance_dispo) ;
           }
         }
+      }
+      
         else { 
 
           if ( config.tmax < dallas_int ) {
             dimmer_hard.setPower(0); 
+            dimmer_off(); // Ajout RV
             ledcWrite(0, 0);
-            gDisplayValues.dimmer = 0 ;
+/// Modif RV - 20240219
+            /// Ca fait aussi un cut de puissance transitoire pour le(s) dimmer(s) distant(s) quand on atteint la tempé
+            /// j'ajoute donc ce if() pour qu'on passe à 0 que si on n'a pas d'enfant
+            if ( strcmp(config.dimmer,"") == 0 || strcmp(config.dimmer,"none") == 0 ) {
+              gDisplayValues.dimmer = 0 ;
+            }
             dallas.security = true ;   /// mise en place sécurité thermique
             Serial.println("security off -> on ");
             logging.Set_log_init("Security On\r\n");
@@ -220,13 +266,21 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
                 if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
                 else {
                     dimmer_on();
+/// Modif RV - 20240303
+                /// Ajout de ce if() AVANT de modifier la puissance locale ... sinon ça ne sert à rien
+                if (dimmer_hard.getPower() < config.localfuse){ // permet d'éviter de trop de donner de puissance au dimmer enfant quand gros soleil d'un coup
+                  puissance_dispo = puissance_dispo - ( (config.localfuse - dimmer_hard.getPower())*config.resistance/100 ); 
+                }
                     dimmer_hard.setPower(config.localfuse); 
                     ledcWrite(0, config.localfuse*256/100);
-                    dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ),puissance_dispo ) ;
+                    if ( strcmp(config.dimmer,"") != 0 && strcmp(config.dimmer,"none") != 0 ) { // Modif RV - Autant ne pas envoyer de requête si in n'a pas d'enfant de configuré
+                  dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ), puissance_dispo ) ;
+                    }
                 }
             }
           }
         }
+
         /// Relay
 
         if ( gDisplayValues.dimmer >= config.relayon ) {   digitalWrite(RELAY1, HIGH); }
@@ -301,18 +355,42 @@ int dimmer_getState() {
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
       //Serial.println(payload);                     //Print the response payload
-      DynamicJsonDocument doc(64);
+      DynamicJsonDocument doc(256);
       DeserializationError error = deserializeJson(doc, payload);
       if (error) {
-        Serial.print(F("get state() failed: "));
-        Serial.println(error.c_str());
-        return 0;
+        /// Modif RV - 20240221
+        /// je préfère que cette fonction se poursuivre pour que le calcul que je rajoute plus bas aille à son terme 
+        /// return 0;
+        dimmer = 0;
       }
-    
-      dimmer = doc["dimmer"];
+      else {
+        /// Modif RV - 20240221
+        /// Le fait de récupérer le champ "dimmer" ne récupère que la puissance locale du premier dimmer enfant
+        /// il vaut donc mieux aller chercher l'info "Ptotal" plutôt que "dimmer" dans la page http:// - IPDIMMER - /state
+        //int dimmer = doc["dimmer"];
+        int dimmerWatt = doc["Ptotal"];
+        dimmer = (dimmerWatt*100/config.resistance);
+      }
     }
     http.end();   //Close connection
   }  
+
+  if (dimmer != 0 ) {  
+    /// Modif RV - 20240221
+    /// synchronisation de gDisplayValues.dimmer après avoir requêté le dimmer enfant
+    ///gDisplayValues.dimmer = dimmer1_state;
+    if (config.dimmerlocal){
+     gDisplayValues.dimmer = dimmer_hard.getPower() + dimmer;
+    }
+    else {
+      gDisplayValues.dimmer = dimmer;
+      }
+  }
+
+  else {
+    gDisplayValues.dimmer = dimmer_hard.getPower();
+  }
+
   return dimmer ; 
 }
 

@@ -28,7 +28,7 @@ HTTPClient shelly_http;
         shelly_state = shelly_http.getString();
         shelly_http.end();
         if (httpResponseCode==200) {
-            shelly_watt = 0;
+            shelly_watt = 99999;
             DynamicJsonDocument doc(1024);
             DeserializationError error = deserializeJson(doc, shelly_state);
 
@@ -37,7 +37,7 @@ HTTPClient shelly_http;
                 Serial.print(F("deserializeJson() failed: "));
                 logging.Set_log_init("deserializeJson() failed: ",true);
                 Serial.println(error.c_str());
-                shelly_watt = 0;
+                shelly_watt = 99999;
                 return shelly_watt;
             }
 
@@ -47,13 +47,13 @@ HTTPClient shelly_http;
                 shelly_watt = powerValue.as<int>();
             }
             else {
-                shelly_watt = 0;
+                shelly_watt = 99999;
             }
            
             //Serial.println("shelly : " + String(shelly_watt));
         }
         else {
-            shelly_watt = 0;
+            shelly_watt = 99999;
         }
     } 
 

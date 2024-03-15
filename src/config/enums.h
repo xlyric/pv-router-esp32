@@ -31,6 +31,7 @@ enum DEVICE_STATE {
 // All other functions should update these!
 struct DisplayValues {
   double watt;
+  bool wattIsValid; // Jeton pour measureEletricity.h permettant d'appliquer la puissance au dimmer (local ou distant)
   double amps;
   int8_t wifi_strength;
   DEVICE_STATE currentState;
