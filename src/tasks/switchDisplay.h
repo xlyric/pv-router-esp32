@@ -76,9 +76,10 @@ void switchDisplay(void * parameter){
           case 2:
                 // flip SCT013
                 config.polarity = !config.polarity;
+                config.sauve_polarity();
                 gDisplayValues.option = 0 ;
                 call_display(); 
-                saveConfiguration(filename_conf, config);
+                //saveConfiguration(filename_conf, config);
             break;
           default:
                 gDisplayValues.option = 0 ;

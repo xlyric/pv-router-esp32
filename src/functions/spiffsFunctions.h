@@ -108,6 +108,8 @@ void loadConfiguration(const char *filename, Config &config) {
           sizeof(config.topic_Shelly));
 
   configFile.close();
+
+  config.recup_polarity();
   
   logging.Set_log_init("config file loaded\r\n",true);
 }
@@ -171,6 +173,8 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["relayon"] = config.relayon; 
   doc["relayoff"] = config.relayoff; 
   doc["topic_Shelly"] = config.topic_Shelly; 
+
+  
 
 
   // Serialize JSON to file

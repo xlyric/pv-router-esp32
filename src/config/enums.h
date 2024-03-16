@@ -101,6 +101,23 @@ struct Config {
   int relayoff;
   bool restart;
   char topic_Shelly[100]; 
+
+  Preferences preferences;
+
+  public:bool sauve_polarity() {
+  preferences.begin("polarity", false);
+  preferences.putBool("polarity",polarity);
+  preferences.end();
+  return true; 
+  }
+
+  public:bool recup_polarity() {
+  preferences.begin("polarity", false);
+  polarity = preferences.getBool("polarity", false);
+  preferences.end();
+  return true; 
+  }
+  
 };
 
 struct Configwifi {
