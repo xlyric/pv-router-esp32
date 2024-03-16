@@ -598,9 +598,9 @@ const int bufferSize = 150; // Taille du tampon pour stocker le message
 char raison[bufferSize];
             
 snprintf(raison, bufferSize, "restart : %s", timeClient.getFormattedTime().c_str()); 
-  
-client.publish("memory/Routeur", raison, true);
-
+#ifndef LIGHT_FIRMWARE 
+  client.publish("memory/Routeur", raison, true);
+#endif
 //WebSerial.begin(&server);
 //WebSerial.msgCallback(recvMsg);
 
