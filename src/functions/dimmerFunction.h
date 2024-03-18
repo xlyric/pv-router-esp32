@@ -92,7 +92,7 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
             /// la valeur 0 doit quand meme être envoyé 
-              //Mqtt_send(String(dimmerIDX), String(dimmervalue),"","dimmer"); 
+              Mqtt_send(String(dimmerIDX), String(dimmervalue),"","dimmer"); 
               if (configmqtt.HA) {
                 //surplus_routeur.send(String(puissance_dispo));
                 } 
