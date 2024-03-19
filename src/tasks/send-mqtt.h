@@ -39,10 +39,10 @@ extern Mqtt configmqtt;
       extern HA power_vrms;
       extern HA power_irms;
       extern HA power_apparent;
-      extern HA enphase_cons_whLifetime;
-      extern HA enphase_prod_whLifetime;
-      extern HA enphase_current_power_consumption;
-      extern HA enphase_current_power_production;
+     // extern HA enphase_cons_whLifetime;
+      //extern HA enphase_prod_whLifetime;
+      //extern HA enphase_current_power_consumption;
+      //extern HA enphase_current_power_production;
 
 #endif
 
@@ -86,10 +86,10 @@ void send_to_mqtt(void * parameter){
                         power_vrms.send(String(int(Vrms)));
                         power_irms.send(String(Irms));
                         power_factor.send(String(PowerFactor));
-                        enphase_cons_whLifetime.send(String(int(gDisplayValues.enp_cons_whLifetime)));
-                        enphase_prod_whLifetime.send(String(int(gDisplayValues.enp_prod_whLifetime)));
-                        enphase_current_power_consumption.send(String(int(gDisplayValues.enp_current_power_consumption)));
-                        enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
+                        //enphase_cons_whLifetime.send(String(int(gDisplayValues.enp_cons_whLifetime)));
+                        //enphase_prod_whLifetime.send(String(int(gDisplayValues.enp_prod_whLifetime)));
+                        //enphase_current_power_consumption.send(String(int(gDisplayValues.enp_current_power_consumption)));
+                        //enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
                         temperature_HA.send(String(gDisplayValues.temperature));
                         device_dimmer.send(String(int(dimmer_hard.getPower()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
                         //device_dimmer.send(String(gDisplayValues.puissance_route)); // puissance_route est maintenant remontée par device_routed

@@ -39,7 +39,7 @@ extern Dallas dallas ;
     extern Logs logging;
   #ifndef LIGHT_FIRMWARE
     extern HA device_dimmer; 
-    extern HA surplus_routeur;
+    //extern HA surplus_routeur;
   #endif
 
 

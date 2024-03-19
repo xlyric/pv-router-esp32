@@ -144,12 +144,12 @@ char *loguptime2();
     HA power_vrms;
     HA power_irms;
     HA power_apparent;
-    HA enphase_cons_whLifetime;
-    HA enphase_prod_whLifetime;
-    HA enphase_current_power_consumption;
-    HA enphase_current_power_production;
-    HA surplus_routeur;
-    HA device_state; 
+    //HA enphase_cons_whLifetime;
+    //HA enphase_prod_whLifetime;
+    //HA enphase_current_power_consumption;
+    //HA enphase_current_power_production;
+    //HA surplus_routeur;
+    //HA device_state; 
 #endif
 
 /***************************
@@ -233,6 +233,9 @@ void setup()
      
      logging.Set_log_init("Wifi config \r\n",true);
        AP=false; 
+  } 
+  else {
+    Serial.println(F("mode AP please configure password before Wifi"));
   }
 
   configmodule.enphase_present=false; 
