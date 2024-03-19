@@ -254,18 +254,23 @@ void search_wifi_ssid(){
         Serial.println("SSID trouvé reboot en cours");
         //ESP.restart();
         /// reconnection wifi
+        
+
         AP=false;
         WiFi.begin(configwifi.SID, configwifi.passwd); 
-        delay(1500);
+        delay(3000);
         /// test si le wifi est connecté sur le mon SSID, on déconnecte le mode AP  
         if(WiFi.status() == WL_CONNECTED) { 
         
           if (WiFi.SSID() == configwifi.SID) {
+            // a test en remplacement mais pose des problème lors de la conf du wifi en mode AP
+            //if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0) {
           Serial.println("WiFi connecté");
           WiFi.softAPdisconnect(true);
           savelogs("-- reboot Wifi retrouvé -- ");
           ESP.restart();
-          }    
+          }   
+           
         }
           
 

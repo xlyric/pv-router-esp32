@@ -82,10 +82,12 @@ Once programming is done, choose “Log &amp; console”
 [![image-1678909558863.png](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-03/scaled-1680-/image-1678909558863.png)](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-03/image-1678909558863.png)
 
 From there you can use a series of commands to configure your wifi:
+( put your password first )
 
 ```
-ssid your_ssid
 pass your_ssid_pass
+ssid your_ssid
+
 reboot
 ```
 
