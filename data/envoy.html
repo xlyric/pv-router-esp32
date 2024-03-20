@@ -208,7 +208,13 @@
 
           <!-- Content Row -->
 
-<script src="/jquery.min.js"></script>
+<!-- Core plugin JavaScript avec chargement local si non dispo-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+  <script>
+  if (typeof jQuery == 'undefined') {
+    document.write('<script src="/jquery.min.js"><\/script>');
+  }
+</script>
 
 <script>
 

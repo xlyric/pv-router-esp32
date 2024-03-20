@@ -463,6 +463,12 @@ function save () {
 
 
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <!-- Core plugin JavaScript avec chargement local si non dispo-->
+  <script>
+  if (typeof jQuery == 'undefined') {
+    document.write('<script src="/jquery.min.js"><\/script>');
+  }
+</script>
 
 <script>
 

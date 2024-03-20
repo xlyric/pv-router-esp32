@@ -12,7 +12,7 @@
   <title>Pv router - Configuration</title>
 
   <!-- Custom fonts for this template-->
- <link href="all.min.css" rel="stylesheet" type="text/css"> 
+  <link href="all.min.css" rel="stylesheet" type="text/css"> 
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
@@ -384,6 +384,7 @@
                 <div class="form-group row">
                   <div class="col-sm-4" data-toggle="popover" title="Aide" data-content="Pour les réseaux à tension différente"><span>Correction Voltage (V) ℹ</span></div>
                   <div class="col-sm-4" data-toggle="popover" title="Aide" data-content="Offset de la sonde SCT-013">Correction Offset (W) ℹ</div>
+                  <div class="col-sm-4" data-toggle="popover" title="Aide" data-content="Valeur de la sonde SCT-013">SCT (A/1V) ℹ</div>
                 </div>
 
                 <div class="form-group row">
@@ -392,6 +393,9 @@
                   </div>
                   <div class="col-sm-4">
                     <input type="number" step="1" class="form-control form-control-user" id="offset" placeholder="%offset%">
+                  </div>
+                  <div class="col-sm-4">
+                    <input type="number" step="1" class="form-control form-control-user" id="SCT_13" placeholder="%SCT_13%">
                   </div>
                 </div>
 
@@ -449,7 +453,13 @@
           <!-- Content Row -->
 
 
-<script src="jquery.min.js"></script>	
+<!-- Core plugin JavaScript avec chargement local si non dispo-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+  <script>
+  if (typeof jQuery == 'undefined') {
+    document.write('<script src="/jquery.min.js"><\/script>');
+  }
+</script>
 				
 <script type='text/javascript'> 
       //<!-- rafraichissement valeurs -->
@@ -506,6 +516,7 @@ function save () {
 <!-- de la doc -->
 
 
+
   <script>
 
           $(function () {
@@ -529,8 +540,9 @@ $( "#save" ).click(function() {
 });
 
 $( "#formulaire" ).submit(function() {
+    
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val()} 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val(),'SCT_13': $('#SCT_13').val() } 
 
 		
         $.ajax({
@@ -589,20 +601,20 @@ var recupconfig =  $.getJSON('/config', function(data) {
   </div>
   <!-- End of Page Wrapper -->
 
-  <!-- Bootstrap core JavaScript-->
-  <!-- Bootstrap core JavaScript-->
-  <script src="/jquery.min.js"></script>
-  <script src="/bootstrap.bundle.min.js"></script>
 
-  <!-- Core plugin JavaScript-->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --> 
+  <!-- Bootstrap core JavaScript-->
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" ></script>
+<script>
+  if (typeof bootstrap == 'undefined') {
+    document.write('<script src="/bootstrap.bundle.min.js"><\/script>');
+  }
+</script>
+
+
 
   <!-- Custom scripts for all pages-->
   <script src="sb-admin-2.js"></script>
- <script>
-
-
-
 
 </script>
 <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
