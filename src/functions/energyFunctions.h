@@ -266,7 +266,11 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 
 //positive = ( positive / ( FACTEURPUISSANCE * nombre_cycle * 230 / config.voltage ) ) + config.offset ; 
-positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle * 230 ) ) + config.offset ; 
+
+positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle * 230 ) ) ; 
+/// correction pour l'offset en fonction de comment est branchée la pince
+if ( config.polarity == true ) { positive = positive + config.offset ; }
+else { positive = positive - config.offset ; }
 
 logging.clean_log_init();
 if ( zero > 75 ) { 
