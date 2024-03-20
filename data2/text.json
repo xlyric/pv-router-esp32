@@ -1,0 +1,18 @@
+{
+    "nosin":"--> No sinus, check 12AC power \r\n",
+    "GRID":"Reseau",
+    "INJECTION":"Injection",
+    "STABLE":"Stable",
+    "BOOTING":"Demarrage",
+    "WIFINO":"Wifi non configuré",
+    "WIFICONNECT":"Connexion à ",
+    "OLEDSTART":"Démarrage Oled",
+    "SPIFFSNO":"Fichier SPIFFS absent, Merci de les uploader",
+    "CONFNO":"Fichier de configuration absent",
+    "OLEDPOW":"Power (W)",
+    "OLEDNOSIN":"No-Sin",
+    "fail_read":"Failed to read",
+    "fail_write":"Failed to write to file in function",
+    "fail_open":"Failed to open config file"
+    
+}
