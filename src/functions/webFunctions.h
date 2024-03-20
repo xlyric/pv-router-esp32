@@ -318,6 +318,7 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
    #endif
    request->redirect("/");
    config.restart = true;
+   ESP.restart();
   });
   
 server.onNotFound(notFound);
