@@ -101,6 +101,7 @@ struct Config {
   int relayoff;
   bool restart;
   char topic_Shelly[100]; 
+  int SCT_13=30;
 
   Preferences preferences;
 

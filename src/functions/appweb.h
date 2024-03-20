@@ -204,6 +204,7 @@ String getconfig() {
   doc["flip"] = config.flip;
   doc["relaystart"] = config.relayon;
   doc["relaystop"] = config.relayoff;
+  doc["SCT_13"] = config.SCT_13;
   
   
   serializeJson(doc, configweb);

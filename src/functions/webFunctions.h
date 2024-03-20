@@ -441,6 +441,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
     }
     if (request->hasParam("relaystart")) { config.relayon = request->getParam("relaystart")->value().toInt();}
     if (request->hasParam("relaystop")) { config.relayoff = request->getParam("relaystop")->value().toInt();}
+    if (request->hasParam("SCT_13")) { config.SCT_13 = request->getParam("SCT_13")->value().toInt();}
 
     //// minuteur 
    if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme.heure_demarrage,6);  }

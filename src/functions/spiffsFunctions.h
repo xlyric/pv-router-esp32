@@ -89,6 +89,7 @@ void loadConfiguration(const char *filename, Config &config) {
   config.offset = doc["offset"] | -10;
   config.relayoff = doc["relayoff"] | 95;
   config.relayon = doc["relayon"] | 100;
+  config.SCT_13 = doc["SCT_13"] | 30;
 
   config.polarity = doc["polarity"] | false;
   strlcpy(config.dimmer,                  // <- destination
@@ -173,6 +174,7 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["relayon"] = config.relayon; 
   doc["relayoff"] = config.relayoff; 
   doc["topic_Shelly"] = config.topic_Shelly; 
+  doc["SCT_13"] = config.SCT_13;
 
   
 

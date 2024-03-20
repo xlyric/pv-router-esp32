@@ -267,10 +267,10 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 //positive = ( positive / ( FACTEURPUISSANCE * nombre_cycle * 230 / config.voltage ) ) + config.offset ; 
 
-positive = ( ( positive * config.voltage ) / ( FACTEURPUISSANCE * nombre_cycle * 230 ) ) ; 
+positive = ( ( positive * config.voltage  ) / ( FACTEURPUISSANCE * nombre_cycle * 230  ) ) ; 
 /// correction pour l'offset en fonction de comment est branchée la pince
-if ( config.polarity == true ) { positive = positive + config.offset ; }
-else { positive = positive - config.offset ; }
+if ( config.polarity == true ) { positive = positive - config.offset ; }
+else { positive = positive + config.offset ; }
 
 logging.clean_log_init();
 if ( zero > 75 ) { 
@@ -299,6 +299,9 @@ middle_debug= sigma_read;
 
 //zero = sqrt(zero / float(zero_count)); 
 // positive = sqrt(positive / float( loop - zero_count )) ;
+
+// correction sonde SCT
+positive = positive * config.SCT_13 / 30  ;
 
 gDisplayValues.watt = int(( positive )) ; 
 if ( config.polarity == true ) { gDisplayValues.watt = - gDisplayValues.watt ; }
