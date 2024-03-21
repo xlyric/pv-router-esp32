@@ -149,7 +149,7 @@ int positive_debug ;
 
 void injection2(){ 
 
-int temp_read ; 
+double temp_read ; 
 // int temp_porteuse ;
   double sigma_read = 0 ; 
   //double voltage = 0; // test de calcul de voltage
@@ -159,7 +159,7 @@ int temp_read ;
   //int zero_count = 0; 
   int loop = 0;  int inter=0;
   
-  int wait_time = 277 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
+  double wait_time = 277.77 ; //  --> 1/50Hz -> /2 -> 10ms --> 18 mesures --> 555 us 
   unsigned long startMillis,stopMillis;
   //int injection = 0; 
  // int nbmesure=72 ;  /// nombre de mesure par ondulation
@@ -172,7 +172,7 @@ delay (15);
 startMillis = micros();   // 0ms 
 
 ///// construction du tableau de mesures  /////
-while (loop < freqmesure ) {
+while (loop < freqmesure  ) {
     tableau[loop] =  adc1_get_raw((adc1_channel_t)4);
     porteuse[loop] =  adc1_get_raw((adc1_channel_t)5);
     sigma_read += tableau[loop]; 
@@ -207,12 +207,12 @@ while (loop < freqmesure ) {
   }
   ///// fin  construction du tableau de mesures  /////
 
-// 20ms * nombre de cycles -> total 72 mesures * nb cycles
+// 20ms * nombre de cycles plus un certain nombre et le tout sur 8 cycles --> 160ms interessante pour 180 ms collectée 
 stopMillis = micros();  
 
 // début des calculs 
 
-sigma_read = ( sigma_read / ( loop +1 ) ) ;  /// calcul du sigma ( la valeur moyenne ), ne marche bien que dans le cas d'une ondulation symétrique. A voir si nouvelle méthode de calcul. ( valeur théorique : 2047 -> vcc/2)
+sigma_read = ( sigma_read / ( loop ) ) ;  /// calcul du sigma ( la valeur moyenne ), ne marche bien que dans le cas d'une ondulation symétrique. A voir si nouvelle méthode de calcul. ( valeur théorique : 2047 -> vcc/2)
 // voltage = ( voltage / (loop + 1 )) ; // test de calcul de voltage
 int start=0; 
 
@@ -224,11 +224,11 @@ Serial.println(voltage);
 Serial.println(voltage_read);*/
 
 
-
+/// synchronisation sur la porteuse 
 for(int i = 0; i < loop; i++)
 {
-  if ( start == 0 ) {  if ( porteuse[i] > 0 ) { 
-    start = i ; 
+  if ( start == 0 ) {  if ( porteuse[i] > 0 && i >= 1) { 
+    start = (i-1) ; 
      //if ( voltage_read < porteuse[i] ) {voltage_read = porteuse[i] ; }
     //Serial.println(String(tableau[i])); }
     }   
@@ -236,12 +236,13 @@ for(int i = 0; i < loop; i++)
   //Serial.println(String(tableau[i])); 
   } 
 
-}
+}   /// stable sur la carte din entre 18 et 21 
 ///Serial.println (voltage_read);
 
 int phi = config.cosphi ;
 if (phi > start ) { phi = start ; }
-
+//int retard = 0; /// 14 mesures de retard pour phi de 0.90 ( .451rad / (2Pi/72 ) ) 
+/// 8 pour cosphi ) 
 
 for (int j = 0 ; j < nombre_cycle   ; j++) 
 {
@@ -263,11 +264,14 @@ for (int j = 0 ; j < nombre_cycle   ; j++)
 
 //Serial.println(int(positive/10000*voltage_read)) ;// test de calcul de voltage
 
+/// A vide j'ai 20 ou -20 environ en fonction de comment est connecté la prise.
 
 
 //positive = ( positive / ( FACTEURPUISSANCE * nombre_cycle * 230 / config.voltage ) ) + config.offset ; 
+//int base_offset = 15; offset du à la sonde et au montage ( composante continue mal filtrée) pour offset = 0 il faut mettre un condensateur de 10µF en //parallèle sur la sonde  (testé aussi avec 3.3µF)
 
-positive = ( ( positive * config.voltage  ) / ( FACTEURPUISSANCE * nombre_cycle * 230  ) ) + config.offset ;  ; 
+int base_offset = 0; // ( testé sur 3 sondes différentes à vide )  --> la base d'offset change de sens en fonction de la phase de la prise
+positive = ( ( positive * config.voltage  ) / ( FACTEURPUISSANCE * nombre_cycle * 230  ) )   ;  
 /// correction pour l'offset en fonction de comment est branchée la pince
 //if ( config.polarity == true ) { positive = positive - config.offset ; }
 //else { positive = positive + config.offset ; }
@@ -284,16 +288,21 @@ if ( zero > 75 ) {
 bool nolog =false; 
 if (nolog) {
 Serial.println("fin tableau");
-Serial.println("temp");
-Serial.println(wait_time*loop);
-Serial.println(stopMillis-startMillis);
-Serial.println("inter");
-Serial.println(inter*wait_time);
+//Serial.println("temp");
+//Serial.println(wait_time*loop);
+//Serial.println(stopMillis-startMillis);
+//Serial.println("inter");
+//Serial.println(inter*wait_time);
 Serial.println("middle");
-Serial.println(loop);
+//Serial.println(loop);
 Serial.println(sigma_read);
 Serial.println(start);
 Serial.println(int(positive)) ;
+Serial.println("valeur 20");
+Serial.println(tableau[19]);
+Serial.println(tableau[20]);
+Serial.println(tableau[21]);
+
 }
 middle_debug= sigma_read; 
 
@@ -301,10 +310,15 @@ middle_debug= sigma_read;
 // positive = sqrt(positive / float( loop - zero_count )) ;
 
 // correction sonde SCT
-positive = positive * config.SCT_13 / 30  ;
+if ( config.polarity == true ) { 
+  positive = ( ( positive + base_offset ) * config.SCT_13 / 30 + config.offset )  ; 
+  }
+else {
+positive = -( ( positive - base_offset )* config.SCT_13 / 30 + config.offset )  ;
+}
 
 gDisplayValues.watt = int(( positive )) ; 
-if ( config.polarity == true ) { gDisplayValues.watt = - gDisplayValues.watt ; }
+
 
 
 
