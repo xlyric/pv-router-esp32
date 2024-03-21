@@ -108,6 +108,7 @@ void loadConfiguration(const char *filename, Config &config) {
           doc["topic_Shelly"] | "none", // <- source
           sizeof(config.topic_Shelly));
 
+  config.Shelly_tri = doc["Shelly_tri"] | 0; /// récupération shelly mode triphasé ou monophasé
   configFile.close();
 
   config.recup_polarity();
@@ -174,9 +175,8 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["relayon"] = config.relayon; 
   doc["relayoff"] = config.relayoff; 
   doc["topic_Shelly"] = config.topic_Shelly; 
+  doc["Shelly_tri"] = config.Shelly_tri;
   doc["SCT_13"] = config.SCT_13;
-
-  
 
 
   // Serialize JSON to file

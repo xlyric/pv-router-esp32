@@ -20,7 +20,11 @@ HTTPClient shelly_http;
   
   if (WiFi.status() == WL_CONNECTED) {   // si connecté on wget
 //    const String baseurl = "/status" ; 
-    const String baseurl = "/emeter/0" ; 
+    String baseurl = "/emeter/0" ; 
+        /// mode triphasé
+      if ( config.Shelly_tri) {
+        String baseurl = "/rpc/EM.GetStatus?id=0" ; 
+      }
     //const String baseurl = "/rpc/EM.GetStatus?id=0" ; 
     shelly_http.begin(String(url),80,baseurl);   
         
@@ -43,6 +47,12 @@ HTTPClient shelly_http;
             }
 
             auto powerValue = doc["power"];
+              /// mode triphasé
+              if (config.Shelly_tri ) { 
+                auto powerValue = doc["total_act_power"];
+              }
+
+            
             //auto powerValue = doc["total_act_power"];
             /// protection de la donnée
             if (powerValue.is<int>() || powerValue.is<float>()) {

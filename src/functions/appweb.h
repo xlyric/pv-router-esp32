@@ -144,6 +144,7 @@ String getServermode(String Servermode) {
   if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; config.sauve_polarity();}
   if ( Servermode == "envoy" ) {   configmodule.enphase_present = !configmodule.enphase_present; }
   if ( Servermode == "fronius" ) {   configmodule.Fronius_present = !configmodule.Fronius_present; }
+  if ( Servermode == "TRI" ) {   config.Shelly_tri = !config.Shelly_tri; }
 
   #ifndef LIGHT_FIRMWARE
     if ( Servermode == "HA" ) {   configmqtt.HA = !configmqtt.HA; 
@@ -246,6 +247,7 @@ String getmqtt() {
   doc["HA"] = configmqtt.HA;
   doc["EM"] = config.topic_Shelly;
   doc["IDXDALLAS"] = config.IDXdallas;
+  doc["TRI"] = config.Shelly_tri;
   serializeJson(doc, retour);
   return String(retour) ;
 }
