@@ -17,6 +17,7 @@
 
   <!-- Custom styles for this template-->
   <link href="sb-admin-2.min.css" rel="stylesheet">
+
   
 </head>
 
@@ -190,7 +191,7 @@
             </div>
 
             <div class="form-group">
-              <a data-toggle="popover" title="Aide" data-content="Utile dans le cas d'un serveur Domoticz ou Jeedom"> Topic ℹ </a> :<input type="text" class="form-control form-control-user" id="topic" placeholder="%TOPIC%">
+              <a data-toggle="popover" title="Aide" data-bs-content="Utile dans le cas d'un serveur Domoticz ou Jeedom"> Topic ℹ </a> :<input type="text" class="form-control form-control-user" id="topic" placeholder="%TOPIC%">
             </div>
 
             <div class="form-group">
@@ -205,7 +206,7 @@
 
             <div class="card position-relative">
               <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" data-placement="top" title="Aide" data-content="Index pour les remontés Domoticz ou Jeedom">MQTT Domoticz ℹ</h6>
+                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" data-placement="top" title="Aide" data-bs-content="Index pour les remontés Domoticz ou Jeedom">MQTT Domoticz ℹ</h6>
                   <span id="saveform"></span>
               </div>
               <div class="card-body">
@@ -226,7 +227,7 @@
             <br>
             <div class="card position-relative">
               <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" title="Aide" data-placement="top" data-content="Cochez pour une remonté sur Home Assistant">HA MQTT ( Envoie d'info MQTT sur topic HA ) ℹ</h6>
+                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" title="Aide" data-placement="top" data-bs-content="Cochez pour une remonté sur Home Assistant">HA MQTT ( Envoie d'info MQTT sur topic HA ) ℹ</h6>
                   <span id="saveform"></span>
               </div>
               <div class="card-body">
@@ -250,9 +251,21 @@
                 <h6 class="m-0 font-weight-bold text-primary">Shelly</h6>
                   <span id="saveform"></span>
               </div>
-              <div class="col-sm-6">
-                <a data-toggle="popover" title="Aide" data-content="Si vous n'utilisez pas de Shelly laissez à 'none'. Pour le Shelly en passant par MQTT, renseignez le topic MQTT, sinon Spécifiez l'Ip du Shelly, la 1ere entrée du Shelly sera capturée">Shelly EM topic ℹ (or none): </a> <input type="text" class="form-control form-control-user" id="EM" placeholder="%EM%">
-                <div class="info-text"></div>
+              <div class="card-body">
+                <div class="form-group row">
+                  <div class="col-sm-6">
+                    <a data-toggle="popover" title="Aide" data-bs-content="Si vous n'utilisez pas de Shelly laissez à 'none'. Pour le Shelly en passant par MQTT, renseignez le topic MQTT, sinon Spécifiez l'Ip du Shelly, la 1ere entrée du Shelly sera capturée">Shelly EM topic ℹ (or none): </a> <input type="text" class="form-control form-control-user" id="EM" placeholder="%EM%">
+                    <div class="info-text"></div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox small">
+                      <a data-toggle="popover" title="Aide" data-bs-content="Cochez si vous utilisez un Shelly 3EM ( Triphasé )">Mono / Triphasé (Beta) ℹ</a>
+                      <br>
+                      <input type="checkbox" class="custom-control-input" id="TRI">
+                      <label class="custom-control-label" for="TRI" onclick="sendservermode(this.innerHTML);" >TRI</label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -307,6 +320,7 @@ $( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
 var config = data.split(";");
 document.getElementById("MQTT").value = config[16];
 document.getElementById("HA").value = config[28];
+
 }); 
 
 
@@ -317,7 +331,7 @@ document.getElementById("HA").value = config[28];
 
 
     <!-- Core plugin JavaScript avec chargement local si non dispo-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> 
   <script>
   if (typeof jQuery == 'undefined') {
     document.write('<script src="/jquery.min.js"><\/script>');
@@ -401,9 +415,11 @@ var recupconfig =  $.getJSON('/getmqtt', function(data) {
   <!-- End of Page Wrapper -->
 
 
+
   <!-- Bootstrap core JavaScript-->
   
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" ></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" ></script>
+  
 <script>
   if (typeof bootstrap == 'undefined') {
     document.write('<script src="/bootstrap.bundle.min.js"><\/script>');
