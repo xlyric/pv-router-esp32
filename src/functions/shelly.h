@@ -22,8 +22,8 @@ HTTPClient shelly_http;
 //    const String baseurl = "/status" ; 
     String baseurl = "/emeter/0" ; 
         /// mode triphasé
-      if ( config.Shelly_tri) {
-        String baseurl = "/rpc/EM.GetStatus?id=0" ; 
+      if ( config.Shelly_tri ) {
+        baseurl = "/rpc/EM.GetStatus?id=0" ; 
       }
     //const String baseurl = "/rpc/EM.GetStatus?id=0" ; 
     shelly_http.begin(String(url),80,baseurl);   
@@ -49,7 +49,7 @@ HTTPClient shelly_http;
             auto powerValue = doc["power"];
               /// mode triphasé
               if (config.Shelly_tri ) { 
-                auto powerValue = doc["total_act_power"];
+                powerValue = doc["total_act_power"];
               }
 
             
