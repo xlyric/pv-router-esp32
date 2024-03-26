@@ -108,7 +108,7 @@ void loadConfiguration(const char *filename, Config &config) {
           doc["topic_Shelly"] | "none", // <- source
           sizeof(config.topic_Shelly));
 
-  config.Shelly_tri = doc["Shelly_tri"] | 0; /// récupération shelly mode triphasé ou monophasé
+  config.Shelly_tri = doc["Shelly_tri"] | false; /// récupération shelly mode triphasé ou monophasé
   configFile.close();
 
   config.recup_polarity();
