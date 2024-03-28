@@ -10,6 +10,7 @@ gzip -9 envoy.html -c > envoy.html.gz
 gzip -9 config.html -c > config.html.gz
 gzip -9 config-ap.html -c > config-ap.html.gz
 gzip -9 config-light.html -c > config-light.html.gz
+gzip -9 config-dimmer.html -c > config-dimmer.html.gz
 
 gzip -9 mqtt.html -c > mqtt.html.gz
 
