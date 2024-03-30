@@ -11,7 +11,7 @@ extern Memory task_mem;
 
 void serial_read_task(void * parameter){
   for (;;){
-    const int timeout_task = 24; /// timeout à 2 minutes
+    const int timeout_task = 36; /// timeout à 2 minutes
 
     if (gDisplayValues.serial_timeout < timeout_task)   {
         serial_read();
@@ -30,7 +30,9 @@ void serial_read_task(void * parameter){
    // Sleep for 5 seconds, avant de refaire une analyse
     //vTaskDelay(5000 / portTICK_PERIOD_MS);
     task_mem.task_serial_read_task = uxTaskGetStackHighWaterMark(NULL);
-    vTaskDelay(pdMS_TO_TICKS(5000));
+    if (AP) { vTaskDelay(pdMS_TO_TICKS(3000)); }
+    else { vTaskDelay(pdMS_TO_TICKS(5000)); }
+    
   }
 }
 

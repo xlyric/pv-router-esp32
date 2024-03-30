@@ -32,6 +32,7 @@
   #include "tasks/measure-electricity.h"
   //#include "tasks/mqtt-home-assistant.h"
   #include "tasks/Dimmer.h"
+  #include "functions/unified_dimmer.h"
   #include "tasks/gettemp.h"
 
   #include "tasks/Serial_task.h"

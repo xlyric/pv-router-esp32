@@ -85,7 +85,8 @@ void WiFiEvent(WiFiEvent_t event) {
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
       Serial.println("Disconnected from WiFi access point");
       if (AP) {
-        savelogs( "-- sortie du mode AP -- ");
+        savelogs( "-- sortie du mode AP reboot dans 30s -- ");
+        delay (30000);
         ESP.restart();
       }
       WiFi.begin(ssid, passphrase);
@@ -240,58 +241,61 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info) {
 
 /// @brief callback for lost wifi connection
 void search_wifi_ssid(){
-    Serial.println("Scan des réseaux WiFi...");
-    int numNetworks = WiFi.scanNetworks();
-  if (numNetworks == 0) {
-    Serial.println("Aucun réseau WiFi trouvé.");
-  } else {
-    Serial.print(numNetworks);
-    Serial.println(" Recherche du wifi configuré :");
-    for (int i = 0; i < numNetworks; i++) {
-      Serial.println(WiFi.SSID(i));
-      if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0)
-      {
-        Serial.println("SSID trouvé reboot en cours");
-        //ESP.restart();
-        /// reconnection wifi
-        
 
-        AP=false;
-        WiFi.begin(configwifi.SID, configwifi.passwd); 
-        delay(3000);
-        /// test si le wifi est connecté sur le mon SSID, on déconnecte le mode AP  
-        if(WiFi.status() == WL_CONNECTED) { 
-        
-          if (WiFi.SSID() == configwifi.SID) {
-            // a test en remplacement mais pose des problème lors de la conf du wifi en mode AP
-            //if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0) {
-          Serial.println("WiFi connecté");
-          WiFi.softAPdisconnect(true);
-          savelogs("-- reboot Wifi retrouvé -- ");
-          ESP.restart();
-          }   
-           
-        }
+  if (strlen(configwifi.passwd) > 4)  { 
+      Serial.println("Scan des réseaux WiFi...");
+      int numNetworks = WiFi.scanNetworks();
+    if (numNetworks == 0) {
+      Serial.println("Aucun réseau WiFi trouvé.");
+    } else {
+      Serial.print(numNetworks);
+      Serial.println(" Recherche du wifi configuré :");
+      for (int i = 0; i < numNetworks; i++) {
+        Serial.println(WiFi.SSID(i));
+        if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0)
+        {
+          Serial.println("SSID trouvé reboot en cours");
+          //ESP.restart();
+          /// reconnection wifi
           
 
-        // deconnection du mode AP
-        //WiFi.softAPdisconnect(true);
-        // reconnexion MQTT
-        /*
-        if (config.mqtt) {
-          Mqtt_init();
-
-        // HA autoconf
-        if (configmqtt.HA) init_HA_sensor();
+          AP=false;
+          WiFi.begin(configwifi.SID, configwifi.passwd); 
+          delay(3000);
+          /// test si le wifi est connecté sur le mon SSID, on déconnecte le mode AP  
+          if(WiFi.status() == WL_CONNECTED) { 
           
+            if (WiFi.SSID() == configwifi.SID && strlen(configwifi.passwd) > 4 ) {
+              // a test en remplacement mais pose des problème lors de la conf du wifi en mode AP
+              //if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0) {
+            Serial.println("WiFi connecté");
+            WiFi.softAPdisconnect(true);
+            savelogs("-- reboot dans 30s Wifi retrouvé -- ");
+            delay(30000);
+            ESP.restart();
+            }   
+            
+          }
+            
+
+          // deconnection du mode AP
+          //WiFi.softAPdisconnect(true);
+          // reconnexion MQTT
+          /*
+          if (config.mqtt) {
+            Mqtt_init();
+
+          // HA autoconf
+          if (configmqtt.HA) init_HA_sensor();
+            
+          }
+          */
+          break;
         }
-        */
-        break;
+
       }
-
     }
   }
-
 }
 
 
