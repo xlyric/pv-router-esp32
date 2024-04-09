@@ -106,13 +106,15 @@ String getState() {
   //if (gDisplayValues.temperature == "null" ) { gDisplayValues.temperature = "0";  }
   // if (gDisplayValues.temperature == "" ) { gDisplayValues.temperature = "0";  }
   //Serial.println(gDisplayValues.temperature);  
+  const String fs_update = String("<br>!! FS pas à jour !!") ;
   const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-  DynamicJsonDocument doc(156);
+  DynamicJsonDocument doc(256);
   doc["state"] = state;
   doc["watt"] = int(gDisplayValues.watt);
   doc["dimmer"] = gDisplayValues.puissance_route;
   doc["temperature"] = gDisplayValues.temperature;
-  doc["version"] = VERSION;
+  if (test_fs_version()) { doc["version"] = VERSION ; }  
+  else { doc["version"] = VERSION + fs_update; }
   doc["RSSI"] = WiFi.RSSI();
   doc["name"] =  String(pvname); 
   state=""; 

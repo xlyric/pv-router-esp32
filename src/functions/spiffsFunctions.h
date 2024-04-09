@@ -309,24 +309,26 @@ void loadlogs() {
 
 }
 
-void test_fs_version() {
+bool test_fs_version() {
   // SPIFFS.begin() call is needed to use filesystem
   if (!SPIFFS.begin(true)) {
     logging.Set_log_init("An Error has occurred while mounting SPIFFS\r\n");
-    return;
+    return false;
   }
   // Open file for reading
   File file = SPIFFS.open("/version", "r");
   if (!file) {
     logging.Set_log_init("Failed to open file for reading\r\n");
-    return;
+    return false;
   }
    // comparaison entre le contenu du fichier et la version du code FS_RELEASE
   String version = file.readStringUntil('\n');
-  if (version != FS_RELEASE) {
-    logging.Set_log_init("FS version is not the same as code version please update FS\r\n");
-    return;
-  }
   file.close();
+  if (version.toInt() < String(FS_RELEASE).toInt() ) {
+    logging.Set_log_init("FS version is not the same as code version please update FS\r\n");
+    
+    return false;
+  }
+  return true;
 }
 #endif
