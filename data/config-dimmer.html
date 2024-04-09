@@ -289,14 +289,22 @@
                     <div class="col-sm-3">
                         Limiteur local (%): <input type="number"  step="1" class="form-control form-control-user" id="Fusiblelocal" placeholder="%FUSELOCAL%">
                     </div>
-                    <div class="col-sm-3"><span>Charge connectée (W) </span>
-                      <input type="number" step="1" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
-                    </div>
                     <div class="col-sm-3">
                       Max temp (°C): <input type="number" step="1"class="form-control form-control-user" id="maxtemp" placeholder="%MAXTEMP%">
                     </div>
 
                 </div>
+
+                <div class="form-group row"> 
+                    <div class="col-sm-3"><span>Charge connectée (W) </span>
+                      <input type="number" step="1" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
+                    </div>
+                    <div class="col-sm-3">
+                      Charge connectée 2 (W) : <input type="number" step="1" class="form-control form-control-user" id="resistance2" placeholder="%RESISTANCE2%">
+                    </div>
+                    <div class="col-sm-3">
+                      Charge connectée 3 (W) : <input type="number" step="1" class="form-control form-control-user" id="resistance3" placeholder="%RESISTANCE3%">
+                    </div>
               </div>
             </div>
 
@@ -486,7 +494,7 @@ $( "#save" ).click(function() {
 $( "#formulaire" ).submit(function() {
     
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val(),'SCT_13': $('#SCT_13').val() } 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'resistance2':$('#resistance2').val(),'resistance3':$('#resistance3').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val(),'SCT_13': $('#SCT_13').val() } 
 
 		
         $.ajax({

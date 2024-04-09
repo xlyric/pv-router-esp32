@@ -7,13 +7,15 @@
 #include "../functions/spiffsFunctions.h"
 #include "../functions/Mqtt_http_Functions.h"
 #include "../functions/minuteur.h"
+#include "unified_dimmer.h"
 #include <RBDdimmer.h>
 #include "HTTPClient.h"
+
 
 extern Programme programme; 
 extern Dallas dallas ;
 
-#if DIMMERLOCAL 
+
 
 
     //***********************************
@@ -25,17 +27,20 @@ extern Dallas dallas ;
     //bool security=false;
 
   void dimmer_on();
-  void dimmer_off();
+  ///void dimmer_off();
   String dimmergetState(); 
 
 
-#endif
+
 
 
     extern DisplayValues gDisplayValues;
     extern Config config; 
     HTTPClient http;
     extern dimmerLamp dimmer_hard; 
+    extern gestion_puissance unified_dimmer; 
+
+
     extern Logs logging;
   #ifndef LIGHT_FIRMWARE
     extern HA device_dimmer; 
@@ -54,15 +59,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
 
   puissance_dispo= int(puissance_dispo*FACTEUR_REGULATION);
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
-  /*  if ( DIMMERLOCAL  ) {
-      if ( dimmervalue <= config.num_fuse ){
-      dimmer_hard.setPower(dimmervalue);
-      }
-      else {
-      dimmer_hard.setPower(config.num_fuse); 
-      }
-    }
-    else {*/
+
       #if WIFI_ACTIVE == true
       /// control dimmer 
 
@@ -141,7 +138,7 @@ gDisplayValues.change = 0;
 
 if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
     //Serial.println("dimmer:" + String(gDisplayValues.dimmer));
-    gDisplayValues.dimmer += -abs((gDisplayValues.watt-delta_cible)*COMPENSATION/config.resistance); 
+    gDisplayValues.dimmer += -abs((gDisplayValues.watt-delta_cible)*COMPENSATION/config.charge); 
     
     
     gDisplayValues.dimmer += 1 ;
@@ -153,7 +150,7 @@ if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
     /// si grosse injection on augmente la puissance par extrapolation
   else if ( gDisplayValues.watt <= config.deltaneg ) {   
     
-gDisplayValues.dimmer += abs((delta_cible-gDisplayValues.watt)*COMPENSATION/config.resistance) ; 
+gDisplayValues.dimmer += abs((delta_cible-gDisplayValues.watt)*COMPENSATION/config.charge) ; 
     gDisplayValues.change = 1 ; 
 
     } 
@@ -224,6 +221,9 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
           gDisplayValues.dimmer = 0 ; 
           dimmer_on();
           dimmer_hard.setPower(gDisplayValues.dimmer);
+            #ifdef ESP32D1MINI_FIRMWARE
+            unified_dimmer.set_power(gDisplayValues.dimmer);
+            #endif
           ledcWrite(0, gDisplayValues.dimmer*256/100);
           Serial.println("security on -> off");
           
@@ -232,7 +232,12 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
             //gDisplayValues.dimmer = 0 ;
             dimmer_hard.setPower(0); 
 
-            dimmer_off(); 
+              #ifdef ESP32D1MINI_FIRMWARE
+              unified_dimmer.set_power(0);
+              
+              #endif
+
+            unified_dimmer.dimmer_off();
             programme.run=false;
             ledcWrite(0, 0);
 /// Modif RV 20240219 - ajout du test pour ne pas chercher à envoyer une requête vers un fils non configuré
@@ -246,7 +251,10 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
 
           if ( config.tmax < dallas_int ) {
             dimmer_hard.setPower(0); 
-            dimmer_off(); // Ajout RV
+            unified_dimmer.dimmer_off();
+              #ifdef ESP32D1MINI_FIRMWARE
+              unified_dimmer.set_power(0);
+              #endif
             ledcWrite(0, 0);
 /// Modif RV - 20240219
             /// Ca fait aussi un cut de puissance transitoire pour le(s) dimmer(s) distant(s) quand on atteint la tempé
@@ -257,21 +265,30 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
             dallas.security = true ;   /// mise en place sécurité thermique
             Serial.println("security off -> on ");
             logging.Set_log_init("Security On\r\n");
-            dimmer_off();
+            unified_dimmer.dimmer_off();
           }
           else {
             if (!dallas.security){  
                 /// fonctionnement du dimmer local 
                  
-                if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { dimmer_hard.setPower(gDisplayValues.dimmer); dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;ledcWrite(0, gDisplayValues.dimmer*256/100);  }
+                if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { 
+                  dimmer_hard.setPower(gDisplayValues.dimmer); 
+                    #ifdef ESP32D1MINI_FIRMWARE
+                    unified_dimmer.set_power(gDisplayValues.dimmer);
+                    #endif
+                  dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;
+                  ledcWrite(0, gDisplayValues.dimmer*256/100);  }
                 else {
                     dimmer_on();
 /// Modif RV - 20240303
                 /// Ajout de ce if() AVANT de modifier la puissance locale ... sinon ça ne sert à rien
-                if (dimmer_hard.getPower() < config.localfuse){ // permet d'éviter de trop de donner de puissance au dimmer enfant quand gros soleil d'un coup
-                  puissance_dispo = puissance_dispo - ( (config.localfuse - dimmer_hard.getPower())*config.resistance/100 ); 
+                if (unified_dimmer.get_power() < config.localfuse){ // permet d'éviter de trop de donner de puissance au dimmer enfant quand gros soleil d'un coup
+                  puissance_dispo = puissance_dispo - ( (config.localfuse - unified_dimmer.get_power())*config.charge/100 ); 
                 }
                     dimmer_hard.setPower(config.localfuse); 
+                      #ifdef ESP32D1MINI_FIRMWARE
+                      unified_dimmer.set_power(gDisplayValues.dimmer);
+                      #endif
                     ledcWrite(0, config.localfuse*256/100);
                     if ( strcmp(config.dimmer,"") != 0 && strcmp(config.dimmer,"none") != 0 ) { // Modif RV - Autant ne pas envoyer de requête si in n'a pas d'enfant de configuré
                   dimmer_change( config.dimmer, config.IDXdimmer, ( gDisplayValues.dimmer - config.localfuse ), puissance_dispo ) ;
@@ -309,6 +326,9 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
       dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
       dimmer_hard.setState(ON);
       dimmer_hard.setPower(0); 
+              #ifdef ESP32D1MINI_FIRMWARE
+              unified_dimmer.set_power(0);
+              #endif
       ledcWrite(0, 0);
       serial_println("Dimmer started...");
 
@@ -325,20 +345,24 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
         }
     }
 
-    void dimmer_off()
+   /* void dimmer_off()
     {
       if (dimmer_hard.getState()==1) {
         dimmer_hard.setPower(0);
         dimmer_hard.setState(OFF);
+              #ifdef ESP32D1MINI_FIRMWARE
+              unified_dimmer.set_power(0);
+              unified_dimmer.dimmer_off();
+              #endif
         ledcWrite(0, 0);
         delay(50);
         Serial.println("dimmer off");
         }
-    }
+    }*/
 
     String dimmergetState() {
       String state; 
-      int pow=dimmer_hard.getPower(); 
+      int pow=unified_dimmer.get_power(); 
       state = String(pow) + ";" + String(gDisplayValues.celsius) ; 
       return String(state);
       
@@ -369,7 +393,7 @@ int dimmer_getState() {
         /// il vaut donc mieux aller chercher l'info "Ptotal" plutôt que "dimmer" dans la page http:// - IPDIMMER - /state
         //int dimmer = doc["dimmer"];
         int dimmerWatt = doc["Ptotal"];
-        dimmer = (dimmerWatt*100/config.resistance);
+        dimmer = (dimmerWatt*100/config.charge);
       }
     }
     http.end();   //Close connection
@@ -380,7 +404,7 @@ int dimmer_getState() {
     /// synchronisation de gDisplayValues.dimmer après avoir requêté le dimmer enfant
     ///gDisplayValues.dimmer = dimmer1_state;
     if (config.dimmerlocal){
-     gDisplayValues.dimmer = dimmer_hard.getPower() + dimmer;
+     gDisplayValues.dimmer = unified_dimmer.get_power()+ dimmer;
     }
     else {
       gDisplayValues.dimmer = dimmer;
@@ -388,7 +412,7 @@ int dimmer_getState() {
   }
 
   else {
-    gDisplayValues.dimmer = dimmer_hard.getPower();
+    gDisplayValues.dimmer = unified_dimmer.get_power();
   }
 
   return dimmer ; 

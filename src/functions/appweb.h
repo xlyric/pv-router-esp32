@@ -5,6 +5,7 @@
 #include "homeassistant.h"
 #include "spiffsFunctions.h"
 #include <RBDdimmer.h>
+#include "unified_dimmer.h"
 
 String configweb; 
 extern DisplayValues gDisplayValues;
@@ -14,6 +15,10 @@ extern Mqtt configmqtt;
 extern Logs logging;
 extern Configmodule configmodule; 
 extern dimmerLamp dimmer_hard; 
+
+#ifdef ESP32D1MINI_FIRMWARE
+extern gestion_puissance unified_dimmer; 
+#endif
 
 #ifdef  TTGO
 #include <TFT_eSPI.h>
@@ -137,7 +142,10 @@ String getServermode(String Servermode) {
   if ( Servermode == "Dimmer local" ) {   
                     config.dimmerlocal = !config.dimmerlocal;  
                     /// correction bug #26 
-                    dimmer_hard.setPower(0); 
+                    dimmer_hard.setPower(0);
+                    #ifdef ESP32D1MINI_FIRMWARE
+                    unified_dimmer.set_power(0);
+                    #endif 
                     
   }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
@@ -196,6 +204,8 @@ String getconfig() {
   doc["facteur"] = buffer;
 
   doc["resistance"] = config.resistance;
+  doc["resistance2"] = config.charge2;
+  doc["resistance3"] = config.charge3;
   doc["polarity"] = config.polarity;
   doc["screentime"] = config.ScreenTime;
   doc["Fusiblelocal"] = config.localfuse;

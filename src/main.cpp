@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "driver/ledc.h"
 
 
 #include "WiFiClientSecure.h"
@@ -32,7 +33,7 @@
   #include "tasks/measure-electricity.h"
   //#include "tasks/mqtt-home-assistant.h"
   #include "tasks/Dimmer.h"
-  #include "functions/unified_dimmer.h"
+ 
   #include "tasks/gettemp.h"
 
   #include "tasks/Serial_task.h"
@@ -53,6 +54,8 @@
 
   #include "uptime.h"
   #include <driver/adc.h>
+
+   
 #if DALLAS
 // Dallas 18b20
   #include <OneWire.h>
@@ -61,10 +64,14 @@
   #include "functions/dallasFunction.h"
 #endif
 
-#if DIMMERLOCAL 
+/// déclaration dimmer
 #include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
+#include "functions/unified_dimmer.h"
 #include "functions/dimmerFunction.h"
-#endif
+
+int pwmChannel = 0; //Choisit le canal 0
+int frequence = 1000; //Fréquence PWM de 1 KHz
+int resolution = 10; // Résolution de 8 bits, 256 valeurs possibles
 
 
 
@@ -156,9 +163,14 @@ char *loguptime2();
 /***************************
  *  Dimmer init
  **************************/
-#if DIMMERLOCAL
+
 dimmerLamp dimmer_hard(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
+#ifdef ESP32D1MINI_FIRMWARE
+  dimmerLamp dimmer2(outputPin2, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
+  dimmerLamp dimmer3(outputPin3, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 #endif
+
+gestion_puissance unified_dimmer;
 
 void setup()
 {
@@ -174,9 +186,10 @@ void setup()
   esp_reset_reason_t reason = esp_reset_reason();
   logging.Set_log_init(String(reason).c_str());
   logging.Set_log_init("\r\n#################  Starting System  ###############\r\n");
-    
+  
   //démarrage file system
   Serial.println("start SPIFFS");
+  test_fs_version();
   
   logging.Set_log_init("Start Filesystem\r\n",true);
   
@@ -205,7 +218,17 @@ void setup()
 
     pinMode(COOLER, OUTPUT);
     digitalWrite(COOLER, HIGH);
-    
+
+    ledcSetup(pwmChannel, frequence, resolution);
+    //ledcAttachPin(outputPin, pwmChannel);
+
+    #ifdef ESP32D1MINI_FIRMWARE
+        pinMode(outputPin2, OUTPUT);
+        pinMode(outputPin3, OUTPUT);
+        //ledcAttachPin(outputPin2, pwmChannel);
+        //ledcAttachPin(outputPin3, pwmChannel);
+    #endif
+//**********************************    
 /// test ACD 
 
     adc1_config_width(ADC_WIDTH_BIT_12);
@@ -279,9 +302,6 @@ void setup()
   digitalWrite(RELAY1, LOW);
   digitalWrite(RELAY2, LOW);
 
-
-
-
 ///  WIFI INIT
  
   connect_to_wifi();
@@ -320,14 +340,8 @@ void setup()
 /// init du NTP
 ntpinit(); 
 
-//Jotta
-  ledcSetup(0, GRIDFREQ , 8);
-  ledcAttachPin(JOTTA, 0);
-  ledcWrite(0, 0);
+  Dimmer_setup();
 
-#if DIMMERLOCAL 
-Dimmer_setup();
-#endif
 
    // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html.gz")){
@@ -693,12 +707,15 @@ void loop()
 if (config.dimmerlocal) {
   ///////////////// gestion des activité minuteur 
   //// Dimmer 
-    Serial.println(dimmer_hard.getPower());
+    Serial.println(unified_dimmer.get_power());
     if (programme.run) { 
         //  minuteur en cours
         if (programme.stop_progr()) { 
           dimmer_hard.setPower(0); 
-          dimmer_off();
+            unified_dimmer.dimmer_off();
+            #ifdef ESP32D1MINI_FIRMWARE
+            unified_dimmer.set_power(0);
+            #endif
           DEBUG_PRINTLN("programme.run");
           //sysvar.puissance=0;
           Serial.println("stop minuteur dimmer");
@@ -710,10 +727,10 @@ if (config.dimmerlocal) {
           #endif
           /// remonté MQTT
           #ifndef LIGHT_FIRMWARE
-            Mqtt_send(String(config.IDX), String(dimmer_hard.getPower()),"pourcent"); // remonté MQTT de la commande réelle
+            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
             if (configmqtt.HA) {
-              int instant_power = dimmer_hard.getPower();
-              device_dimmer.send(String(instant_power * config.resistance/100));
+              int instant_power = unified_dimmer.get_power();
+              device_dimmer.send(String(instant_power * config.charge/100));
             } 
           #endif
         } 
@@ -721,9 +738,13 @@ if (config.dimmerlocal) {
     else { 
       // minuteur à l'arret
       if (programme.start_progr()){ 
-        //sysvar.puissance=config.localfuse; 
-        dimmer_on();
-        dimmer_hard.setPower(config.localfuse); 
+            #ifndef ESP32D1MINI_FIRMWARE
+            dimmer_on();
+            dimmer_hard.setPower(config.localfuse); 
+            #endif
+            #ifdef ESP32D1MINI_FIRMWARE
+            unified_dimmer.set_power(config.localfuse);
+            #endif
         delay (50);
         Serial.println("start minuteur ");
         //demarrage du ventilateur 
@@ -731,10 +752,10 @@ if (config.dimmerlocal) {
         
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
-          Mqtt_send(String(config.IDX), String(dimmer_hard.getPower()),"pourcent"); // remonté MQTT de la commande réelle
+          Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
           if (configmqtt.HA) {
-            int instant_power = dimmer_hard.getPower();
-            device_dimmer.send(String(instant_power * config.resistance/100));
+            int instant_power = unified_dimmer.get_power();
+            device_dimmer.send(String(instant_power * config.charge/100));
           } 
         #endif
         offset_heure_ete(); // on corrige l'heure d'été si besoin

@@ -65,24 +65,24 @@ struct DisplayValues {
 };
 
 struct Config {
-  char hostname[16];
-  int port;
-  char apiKey[64];
+  char hostname[16];  // à vérifier si on peut pas le supprimer
+  int port;  // idem  
+  char apiKey[64];  // clé pour jeedom
   bool UseDomoticz;
   bool UseJeedom;
-  int IDX;
-  int IDXdallas; 
+  int IDX;  // IDX pour domoticz
+  int IDXdallas; // IDX pour domoticz
   char otapassword[64];
-  int delta;
+  int delta; 
   int deltaneg;
-  int cosphi;
-  int readtime;
-  int cycle;
-  bool sending;
-  bool autonome;
-  char dimmer[16];
-  bool dimmerlocal;
-  float facteur;
+  int cosphi; // plus utilisé
+  int readtime;  // temps de lecture des capteurs
+  int cycle;  // cycle de lecture des capteurs
+  bool sending; 
+  bool autonome; // si dimmer en local 
+  char dimmer[16];  // adresse IP du dimmer
+  bool dimmerlocal; // si dimmer en local
+  float facteur; // facteur de correction de la puissance
   int num_fuse;
   int localfuse;
   int tmax;
@@ -90,7 +90,7 @@ struct Config {
   char mqttserver[16];
   int mqttport; 
   int IDXdimmer;
-  int resistance;
+  int resistance;  // résistance de la charge
   bool polarity; 
   char Publish[100];
   int  ScreenTime;
@@ -103,23 +103,33 @@ struct Config {
   char topic_Shelly[100]; 
   bool Shelly_tri;
   int SCT_13=30;
+/// @brief  // Puissance de la charge 2 déclarée dans la page web
+  int charge2; 
+/// @brief  // Puissance de la charge 3 déclarée dans la page web
+  int charge3;
+/// @brief  // Somme des 3 charges déclarées dans la page web
+  int charge;
 
   Preferences preferences;
 
-  public:bool sauve_polarity() {
+public:
+  bool sauve_polarity() {
   preferences.begin("polarity", false);
   preferences.putBool("polarity",polarity);
   preferences.end();
   return true; 
   }
 
-  public:bool recup_polarity() {
+  bool recup_polarity() {
   preferences.begin("polarity", false);
   polarity = preferences.getBool("polarity", false);
   preferences.end();
   return true; 
   }
   
+  void calcul_charge() {
+    charge = resistance + charge2 + charge3;
+  }
 };
 
 struct Configwifi {

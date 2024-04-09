@@ -81,7 +81,7 @@ void send_to_mqtt(void * parameter){
                   if (configmqtt.HA) {
                         device_routeur.send(String(int(gDisplayValues.watt)));
                         device_routed.send(String(gDisplayValues.puissance_route));
-                        device_dimmer_power.send(String(int((dimmer_hard.getPower()) * config.resistance/100)));
+                        device_dimmer_power.send(String(int((unified_dimmer.get_power()) * config.charge/100)));
                         power_apparent.send(String(int(PVA)));
                         power_vrms.send(String(int(Vrms)));
                         power_irms.send(String(Irms));
@@ -91,7 +91,7 @@ void send_to_mqtt(void * parameter){
                         //enphase_current_power_consumption.send(String(int(gDisplayValues.enp_current_power_consumption)));
                         //enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
                         temperature_HA.send(String(gDisplayValues.temperature));
-                        device_dimmer.send(String(int(dimmer_hard.getPower()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
+                        device_dimmer.send(String(int(unified_dimmer.get_power()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
                         //device_dimmer.send(String(gDisplayValues.puissance_route)); // puissance_route est maintenant remontée par device_routed
                         //surplus_routeur.send(String(puissance_dispo));
                         

@@ -73,7 +73,7 @@ void updateDimmer(void * parameter){
         int child_power = 0 ;
     // si dimmer local alors calcul de puissance routée 
     //if (config.dimmerlocal) { // Pas besoin de ce if, ça répond bien même si pas d'enfant configuté
-        local_power =  dimmer_hard.getPower() * config.resistance/100; // watts
+        local_power =  unified_dimmer.get_power()* config.charge/100; // watts
         //}
         //else { 
         //    local_power = 0 ; 
@@ -87,10 +87,10 @@ void updateDimmer(void * parameter){
         gDisplayValues.puissance_route = local_power + child_power;
 
         /// Actualisation de gDisplayValues.dimmer à chaque requêtage du dimmer enfant
-        gDisplayValues.dimmer = gDisplayValues.puissance_route * 100/config.resistance;
+        gDisplayValues.dimmer = gDisplayValues.puissance_route * 100/config.charge;
 
         #else
-            gDisplayValues.puissance_route = config.resistance * gDisplayValues.dimmer/100; // watts
+            gDisplayValues.puissance_route = config.charge * gDisplayValues.dimmer/100; // watts
         #endif
     
 #endif

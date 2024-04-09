@@ -76,6 +76,10 @@ void loadConfiguration(const char *filename, Config &config) {
   config.cycle = doc["cycle"] | 72;
 
   config.resistance = doc["resistance"] | 1000;
+  config.charge2 = doc["charge2"] | 0;
+  config.charge3 = doc["charge3"] | 0;
+  config.calcul_charge();
+
   config.sending = doc["sending"] | true;
   config.autonome = doc["autonome"] | true;
   config.mqtt = doc["mqtt"] | true;
@@ -164,7 +168,11 @@ void saveConfiguration(const char *filename, const Config &config) {
   doc["mqtt"] = config.mqtt;
   doc["mqttserver"] = config.mqttserver; 
   doc["mqttport"] = config.mqttport; 
+  
   doc["resistance"] = config.resistance;
+  doc["charge2"] = config.charge2;
+  doc["charge3"] = config.charge3;
+
   doc["polarity"] = config.polarity; 
   doc["Publish"] = config.Publish;
   doc["screentime"] = config.ScreenTime; 
@@ -301,5 +309,24 @@ void loadlogs() {
 
 }
 
-
+void test_fs_version() {
+  // SPIFFS.begin() call is needed to use filesystem
+  if (!SPIFFS.begin(true)) {
+    logging.Set_log_init("An Error has occurred while mounting SPIFFS\r\n");
+    return;
+  }
+  // Open file for reading
+  File file = SPIFFS.open("/version", "r");
+  if (!file) {
+    logging.Set_log_init("Failed to open file for reading\r\n");
+    return;
+  }
+   // comparaison entre le contenu du fichier et la version du code FS_RELEASE
+  String version = file.readStringUntil('\n');
+  if (version != FS_RELEASE) {
+    logging.Set_log_init("FS version is not the same as code version please update FS\r\n");
+    return;
+  }
+  file.close();
+}
 #endif
