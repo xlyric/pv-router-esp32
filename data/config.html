@@ -542,22 +542,44 @@ $( "#formulaire" ).submit(function() {
   return false;
 });
 
+$(document).ready(function(){
+            // Fonction pour générer le lien
+            function generateLink(dimmerValue) {
+                if (dimmerValue !== 'none') {
+                    var dimmerURL = "http://" + dimmerValue;
+                    $('#dimmer-url').html('<a href="' + dimmerURL + '" target="_blank">' + dimmerURL + '</a>');
+                }
+            }
 
+            // Requête JSON pour récupérer la configuration
+            var recupconfig =  $.getJSON('/config', function(data) {
+              for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                  var element = document.getElementById(key);
+                  if (element) {
+                    element.value = data[key];
+                    if (element.type === 'checkbox') {
+                      element.checked = data[key];
+                    }
+                  }
+                }
+              }
+            });
 
-var recupconfig =  $.getJSON('/config', function(data) {
-  for (var key in data) {
-    if (data.hasOwnProperty(key)) {
-      var element = document.getElementById(key);
-      if (element) {
-        element.value = data[key];
-        if (element.type === 'checkbox') {
-          element.checked = data[key];
-        }
-      }
-    }
-  }
-});
+            // Une fois la requête terminée
+            recupconfig.done(function() {
+                // Générer le lien avec la valeur initiale
+                var dimmerValue = $('#dimmer').val();
+                generateLink(dimmerValue);
+            });
 
+            // Lorsque le champ de texte change
+            $('#dimmer').on('input', function() {
+                var dimmerValue = $(this).val();
+                generateLink(dimmerValue);
+            });
+        });
+        
 </script>
 	  
                 </div>
@@ -596,13 +618,7 @@ var recupconfig =  $.getJSON('/config', function(data) {
 </script>
 
 <script>
-  $(document).ready(function(){
-            $('#dimmer').on('input', function() {
-                var dimmerValue = $(this).val();
-                var dimmerURL = "http://" + dimmerValue;
-                $('#dimmer-url').html('<a href="' + dimmerURL + '" target="_blank">' + dimmerURL + '</a>');
-            });
-        });
+
     </script>
 
   <!-- Custom scripts for all pages-->
