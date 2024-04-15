@@ -69,6 +69,9 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
         #else
       const String baseurl = "/?POWER=" + String(dimmervalue) ;
         #endif
+        // si la puissance routé est de 0 et que le dimmer est à 0 on ne fait rien
+        if ( dimmervalue == 0 && gDisplayValues.puissance_route == 0 ) { return ; }
+        
         http.begin(dimmerurl,80,baseurl);   
         http.GET();
         http.end(); 
