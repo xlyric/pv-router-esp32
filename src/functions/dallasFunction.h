@@ -99,6 +99,7 @@ if ( !ds.search(dallas.addr)) {
     //***********************************
     //************* récupération d'une température du 18b20
     //***********************************
+int dallas_error = 0;
 
 float CheckTemperature(String label, byte deviceAddress[12]){
   sensors.requestTemperatures(); 
@@ -115,18 +116,27 @@ float CheckTemperature(String label, byte deviceAddress[12]){
     tempC = sensors.getTempC(deviceAddress);
       if ( (tempC == -127.0) || (tempC == -255.0) ) {
       Serial.print("Error getting temperature");
-       logging.Set_log_init("Dallas on error\r\n");
+       //logging.Set_log_init("Dallas on error\r\n");
        /// si erreur on reprends l'ancienne valeur
        tempC = gDisplayValues.temperature; 
+       dallas_error++;
       }
   } else {
     //réduction du retour à 1 décimale 
     tempC = (int(tempC*10))/10.0;
-      
+    dallas_error = 0;  
     return (tempC); 
    
     
   }  
+
+  if (dallas_error > 5) {
+    Serial.print("Error getting temperature");
+    logging.Set_log_init("Local Dallas on error 5 times\r\n");
+    tempC = gDisplayValues.temperature; 
+    /// mise en securité du dimmer local
+        unified_dimmer.dimmer_off();
+    }
   return (tempC); 
 }
 

@@ -1,6 +1,6 @@
 # Photovoltaic Router C_Lyric Version 2023 for TTGO T display
 
-The wiki Documentation is [here in French](https://pvrouteur.apper-solaire.org/wiki.apper-solaire.org)
+The wiki Documentation is [here in French](https://wiki.apper-solaire.org/)
 
 # Photovoltaic router
 

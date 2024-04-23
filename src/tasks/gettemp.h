@@ -49,11 +49,11 @@ if ( !dallas.detect && ( String(config.dimmer) != "" || String(config.dimmer) !=
   if (httpResponseCode>400) { gDisplayValues.temperature = 0;   }
   else { 
     // hash temp 
-    DynamicJsonDocument doc(256);
+    DynamicJsonDocument doc(512);
     DeserializationError error = deserializeJson(doc, dimmerstate);
     if (error) {
       Serial.print(F("gettemp() failed: "));
-      logging.Set_log_init("gettemp() failed: ",true);
+      logging.Set_log_init("gettemp() failed: \r\n",true);
       Serial.println(error.c_str());
       gDisplayValues.temperature = gDisplayValues.temperature;
       vTaskDelay(10*1000 / portTICK_PERIOD_MS);
