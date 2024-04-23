@@ -34,6 +34,7 @@ AsyncWebServer server(80);
 		//***********************************
 
 String getMinuteur(const Programme& minuteur);
+String getMinuteur();
 String return_Memory();
 
 void notFound(AsyncWebServerRequest *request) {
@@ -463,7 +464,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 
   server.on("/getminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
     if (request->hasParam("dimmer")) { request->send(200, "application/json",  getMinuteur(programme));  }
- 
+    else { request->send(200, "application/json",  getMinuteur());  }
     //request->send(200, "application/json",  getminuteur(programme_relay2).c_str()); 
   });
 
@@ -487,9 +488,21 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 
 String getMinuteur(const Programme& minuteur) {
     DynamicJsonDocument doc(128);
+    //getLocalTime(&timeinfo);
     doc["heure_demarrage"] = minuteur.heure_demarrage;
     doc["heure_arret"] = minuteur.heure_arret;
     doc["temperature"] = minuteur.temperature;
+    doc["heure"] = timeClient.getHours();
+    doc["minute"] = timeClient.getMinutes();
+
+    String retour;
+    serializeJson(doc, retour);
+    return retour;
+}
+
+String getMinuteur() {
+    DynamicJsonDocument doc(128);
+    //getLocalTime(&timeinfo);
     doc["heure"] = timeClient.getHours();
     doc["minute"] = timeClient.getMinutes();
 

@@ -177,7 +177,7 @@ bool discovery_temp = false;
 #endif
 
 #define RELEASE "Version 20240501"
-#define FS_RELEASE "20240415"
+#define FS_RELEASE "20240501"
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE
         #else

@@ -210,6 +210,16 @@
     });
   
   });
+
+  // Récupération de l'heure depuis le serveur toutes les 15 secondes
+  setInterval(function ( ) {
+    $.getJSON('/getminiteur', function(data) {
+        // Affichage de l'heure au format 2 digits
+        var heure = data.heure < 10 ? "0" + data.heure : data.heure;
+        var minute = data.minute < 10 ? "0" + data.minute : data.minute;
+        $("#heure").html( heure + ":" + minute );
+      });
+	}, 15000);
 </script>
 
         </div>
