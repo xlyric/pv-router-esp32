@@ -538,28 +538,6 @@ ntpinit();
 #endif
 
 
-  // ----------------------------------------------------------------
-  // TASK: update time from NTP server.
-  // ----------------------------------------------------------------
-/* #if WIFI_ACTIVE == true
-  if (!AP) {
-    #if NTP  
-      #if NTP_TIME_SYNC_ENABLED == true
-        xTaskCreate(
-          fetchTimeFromNTP,
-          "Update NTP time",
-          5000,            // Stack size (bytes)
-          NULL,             // Parameter
-          2,                // Task priority
-          NULL              // Task handle
-        );
-        
-      #endif
-    #endif
-  }
-    
-#endif */
-
 #if WIFI_ACTIVE == true
 
 
