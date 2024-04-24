@@ -243,11 +243,15 @@ public:void Set_log_init(String setter, bool logtime=false) {
       strcat(log_init,"197}11}1");
   }
 
-  char *loguptime() {
+  char *loguptime(bool day=false) {
     static char uptime_stamp[20]; // Vous devrez définir une taille suffisamment grande pour stocker votre temps
       time_t maintenant;
       time(&maintenant);
-      strftime(uptime_stamp, sizeof(uptime_stamp), "%H:%M:%S\t ", localtime(&maintenant));
+      if (day) {
+        strftime(uptime_stamp, sizeof(uptime_stamp), "%d/%m/%Y %H:%M:%S\t ", localtime(&maintenant));
+      } else {
+        strftime(uptime_stamp, sizeof(uptime_stamp), "%H:%M:%S\t ", localtime(&maintenant));
+      }
     return uptime_stamp;
   }
 };

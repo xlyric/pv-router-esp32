@@ -24,6 +24,7 @@ extern TFT_eSPI display;
 
 extern DisplayValues gDisplayValues;
 extern unsigned char measureIndex;
+extern Logs logging;
 
 #if NTP
   extern NTPClient timeClient;
@@ -35,13 +36,13 @@ extern unsigned char measureIndex;
         if (!AP) {
         display.setTextAlignment(TEXT_ALIGN_LEFT);
         display.setFont(ArialMT_Plain_10);
-        display.drawString(0, 0,timeClient.getFormattedTime());
+        display.drawString(0, 0,logging.logtime());
       }
       #ifdef  TTGO
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
         
-          display.println(timeClient.getFormattedTime());
+          display.println(logging.logtime());
 
       #endif
     #endif

@@ -211,9 +211,6 @@ bool Enphase_get_7_Production(void){
   String adr = String(configmodule.hostname);
   String url = "/404.html" ;
 
-  Serial.println();
-  Serial.println(timeClient.getFormattedTime());
-
   if (String(configmodule.envoy) == "R") {
     url = String(EnvoyR);
     Serial.print("type R ");

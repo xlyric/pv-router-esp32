@@ -611,9 +611,8 @@ savelogs(" -- fin du précédent reboot -- ");
 
 /// envoie de l'info de reboot
 const int bufferSize = 150; // Taille du tampon pour stocker le message
-char raison[bufferSize];
-            
-snprintf(raison, bufferSize, "restart : %s", timeClient.getFormattedTime().c_str()); 
+char raison[bufferSize];     
+snprintf(raison, bufferSize, "restart : %s", logging.loguptime()); 
 #ifndef LIGHT_FIRMWARE 
   client.publish("memory/Routeur", raison, true);
 #endif
@@ -869,7 +868,8 @@ void handler_before_reset() {
   #ifndef LIGHT_FIRMWARE
   const int bufferSize = 150; // Taille du tampon pour stocker le message
   char raison[bufferSize];
-  snprintf(raison, bufferSize, "reboot handler: %s ",timeClient.getFormattedTime().c_str()); 
+
+  snprintf(raison, bufferSize, "reboot handler: %s ",logging.loguptime()); 
   
   client.publish("memory/Routeur", raison, true);
   #endif

@@ -275,14 +275,9 @@ void savemqtt(const char *filename, const Mqtt &configmqtt) {
 /// sauvegarde des logs avant reboot
 
 void savelogs(String log) {
-        
-        static char uptime_stamp[20];
-        time_t maintenant;
-        time(&maintenant);
-        strftime(uptime_stamp, sizeof(uptime_stamp), "%H:%M:%S\t", localtime(&maintenant));
-  
-        log = String(uptime_stamp) + log;
-        
+ 
+        log = String(logging.loguptime(true)) + log;
+
   // Open file for writing
    File configFile = SPIFFS.open(log_conf, "w");
   if (!configFile) {

@@ -37,7 +37,7 @@ void call_display(){
 
     #if WIFI_ACTIVE == true
         if (gDisplayValues.currentState == UP) {
-          drawTime();
+          //drawTime();
           drawIP();
         } else {
           drawtext10(64, 0, "no Wifi");
