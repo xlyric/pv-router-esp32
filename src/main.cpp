@@ -546,7 +546,7 @@ ntpinit();
   // ----------------------------------------------------------------
   // TASK: update time from NTP server.
   // ----------------------------------------------------------------
-#if WIFI_ACTIVE == true
+/* #if WIFI_ACTIVE == true
   if (!AP) {
     #if NTP  
       #if NTP_TIME_SYNC_ENABLED == true
@@ -563,7 +563,7 @@ ntpinit();
     #endif
   }
     
-#endif
+#endif */
 
 #if WIFI_ACTIVE == true
 

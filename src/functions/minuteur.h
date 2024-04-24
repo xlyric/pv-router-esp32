@@ -29,16 +29,20 @@ extern Config config;
 void offset_heure_ete();
 void timeclientEpoch_to_date(time_t epoch) ;
 
+struct tm timeinfo;
 epoc actual_time;
 
 /// @brief ///////init du NTP 
 void ntpinit() {
       // Configurer le serveur NTP et le fuseau horaire
-  timeClient.begin();
-  timeClient.update();
+  // timeClient.begin();
+  // timeClient.update();
   //Serial.println(timeClient.getFormattedTime());
-  offset_heure_ete();
-  Serial.println(timeClient.getFormattedTime());
+  // offset_heure_ete();
+  configTzTime("CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00", NTP_SERVER);  //Voir Time-Zone: https://sites.google.com/a/usapiens.com/opnode/time-zones
+  // Serial.println(timeClient.getFormattedTime());
+  getLocalTime( &timeinfo );
+  Serial.println(asctime(&timeinfo));
   
 }
 

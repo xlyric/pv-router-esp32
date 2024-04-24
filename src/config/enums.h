@@ -197,22 +197,29 @@ struct Configmodule {
 
 /// @brief  partie délicate car pas mal d'action sur la variable log_init et donc protection de la variable ( pour éviter les pb mémoire )
 struct Logs {
-  private:char log_init[LOG_MAX_STRING_LENGTH];
+  private:
+      char log_init[LOG_MAX_STRING_LENGTH];
+      int MaxString = LOG_MAX_STRING_LENGTH * .9 ;
+
   public:bool sct;
   public:bool sinus;
   public:bool power;
   public:bool serial=false; 
 
   ///setter log_init --> ajout du texte dans la log
-  public:void Set_log_init(String setter, bool logtime=false) {
-    // vérification qu'il y ai encore de la taille pour stocker la log 
-    if (strlen(log_init) > (LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/50)) ) {
-      reset_log_init();
-    }
-    if ((strlen(setter.c_str()) + strlen(log_init) > LOG_MAX_STRING_LENGTH)) { return; } // si la taille de la log est trop grande, on ne fait rien )*
-    if (logtime) { strcat(log_init,loguptime()); }
-    strcat(log_init,setter.c_str()); 
-  }
+public:void Set_log_init(String setter, bool logtime=false) {
+        // Vérifier si la longueur de la chaîne ajoutée ne dépasse pas LOG_MAX_STRING_LENGTH
+        if ( strlen(setter.c_str()) + strlen(log_init) < static_cast<size_t>(MaxString) )  { 
+            if (logtime) { 
+              if ( strlen(setter.c_str()) + strlen(log_init) + strlen(loguptime()) < static_cast<size_t>(MaxString))  { 
+                strcat(log_init,loguptime()); }
+              }
+          strcat(log_init,setter.c_str());  
+        } else {  
+          // Si la taille est trop grande, réinitialiser le log_init
+          reset_log_init();
+        }     
+      }
 
 
   ///getter log_init

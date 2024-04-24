@@ -314,8 +314,8 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
    #ifndef LIGHT_FIRMWARE
     const int bufferSize = 150; // Taille du tampon pour stocker le message
     char raison[bufferSize];
-            
-    snprintf(raison, bufferSize, "reboot manuel: %s", timeClient.getFormattedTime().c_str()); 
+    getLocalTime( &timeinfo );
+    snprintf(raison, bufferSize, "reboot manuel: %s", asctime(&timeinfo) ); 
   
    client.publish("memory/Routeur", raison, true);
    #endif
@@ -488,12 +488,12 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 
 String getMinuteur(const Programme& minuteur) {
     DynamicJsonDocument doc(128);
-    //getLocalTime(&timeinfo);
+    getLocalTime(&timeinfo);
     doc["heure_demarrage"] = minuteur.heure_demarrage;
     doc["heure_arret"] = minuteur.heure_arret;
     doc["temperature"] = minuteur.temperature;
-    doc["heure"] = timeClient.getHours();
-    doc["minute"] = timeClient.getMinutes();
+    doc["heure"] = timeinfo.tm_hour;
+    doc["minute"] = timeinfo.tm_min;;
 
     String retour;
     serializeJson(doc, retour);
@@ -502,9 +502,9 @@ String getMinuteur(const Programme& minuteur) {
 
 String getMinuteur() {
     DynamicJsonDocument doc(128);
-    //getLocalTime(&timeinfo);
-    doc["heure"] = timeClient.getHours();
-    doc["minute"] = timeClient.getMinutes();
+    getLocalTime(&timeinfo);
+    doc["heure"] = timeinfo.tm_hour;
+    doc["minute"] = timeinfo.tm_min;
 
     String retour;
     serializeJson(doc, retour);
