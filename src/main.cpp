@@ -135,8 +135,7 @@ TaskHandle_t serialTaskHandle = NULL;
 Dallas dallas; 
 #endif
 
-//String loguptime();
-char *loguptime2();
+
 #ifndef LIGHT_FIRMWARE
     HA device_dimmer; 
     HA device_routeur; 
@@ -606,10 +605,9 @@ esp_register_shutdown_handler( handler_before_reset );
 logging.power=true; logging.sct=true; logging.sinus=true; 
 
 /// affichage de l'heure  GMT +1 dans la log
-logging.Set_log_init("-- fin du demarrage: ");
-logging.Set_log_init(timeClient.getFormattedTime());
-logging.Set_log_init(" --\r\n");
-//savelogs(timeClient.getDay() + " " + timeClient.getFormattedTime() + " -- fin du précédent reboot -- ");
+logging.Set_log_init("-- fin du demarrage  \r\n",true);
+
+savelogs(" -- fin du précédent reboot -- ");
 
 /// envoie de l'info de reboot
 const int bufferSize = 150; // Taille du tampon pour stocker le message
@@ -643,7 +641,7 @@ void loop()
   if (config.restart) {
     //delay(5000);
     Serial.print(PV_RESTART);
-    savelogs(timeClient.getFormattedTime() + "-- reboot demande par l'utilisateur -- ");
+    savelogs("-- reboot demande par l'utilisateur -- ");
     ESP.restart();
   }
 
@@ -758,7 +756,7 @@ if (config.dimmerlocal) {
             device_dimmer.send(String(instant_power * config.charge/100));
           } 
         #endif
-        offset_heure_ete(); // on corrige l'heure d'été si besoin
+        //offset_heure_ete(); // on corrige l'heure d'été si besoin
       }
     }
 }
@@ -851,8 +849,7 @@ void connect_to_wifi() {
 
 
       serial_println("WiFi connected");
-      logging.Set_log_init(loguptime2());
-      logging.Set_log_init("Wifi connected\r\n");
+      logging.Set_log_init("Wifi connected\r\n",true);
       serial_println("IP address: ");
       serial_println(WiFi.localIP());
         serial_print("force du signal:");
@@ -866,19 +863,7 @@ void connect_to_wifi() {
 }
 
 
-char *loguptime2() {
-  static char uptime_stamp[20]; // Vous devrez définir une taille suffisamment grande pour stocker votre temps
-/*
-  uptime::calculateUptime();
 
-  // Utilisez snprintf pour formater le texte dans le tableau de caractères
-  snprintf(uptime_stamp, sizeof(uptime_stamp), "%d:%d:%d:%d\t", uptime::getDays(), uptime::getHours(), uptime::getMinutes(), uptime::getSeconds());
-*/
-  
-  snprintf(uptime_stamp, sizeof(uptime_stamp), "%s\t", timeClient.getFormattedTime().c_str());
-
-  return uptime_stamp;
-}
 
 void handler_before_reset() {
   #ifndef LIGHT_FIRMWARE

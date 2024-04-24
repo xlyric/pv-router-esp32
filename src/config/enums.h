@@ -233,7 +233,6 @@ public:void Set_log_init(String setter, bool logtime=false) {
 
       ///si risque de fuite mémoire
       if (strlen(log_init) >(LOG_MAX_STRING_LENGTH - (LOG_MAX_STRING_LENGTH/50)) ) {
-      //savelogs("-- reboot Suite problème de taille logs -- ");   //--> vu que dans une struc, c'est compliqué à mettre en place
       ESP.restart();  
       }
   }
@@ -246,7 +245,9 @@ public:void Set_log_init(String setter, bool logtime=false) {
 
   char *loguptime() {
     static char uptime_stamp[20]; // Vous devrez définir une taille suffisamment grande pour stocker votre temps
-    snprintf(uptime_stamp, sizeof(uptime_stamp), "%s\t", timeClient.getFormattedTime().c_str());
+      time_t maintenant;
+      time(&maintenant);
+      strftime(uptime_stamp, sizeof(uptime_stamp), "%H:%M:%S\t ", localtime(&maintenant));
     return uptime_stamp;
   }
 };

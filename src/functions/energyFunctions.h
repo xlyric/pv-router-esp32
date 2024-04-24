@@ -8,8 +8,6 @@ extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Logs logging;
 
-//extern String loguptime(); 
-extern char *loguptime2();
 
 // ***********************************
 // ** recherche du point 0. temps 20 ms max ... 

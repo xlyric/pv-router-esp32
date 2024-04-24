@@ -86,7 +86,7 @@ void watchdog_memory(void * parameter){
      
     // si need  reboot alors reboot
     if (need_reboot) {
-      savelogs(timeClient.getFormattedTime() +"-- reboot watchdog memoire -- ");
+      savelogs("-- reboot watchdog memoire -- ");
       ESP.restart();
     } 
     // Sleep for 10 seconds, avant de refaire une analyse

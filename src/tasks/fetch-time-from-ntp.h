@@ -53,7 +53,6 @@
 */
 
             serial_println("[NTP] Updating...");
-            timeClient.update();
 
             //String timestring = timeClient.getFormattedTime();
             //short tIndex = timestring.indexOf("T");

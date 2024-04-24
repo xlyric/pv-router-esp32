@@ -22,48 +22,16 @@
 extern DisplayValues gDisplayValues;
 extern Config config; 
 
-//// NTP 
-//WiFiUDP ntpUDP;
-//NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
-
-void offset_heure_ete();
-void timeclientEpoch_to_date(time_t epoch) ;
-
 struct tm timeinfo;
 epoc actual_time;
 
 /// @brief ///////init du NTP 
 void ntpinit() {
       // Configurer le serveur NTP et le fuseau horaire
-  // timeClient.begin();
-  // timeClient.update();
-  //Serial.println(timeClient.getFormattedTime());
-  // offset_heure_ete();
   configTzTime("CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00", NTP_SERVER);  //Voir Time-Zone: https://sites.google.com/a/usapiens.com/opnode/time-zones
-  // Serial.println(timeClient.getFormattedTime());
   getLocalTime( &timeinfo );
   Serial.println(asctime(&timeinfo));
   
-}
-
-void timeclientEpoch_to_date(time_t epoch)  { // convert epoch to date  
-  actual_time.mois = month(epoch);
-  actual_time.jour = day(epoch);
-  actual_time.heure = hour(epoch);
-  DEBUG_PRINTLN(actual_time.mois);
-  DEBUG_PRINTLN(actual_time.jour);
-  DEBUG_PRINTLN(actual_time.heure);
-  }
-
-void offset_heure_ete() {
-  timeclientEpoch_to_date(timeClient.getEpochTime());
-  //timeClient.setTimeOffset(7200);
-  if ((actual_time.jour >= 25 && actual_time.mois >= 3 && actual_time.heure >= 2)||(actual_time.mois >= 4)){
-    timeClient.setTimeOffset(7200); // Fuseau horaire (en secondes, ici GMT+2)
-  }
-  if ((actual_time.jour >= 25 && actual_time.mois >= 10 && actual_time.heure >= 3)||(actual_time.mois >= 11)) {
-    timeClient.setTimeOffset(3600); // Fuseau horaire (en secondes, ici GMT+1)
-  }
 }
 
 //////// structure pour les programmateurs. 
@@ -147,8 +115,7 @@ struct Programme {
   void commande_run(){
           digitalWrite(COOLER, HIGH);
           run=true; 
-          timeClient.update();
-          logging.Set_log_init("minuteur: start\r\n");
+          logging.Set_log_init("minuteur: start\r\n",true);
   }
 
    public:bool start_progr() {
@@ -165,8 +132,8 @@ struct Programme {
       // quand c'est l'heure de démarrer le programme    
 
       ///vérification que le ntp est synchronisé
-      if(timeClient.isTimeSet()) {
-        if ( heures == timeClient.getHours() && minutes == timeClient.getMinutes() && temperature > gDisplayValues.temperature ) {
+      if(getLocalTime( &timeinfo )) {
+        if ( heures == timeinfo.tm_hour && minutes == timeinfo.tm_min && temperature > gDisplayValues.temperature ) {
             // demarrage du cooler
             commande_run();
             return true; 
@@ -176,12 +143,12 @@ struct Programme {
       // remise en route en cas de reboot et si l'heure est dépassée  
       // recherche si l'heure est passée 
       bool heure_passee = false;
-      if (timeClient.getHours() > heures || (timeClient.getHours() == heures && timeClient.getMinutes() > minutes )) {
+      if (timeinfo.tm_hour > heures || (timeinfo.tm_hour == heures && timeinfo.tm_min > minutes )) {
                           heure_passee = true; 
       }
       // recherche si l'heure d'arret est est passée
       bool heure_arret_passee = false;
-      if (timeClient.getHours() > heures_fin || (timeClient.getHours() == heures_fin && timeClient.getMinutes() >= minutes_fin )) {
+      if (timeinfo.tm_hour > heures_fin || (timeinfo.tm_hour == heures_fin && timeinfo.tm_min >= minutes_fin )) {
                           heure_arret_passee = true; 
       }
 
@@ -190,18 +157,12 @@ struct Programme {
               commande_run();
                 return true; 
       }
-        /// ??? doublon ?
-    //    if(timeClient.isTimeSet()) {
-    //      if (heures < timeClient.getHours() && minutes < timeClient.getMinutes()) {
-    //        commande_run();
-    //        return true; 
-     //     }
-     //   }
+
        
 
       // protection fuite mémoire 
       if (temperature > 500) {
-        savelogs(timeClient.getFormattedTime() +"-- reboot problème de fuite memoire -- ");
+        savelogs("-- reboot problème de fuite memoire -- ");
         ESP.restart(); 
       }
 
@@ -218,25 +179,23 @@ public:bool stop_progr() {
   /// sécurité temp
   if ( gDisplayValues.temperature >= config.tmax  || gDisplayValues.temperature >= temperature ) { 
     digitalWrite(COOLER, LOW);
-    logging.Set_log_init("minuteur: stop\r\n");
+    logging.Set_log_init("minuteur: stop\r\n",true);
     run=false; 
 
      // protection flicking
     sscanf(heure_demarrage, "%d:%d", &heures, &minutes);  
-    if (heures == timeClient.getHours() && minutes == timeClient.getMinutes()) {
+    if (heures == timeinfo.tm_hour && minutes == timeinfo.tm_min) {
       delay(7000);
     }
   return true; 
   }
   
   sscanf(heure_arret, "%d:%d", &heures, &minutes);
-  if(timeClient.isTimeSet()) {
-    if (heures == timeClient.getHours() && minutes == timeClient.getMinutes()) {
-        logging.Set_log_init("minuteur: stop\r\n");
+  if(getLocalTime( &timeinfo )) {
+    if (heures == timeinfo.tm_hour && minutes == timeinfo.tm_min ) {
+        logging.Set_log_init("minuteur: stop\r\n",true);
         digitalWrite(COOLER, LOW);
         run=false; 
-        timeClient.update();
-        offset_heure_ete();     
         return true; 
     }
   }
@@ -262,9 +221,9 @@ public:bool stop_progr() {
 
 //// fonction de reboot de l'ESP tous les lundi à  00h00  
 void time_reboot() {
-  if(timeClient.isTimeSet()) {
-    if (timeClient.getDay() == 1 && timeClient.getHours() == 0 && timeClient.getMinutes() == 0 && timeClient.getSeconds() <= 15) {
-      savelogs(timeClient.getFormattedTime() +"-- Reboot du Lundi matin -- ");
+  if(getLocalTime( &timeinfo )) {
+    if (timeinfo.tm_wday == 1 && timeinfo.tm_hour == 0 && timeinfo.tm_min == 0 && timeinfo.tm_sec <= 15) {
+      savelogs("-- Reboot du Lundi matin -- ");
       ESP.restart();
     }
   }
