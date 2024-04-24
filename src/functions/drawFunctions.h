@@ -26,11 +26,6 @@ extern DisplayValues gDisplayValues;
 extern unsigned char measureIndex;
 extern Logs logging;
 
-#if NTP
-  extern NTPClient timeClient;
-#endif
-
-
   void drawTime(){
     #ifdef  DEVKIT1
         if (!AP) {

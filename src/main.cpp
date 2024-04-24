@@ -116,10 +116,6 @@ void reboot_after_lost_wifi(int timeafterlost);
 void IRAM_ATTR function_off_screen();
 void IRAM_ATTR function_next_screen();
 
-//#if  NTP
-//WiFiUDP ntpUDP;
-//extern NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
-//#endif
 
 // Place to store local measurements before sending them off to AWS
 unsigned short measurements[LOCAL_MEASUREMENTS];

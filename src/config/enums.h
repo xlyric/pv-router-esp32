@@ -11,9 +11,6 @@
 #include <TimeLib.h>
 #include <NTPClient.h>
 
-//// NTP 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, NTP_SERVER, NTP_OFFSET_SECONDS, NTP_UPDATE_INTERVAL_MS);
 
 #define SECURITEPASS "MyPassword"
 
