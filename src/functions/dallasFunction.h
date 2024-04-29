@@ -15,16 +15,6 @@ OneWire ds(ONE_WIRE_BUS);
 DallasTemperature sensors(&ds);
 DeviceAddress insideThermometer;
 
- /* 
-  byte present = 0;
-  byte type_s;
-  byte data[12];
-  byte addr[8];
-  float celsius = 0.00 ;
-  
-  int refresh = 30;
-  int refreshcount = 0; 
-*/
 byte i;
 
 bool dallaspresent () {
@@ -107,8 +97,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){
   delay(400); // conseillé 375 ms pour une 18b20
 
   float tempC = sensors.getTempC(deviceAddress);
-  //Serial.print(label);
-  //logging.init += loguptime();
+
     if ( (tempC == -127.0) || (tempC == -255.0) ) {
     
     //// cas d'une sonde trop longue à préparer les valeurs 
@@ -116,7 +105,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){
     tempC = sensors.getTempC(deviceAddress);
       if ( (tempC == -127.0) || (tempC == -255.0) ) {
       Serial.print("Error getting temperature");
-       //logging.Set_log_init("Dallas on error\r\n");
+
        /// si erreur on reprends l'ancienne valeur
        tempC = gDisplayValues.temperature; 
        dallas_error++;

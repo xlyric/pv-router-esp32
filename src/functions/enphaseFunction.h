@@ -358,7 +358,6 @@ bool Enphase_get_7_JWT(void) {
       Serial.println("Error code : " + String(httpCode));
     }
   }
-  //https.end();
   nbErreurCtrlTocken++;
   if (  nbErreurCtrlTocken == 10 )  {
       Serial.println("Trop d'erreur  : redemmarrage");

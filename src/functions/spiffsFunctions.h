@@ -325,7 +325,7 @@ bool test_fs_version() {
    // comparaison entre le contenu du fichier et la version du code FS_RELEASE
   String version = file.readStringUntil('\n');
   file.close();
-  if (version.toInt() < String(FS_RELEASE).toInt() ) {
+  if (version.toInt() < FS_RELEASE ) {
     logging.Set_log_init("FS version is not the same as code version please update FS\r\n");
     
     return false;

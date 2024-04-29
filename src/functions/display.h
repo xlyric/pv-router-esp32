@@ -27,7 +27,7 @@ extern Configmodule configmodule;
 extern Config config;
 
 void call_display(){
-    //serial_println(F("lcd task"));
+
     #ifdef DEVKIT1
         display.clear();
     #endif
@@ -37,7 +37,7 @@ void call_display(){
 
     #if WIFI_ACTIVE == true
         if (gDisplayValues.currentState == UP) {
-          //drawTime();
+
           drawIP();
         } else {
           drawtext10(64, 0, "no Wifi");

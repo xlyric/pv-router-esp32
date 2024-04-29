@@ -590,8 +590,7 @@ snprintf(raison, bufferSize, "restart : %s", logging.loguptime());
 #ifndef LIGHT_FIRMWARE 
   client.publish("memory/Routeur", raison, true);
 #endif
-//WebSerial.begin(&server);
-//WebSerial.msgCallback(recvMsg);
+
 
 }
 
@@ -618,16 +617,12 @@ void loop()
     ESP.restart();
   }
 
-/// vérification du buffer log 
- // if (logging.start.length() > LOG_MAX_STRING_LENGTH - 5 ) { 
-  //  logging.start = "";
-  //}
+
    ///  vérification de la tailld du buffer log_init ( 600 caractères max ) il est créé à 650 caractères ( enums.h )
    /// pour éviter les buffer overflow et fuite mémoire. 
   logging.clean_log_init();
 // affichage en mode serial de la taille de la chaine de caractère logging.log_init
-//Serial.print( "log_init : " );
-//Serial.println( strlen(logging.log_init) );
+
 
 
 // vérification de la connexion wifi 
@@ -729,7 +724,6 @@ if (config.dimmerlocal) {
             device_dimmer.send(String(instant_power * config.charge/100));
           } 
         #endif
-        //offset_heure_ete(); // on corrige l'heure d'été si besoin
       }
     }
 }
@@ -867,20 +861,3 @@ void IRAM_ATTR function_next_screen(){
   if (gDisplayValues.option > 2 ) { gDisplayValues.option = 1 ;}; 
 }
 
-/*
-gDisplayValues.screenstate == HIGH ){ // if right button is pressed or HTTP call 
-        if (digitalRead(TFT_PIN)==HIGH) {             // and the status flag is LOW
-          gDisplayValues.screenstate = LOW ;  
- 
-          digitalWrite(TFT_PIN,LOW);     // and turn Off the OLED
-          }                           // 
-        else {                        // otherwise...      
-          Serial.println("button left/bottom pressed");
-          gDisplayValues.screenstate = LOW ;
-
-          digitalWrite(TFT_PIN,HIGH);      // and turn On  the OLED
-          if (config.ScreenTime !=0 ) {
-            timer = millis();
-          }
-        }
-      }*/

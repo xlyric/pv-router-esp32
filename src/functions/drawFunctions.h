@@ -67,7 +67,7 @@ void drawIP(){
 }
 /*
 
-/**
+/*
  * The screen that is displayed when the ESP has just booted
  * and is connecting to WiFi & AWS.
  */
