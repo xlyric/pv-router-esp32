@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -324,28 +324,28 @@
 					}, 8000 ) ;
 
 	
-		<!-- mise à jour de la jauge  --> 	
+		// mise à jour de la jauge  --> 	
 		var gaugePA = new google.visualization.Gauge(document.getElementById('curve_chart2'));
-	    dataGaugePA = new google.visualization.DataTable();
+	  var dataGaugePA = new google.visualization.DataTable();
 	    dataGaugePA.addColumn('string', 'Reseau');
 		dataGaugePA.addColumn('number', 'Value');
 		dataGaugePA.addRows(1);
 		
 		
-		<!-- mise à jour de la jauge  --> 	
+		//  mise à jour de la jauge  --> 	
 		var gaugePApower = new google.visualization.Gauge(document.getElementById('curve_power'));
-	    dataGaugePApower = new google.visualization.DataTable();
+	  var   dataGaugePApower = new google.visualization.DataTable();
 	    dataGaugePApower.addColumn('string', 'Power');
 		dataGaugePApower.addColumn('number', 'Value');
 		dataGaugePApower.addRows(1);
 
 		var gaugePAtemp = new google.visualization.Gauge(document.getElementById('curve_temp'));
-	    dataGaugePAtemp = new google.visualization.DataTable();
+	  var  dataGaugePAtemp = new google.visualization.DataTable();
 	    dataGaugePAtemp.addColumn('string', 'temp °C');
 		dataGaugePAtemp.addColumn('number', 'Value');
 		dataGaugePAtemp.addRows(1);
 
-	 <!-- récupération valeur sigma et State  -->
+	 // récupération valeur sigma et State  -->
    setInterval(function ( ) {
 
 $.getJSON('/state', function(data) {
@@ -446,7 +446,7 @@ $( "form" ).submit(function( event ) {
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2019</span>
+            <span>https://github.com/xlyric/  - 2024</span>
           </div>
         </div>
       </footer>
@@ -469,8 +469,6 @@ $( "form" ).submit(function( event ) {
   <!-- Core plugin JavaScript-->
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --> 
 
-  <!-- Custom scripts for all pages-->
-  <!--    <script src="http://pvrouter.poissonnier.net/vendor/jquery-easing/jquery.easing.min.js"></script>--> 
  <script>
 
 

@@ -13,7 +13,7 @@
 
 HTTPClient httpfronius;  
 
-const char *fronius_conf = "/fronius.json";
+constexpr const char *fronius_conf = "/fronius.json";
 extern Configmodule configmodule; 
 extern Logs logging;
 

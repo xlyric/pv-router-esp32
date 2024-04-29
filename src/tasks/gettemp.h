@@ -23,8 +23,7 @@ void GetDImmerTemp(void * parameter){
                 continue;
             }
 
-/// Modif RV - 20240303 - rajout de "none"
-/// if ( !dallas.detect &&  String(config.dimmer) != "" ) {
+
 if ( !dallas.detect && ( String(config.dimmer) != "" || String(config.dimmer) != "none")) {
   const String baseurl = "/state" ; 
   httpdimmer.begin(String(config.dimmer),80,baseurl);   
@@ -60,13 +59,7 @@ if ( !dallas.detect && ( String(config.dimmer) != "" || String(config.dimmer) !=
       continue;
     }
     gDisplayValues.temperature = doc["temperature"].as<String>().toFloat();
-    /* int starttemp = dimmerstate.indexOf(";"); 
-      dimmerstate = dimmerstate.substring(starttemp+1);
-      int lasttemp = dimmerstate.indexOf(";"); 
-      //dimmerstate[lasttemp] = '\0'; 
-      dimmerstate = dimmerstate.substring(0,lasttemp);
 
-      gDisplayValues.temperature = dimmerstate; */
   }
 
   if (logging.serial){

@@ -133,8 +133,8 @@ void injection(){
 }
 #endif
 
-const int nbmesure = 72 ; /// nombre de mesure par ondulation
-const int nombre_cycle  = 8 ; /// nombre de cycle pour affiner la mesure
+constexpr const int nbmesure = 72 ; /// nombre de mesure par ondulation
+constexpr const int nombre_cycle  = 8 ; /// nombre de cycle pour affiner la mesure
 const int freqmesure = nbmesure*(nombre_cycle+1) ;  // nombre total de mesures
 int tableau[freqmesure]; // mesure ADC Ampères
 int porteuse[freqmesure]; // mesure ADC Volts

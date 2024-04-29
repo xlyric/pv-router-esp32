@@ -15,13 +15,9 @@
  */
 #define WEBSSERVER true
 #define WIFI_ACTIVE  true
-//#define MQTT_CLIENT true --> option in the web menu
-
-//#define WIFI_NETWORK "xxx"
-//#define WIFI_PASSWORD "xxx"
 
 /**
- * WiFi credentials
+ * MQTT credentials
  */
 #define MQTT_USER ""
 #define MQTT_PASSWORD ""
@@ -32,7 +28,6 @@
  * 
  */
 #define SWITCH 35
-//#define SWITCHTIMER 0   // 0 : always ON  / other : time in sec 
 #define BUTTON_LEFT 0 // bouton droit ttgo
 #define NB_PAGES 1 // nombre de pages d'affichages codées
 
@@ -90,13 +85,6 @@ float PHASECAL = 0.5;
 float PVA;  //Power in VA
 double PW;   //Power in Watt
 float PowerFactor; // 
-
-
-/**
- * The voltage of your home, used to calculate the wattage.
- * Try setting this as accurately as possible.
- */
-// #define HOME_VOLTAGE 225.0
 
 /**
  *  Dimmer 
@@ -242,6 +230,3 @@ bool AP=true;
 
 
 #endif
-
-
-///

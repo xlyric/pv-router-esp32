@@ -9,7 +9,7 @@
 #include "SPIFFS.h"
 #include "config/enums.h"
 
-const char *enphase_conf = "/enphase.json";
+constexpr const char *enphase_conf = "/enphase.json";
 extern Configmodule configmodule;
 
 void Enphase_get_5(void);
@@ -107,7 +107,7 @@ void saveenphase(const char *filename, const Configmodule &configmodule) {
   doc["Type"] = configmodule.envoy;
   doc["version"] = configmodule.version;
   doc["token"] = configmodule.token;
-  //doc["enphase_present"] = configmodule.enphase_present;
+
 
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
@@ -124,7 +124,7 @@ void saveenphase(const char *filename, const Configmodule &configmodule) {
 void Enphase_get(void) {
   if (String(configmodule.version) == "7") {
     if (String(configmodule.token)!="") {
-      //Serial.println("Enphase version 7");
+
       Enphase_get_7();
     } else {
       Serial.println("Enphase version 7 : Token vide");
@@ -132,7 +132,7 @@ void Enphase_get(void) {
     
     
   } else {
-    //Serial.println("Enphase version 5");
+
     Enphase_get_5();
   }
 }
@@ -153,7 +153,7 @@ void Enphase_get_5(void) {
   }
 
   httpenphase.begin(String(configmodule.hostname), 80 , url);
-  // int httpResponseCode = httpenphase.GET();
+
 
   /// workaround because envoy is too slow
   int httpResponseCode;
@@ -191,7 +191,7 @@ void Enphase_get_5(void) {
     }
 
     gDisplayValues.porteuse = true; // si FALSE affiche No-Sin sur l'ecran
-    //String test = doc["consumption"][0];
+
   } else {
     Serial.println("timeout");
   }
@@ -291,17 +291,16 @@ bool Enphase_get_7_Production(void){
       nbErreurGetJsonProd++;
       // NEW
       https.end();
-      //Enphase_get_7_JWT(); // pour reconnexion enphase
+
       // FIN NEW
     }
     https.end();
   }
   else {
-    //https.end();
-    //Serial.println("[2.Enphase Get production] GET... failed, error: " + String(httpCode));     
+  
     nbErreurGetJsonProd++;
     // NEW
-    //Enphase_get_7_JWT(); // pour reconnexion enphase
+
     // FIN NEW
   }
   //https.end();

@@ -66,42 +66,7 @@ void drawIP(){
   #endif
 }
 /*
-void drawSignalStrength(){
-  #ifdef  DEVKIT1
-  const byte X = 51;
-  const byte X_SPACING = 2;
 
-  // Draw the four base rectangles
-  display.setColor(WHITE);
-  display.fillRect(X, 8-2, X+1,8-2 ); // Bar 1
-  display.fillRect(X + X_SPACING, 8-2 ,X + X_SPACING +2, 8-2); // Bar 2
-  display.fillRect(X + X_SPACING*2, 8-2,X + X_SPACING*2 +3, 8-2 ); // Bar 3
-  display.fillRect(X + X_SPACING*3, 8-2,X + X_SPACING*3 +4 , 8-2); // Bar 4
-
-  // Draw bar 2
-  if(gDisplayValues.wifi_strength > -70){
-    display.fillRect(X+X_SPACING, 8-4, 1, 4);
-  }
-
-  // Draw bar 3
-  if(gDisplayValues.wifi_strength > -60){
-    display.fillRect(X+X_SPACING*2, 8-6, 1, 6);
-  }
-
-  // Draw bar 4
-  if(gDisplayValues.wifi_strength >= -50){
-    display.fillRect(X+X_SPACING*3, 8-8, 1, 8);
-  }
-  #endif
-}
-
-void drawMeasurementProgress(){
-  #ifdef  DEVKIT1
-  const byte Y = SCREEN_WIDTH - 20;
-  display.drawRect(0, Y, measureIndex*2, 2);
-  #endif
-}
-*/
 /**
  * The screen that is displayed when the ESP has just booted
  * and is connecting to WiFi & AWS.
@@ -138,57 +103,7 @@ void drawBootscreen(){
 
 }
  
-/**
- * Draw the current amps & watts in the middle of the display.
- */
-/*
-void drawAmpsWatts(){
-  const int width = 85 ; 
-  const int height = 30 ; 
-  const int startY = 18;
 
-  String watts = String(gDisplayValues.watt, 0);
-  String lblWatts = "Watt";
-  
-  // Calculate how wide (pixels) the text will be once rendered.
-  // Each character = 6 pixels, with font size 2, that is 12 pixels.
-  // -1 because of the spacing between letters (last one doesn't)
-  int widthWatts = watts.length() * 12 - 1;
-  /// clean rect
-  display.setColor(BLACK);
-  display.fillRect(width, height, widthWatts, startY);
-  /// write Data
-  display.setColor(WHITE);
-  display.setTextAlignment(TEXT_ALIGN_CENTER);
-  display.setFont(ArialMT_Plain_16);
-  display.drawString(width,height, String(watts) + " W"); 
-}
-*/
-/**
- * Draw the current amps & watts in the middle of the display.
- */
-/*
-void drawDimmer(){
-  const int width = 85 ; 
-  const int height = 50 ; 
-  const int startY = 18;
-
-  String watts = String(gDisplayValues.dimmer);
-  
-  // Calculate how wide (pixels) the text will be once rendered.
-  // Each character = 6 pixels, with font size 2, that is 12 pixels.
-  // -1 because of the spacing between letters (last one doesn't)
-  int widthWatts = watts.length() * 12 - 1;
-  /// clean rect
-  display.setColor(BLACK);
-  display.fillRect(width, height, widthWatts, startY);
-  /// write Data
-  display.setColor(WHITE);
-  display.setTextAlignment(TEXT_ALIGN_CENTER);
-  display.setFont(ArialMT_Plain_16);
-  display.drawString(width,height, String(watts) ); 
-}
-*/
 
 /**
  * Affichage de texte de format 16 
@@ -197,7 +112,7 @@ void drawDimmer(){
 void drawtext16(int width,int height, String text ){
   
   #ifdef  DEVKIT1  
-  const int startY = 18;
+  constexpr const int startY = 18;
   // Calculate how wide (pixels) the text will be once rendered.
   // Each character = 6 pixels, with font size 2, that is 12 pixels.
   // -1 because of the spacing between letters (last one doesn't)
@@ -223,7 +138,7 @@ void drawtext16(int width,int height, String text ){
 void drawtext10(int width,int height, String text  ){
 
   #ifdef  DEVKIT1
-    const int startY = 12;
+    constexpr const int startY = 12;
     
   // Calculate how wide (pixels) the text will be once rendered.
   // Each character = 6 pixels, with font size 2, that is 12 pixels.

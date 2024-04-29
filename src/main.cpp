@@ -81,7 +81,7 @@ int resolution = 10; // Résolution de 8 bits, 256 valeurs possibles
 #ifdef  DEVKIT1
 // Oled
 #include "SSD1306Wire.h" /// Oled ( https://github.com/ThingPulse/esp8266-oled-ssd1306 ) 
-const int I2C_DISPLAY_ADDRESS = 0x3c;
+constexpr const int I2C_DISPLAY_ADDRESS = 0x3c;
 SSD1306Wire  display(0x3c, SDA, SCL); // pin 21 SDA - 22 SCL
 #endif
 
@@ -584,7 +584,7 @@ logging.Set_log_init("-- fin du demarrage  \r\n",true);
 savelogs(" -- fin du précédent reboot -- ");
 
 /// envoie de l'info de reboot
-const int bufferSize = 150; // Taille du tampon pour stocker le message
+constexpr const int bufferSize = 150; // Taille du tampon pour stocker le message
 char raison[bufferSize];     
 snprintf(raison, bufferSize, "restart : %s", logging.loguptime()); 
 #ifndef LIGHT_FIRMWARE 

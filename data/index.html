@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -88,13 +88,6 @@
 
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          <!-- Sidebar Toggle (Topbar) -->
-   <!--       <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -316,8 +309,8 @@
 				
 				  setInterval(function ( ) {
 				  
-					chart = new google.visualization.LineChart(document.getElementById('curve_chart'));  	 
-					data2 = new google.visualization.DataTable(); 
+					var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));  	 
+					var data2 = new google.visualization.DataTable(); 
 					data2.addColumn('number', 'time');
 					data2.addColumn('number', 'half wave');
 					data2.addColumn('number', 'Analog out (Ampere)');
@@ -336,7 +329,7 @@
 					}, 8000 ) ;
 
 	
-		<!-- mise à jour de la jauge  --> 	
+		// mise à jour de la jauge  --> 	
 		var gaugePA = new google.visualization.Gauge(document.getElementById('curve_chart2'));
 	    dataGaugePA = new google.visualization.DataTable();
 	    dataGaugePA.addColumn('string', 'Reseau');
@@ -346,17 +339,16 @@
 		
 	
 		var gaugePApower = new google.visualization.Gauge(document.getElementById('curve_power'));
-	    dataGaugePApower = new google.visualization.DataTable();
+	  var  dataGaugePApower = new google.visualization.DataTable();
 	    dataGaugePApower.addColumn('string', 'Power');
 		dataGaugePApower.addColumn('number', 'Value');
 		dataGaugePApower.addRows(1);
 
 		var gaugePAtemp = new google.visualization.Gauge(document.getElementById('curve_temp'));
-	    dataGaugePAtemp = new google.visualization.DataTable();
+	  var dataGaugePAtemp = new google.visualization.DataTable();
 	    dataGaugePAtemp.addColumn('string', 'Temp °C');
 		dataGaugePAtemp.addColumn('number', 'Value');
 		dataGaugePAtemp.addRows(1);
-
 
 	  setInterval(function ( ) {
 
@@ -482,7 +474,7 @@ $( "form" ).submit(function( event ) {
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2019</span>
+            <span>https://github.com/xlyric/  - 2024</span>
           </div>
         </div>
       </footer>
@@ -509,10 +501,6 @@ $( "form" ).submit(function( event ) {
   <!-- Custom scripts for all pages-->
   <script src="/sb-admin-2.js"></script>
  <script>
-
-
-
-
 </script>
 
 </body>
