@@ -37,7 +37,7 @@ int get_dimmer_child_power (){
                 
                 return 0 ; 
             }
-            //int ptotal = doc["Ptotal"];
+
             
             Ptotal_read = doc["Ptotal"];
             return Ptotal_read;
@@ -58,15 +58,6 @@ void updateDimmer(void * parameter){
 #if WIFI_ACTIVE == true
     dimmer();
     
-    #if CLEAN
-    /*
-    /// si changement à faire
-    if  (gDisplayValues.change != 0 ) {
-        Serial.println(F("changement des valeurs dimmer-MQTT"));
-        // envoie de l'information au dimmer et au serveur MQTT ( mosquito ou autre )
-        dimmer_change(); 
-    }*/ 
-    #endif
    
     #ifndef POURCENTAGE
         int local_power = 0 ;
@@ -74,10 +65,7 @@ void updateDimmer(void * parameter){
     // si dimmer local alors calcul de puissance routée 
     //if (config.dimmerlocal) { // Pas besoin de ce if, ça répond bien même si pas d'enfant configuté
         local_power =  unified_dimmer.get_power()* config.charge/100; // watts
-        //}
-        //else { 
-        //    local_power = 0 ; 
-        //}
+
     
     // si dimmer distant alors calcul de puissance routée
     if ( strcmp(config.dimmer,"") != 0 && strcmp(config.dimmer,"none") != 0 ) {  

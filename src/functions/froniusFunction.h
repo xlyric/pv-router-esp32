@@ -115,10 +115,6 @@ httpResponseCode = httpfronius.GET();
 
 httpfronius.end();
 
-//debug
-//Serial.print("prod : " + String(gDisplayValues.Fronius_prod));
-//Serial.print("conso: : "+ String(gDisplayValues.Fronius_conso) );
-
 
 }
 

@@ -91,7 +91,7 @@ if ( !ds.search(dallas.addr)) {
     //***********************************
 int dallas_error = 0;
 
-float CheckTemperature(String label, byte deviceAddress[12]){
+float CheckTemperature(String label, byte deviceAddress[12]){ // NOSONAR
   sensors.requestTemperatures(); 
    
   delay(400); // conseillé 375 ms pour une 18b20
@@ -114,7 +114,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){
     //réduction du retour à 1 décimale 
     tempC = (int(tempC*10))/10.0;
     dallas_error = 0;  
-    return (tempC); 
+    return tempC ; 
    
     
   }  
@@ -126,7 +126,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){
     /// mise en securité du dimmer local
         unified_dimmer.dimmer_off();
     }
-  return (tempC); 
+  return tempC; 
 }
 
 #endif

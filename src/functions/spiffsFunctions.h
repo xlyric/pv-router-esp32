@@ -18,8 +18,8 @@
 
 
 
-const char *filename_conf = "/config.json";
-const char *log_conf = "/log.txt";
+constexpr const char *filename_conf = "/config.json";
+constexpr const char *log_conf = "/log.txt";
 extern Config config; 
 
 
@@ -201,7 +201,7 @@ void saveConfiguration(const char *filename, const Config &config) {
 ///////////////////////////////////
 ////////config MQTT
 ///////////////////////////////////
-const char *mqtt_conf = "/mqtt.json";
+constexpr const char *mqtt_conf = "/mqtt.json";
 extern Mqtt configmqtt;
 
 bool loadmqtt(const char *filename, Mqtt &configmqtt) {

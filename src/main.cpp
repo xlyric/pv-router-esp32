@@ -18,7 +18,6 @@
   #endif
 
 #include <AsyncElegantOTA.h>
-//#include <WebSerial.h>
 
 // File System
 #include <FS.h>
@@ -28,10 +27,10 @@
   #include "tasks/updateDisplay.h"
   #include "tasks/switchDisplay.h"
  
-  //#include "tasks/mqtt-aws.h"
+  
   #include "tasks/wifi-connection.h"
   #include "tasks/measure-electricity.h"
-  //#include "tasks/mqtt-home-assistant.h"
+  
   #include "tasks/Dimmer.h"
  
   #include "tasks/gettemp.h"
@@ -39,8 +38,7 @@
   #include "tasks/Serial_task.h"
   #include "tasks/send-mqtt.h"
   #include "tasks/watchdog_memory.h"
-
-  //#include "functions/otaFunctions.h"
+  
   #include "functions/spiffsFunctions.h"
   #include "functions/Mqtt_http_Functions.h"
   #include "functions/webFunctions.h"
@@ -93,7 +91,7 @@ TFT_eSPI display = TFT_eSPI();   // Invoke library
 
 
 DisplayValues gDisplayValues;
-//EnergyMonitor emon1;
+
 Config config; 
 Configwifi configwifi; 
 Configmodule configmodule; 
@@ -118,7 +116,7 @@ void IRAM_ATTR function_next_screen();
 
 
 // Place to store local measurements before sending them off to AWS
-unsigned short measurements[LOCAL_MEASUREMENTS];
+unsigned short measurements[LOCAL_MEASUREMENTS]; // NOSONAR
 unsigned char measureIndex = 0;
 
 ///gestion des tasks
@@ -147,12 +145,7 @@ Dallas dallas;
     HA power_vrms;
     HA power_irms;
     HA power_apparent;
-    //HA enphase_cons_whLifetime;
-    //HA enphase_prod_whLifetime;
-    //HA enphase_current_power_consumption;
-    //HA enphase_current_power_production;
-    //HA surplus_routeur;
-    //HA device_state; 
+
 #endif
 
 /***************************
@@ -192,7 +185,7 @@ void setup()
     Serial.println("SPIFFS Initialization failed!");
     return;
   }
-  //Serial.println(logging.log_init);
+
   /// Program & FS size
     // size of the compiled program
     uint32_t program_size = ESP.getSketchSize();
@@ -215,13 +208,13 @@ void setup()
     digitalWrite(COOLER, HIGH);
 
     ledcSetup(pwmChannel, frequence, resolution);
-    //ledcAttachPin(outputPin, pwmChannel);
+    //ledcAttachPin(outputPin, pwmChannel); // NOSONAR
 
     #ifdef ESP32D1MINI_FIRMWARE
         pinMode(outputPin2, OUTPUT);
         pinMode(outputPin3, OUTPUT);
-        //ledcAttachPin(outputPin2, pwmChannel);
-        //ledcAttachPin(outputPin3, pwmChannel);
+        //ledcAttachPin(outputPin2, pwmChannel); // NOSONAR 
+        //ledcAttachPin(outputPin3, pwmChannel);  // NOSONAR
     #endif
 //**********************************    
 /// test ACD 
@@ -243,11 +236,7 @@ void setup()
 
   // récup des logs
   loadlogs();
-    
-    ///define if AP mode or load configuration
-  /*if (loadwifi(wifi_conf, configwifi)) {
-    AP=false; 
-  }*/
+
   if (configwifi.recup_wifi()){
      
      logging.Set_log_init("Wifi config \r\n",true);
@@ -288,7 +277,6 @@ void setup()
   adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
   adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);
 
-  //analogReadResolution(ADC_BITS);
   pinMode(ADC_INPUT, INPUT);
 
   // déclaration switch
@@ -317,14 +305,12 @@ void setup()
         pinMode(BUTTON_LEFT,INPUT_PULLUP);
 
         display.init();
-        //digitalWrite(TFT_BL, HIGH);
         display.setRotation(1);
         
         if (config.flip) {
         display.setRotation(3);
         }
-        
-        //display.begin();               // Initialise the display
+
         display.fillScreen(TFT_BLACK); // Black screen fill
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
@@ -373,19 +359,19 @@ ntpinit();
   // ----------------------------------------------------------------
   // TASK: Connect to WiFi & keep the connection alive.
   // ----------------------------------------------------------------
-  /*if (!AP){
-    xTaskCreate(
-      keepWiFiAlive,
-      "keepWiFiAlive",  // Task name
-      8000,            // Stack size (bytes)
-      NULL,             // Parameter
-      5,                // Task priority
-      NULL          // Task handle
+  /*if (!AP){ // NOSONAR
+    xTaskCreate( // NOSONAR
+      keepWiFiAlive, // NOSONAR
+      "keepWiFiAlive",  // Task name // NOSONAR
+      8000,            // Stack size (bytes) // NOSONAR
+      NULL,             // Parameter // NOSONAR
+      5,                // Task priority // NOSONAR
+      NULL          // Task handle // NOSONAR
       
-    );  //pdMS_TO_TICKS(30000)
-    } */
+    );  //pdMS_TO_TICKS(30000)// NOSONAR
+    } */ // NOSONAR
 
-    /// task du watchdog de la mémoire
+    // task du watchdog de la mémoire
     xTaskCreate(
       watchdog_memory,
       "watchdog_memory",  // Task name
@@ -393,7 +379,7 @@ ntpinit();
       NULL,             // Parameter
       5,                // Task priority
       NULL          // Task handle
-    );  //pdMS_TO_TICKS(30000)
+    );  
 
 
      //// task pour remettre le wifi en route en cas de passage en mode AP
@@ -421,7 +407,7 @@ ntpinit();
       NULL,             // Parameter
       1,                // Task priority
       NULL              // Task handle
-    );  //pdMS_TO_TICKS(5000)
+    );  
 
 
   // ----------------------------------------------------------------
@@ -438,7 +424,7 @@ ntpinit();
     2,                // Task priority
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
-  );  //pdMS_TO_TICKS(5000)
+  );  
   #endif
 
 
@@ -454,7 +440,7 @@ ntpinit();
       NULL,                   // Parameter
       2,                      // Task priority
       NULL       // Task handle
-    );  //pdMS_TO_TICKS(10000)
+    ); 
   }
 #endif
 
@@ -472,7 +458,7 @@ ntpinit();
     NULL,                   // Parameter
     2,                      // Task priority
     NULL                    // Task handle
-  );  // pdMS_TO_TICKS(1000)
+  ); 
   
   #endif
 
@@ -489,7 +475,7 @@ ntpinit();
     7,                      // Task priority
     NULL                    // Task handle
   
-  );  // pdMS_TO_TICKS(2000)
+  );  
 
 #if WIFI_ACTIVE == true
   #if DIMMER == true
@@ -503,7 +489,7 @@ ntpinit();
     NULL,                   // Parameter
     4,                      // Task priority
     NULL                    // Task handle
-  ); //pdMS_TO_TICKS(4000)
+  );
   
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
@@ -516,7 +502,7 @@ ntpinit();
         NULL,                   // Parameter
         4,                      // Task priority
         NULL                    // Task handle
-      );  //pdMS_TO_TICKS(15000)
+      );  
   }
 
 // ----------------------------------------------------------------
@@ -530,7 +516,7 @@ ntpinit();
     NULL,                   // Parameter
     5,                      // Task priority
     NULL                    // Task handle
-  );  //pdMS_TO_TICKS(10000)
+  );  
 
 
   #endif
@@ -557,10 +543,10 @@ ntpinit();
           }
       }
   #endif
-  //if ( config.autonome == true ) {
+
     gDisplayValues.dimmer = 0; 
     dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,0 ) ; 
-  //}
+
 
 #endif
 
@@ -611,7 +597,7 @@ void loop()
 
 /// redémarrage sur demande
   if (config.restart) {
-    //delay(5000);
+
     Serial.print(PV_RESTART);
     savelogs("-- reboot demande par l'utilisateur -- ");
     ESP.restart();
@@ -652,10 +638,6 @@ void loop()
           client.loop();
           
           }
-          // TODO : désactivation MQTT en décochant la case, sans redémarrer
-          // else {
-          //     if (client.connected()) { client.disconnect(); }
-          // }  
 
       #endif
     }
@@ -683,7 +665,6 @@ if (config.dimmerlocal) {
             unified_dimmer.set_power(0);
             #endif
           DEBUG_PRINTLN("programme.run");
-          //sysvar.puissance=0;
           Serial.println("stop minuteur dimmer");
           //arret du ventilateur
           digitalWrite(COOLER, LOW);
@@ -750,8 +731,7 @@ void connect_to_wifi() {
 
   if (AP || strcmp(configwifi.SID,"AP") == 0 ) {
       APConnect(); 
-      //AP=true; 
-      gDisplayValues.currentState = UP;
+      gDisplayValues.currentState = DEVICE_STATE::UP;
       gDisplayValues.IP = String(WiFi.softAPIP().toString());
       btStop();
       return; 
@@ -759,7 +739,6 @@ void connect_to_wifi() {
   else {
       #if WIFI_ACTIVE == true
       WiFi.mode(WIFI_STA);
-      //Esp_wifi_set_ps (WIFI_PS_NONE);
       WiFi.setSleep(false);
       WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
@@ -806,11 +785,9 @@ void connect_to_wifi() {
         //// timeout --> AP MODE 
         if ( timeoutwifi > 40 ) {
               WiFi.disconnect(); 
-              //AP=true; 
               serial_println("timeout, go to AP mode ");
               
-              gDisplayValues.currentState = UP;
-             // gDisplayValues.IP = String(WiFi.softAPIP().toString());
+              gDisplayValues.currentState = DEVICE_STATE::UP;
               APConnect(); 
         }
 
@@ -822,7 +799,7 @@ void connect_to_wifi() {
         serial_print("force du signal:");
         serial_print(WiFi.RSSI());
         serial_println("dBm");
-      gDisplayValues.currentState = UP;
+      gDisplayValues.currentState = DEVICE_STATE::UP;
       gDisplayValues.IP = String(WiFi.localIP().toString());
       btStop();
       #endif

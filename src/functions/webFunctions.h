@@ -15,19 +15,11 @@ extern Logs logging;
 extern Programme programme; 
 extern Memory task_mem; 
 
-//***********************************
-//************* Gestion du serveur WEB
-//***********************************
-// Create AsyncWebServer object on port 80
-//WiFiClient domotic_client;
-// mqtt
-//PubSubClient client(domotic_client);
 
 String inputMessage;
 
 AsyncWebServer server(80);
-//DNSServer dns;
-//HTTPClient http;
+
 
 		//***********************************
 		//************* Setup - Web pages
@@ -45,7 +37,7 @@ void compress_html(AsyncWebServerRequest *request,String filefs , String format 
       AsyncWebServerResponse *response = request->beginResponse(SPIFFS, filefs, format);
       response->addHeader("Content-Encoding", "gzip");
       response->addHeader("Cache-Control", "max-age=604800");
-      //response-> addHeader("Content-Disposition", "inline; filename='file,index.html'");
+
       request->send(response);
 }
 
@@ -71,7 +63,6 @@ if (AP) {
       compress_html(request,"/config-ap.html.gz", "text/html");
     }
     else {
-      //request->send_P(200, "text/plain", SPIFFSNO ); 
       serveur_response(request, SPIFFSNO);
     }
   });
@@ -89,7 +80,6 @@ else {
 
     }
     else {
-            //request->send_P(200, "text/plain", SPIFFSNO ); 
       serveur_response(request, SPIFFSNO);
      }
   });
@@ -106,7 +96,6 @@ else {
 
     }
     else {
-            //request->send_P(200, "text/plain", SPIFFSNO ); 
       serveur_response(request, SPIFFSNO);
       }
 
@@ -114,13 +103,6 @@ else {
 
 }
 
-  /*server.on("/config.html.gz",  HTTP_GET, [](AsyncWebServerRequest *request){  /// pour corriger le bug  safari
-      compress_html(request,"/config.html.gz", "text/html");   
-  });
-
-  server.on("/index.html.gz",  HTTP_GET, [](AsyncWebServerRequest *request){  /// pour corriger le bug  safari
-      compress_html(request,"/index.html.gz", "text/html");   
-  });*/
 
   server.on("/all.min.css",  HTTP_GET, [](AsyncWebServerRequest *request){
       compress_html(request,"/all.min.css.gz", "text/css");
@@ -163,7 +145,6 @@ server.on("/config.json", HTTP_GET, [](AsyncWebServerRequest *request){
   });
 
 server.on("/envoy.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send(SPIFFS, "/envoy.html", "text/html");
     compress_html(request,"/envoy.html.gz", "text/html");
   });
 
@@ -182,76 +163,27 @@ server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
 ///// Pages 
 /// Appel de fonction 
 
-//if (!configmodule.pilote) {
   server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "application/json", getchart().c_str());
   }); 
-//}
 
-/*
-
-  server.on("/doc.txt", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/doc.txt", "text/plain");
-  });
-
-  server.on("/jquery.easing.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/jquery.easing.min.js", "text/css");
-  });
-
-  server.on("/sendmode", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "text/plain", getSendmode().c_str());
-  });
-
-  server.on("/loader.js",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/loader.js", "text/css");
-  });
-
-  server.on("/google.css",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/google.css", "text/css");
-  });
-
-  server.on("/memory", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getmemory().c_str());
-    serveur_response(request, getmemory() );
-  });
-  
-  server.on("/debug", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getdebug().c_str());
-    serveur_response(request, getdebug() );
-  });
-
-  server.on("/log", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getlogs().c_str());
-    serveur_response(request, getlogs() );
-  });
-*/
   server.on("/state", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "application/json", getState().c_str());
-    //serveur_response(request, getState());
   });
 
-/*  server.on("/serial", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getState().c_str());
-    serveur_response(request, getState());
-  });*/
   
   server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "application/json", getconfig().c_str());
-    //serveur_response(request, getconfig() );
+
   });
 
 
 /// beta ? 
 server.on("/cosphi", HTTP_GET, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getcosphi().c_str());
+
     serveur_response(request, getcosphi());
   });
-/*
-server.on("/puissance", HTTP_GET, [](AsyncWebServerRequest *request){
-   // request->send_P(200, "text/plain",  getpuissance().c_str());
-     serveur_response(request, getpuissance());
-  });*/  
-
+  
 ///////////////
 //// wifi
 ///////////////
@@ -262,7 +194,6 @@ server.on("/wifi.html", HTTP_GET, [](AsyncWebServerRequest *request){
 
 
 server.on("/getwifi", HTTP_ANY, [] (AsyncWebServerRequest *request) {
-  //request->send(200, "text/plain",  getwifi().c_str()); 
   serveur_response(request, getwifi());
   
 });
@@ -277,13 +208,13 @@ server.on("/mqtt.html", HTTP_GET, [](AsyncWebServerRequest *request){
 
 server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(200, "application/json",  getmqtt().c_str()); 
-  //serveur_response(request, getmqtt());
+
 });
 
 server.on("/log.txt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(SPIFFS, "/log.txt", "text/plain"); 
   
-  //serveur_response(request, getmqtt());
+
 });
  /// il serait bien que /getmqtt et getwifi soit directement en processing de l'appel de la page 
 
@@ -293,8 +224,7 @@ server.on("/log.txt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 ///////////////
 
 server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
-    //request->send_P(200, "text/plain", getlogs().c_str());
-    //serveur_response(request,  getlogs());
+
     logging.Set_log_init("}1");
     serveur_response(request, logging.Get_log_init().c_str());
     // reinit de logging.log_init 
@@ -302,18 +232,11 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
 
   });
 
-/*
-  server.on("/reset", HTTP_ANY, [](AsyncWebServerRequest *request){
-     //request->send_P(200, "text/plain",PV_RESTART);
 
-     serveur_response(request,  PV_RESTART);
-     config.restart = true;
-  });
-*/
   server.on("/reboot", HTTP_ANY, [](AsyncWebServerRequest *request){
    #ifndef LIGHT_FIRMWARE
-    const int bufferSize = 150; // Taille du tampon pour stocker le message
-    char raison[bufferSize];
+    const int bufferSize = 150; //  Taille du tampon pour stocker le message
+    char raison[bufferSize]; // NOSONAR
     getLocalTime( &timeinfo );
     snprintf(raison, bufferSize, "reboot manuel: %s", asctime(&timeinfo) ); 
   
@@ -331,7 +254,7 @@ server.onNotFound(notFound);
 /////////////////////////
 
 server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
-      ///   /get?disengage_dimmer=on
+      ///  doc  /get?disengage_dimmer=on
     if (request->hasParam(PARAM_INPUT_1)) {
                           String engagedimmer;
                           if(request->getParam(PARAM_INPUT_1)->value() == "on") {
@@ -344,7 +267,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                           }
                           request->send(200, "text/html", engagedimmer.c_str());}
                           
-	   // /get?cycle=x
+	   // doc /get?cycle=x
     if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
                           saveConfiguration(filename_conf, config);   
                             }
@@ -398,7 +321,6 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    // enphase
    bool enphasemodif=false ; 
    if (request->hasParam("envoyserver")) { request->getParam("envoyserver")->value().toCharArray(configmodule.hostname,16); enphasemodif=true; }
-   //if (request->hasParam("envport")) { request->getParam("envport")->value().toCharArray(configmodule.port,5);  enphasemodif=true;}
    if (request->hasParam("envmodele")) { request->getParam("envmodele")->value().toCharArray(configmodule.envoy,2);  enphasemodif=true;}
    if (request->hasParam("envversion")) { request->getParam("envversion")->value().toCharArray(configmodule.version,2); enphasemodif=true; }
    if (request->hasParam("envtoken")) { request->getParam("envtoken")->value().toCharArray(configmodule.token,425); enphasemodif=true; }
@@ -410,7 +332,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
       saveConfiguration(filename_conf, config);   }
    if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,50);  }
    if (request->hasParam("mqttport")) { config.mqttport = request->getParam("mqttport")->value().toInt();}
-   if (request->hasParam("mqttpassword")) { //request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
+   if (request->hasParam("mqttpassword")) {
        char password[50];  
        request->getParam("mqttpassword")->value().toCharArray(password,50);
           if (strcmp(password,SECURITEPASS) != 0) {  ///sécurisation du mot de passe pas en clair     
@@ -457,15 +379,12 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme.heure_demarrage,6);  }
    if (request->hasParam("heure_arret")) { request->getParam("heure_arret")->value().toCharArray(programme.heure_arret,6);  }
    if (request->hasParam("temperature")) { programme.temperature = request->getParam("temperature")->value().toInt();  programme.saveProgramme(); }
-
-    //request->send(200, "text/html", getconfig().c_str());
     serveur_response(request,  getconfig());
 	}); 
 
   server.on("/getminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
     if (request->hasParam("dimmer")) { request->send(200, "application/json",  getMinuteur(programme));  }
     else { request->send(200, "application/json",  getMinuteur());  }
-    //request->send(200, "application/json",  getminuteur(programme_relay2).c_str()); 
   });
 
 

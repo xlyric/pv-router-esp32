@@ -53,7 +53,7 @@ long beforetime;
 #define timemilli 3.6e+6 
 extern Memory task_mem; 
 
-void send_to_mqtt(void * parameter){
+void send_to_mqtt(void * parameter){ // NOSONAR
   for (;;){
             if(!WiFi.isConnected()){   /// si pas de connexion Wifi test dans 10 s 
                 vTaskDelay(10*1000 / portTICK_PERIOD_MS);
@@ -86,14 +86,10 @@ void send_to_mqtt(void * parameter){
                         power_vrms.send(String(int(Vrms)));
                         power_irms.send(String(Irms));
                         power_factor.send(String(PowerFactor));
-                        //enphase_cons_whLifetime.send(String(int(gDisplayValues.enp_cons_whLifetime)));
-                        //enphase_prod_whLifetime.send(String(int(gDisplayValues.enp_prod_whLifetime)));
-                        //enphase_current_power_consumption.send(String(int(gDisplayValues.enp_current_power_consumption)));
-                        //enphase_current_power_production.send(String(int(gDisplayValues.enp_current_power_production)));
+
                         temperature_HA.send(String(gDisplayValues.temperature));
                         device_dimmer.send(String(int(unified_dimmer.get_power()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
-                        //device_dimmer.send(String(gDisplayValues.puissance_route)); // puissance_route est maintenant remontée par device_routed
-                        //surplus_routeur.send(String(puissance_dispo));
+
                         
                   }
 

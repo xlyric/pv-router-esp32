@@ -36,7 +36,7 @@ void call_display(){
     #endif
 
     #if WIFI_ACTIVE == true
-        if (gDisplayValues.currentState == UP) {
+        if (gDisplayValues.currentState == DEVICE_STATE::UP) {
 
           drawIP();
         } else {

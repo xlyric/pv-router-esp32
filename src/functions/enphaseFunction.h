@@ -57,14 +57,13 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   strlcpy(configmodule.envoy,           // <- destination
           doc["Type"] | "S",            // <- source
           sizeof(configmodule.envoy));  // <- destination's capacity
-  //configmodule.pilote = doc["Pilote"] | false;
   strlcpy(configmodule.version,           // <- destination
           doc["version"] | "5",            // <- source
           sizeof(configmodule.version));
   strlcpy(configmodule.token,         
           doc["token"] | "",            
           sizeof(configmodule.token));
-  //configmodule.enphase_present = doc["enphase_present"] | false;
+
   if (strcmp(configmodule.hostname,"") == 0) { configmodule.enphase_present=false ; configFile.close(); Serial.println("no enphase"); return false; } 
   configmodule.enphase_present=true; 
   Serial.println(configmodule.hostname);
@@ -84,7 +83,7 @@ bool loadenphase(const char *filename, Configmodule &configmodule) {
   return true;
 }
 
-void saveenphase(const char *filename, const Configmodule &configmodule) {
+void saveenphase(const char *filename, const Configmodule &configmodule_save) {
   
   // Open file for writing
    File configFile = SPIFFS.open(enphase_conf, "w");
@@ -102,11 +101,11 @@ void saveenphase(const char *filename, const Configmodule &configmodule) {
   DynamicJsonDocument doc(768);
 
   // Set the values in the document
-  doc["IP_ENPHASE"] = configmodule.hostname;
-  doc["PORT_ENPHASE"] = configmodule.port;
-  doc["Type"] = configmodule.envoy;
-  doc["version"] = configmodule.version;
-  doc["token"] = configmodule.token;
+  doc["IP_ENPHASE"] = configmodule_save.hostname;
+  doc["PORT_ENPHASE"] = configmodule_save.port;
+  doc["Type"] = configmodule_save.envoy;
+  doc["version"] = configmodule_save.version;
+  doc["token"] = configmodule_save.token;
 
 
   // Serialize JSON to file
@@ -303,7 +302,7 @@ bool Enphase_get_7_Production(void){
 
     // FIN NEW
   }
-  //https.end();
+
   return retour;
 }
 
@@ -326,13 +325,13 @@ bool Enphase_get_7_JWT(void) {
     https.setAuthorization(configmodule.token);
     https.addHeader("Accept-Encoding","gzip, deflate, br");
     https.addHeader("User-Agent","PvRouter/1.1.1");
-    const char * headerkeys[] = {"Set-Cookie"};
+    const char * headerkeys[] = {"Set-Cookie"}; // NOSONAR
     https.collectHeaders(headerkeys, sizeof(headerkeys)/sizeof(char*));
     https.setReuse(true);
     int httpCode = https.GET();
    
     // httpCode will be negative on error
-    //Serial.println("Enphase_Get_7 : httpcode : " + httpCode);
+
     if (httpCode > 0) {
       if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
         retour = true;
@@ -341,7 +340,7 @@ bool Enphase_get_7_JWT(void) {
         TockenValide=true;
         SessionId.clear();
         SessionId = https.header("Set-Cookie");
-        if (/*SessionId.isEmpty() || */SessionId.indexOf("sessionId") < 0) {
+        if (SessionId.indexOf("sessionId") < 0) {
           retour=false;
           SessionId.clear();
           Serial.println("Enphase contrôle token : PAS DE SESSION ID !!!");

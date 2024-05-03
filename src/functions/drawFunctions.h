@@ -65,7 +65,6 @@ void drawIP(){
     display.println("dBm");
   #endif
 }
-/*
 
 /*
  * The screen that is displayed when the ESP has just booted

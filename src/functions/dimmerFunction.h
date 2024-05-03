@@ -24,7 +24,7 @@ extern Dallas dallas ;
 
     int dimmer_security = 60;  // coupe le dimmer toute les X minutes en cas de probleme externe. 
     int dimmer_security_count = 0; 
-    //bool security=false;
+
 
   void dimmer_on();
   ///void dimmer_off();
@@ -53,7 +53,6 @@ extern Dallas dallas ;
 */
 /// Modif RV 20240219 
 /// Plus besoin !
-//#define FACTEUR_REGULATION 0.9 
 #define FACTEUR_REGULATION 1
 void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puissance_dispo) {
 
@@ -83,7 +82,7 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
             logging.Set_log_init(POWER_COMMAND,true);
             logging.Set_log_init(String(dimmervalue).c_str());
             logging.Set_log_init("% \r\n");
-            //logging.power = false;
+
         }
       }
       //// Mqtt send information
@@ -93,9 +92,7 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
             /// A vérifier que c'est necessaire ( envoie double ? )
             /// la valeur 0 doit quand meme être envoyé 
               Mqtt_send(String(dimmerIDX), String(dimmervalue),"","dimmer"); 
-              if (configmqtt.HA) {
-                //surplus_routeur.send(String(puissance_dispo));
-                } 
+              
             }
         }
       #endif
@@ -140,13 +137,13 @@ gDisplayValues.change = 0;
   puissance_dispo = -(gDisplayValues.watt-delta_cible);
 
 if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
-    //Serial.println("dimmer:" + String(gDisplayValues.dimmer));
+
     gDisplayValues.dimmer += -abs((gDisplayValues.watt-delta_cible)*COMPENSATION/config.charge); 
     
     
     gDisplayValues.dimmer += 1 ;
     gDisplayValues.change = 1; 
-//debug    Serial.println(String(gDisplayValues.watt) + " " + String(config.delta) + " " + String(config.deltaneg) + " " + String(gDisplayValues.dimmer) );
+
     } 
 
     // injection 
@@ -173,7 +170,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
     /// Modif RV 20240219
     /// Si et seulement si on n'a pas de dimmer enfant, sinon on ne lui routerait aucune puissance !!!!!
     /// Modification du if() qui ne fonctionnait pas à tous les coups
-	/// gDisplayValues.dimmer = config.localfuse; 
+
     if ( strcmp(config.dimmer,"") == 0 || strcmp(config.dimmer,"none") == 0 ){ // Si pas de dimmer fils, on bride la puissance 
     gDisplayValues.dimmer = config.localfuse; 
     gDisplayValues.change = 1 ; 
@@ -232,7 +229,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
           
           }
           else {
-            //gDisplayValues.dimmer = 0 ;
+
             dimmer_hard.setPower(0); 
 
               #ifdef ESP32D1MINI_FIRMWARE
@@ -324,7 +321,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
       pinMode(COOLER, OUTPUT);
       digitalWrite(COOLER, LOW);
 
-      //digitalWrite(outputPin, HIGH);
+
       // configuration dimmer
       dimmer_hard.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
       dimmer_hard.setState(ON);
@@ -348,20 +345,6 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
         }
     }
 
-   /* void dimmer_off()
-    {
-      if (dimmer_hard.getState()==1) {
-        dimmer_hard.setPower(0);
-        dimmer_hard.setState(OFF);
-              #ifdef ESP32D1MINI_FIRMWARE
-              unified_dimmer.set_power(0);
-              unified_dimmer.dimmer_off();
-              #endif
-        ledcWrite(0, 0);
-        delay(50);
-        Serial.println("dimmer off");
-        }
-    }*/
 
     String dimmergetState() {
       String state; 
@@ -381,20 +364,20 @@ int dimmer_getState() {
     int httpCode = http.GET();                                                                  //Send the request
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
-      //Serial.println(payload);                     //Print the response payload
+
       DynamicJsonDocument doc(256);
       DeserializationError error = deserializeJson(doc, payload);
       if (error) {
         /// Modif RV - 20240221
         /// je préfère que cette fonction se poursuivre pour que le calcul que je rajoute plus bas aille à son terme 
-        /// return 0;
+
         dimmer = 0;
       }
       else {
         /// Modif RV - 20240221
         /// Le fait de récupérer le champ "dimmer" ne récupère que la puissance locale du premier dimmer enfant
         /// il vaut donc mieux aller chercher l'info "Ptotal" plutôt que "dimmer" dans la page http:// - IPDIMMER - /state
-        //int dimmer = doc["dimmer"];
+
         int dimmerWatt = doc["Ptotal"];
         dimmer = (dimmerWatt*100/config.charge);
       }
@@ -405,7 +388,7 @@ int dimmer_getState() {
   if (dimmer != 0 ) {  
     /// Modif RV - 20240221
     /// synchronisation de gDisplayValues.dimmer après avoir requêté le dimmer enfant
-    ///gDisplayValues.dimmer = dimmer1_state;
+
     if (config.dimmerlocal){
      gDisplayValues.dimmer = unified_dimmer.get_power()+ dimmer;
     }

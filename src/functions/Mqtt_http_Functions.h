@@ -24,7 +24,7 @@ extern float WHtempgrid;
 extern float WHtempinject;
 #ifndef LIGHT_FIRMWARE
 
-// void Mqtt_HA_hello(); // non utilisé maintenant 
+
 void reconnect();
 /***
  *  reconnexion au serveur MQTT
@@ -51,11 +51,10 @@ void reconnect();
 
         // Attempt to connect
 
-        //if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline", false)) {       //Connect to MQTT server
         if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password)) {
           client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
           client.setKeepAlive(30);
-          //client.setSocketTimeout(30);
+
           
           logging.Set_log_init("MQTT : Reconnected\r\n",true);
           Serial.println("MQTT connected");
@@ -65,13 +64,6 @@ void reconnect();
           Serial.println(" try again in 2 seconds");
           ///dans le doute si le mode AP est actif on le coupe
           Serial.println(WiFi.status());
-
-          ////la suite causait un bug si MQTT mal configuré ( reboot toute les 2 secondes.)
-         /* if((WiFi.softAPIP() == IPAddress(192,168,4,1)) && (WiFi.status() == WL_IDLE_STATUS ) ) {
-            Serial.println("MQTT reconnect : AP encore actif, on redémarre l'ESP");
-            Serial.println(WiFi.softAPIP());
-            ESP.restart();
-          }*/
 
           // Wait 2 seconds before retrying
           delay(2000);  // 24/01/2023 passage de 5 à 2s 
@@ -95,7 +87,7 @@ void Mqtt_send ( String idx, String value, String otherpub = "" , String name = 
     
     String message; 
     if (otherpub == "" ) {
-      message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
+      message = R"( { "idx" : )" + idx + R"( , "svalue" : ")" + value + R"(",  "nvalue" : )" + nvalue + R"( } )";
     }
 
     String jdompub = String(config.Publish) + "/"+idx ;
@@ -105,20 +97,9 @@ void Mqtt_send ( String idx, String value, String otherpub = "" , String name = 
     if (client.connected() && (WiFi.status() == WL_CONNECTED ))  {
       client.loop();
         if (otherpub == "" ) {
-          if (client.publish(config.Publish, String(message).c_str(), true)) {
-        //   Serial.println("MQTT_send : MQTT sent to domoticz");
-          }
-
-          else {
-            Serial.println("MQTT_send : error publish to domoticz ");
-          }
+          client.publish(config.Publish, String(message).c_str(), true);
         }
-      if (client.publish(jdompub.c_str() , value.c_str(), true)){
-      //  Serial.println("MQTT_send : MQTT sent to Jeedom ");
-      }
-      else {
-    Serial.println("MQTT_send : error publish to Jeedom ");
-      }
+        client.publish(jdompub.c_str() , value.c_str(), true);
     }
   }
 }
@@ -128,8 +109,7 @@ Fonction MQTT callback
 *
 */
 void callback(char* topic, byte* payload, unsigned int length) {
-char arrivage[length+1]; // Ajout d'un espace pour le caractère nul
-//Serial.println("MQTT callback : "+String(topic));
+char arrivage[length+1]; // Ajout d'un espace pour le caractère nul // NOSONAR
 int recup = 0;
 
   for (int i=0;i<length;i++) {
@@ -202,8 +182,6 @@ int recup = 0;
 */
 
 void Mqtt_init() {
-  // String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-  // String topic = "homeassistant/sensor/"+ pvname +"/status";
 
   // comparaison de config.mqttserver avec none 
   if (strcmp(config.mqttserver,"none") == 0) {
@@ -229,39 +207,13 @@ void Mqtt_init() {
   client.subscribe(("memory/"+compteur_grid.topic+"#").c_str());
   client.loop();
 
-  // if (client.connect(pvname,configmqtt.username, configmqtt.password, topic.c_str(), 2, true, "offline")) {       //Connect to MQTT server
-  //   client.publish(topic.c_str(), "online", true);         // Once connected, publish online to the availability topic
-  //   Serial.println("MQTT_init : connecte a MQTT... Initialisation dimmer à 0");
+
      if (config.IDXdimmer != 0 ){ Mqtt_send(String(config.IDXdimmer),"0","","Dimmer"); }
     if (strcmp(config.topic_Shelly,"none") != 0) client.subscribe(config.topic_Shelly);
-  // }
-  // else {
-  //   Serial.println("MQTT_init : /! ECHEC !/ ");
-  // }  
+
 
 }
 
-
-// void Mqtt_HA_hello() {
-// String pvname = String("pvrouteur-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-// String message = "{'device_class': 'power', 'name': '"+ pvname +"-power', 'state_topic': 'homeassistant/sensor/"+ pvname +"/state', 'unit_of_measurement', 'W', 'value_template': '{{ value_json.power}}' }"; 
-// String topic = "homeassistant/sensor/"+ pvname +"/power/config";
-
-// if (client.publish(topic.c_str(), String(message).c_str(), true))  {  Serial.println("HELLO routeur");}
-
-// message = "{'device_class': 'power', 'name': '"+ pvname +"-dimmer', 'state_topic': 'homeassistant/sensor/"+ pvname +"/state', 'unit_of_measurement': '%', 'value_template': '{{ value_json.dimmer}}' }"; 
-// topic = "homeassistant/sensor/"+ pvname +"/dimmer/config";
-// if (client.publish(topic.c_str(), String(message).c_str(), true))  {  Serial.println("HELLO dimmer");}
-// message = "{'device_class': 'temperature', 'name': '"+ pvname +"-temp', 'state_topic': 'homeassistant/sensor/"+ pvname +"/state', 'unit_of_measurement': '°C', 'value_template': '{{ value_json.temperature}}' }"; 
-// topic = "homeassistant/sensor/"+ pvname +"/temperature/config";
-// message = "{'device_class': 'switch', 'name': '"+ pvname +"-switch', 'state_topic': 'homeassistant/sensor/"+ pvname +"/state', 'value_template': '{{ value_json.switch}}' }"; 
-// topic = "homeassistant/sensor/"+ pvname +"/switch/config";
-// if (client.publish(topic.c_str(), String(message).c_str(), true))  {  Serial.println("HELLO temp");}
-// Serial.println (pvname);
-// //Serial.println (message);
-// //Serial.println (topic);
-// //if (client.publish(topic.c_str(), String(message).c_str(), true))  {  Serial.println("HELLO");}
-// }
 
 #endif
 

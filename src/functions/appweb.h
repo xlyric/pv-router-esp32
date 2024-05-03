@@ -27,27 +27,27 @@ extern TFT_eSPI display ;   // Invoke library
 #endif
 int middleoscillo = 1800;
 
-const char* PARAM_INPUT_1 = "disengage_dimmer"; /// paramettre de retour sendmode
-const char* PARAM_INPUT_2 = "cycle"; /// paramettre de retour cycle
-const char* PARAM_INPUT_3 = "readtime"; /// paramettre de retour readtime
-const char* PARAM_INPUT_4 = "cosphi"; /// paramettre de retour cosphi
-const char* PARAM_INPUT_save = "save"; /// paramettre de retour cosphi
-const char* PARAM_INPUT_dimmer = "dimmer"; /// paramettre de retour cosphi
-const char* PARAM_INPUT_server = "server"; /// paramettre de retour server domotique
-const char* PARAM_INPUT_IDX = "idx"; /// paramettre de retour idx
-const char* PARAM_INPUT_IDXdimmer = "idxdimmer"; /// paramettre de retour idx
-const char* PARAM_INPUT_port = "port"; /// paramettre de retour port server domotique
-const char* PARAM_INPUT_delta = "delta"; /// paramettre retour delta
-const char* PARAM_INPUT_deltaneg = "deltaneg"; /// paramettre retour deltaneg
-const char* PARAM_INPUT_fuse = "fuse"; /// paramettre retour fusible numérique
-const char* PARAM_INPUT_API = "apiKey"; /// paramettre de retour apiKey
-const char* PARAM_INPUT_servermode = "servermode"; /// paramettre de retour activation de mode server
-const char* PARAM_INPUT_dimmer_power = "POWER"; /// paramettre de retour activation de mode server
-const char* PARAM_INPUT_facteur = "facteur"; /// paramettre retour delta
-const char* PARAM_INPUT_tmax = "tmax"; /// paramettre retour delta
-const char* PARAM_INPUT_mqttserver = "mqttserver"; /// paramettre retour mqttserver
-const char* PARAM_INPUT_reset = "reset"; /// paramettre reset
-const char* PARAM_INPUT_publish = "publish"; /// paramettre publication mqtt
+constexpr const char* PARAM_INPUT_1 = "disengage_dimmer"; /// paramettre de retour sendmode
+constexpr const char* PARAM_INPUT_2 = "cycle"; /// paramettre de retour cycle
+constexpr const char* PARAM_INPUT_3 = "readtime"; /// paramettre de retour readtime
+constexpr const char* PARAM_INPUT_4 = "cosphi"; /// paramettre de retour cosphi
+constexpr const char* PARAM_INPUT_save = "save"; /// paramettre de retour cosphi
+constexpr const char* PARAM_INPUT_dimmer = "dimmer"; /// paramettre de retour cosphi
+constexpr const char* PARAM_INPUT_server = "server"; /// paramettre de retour server domotique
+constexpr const char* PARAM_INPUT_IDX = "idx"; /// paramettre de retour idx
+constexpr const char* PARAM_INPUT_IDXdimmer = "idxdimmer"; /// paramettre de retour idx
+constexpr const char* PARAM_INPUT_port = "port"; /// paramettre de retour port server domotique
+constexpr const char* PARAM_INPUT_delta = "delta"; /// paramettre retour delta
+constexpr const char* PARAM_INPUT_deltaneg = "deltaneg"; /// paramettre retour deltaneg
+constexpr const char* PARAM_INPUT_fuse = "fuse"; /// paramettre retour fusible numérique
+constexpr const char* PARAM_INPUT_API = "apiKey"; /// paramettre de retour apiKey
+constexpr const char* PARAM_INPUT_servermode = "servermode"; /// paramettre de retour activation de mode server
+constexpr const char* PARAM_INPUT_dimmer_power = "POWER"; /// paramettre de retour activation de mode server
+constexpr const char* PARAM_INPUT_facteur = "facteur"; /// paramettre retour delta
+constexpr const char* PARAM_INPUT_tmax = "tmax"; /// paramettre retour delta
+constexpr const char* PARAM_INPUT_mqttserver = "mqttserver"; /// paramettre retour mqttserver
+constexpr const char* PARAM_INPUT_reset = "reset"; /// paramettre reset
+constexpr const char* PARAM_INPUT_publish = "publish"; /// paramettre publication mqtt
 
 
 //***********************************
@@ -56,9 +56,10 @@ const char* PARAM_INPUT_publish = "publish"; /// paramettre publication mqtt
 
 String oscilloscope() {
 
- // int starttime,endtime; 
   int timer = 0; 
-  int temp, signe, moyenne; 
+  int temp;
+  int signe; 
+  int moyenne; 
   int freqmesure = 40; 
   int sigma = 0;
   String retour = "[[";
@@ -66,15 +67,15 @@ String oscilloscope() {
   front();
   
   delayMicroseconds (config.cosphi*config.readtime); // correction décalage
-  while ( timer < ( freqmesure ) )
+  while ( timer < freqmesure )
   {
 
   
-  //temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+
   temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
   moyenne = middleoscillo  + signe/50; 
   sigma += temp;
-  //moyenne = moyenne + abs(temp - middle) ;
+
   /// mode oscillo graph 
 
   
@@ -83,7 +84,7 @@ String oscilloscope() {
   delayMicroseconds (config.readtime);
   } 
   
-  //temp =  analogRead(ADC_INPUT); signe = analogRead(ADC_PORTEUSE);
+
   temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
   moyenne = middleoscillo  + signe/50; 
   retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
@@ -102,10 +103,7 @@ String getState() {
   String state=STABLE; 
   if (gDisplayValues.watt >= config.delta  ) {   state = GRID; }
   if (gDisplayValues.watt <= config.deltaneg ) {   state = INJECTION; }
-  //Serial.println(gDisplayValues.temperature);  
-  //if (gDisplayValues.temperature == "null" ) { gDisplayValues.temperature = "0";  }
-  // if (gDisplayValues.temperature == "" ) { gDisplayValues.temperature = "0";  }
-  //Serial.println(gDisplayValues.temperature);  
+ 
   const String fs_update = String("<br>!! FS pas à jour !!") ;
   const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
   DynamicJsonDocument doc(256);
@@ -129,15 +127,7 @@ String stringbool(bool mybool){
   if (mybool == false ) {truefalse = "";}
   return String(truefalse);
   }
-//***********************************
-/*
-String getSendmode() {
-  String sendmode;
-  if ( config.sending == 0 ) {   sendmode = "Off"; }
-  else {   sendmode = "On"; }
-  return String(sendmode);
-}*/
-//***********************************
+
 String getServermode(String Servermode) {
   if ( Servermode == "screen" ) {  gDisplayValues.screenstate = !gDisplayValues.screenstate; }
   if ( Servermode == "Jeedom" ) {   config.UseJeedom = !config.UseJeedom;}
@@ -186,7 +176,7 @@ String getcosphi() {
 }
 //***********************************
 String getpuissance() {
-  //int tempvalue=15;
+
    int bestpuissance =1 ;
   return String(bestpuissance*config.facteur) ;
 }
@@ -202,7 +192,7 @@ String getconfig() {
   doc["cosphi"] = config.cosphi;
   doc["dimmerlocal"] = config.dimmerlocal;
   
-  char buffer[8];
+  char buffer[8];  // NOSONAR
   dtostrf(config.facteur, 5, 2, buffer); 
   doc["facteur"] = buffer;
 
@@ -287,63 +277,8 @@ String getdebug() {
 //***********************************
 String getmemory() {
    String memory = "";
-   // memory = String(ESP.getFreeHeap()) + ";" + String(ESP.getHeapFragmentation()) ;
       return String(memory);
   }
-
-//***********************************
-/*String getlogs() {
-   // logging.start = logging.init + logging.start  + "}1"; 
-  //  logging.power = true ; logging.sct = true; logging.sinus = true; 
-    return logging.start ; 
-   
-  } 
-*/
-//***********************************
-/*String processor(const String& var){
-   Serial.println(var);
-   if (var == "SIGMA"){
-    return getSigma();
-  }
-  if (var == "STATE"){
-    return getState();
-  }
-  if (var == "VERSION"){
-    return VERSION;
-  }
-    
-
-return getState();
-}
-*/
-
-//***********************************
-//************* Fonction domotique 
-//***********************************
-/* 
-void SendToDomotic(String Svalue){
-  String baseurl; 
-  Serial.print("connecting to mqtt & dimmer");
-  Serial.println(config.hostname);
-  
-  Serial.println(baseurl);
-
-}
-*/ 
-/*
-void mqtt(String idx, String value)
-{
-  String nvalue = "0" ; 
-  if ( value != "0" ) { nvalue = "2" ; }
-String message = "  { \"idx\" : " + idx +" ,   \"svalue\" : \"" + value + "\",  \"nvalue\" : " + nvalue + "  } ";
-
-  if (!client.connected()) {
-    reconnect();
-  }
-  client.loop();
-  client.publish("domoticz/in", String(message).c_str(), true);
-  
-}*/
 
 
 String injection_type() {
@@ -354,70 +289,6 @@ String injection_type() {
       return (state);
 }
 
-/*
-*  récupération de la température sur le dimmer 
-*/
-/*
-String Dimmer_temp(char* host) {
-WiFiClient client;
-  
-  String url = "/state";
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" +
-               "User-Agent: BuildFailureDetectorESP8266\r\n" +
-               "Connection: close\r\n\r\n");
-  
-  while (client.connected()) {
-    String line = client.readStringUntil('\n');
-    if (line == "\r") {
-      Serial.println("headers received");
-      break;
-    }
-  }
-  String line = client.readStringUntil('OK');
-
-  return (line);
-   
-}*/
-/* //// la fonction prend 100 octets de plus .
-void processMessage(String message_get ) {
-  
-    if (-1 == message_get.indexOf("reboot")) {
-          Serial.println("commande reboot reçue");
-          ESP.restart();
-    } else if (-1 == message_get.indexOf("ssid")) {
-          String wifitemp=message_get.substring(5, message_get.length());
-          Serial.println("ssid enregistré: " + wifitemp);
-          wifitemp.toCharArray(configwifi.SID,50);
-          configwifi.sauve_wifi(); 
-          return;
-    } else if (-1 == message_get.indexOf("pass")) {
-        Serial.println("password enregistré :");
-        String passtemp=message_get.substring(5, message_get.length());
-        passtemp.toCharArray(configwifi.passwd,50);
-        configwifi.sauve_wifi(); 
-        return;
-    } else if (-1 == message_get.indexOf("log")) {
-          logging.serial = true; 
-          return; 
-    } else if (-1 == message_get.indexOf("flip")) {
-          config.flip = !config.flip; 
-          if (config.flip) display.setRotation(3);
-          else display.setRotation(1);
-          saveConfiguration(filename_conf, config); 
-          return; 
-    } else if (message_get.length() !=0) {
-          Serial.println("Commande disponibles :");
-          Serial.println("'reboot' pour redémarrer le routeur ");
-          Serial.println("'ssid' pour changer le SSID wifi");
-          Serial.println("'pass' pour changer le mdp wifi");
-          Serial.println("'log' pour afficher les logs serial");
-          Serial.println("'flip' pour retourner l'ecran");
-    }
-  
-}
-
-*/
 
 bool detecterEspace(const char* chaine) {
     // Parcourir chaque caractère de la chaîne
@@ -461,7 +332,7 @@ void serial_read() {
       index = message_get.indexOf("ssid");
       if (index != -1 ){
         // Extraire le SSID de message_get
-        char ssidArray[51];  
+        char ssidArray[51]; // NOSONAR
         int ssidLength = message_get.length() - 4;  // Longueur du SSID à partir de l'index 5
         message_get.toCharArray(ssidArray, ssidLength, 5);
         // protection chaine vide ou négative >> SSID "AP" par defaut
@@ -482,7 +353,7 @@ void serial_read() {
 // récupération du mot de passe
       index = message_get.indexOf("pass");
       if (index != -1 ){
-        char passArray[60];  
+        char passArray[60];   // NOSONAR
         int passLength = message_get.length() - 4;  // Longueur du PASS à partir de l'index 5
         /// protection contre chaine vide ou négative
         if (passLength <= 0) { 

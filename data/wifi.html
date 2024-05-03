@@ -350,22 +350,11 @@ footer.sticky-footer .copyright{line-height:1;font-size:.8rem;}
 
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
             <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
+
               <!-- Dropdown - Messages -->
               <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
 
               </div>
-            </li>
-            <!-- Nav Item - Alerts -->
-            <li class="nav-item dropdown no-arrow mx-1">
-              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Transmission mode <i class="fas fa-bell fa-fw"></i>
-                <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter"><span id="sendmode2" onclick="sendmode(this.innerHTML);" ></span></span>
-              </a>
-              
             </li>
 
             <div class="topbar-divider d-none d-sm-block"></div>
@@ -446,7 +435,6 @@ function save () {
 
 }
 
-		
 		</script >
            
 
@@ -457,9 +445,6 @@ function save () {
   if (typeof jQuery == 'undefined') {
     document.write('<script src="/jquery.min.js"><\/script>');
   }
-</script>
-
-<script>
 
 <!-- sauvegarde de la configuration --> 
 
@@ -491,20 +476,18 @@ $( "#formulaire" ).submit(function() {
   return false;
 });
 
+var recupconfig =  $.getJSON('/getwifi', function(data) {
+        for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+            var element = document.getElementById(key);
+                element.value = data[key];
+            }
+        }
 
-
-
-var recupconfig = $.get ({
-		url : 'getwifi',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
-        var config = recupconfig.split(";");
-    i=0;
-		document.getElementById("ssid").value = config[i];
-    i++;
-		document.getElementById("password").value = config[i];	  
+            // Une fois la requête terminée
+            recupconfig.done(function() {
+        });
+    
 </script>
 				  
                 </div>
@@ -539,12 +522,6 @@ var recupconfig = $.get ({
 
   <!-- Custom scripts for all pages-->
   <script src="sb-admin-2.js"></script>
- <script>
-
-
-
-
-</script>
 
 </body>
 

@@ -24,8 +24,8 @@ extern Logs logging;
  * If not, a reconnect is attempted. If this fails to finish within the timeout,
  * the ESP32 is send to deep sleep in an attempt to recover from this.
  */
-void keepWiFiAlive(void * parameter){
-    for(;;){
+void keepWiFiAlive(void * parameter){ // NOSONAR
+    for(;;){ 
         //serial_println(F("Wifi task"));
         if(WiFi.status() == WL_CONNECTED){
                 if (AP) { search_wifi_ssid(); }
@@ -34,19 +34,19 @@ void keepWiFiAlive(void * parameter){
         }
 
         serial_println(F("[WIFI] Connecting"));
-        gDisplayValues.currentState = CONNECTING_WIFI;
+        gDisplayValues.currentState = DEVICE_STATE::CONNECTING_WIFI;
 
         WiFi.mode(WIFI_STA);
         WiFi.setHostname(DEVICE_NAME);
         WiFi.begin(configwifi.SID, configwifi.passwd); 
-        //else { WiFi.begin(WIFI_NETWORK, WIFI_PASSWORD); }
+
         
 
         unsigned long startAttemptTime = millis();
 
         // Keep looping while we're not connected and haven't reached the timeout
         while (WiFi.status() != WL_CONNECTED && 
-                millis() - startAttemptTime < WIFI_TIMEOUT){}
+                millis() - startAttemptTime < WIFI_TIMEOUT){} // NOSONAR
 
         // Make sure that we're actually connected, otherwise go to deep sleep
         if(WiFi.status() != WL_CONNECTED){
@@ -63,7 +63,7 @@ void keepWiFiAlive(void * parameter){
         serial_print("force du signal:");
         serial_print(WiFi.RSSI());
         serial_println("dBm");
-        gDisplayValues.currentState = UP;
+        gDisplayValues.currentState = DEVICE_STATE::UP;
         gDisplayValues.IP = String(WiFi.localIP().toString());
         btStop();
     }
@@ -75,7 +75,7 @@ extern Memory task_mem;
 /// @param parameter 
 void keepWiFiAlive2(void * parameter){
     for(;;){
-        //serial_println(F("Wifi task"));
+
 
                 if (AP) { search_wifi_ssid(); 
                 }
@@ -83,7 +83,7 @@ void keepWiFiAlive2(void * parameter){
                 
             task_mem.task_keepWiFiAlive2 = uxTaskGetStackHighWaterMark(NULL);
             vTaskDelay(pdMS_TO_TICKS(30000));
-            //continue;
+
         }
 }
 

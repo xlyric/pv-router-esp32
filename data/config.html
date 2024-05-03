@@ -136,9 +136,7 @@
 
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
             <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
+
               <!-- Dropdown - Messages -->
               <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
 
@@ -279,8 +277,8 @@
                   
                     <div class="col-sm-3">
                     <div class="custom-control custom-checkbox small">
-                            <input type="checkbox" class="custom-control-input" id="dimmerlocal">
-                            <label class="custom-control-label" for="dimmerlocal" onclick="sendservermode(this.innerHTML);" >Dimmer local</label>
+                            <input type="checkbox" class="custom-control-input" id="dimmerlocal" onchange="sendservermode('dimmerlocal');">
+                            <label class="custom-control-label" for="dimmerlocal" >Dimmer local</label>
                     </div>
                     </div>
                     <div class="col-sm-3">
@@ -381,8 +379,8 @@
                   <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="Pour inverser la mesure sans toucher à la sonde">Inversion de la mesure (+/-) : ℹ </div>
                   <div class="col-sm-4">
                     <div class="custom-control custom-checkbox small">
-                      <input type="checkbox" class="custom-control-input" id="polarity">
-                      <label class="custom-control-label" for="polarity" onclick="sendservermode(this.innerHTML);" >polarité</label>
+                      <input type="checkbox" class="custom-control-input" id="polarity" onchange="sendservermode('polarity');">
+                      <label class="custom-control-label" for="polarity">polarité</label>
                     </div>
                   </div>
                </div>
@@ -402,8 +400,8 @@
 
                 <div class="col-sm-3">
                   <div class="custom-control custom-checkbox small">
-                    <input type="checkbox" class="custom-control-input" id="flip">
-                    <label class="custom-control-label" for="flip" onclick="sendservermode('flip');" >flip screen</label>
+                    <input type="checkbox" class="custom-control-input" id="flip" onchange="sendservermode('flip');">
+                    <label class="custom-control-label" for="flip" >flip screen</label>
                   </div>
                 </div>
               </div> 
@@ -610,14 +608,9 @@ $(document).ready(function(){
   }
 </script>
 
-<script>
-
-    </script>
-
   <!-- Custom scripts for all pages-->
   <script src="sb-admin-2.js"></script>
 
-</script>
 <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
 <script>
   kofiWidgetOverlay.draw('clyric', {

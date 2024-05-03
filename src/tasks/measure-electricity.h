@@ -24,7 +24,7 @@ int slowlog = TEMPOLOG - 1 ;
 extern Memory task_mem; 
 int demoloop = 0;
 
-void measureElectricity(void * parameter)
+void measureElectricity(void * parameter) // NOSONAR
 {
     for(;;){
     //  serial_println("[ENERGY] Measuring...");

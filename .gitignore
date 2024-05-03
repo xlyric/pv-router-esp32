@@ -51,14 +51,16 @@ Module.symvers
 Mkfile.old
 dkms.conf
 test/*
+.pio/build/project.checksum
 .pio/*
 .vscode/*
 .pio/build/esp32doit-devkit-v1/.sconsign37.dblite
 .pio/build/esp32doit-devkit-v1/firmware.bin
-.pio/build/project.checksum
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .pio/build/esp32doit-devkit-v1/.sconsign37.dblite
 .vscode/c_cpp_properties.json
 .pio/build/esp32doit-devkit-v1/firmware.bin
 .pio/build/esp32doit-devkit-v1/.sconsign37.dblite
+
+compiled_bin/*

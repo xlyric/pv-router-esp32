@@ -125,9 +125,7 @@
 
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
             <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
+
               <!-- Dropdown - Messages -->
               <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
 
@@ -164,8 +162,8 @@
 			  
             <div class="col-sm-3">
               <div class="custom-control custom-checkbox small">
-                <input type="checkbox" class="custom-control-input" id="MQTT">
-                <label class="custom-control-label" for="MQTT" onclick="sendservermode(this.innerHTML);" >MQTT</label>
+                <input type="checkbox" class="custom-control-input" id="MQTT" onchange="sendservermode('MQTT');">
+                <label class="custom-control-label" for="MQTT"  >MQTT</label>
               </div>
             </div>
           
@@ -225,8 +223,8 @@
                     <div class="custom-control custom-checkbox small">
                       Actif
                       <br>
-                      <input type="checkbox" class="custom-control-input" id="HA">
-                      <label class="custom-control-label" for="HA" onclick="sendservermode(this.innerHTML);" >HA</label>
+                      <input type="checkbox" class="custom-control-input" id="HA" onchange="sendservermode('HA');">
+                      <label class="custom-control-label" for="HA"  >HA</label>
                     </div>
                   </div>
 
@@ -249,8 +247,8 @@
                     <div class="custom-control custom-checkbox small">
                       <a data-toggle="popover" title="Aide" data-bs-content="Cochez si vous utilisez un Shelly 3EM ( Triphasé )">Mono / Triphasé (Beta) ℹ</a>
                       <br>
-                      <input type="checkbox" class="custom-control-input" id="TRI">
-                      <label class="custom-control-label" for="TRI" onclick="sendservermode(this.innerHTML);" >TRI</label>
+                      <input type="checkbox" class="custom-control-input" id="TRI" onchange="sendservermode('TRI');">
+                      <label class="custom-control-label" for="TRI" >TRI</label>
                     </div>
                   </div>
                 </div>

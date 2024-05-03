@@ -126,7 +126,6 @@ float get_power(){
 
     // pour le dimmer robotdyn et SSR Random
 
-      //power = dimmer_hard.getPower();
       int power1 = dimmer_hard.getPower();
 
       #ifdef outputPin2
@@ -136,9 +135,6 @@ float get_power(){
       #else
         power = ((float)(power1*config.resistance ) / (float)config.charge) ;
       #endif
-      //logging.Set_log_init("P1: " + String(power1) + " P2: " + String(power2) + " P3: " + String(power3) );
-      //power = ((float)(power1*config.resistance + power2*config.charge2 + power3*config.charge3) / (float)config.charge) ;
-      //logging.Set_log_init(" PTotale: " + String(power) + "\r\n" ); 
 
   return power;
 }

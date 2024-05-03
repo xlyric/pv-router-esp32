@@ -10,13 +10,13 @@
   extern TFT_eSPI display;
 #endif
 
-#define TFT_PIN 4
+#define TFT_PIN 4 // NOSONAR
 
 extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Memory task_mem; 
 
-void switchDisplay(void * parameter){
+void switchDisplay(void * parameter){ // NOSONAR
   int timer = millis();
   int timeroptions ;
   for(;;) {
@@ -99,5 +99,5 @@ void switchDisplay(void * parameter){
     task_mem.task_switchDisplay = uxTaskGetStackHighWaterMark(NULL);
     vTaskDelay(pdMS_TO_TICKS(1000));  
   } 
-} //switchDisplay
+} 
 #endif

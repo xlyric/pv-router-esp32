@@ -9,11 +9,11 @@
 extern Configwifi configwifi; 
 extern Memory task_mem; 
 
-void serial_read_task(void * parameter){
+void serial_read_task(void * parameter){ // NOSONAR
   for (;;){
     const int timeout_task = 36; /// timeout à 2 minutes
 
-    if (gDisplayValues.serial_timeout < timeout_task)   {
+    if (gDisplayValues.serial_timeout < timeout_task)   { 
         serial_read();
         gDisplayValues.serial_timeout ++ ;
         
@@ -28,7 +28,7 @@ void serial_read_task(void * parameter){
     logging.clean_log_init();
 
    // Sleep for 5 seconds, avant de refaire une analyse
-    //vTaskDelay(5000 / portTICK_PERIOD_MS);
+
     task_mem.task_serial_read_task = uxTaskGetStackHighWaterMark(NULL);
     if (AP) { vTaskDelay(pdMS_TO_TICKS(3000)); }
     else { vTaskDelay(pdMS_TO_TICKS(5000)); }

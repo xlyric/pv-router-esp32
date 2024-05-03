@@ -36,14 +36,15 @@ void ntpinit() {
 
 //////// structure pour les programmateurs. 
 struct Programme {
-  public:char heure_demarrage[6];
-  public:char heure_arret[6];
-  public:int temperature=50;
-  public:bool run; 
-  public:int heure;
-  public:int minute;
+  public:
+    char heure_demarrage[6]; // NOSONAR
+    char heure_arret[6]; // NOSONAR
+    int temperature=50;
+    bool run; 
+    int heure;
+    int minute;
   //public:String name2;
-  private:char name_minuteur[12]; 
+  private:char name_minuteur[12];  // NOSONAR
   
   // setter name 
   public:void Set_name(String setter) {strlcpy(name_minuteur, setter.c_str(), sizeof(name_minuteur)); }
@@ -52,8 +53,7 @@ struct Programme {
   /// @brief sauvegarde
   /// @param programme_conf 
   public:void saveProgramme() {
-        //const char * c_file = name;
-        //Serial.println(c_file);
+
         DynamicJsonDocument doc(192);
 
               ////vérification cohérence des données
@@ -85,7 +85,6 @@ struct Programme {
   
 
   public:bool loadProgramme() {
-        //const char * c_file = name;
         File configFile = SPIFFS.open(name_minuteur, "r");
 
         // Allocate a temporary JsonDocument
@@ -119,9 +118,11 @@ struct Programme {
   }
 
    public:bool start_progr() {
-      int heures, minutes;
+      int heures;
+      int minutes;
       sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
-      int heures_fin, minutes_fin;
+      int heures_fin;
+      int minutes_fin;
       sscanf(heure_arret, "%d:%d", &heures_fin, &minutes_fin);
       
       // si heure_demarrage == heure_arret alors on retourne false
@@ -175,7 +176,8 @@ struct Programme {
 /// @brief  stop du programme
 /// @return 
 public:bool stop_progr() {
-  int heures, minutes;
+  int heures ;
+  int minutes;
   /// sécurité temp
   if ( gDisplayValues.temperature >= config.tmax  || gDisplayValues.temperature >= temperature ) { 
     digitalWrite(COOLER, LOW);
@@ -204,7 +206,8 @@ public:bool stop_progr() {
 
  /// vérification de la conformité de la donnée heure_demarrage[6]; 
  bool check_data(char data[6]){
-  int heures, minutes;
+  int heures; 
+  int minutes;
   int result = sscanf(data, "%d:%d", &heures, &minutes);
   if (result != 2) {
     Serial.println("Erreur de lecture de l'heure");

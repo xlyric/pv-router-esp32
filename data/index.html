@@ -94,12 +94,9 @@
 
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
             <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
+
               <!-- Dropdown - Messages -->
               <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-
               </div>
             </li>
 
@@ -331,24 +328,23 @@
 	
 		// mise à jour de la jauge  --> 	
 		var gaugePA = new google.visualization.Gauge(document.getElementById('curve_chart2'));
-	    dataGaugePA = new google.visualization.DataTable();
+	  var dataGaugePA = new google.visualization.DataTable();
 	    dataGaugePA.addColumn('string', 'Reseau');
-		dataGaugePA.addColumn('number', 'Value');
-		dataGaugePA.addRows(1);
-		
-		
+		  dataGaugePA.addColumn('number', 'Value');
+		  dataGaugePA.addRows(1);
+			
 	
 		var gaugePApower = new google.visualization.Gauge(document.getElementById('curve_power'));
 	  var  dataGaugePApower = new google.visualization.DataTable();
 	    dataGaugePApower.addColumn('string', 'Power');
-		dataGaugePApower.addColumn('number', 'Value');
-		dataGaugePApower.addRows(1);
+		  dataGaugePApower.addColumn('number', 'Value');
+		  dataGaugePApower.addRows(1);
 
 		var gaugePAtemp = new google.visualization.Gauge(document.getElementById('curve_temp'));
 	  var dataGaugePAtemp = new google.visualization.DataTable();
 	    dataGaugePAtemp.addColumn('string', 'Temp °C');
-		dataGaugePAtemp.addColumn('number', 'Value');
-		dataGaugePAtemp.addRows(1);
+		  dataGaugePAtemp.addColumn('number', 'Value');
+		  dataGaugePAtemp.addRows(1);
 
 	  setInterval(function ( ) {
 
@@ -385,20 +381,6 @@
     });
   }, 2000);
   
- 			
-var recupconfig = $.get ({
-		url : '/config',
-		type : 'GET',
-		dataType: "text",
-		async: false }).responseText; 
-				  
- var config = recupconfig.split(";");
-
-}
-
-
-	
-
 				  
 function sendservermode (mode) {
 

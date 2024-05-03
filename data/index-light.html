@@ -96,9 +96,7 @@
 
             <!-- Nav Item - Search Dropdown (Visible Only XS) -->
             <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
+
               <!-- Dropdown - Messages -->
               <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
 
@@ -314,7 +312,7 @@
 				  setInterval(function ( ) {
 				  
 					chart = new google.visualization.LineChart(document.getElementById('curve_chart'));  	 
-					data2 = new google.visualization.DataTable(); 
+					var data2 = new google.visualization.DataTable(); 
 					data2.addColumn('number', 'time');
 					data2.addColumn('number', 'half wave');
 					data2.addColumn('number', 'Analog out (Ampere)');
@@ -466,8 +464,6 @@ $( "form" ).submit(function( event ) {
   <script src="/jquery.min.js"></script>
   <script src="/bootstrap.bundle.min.js"></script>
 
-  <!-- Core plugin JavaScript-->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --> 
 
  <script>
 

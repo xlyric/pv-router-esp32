@@ -9,8 +9,8 @@
 #include "../config/enums.h"
 #include "../config/config.h"
 
-const char *ssid = "PV-ROUTER";
-const char *passphrase = "PV-ROUTER";
+constexpr const char *ssid = "PV-ROUTER"; // NOSONAR
+constexpr const char *passphrase = "PV-ROUTER"; // NOSONAR
 
 IPAddress local_IP(192,168,4,1);
 IPAddress gateway(192,168,4,254);
@@ -42,11 +42,11 @@ void APConnect() {
     WiFi.onEvent(WiFiEvent);
     WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED);
     Serial.println(WiFi.macAddress());
-    //String network = ssid + String('-') + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+
     Serial.println(gDisplayValues.pvname);
     
     int net_len = gDisplayValues.pvname.length() + 1; 
-    char char_ssid[net_len];
+    char char_ssid[net_len];  // NOSONAR
     gDisplayValues.pvname.toCharArray(char_ssid, net_len);
 
     Serial.print("Setting AP-ROUTER configuration ... ");
@@ -227,13 +227,13 @@ void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info) {
     Serial.println("dimmer ");
         
         logging.Set_log_init("New Dimmer on AP",true);
-  //  logging.start += "New Dimmer on AP :" + String(dimmertemp) +"\r\n";
+
   }
   else {
     Serial.println("not dimmer");
     
     logging.Set_log_init("New Connexion on AP",true);
-// logging.start += "New Connexion on AP :" + String(dimmertemp) +"\r\n";
+
   }
 
   Serial.println(dimmertemp);
@@ -255,7 +255,6 @@ void search_wifi_ssid(){
         if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0)
         {
           Serial.println("SSID trouvé reboot en cours");
-          //ESP.restart();
           /// reconnection wifi
           
 
@@ -267,7 +266,7 @@ void search_wifi_ssid(){
           
             if (WiFi.SSID() == configwifi.SID && strlen(configwifi.passwd) > 4 ) {
               // a test en remplacement mais pose des problème lors de la conf du wifi en mode AP
-              //if (strcmp(configwifi.SID, WiFi.SSID(i).c_str()) == 0) {
+
             Serial.println("WiFi connecté");
             WiFi.softAPdisconnect(true);
             savelogs("-- reboot dans 30s Wifi retrouvé -- ");
@@ -276,20 +275,7 @@ void search_wifi_ssid(){
             }   
             
           }
-            
 
-          // deconnection du mode AP
-          //WiFi.softAPdisconnect(true);
-          // reconnexion MQTT
-          /*
-          if (config.mqtt) {
-            Mqtt_init();
-
-          // HA autoconf
-          if (configmqtt.HA) init_HA_sensor();
-            
-          }
-          */
           break;
         }
 

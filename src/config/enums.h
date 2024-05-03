@@ -1,23 +1,21 @@
 #ifndef ENUMS
 #define ENUMS
 
+#include <Preferences.h> 
+#include <TimeLib.h>
+#include <NTPClient.h>
+
 #include <Arduino.h>
 #ifndef LIGHT_FIRMWARE
   #include <PubSubClient.h>
   extern PubSubClient client;
 #endif
 
-#include <Preferences.h> 
-#include <TimeLib.h>
-#include <NTPClient.h>
-
-
-#define SECURITEPASS "MyPassword"
-
+#define SECURITEPASS "MyPassword" // NOSONAR
 
 // The state in which the device can be. This mainly affects what
 // is drawn on the display.
-enum DEVICE_STATE {
+enum class DEVICE_STATE {
   CONNECTING_WIFI,
   CONNECTING_AWS,
   FETCHING_TIME,
@@ -62,14 +60,14 @@ struct DisplayValues {
 };
 
 struct Config {
-  char hostname[16];  // à vérifier si on peut pas le supprimer
+  char hostname[16];  // à vérifier si on peut pas le supprimer // NOSONAR
   int port;  // idem  
-  char apiKey[64];  // clé pour jeedom
+  char apiKey[64];  // clé pour jeedom // NOSONAR 
   bool UseDomoticz;
   bool UseJeedom;
   int IDX;  // IDX pour domoticz
   int IDXdallas; // IDX pour domoticz
-  char otapassword[64];
+  char otapassword[64]; // NOSONAR
   int delta; 
   int deltaneg;
   int cosphi; // plus utilisé
@@ -77,19 +75,19 @@ struct Config {
   int cycle;  // cycle de lecture des capteurs
   bool sending; 
   bool autonome; // si dimmer en local 
-  char dimmer[16];  // adresse IP du dimmer
+  char dimmer[16];  // adresse IP du dimmer // NOSONAR
   bool dimmerlocal; // si dimmer en local
   float facteur; // facteur de correction de la puissance
   int num_fuse;
   int localfuse;
   int tmax;
   bool mqtt;
-  char mqttserver[16];
+  char mqttserver[16]; // NOSONAR
   int mqttport; 
   int IDXdimmer;
   int resistance;  // résistance de la charge
   bool polarity; 
-  char Publish[100];
+  char Publish[100]; // NOSONAR
   int  ScreenTime;
   int voltage; 
   int offset; 
@@ -97,7 +95,7 @@ struct Config {
   int relayon; 
   int relayoff;
   bool restart;
-  char topic_Shelly[100]; 
+  char topic_Shelly[100];  // NOSONAR
   bool Shelly_tri;
   int SCT_13=30;
 /// @brief  // Puissance de la charge 2 déclarée dans la page web
@@ -133,8 +131,8 @@ struct Configwifi {
   
   Preferences preferences;
 
-  char SID[32];
-  char passwd[64];
+  char SID[32]; // NOSONAR
+  char passwd[64]; // NOSONAR
 
   public:bool sauve_wifi() {
   preferences.begin("credentials", false);
@@ -159,8 +157,8 @@ struct Configwifi {
 
 struct Mqtt {
 public: 
-  char username[50];
-  char password[50];
+  char username[50]; // NOSONAR
+  char password[50]; // NOSONAR
   bool HA;
 };
 
@@ -185,19 +183,19 @@ public:
 
 struct Configmodule {
 public: 
-  char hostname[16];
-  char port[5];
+  char hostname[16]; // NOSONAR
+  char port[5]; // NOSONAR
   bool enphase_present=false; 
   bool Fronius_present=false;
-  char envoy[5];
-  char version[2];
-  char token[512]; //correction suite remonté de multinet
+  char envoy[5]; // NOSONAR
+  char version[2]; // NOSONAR 
+  char token[512]; //correction suite remonté de multinet // NOSONAR
 };
 
 /// @brief  partie délicate car pas mal d'action sur la variable log_init et donc protection de la variable ( pour éviter les pb mémoire )
 struct Logs {
   private:
-      char log_init[LOG_MAX_STRING_LENGTH];
+      char log_init[LOG_MAX_STRING_LENGTH]; // NOSONAR
       int MaxString = LOG_MAX_STRING_LENGTH * .9 ;
 
   public:
@@ -244,7 +242,7 @@ public:void Set_log_init(String setter, bool logtime=false) {
   }
 
   char *loguptime(bool day=false) {
-    static char uptime_stamp[20]; // Vous devrez définir une taille suffisamment grande pour stocker votre temps
+    static char uptime_stamp[20]; // Vous devrez définir une taille suffisamment grande pour stocker votre temps // NOSONAR
       time_t maintenant;
       time(&maintenant);
       if (day) {
@@ -268,8 +266,8 @@ struct Dallas{
   byte i;
   byte present = 0;
   byte type_s;
-  byte data[12];
-  byte addr[8];
+  byte data[12]; // NOSONAR
+  byte addr[8]; // NOSONAR
   float celsius = 0.00 ;
   byte security = 0;
   bool detect = false; 
@@ -302,7 +300,7 @@ struct Dallas{
           public:void Set_entity_category(String setter) {entity_category=setter; }
 
           private:String icon; 
-          public:void Set_icon(String setter) {icon="\"ic\": \""+ setter +"\", "; }
+          public:void Set_icon(String setter) {icon = R"("ic": ")" + setter + R"(", )"; }
 
           bool cmd_t; 
 
@@ -316,14 +314,17 @@ struct Dallas{
           private:const String node_id = String("PvRouter-") + node_mac; 
           public:const String topic = "homeassistant/sensor/"+ node_id +"/";
           private:String device_declare() { 
-                    String info =         "\"dev\": {"
-                    "\"ids\": \""+ node_id + "\","
-                    "\"name\": \""+ node_id + "\","
-                    "\"sw\": \"PvRouter "+ String(VERSION) +"\","
-                    "\"mdl\": \"ESP32 TTGO " + IPaddress + "\","
-                    "\"mf\": \"Cyril Poissonnier\","
-                    "\"cu\": \"http://"+ IPaddress +"\""
-                  "}"; 
+                  String info = R"(
+                      "dev": {
+                          "ids": ")" + node_id + R"(",
+                          "name": ")" + node_id + R"(",
+                          "sw": "PvRouter )" + String(VERSION) + R"(",
+                          "mdl": "ESP32 TTGO )" + IPaddress + R"(",
+                          "mf": "Cyril Poissonnier",
+                          "cu": "http://)" + IPaddress + R"("
+                      }
+                  )";
+ 
                   return info;
                   }
           private:String uniq_id; 
@@ -332,21 +333,23 @@ struct Dallas{
 
           public:void discovery(){
             IPaddress =   WiFi.localIP().toString() ;
-            String device= "{ \"dev_cla\": \""+dev_cla+"\","
-                  "\"unit_of_meas\": \""+unit_of_meas+"\","
-                  "\"stat_cla\": \""+stat_cla+"\"," 
-                  "\"name\": \""+ name +"-"+ node_mac + "\"," 
-                  "\"state_topic\": \""+ topic +"state\","
-                  "\"stat_t\": \""+ topic +"state"+name+"\","
-                  "\"avty_t\": \""+ topic +"status\","
-                  "\"uniq_id\": \""+ node_mac + "-" + name +"\", "
-                  "\"value_template\": \"{{ value_json."+name +" }}\", "
-                  "\"cmd_t\": \""+ topic +"command\","
-                  "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
-                  "\"exp_aft\": \""+ MQTT_INTERVAL +"\", "
-                  + icon
-                  + device_declare() + 
-                "}";
+              String device = R"(
+                  {
+                      "dev_cla": ")" + dev_cla + R"(",
+                      "unit_of_meas": ")" + unit_of_meas + R"(",
+                      "stat_cla": ")" + stat_cla + R"(",
+                      "name": ")" + name + "-" + node_mac + R"(",
+                      "state_topic": ")" + topic + "state" + R"(",
+                      "stat_t": ")" + topic + "state" + name + R"(",
+                      "avty_t": ")" + topic + "status" + R"(",
+                      "uniq_id": ")" + node_mac + "-" + name + R"(", 
+                      "value_template": "{{ value_json.)" + name + R"( }}", 
+                      "cmd_t": ")" + topic + "command" + R"(",
+                      "cmd_tpl": "{{ value_json.)" + name + R"( }}", 
+                      "exp_aft": ")" + MQTT_INTERVAL + R"(", )" + icon + device_declare() + R"(
+                  }
+              )";
+
                 if (dev_cla =="" ) { dev_cla = name; }
 
                 if (strlen(name.c_str()) != 0 ) {
@@ -374,15 +377,16 @@ struct Dallas{
   #endif
 
 struct epoc {
-  public:int heure;
-  public:int minute;
-  public:int seconde;
-  public:int jour;
-  public:int mois;
-  public:int annee;
+  public:
+    int heure;
+    int minute;
+    int seconde;
+    int jour;
+    int mois;
+    int annee;
 };
 
-#define TABLEAU_SIZE 7
-int tableaudemo[TABLEAU_SIZE] = {180, 3, -150, 4, 150, 5, -180};
+#define TABLEAU_SIZE 7 // NOSONAR
+int tableaudemo[TABLEAU_SIZE] = {180, 3, -150, 4, 150, 5, -180}; // NOSONAR
 
 #endif

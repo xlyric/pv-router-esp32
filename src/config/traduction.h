@@ -1,50 +1,49 @@
 
 #if LANG_EN 
 
-#define GRID "Grid"
-#define INJECTION "Injection"
-#define STABLE "Stable"
+#define GRID "Grid" // NOSONAR
+#define INJECTION "Injection" // NOSONAR
+#define STABLE "Stable" // NOSONAR
 
-#define BOOTING "Booting"
+#define BOOTING "Booting" // NOSONAR
+ 
+#define WIFINO "Wifi not configured" // NOSONAR
+#define WIFICONNECT "Connecting to " // NOSONAR
 
-#define WIFINO "Wifi not configured"
-#define WIFICONNECT "Connecting to "
+#define OLEDSTART "Start Oled" // NOSONAR
 
-#define OLEDSTART "Start Oled"
+#define SPIFFSNO "SPIFFS Files are missing, please upload them\r\n" // NOSONAR
+#define CONFNO "config Files is missing\r\n" // NOSONAR
 
-#define SPIFFSNO "SPIFFS Files are missing, please upload them\r\n"
-#define CONFNO "config Files is missing\r\n"
-
-#define OLEDPOW "Power (W)"
-#define OLEDNOSIN "No-Sin"
+#define OLEDPOW "Power (W)" // NOSONAR
+#define OLEDNOSIN "No-Sin" // NOSONAR
 
 #endif
 
 #if LANG_FR
 
-#define GRID "Reseau"
-#define INJECTION "Injection"
-#define STABLE "Stable"
+#define GRID "Reseau" // NOSONAR
+#define INJECTION "Injection" // NOSONAR
+#define STABLE "Stable" // NOSONAR
 
-#define BOOTING "Demarrage"
+#define BOOTING "Demarrage" // NOSONAR
 
-#define WIFINO "Wifi non configuré"
-#define WIFICONNECT "Connexion à  "
+#define WIFINO "Wifi non configuré" // NOSONAR
+#define WIFICONNECT "Connexion à  " // NOSONAR
 
-#define OLEDSTART "Démarrage Oled"
+#define OLEDSTART "Démarrage Oled" // NOSONAR
 
-#define SPIFFSNO "Fichier SPIFFS absent, Merci de les uploader\r\n"
-#define CONFNO "Fichier de configuration absent\r\n"
+#define SPIFFSNO "Fichier SPIFFS absent, Merci de les uploader\r\n" // NOSONAR
+#define CONFNO "Fichier de configuration absent\r\n" // NOSONAR
 
-#define OLEDPOW "Power (W)"
-#define OLEDNOSIN "No-Sin"
+#define OLEDPOW "Power (W)" // NOSONAR
+#define OLEDNOSIN "No-Sin" // NOSONAR
 
 #endif
 
-#define NOT_ENPHASE "--> Enphase not present\r\n"
-#define NOT_FRONIUS "--> Fronius not present\r\n"
-#define PV_RESTART "Restarting PV ROUTER"
-#define POWER_COMMAND "Power command sent "
-#define DALLAS_TEXT "Chip is DS18S20"
-#define NO_SYNC "Attention pas de porteuse, alimentation 9VAC ou pont redresseur débranché ? "
-//#define FAIL_READ "Failed to read, using default configuration in function"
+#define NOT_ENPHASE "--> Enphase not present\r\n" // NOSONAR
+#define NOT_FRONIUS "--> Fronius not present\r\n" // NOSONAR
+#define PV_RESTART "Restarting PV ROUTER" // NOSONAR
+#define POWER_COMMAND "Power command sent " // NOSONAR
+#define DALLAS_TEXT "Chip is DS18S20" // NOSONAR
+#define NO_SYNC "Attention pas de porteuse, alimentation 9VAC ou pont redresseur débranché ? " // NOSONAR

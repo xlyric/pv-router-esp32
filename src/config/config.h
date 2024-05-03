@@ -70,7 +70,6 @@ int dimmer_getState_interval = 0; // On requête la puissance du dimmer réguli�
 
 #define ADC_BITS    12
 #define ADC_COUNTS  (1<<ADC_BITS)
-int sigma_read;
 float VrmsOLD = 225; // Valeur de référence, s'ajuste avec la tension mesurée en fonction du coef PHASECAL
 float PHASECAL = 0.5;
 
@@ -164,8 +163,8 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20240501"
-constexpr const int FS_RELEASE= 20240501 ;
+#define RELEASE "Version 20240504"
+constexpr const int FS_RELEASE= 20240504 ;
 
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE

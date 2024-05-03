@@ -19,21 +19,22 @@
 
     extern unsigned short measurements[];
 
-    const char* PROGMEM HA_discovery_msg = "{"
-            "\"name\":\"" DEVICE_NAME "\","
-            "\"device_class\":\"power\","
-            "\"unit_of_measurement\":\"W\","
-            "\"icon\":\"mdi:transmission-tower\","
-            "\"state_topic\":\"homeassistant/sensor/" DEVICE_NAME "/state\","
-            "\"value_template\":\"{{ value_json.power}}\","
-            "\"device\": {"
-                "\"name\":\"" DEVICE_NAME "\","
-                "\"sw_version\":\"2.0\","
-                "\"model\":\"HW V2\","
-                "\"manufacturer\":\"Cyril Poissonnier\","
-                "\"identifiers\":[\"" DEVICE_NAME "\"]"
-            "}"
-        "}";
+    const char* PROGMEM HA_discovery_msg = R"({
+        "name": ")" DEVICE_NAME R"(",
+        "device_class": "power",
+        "unit_of_measurement": "W",
+        "icon": "mdi:transmission-tower",
+        "state_topic": "homeassistant/sensor/)" DEVICE_NAME R"(/state",
+        "value_template": "{{ value_json.power}}",
+        "device": {
+            "name": ")" DEVICE_NAME R"(",
+            "sw_version": "2.0",
+            "model": "HW V2",
+            "manufacturer": "Cyril Poissonnier",
+            "identifiers": [")" DEVICE_NAME R"("]
+        }
+    })";
+
 
     /**
      * Established a connection to Home Assistant MQTT broker.
