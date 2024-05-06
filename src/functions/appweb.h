@@ -60,14 +60,14 @@ String oscilloscope() {
   int temp;
   int signe; 
   int moyenne; 
-  int freqmesure = 40; 
+  int oscillo_freqmesure = 40; 
   int sigma = 0;
   String retour = "[[";
   
   front();
   
   delayMicroseconds (config.cosphi*config.readtime); // correction décalage
-  while ( timer < freqmesure )
+  while ( timer < oscillo_freqmesure )
   {
 
   
@@ -88,7 +88,7 @@ String oscilloscope() {
   temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
   moyenne = middleoscillo  + signe/50; 
   retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
-  middleoscillo = sigma / freqmesure ;
+  middleoscillo = sigma / oscillo_freqmesure ;
 
 return ( retour ); 
   
@@ -260,16 +260,15 @@ String getdebug() {
   configweb = "";
   configweb += "middle:" + String(middle_debug) + "\r\n" ; 
   //// calcul du cos phi par recherche milieu de demi onde positive 
-  int start=0;int end=0;int half=0  ;
+  int start=0;int end=0;int debug_half=0  ;
     for ( int i=0; i < 72; i ++ )
     {
       if ( porteuse[i] !=0  && start == 0 ) {start = i ;}
       if ( porteuse[i] ==0 && start != 0 && end == 0 ) {end = i ;}
 	  configweb += String(i) + "; "+ String(tableau[i]) + "; "+ String(porteuse[i]) + "\r\n" ;
     }
-    half = 36 - ( end - start ); 
-    configweb += "  cosphi :" + String(half) + "  end  :" + String(end ) +"  start :" + String(start)  ; 
-
+    debug_half = 36 - ( end - start ); 
+    configweb += "  cosphi :" + String(debug_half) + "  end  :" + String(end ) +"  start :" + String(start)  ; 
 
     return String(configweb);
   }
@@ -380,7 +379,7 @@ void serial_read() {
                   config.flip = !config.flip; 
                   if (config.flip) display.setRotation(3);
                   else display.setRotation(1);
-                  saveConfiguration(filename_conf, config); 
+                  logging.Set_log_init(config.saveConfiguration(),true); ///save configuration
         return; 
       }
 

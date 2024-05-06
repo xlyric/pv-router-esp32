@@ -18,8 +18,7 @@ extern HA compteur_grid;
 extern HA switch_1;
 extern HA temperature_HA;
 extern HA power_factor;
-extern HA power_vrms;
-extern HA power_irms;
+
 extern HA power_apparent;
 
 
@@ -80,17 +79,6 @@ void init_HA_sensor(){
         power_factor.Set_unit_of_meas("None");
         power_factor.Set_stat_cla("measurement");
         power_factor.Set_dev_cla("power_factor");
-
-        power_vrms.Set_name("Vrms");
-        power_vrms.Set_unit_of_meas("V");
-        power_vrms.Set_stat_cla("measurement");
-        power_vrms.Set_dev_cla("voltage");
-
-
-        power_irms.Set_name("Irms");
-        power_irms.Set_unit_of_meas("A");
-        power_irms.Set_stat_cla("measurement");
-        power_irms.Set_dev_cla("current");
 
         power_apparent.Set_name("ApparentPower");
         power_apparent.Set_unit_of_meas("VA");

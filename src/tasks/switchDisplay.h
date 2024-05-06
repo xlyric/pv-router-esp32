@@ -70,7 +70,7 @@ void switchDisplay(void * parameter){ // NOSONAR
                   else display.setRotation(1);
                   gDisplayValues.option = 0 ;
                   call_display(); 
-                  saveConfiguration(filename_conf, config);
+                  logging.Set_log_init(config.saveConfiguration(),true);  ///save configuration
                   #endif
             break;
           case 2:

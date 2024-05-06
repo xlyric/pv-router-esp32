@@ -20,7 +20,7 @@ extern Logs logging;
 
 void Fronius_get(void);
 
-bool loadfronius(const char *filename, Configmodule &configmodule) {
+bool loadfronius(const char *filename) {
   // Open file for reading
   File configFile = SPIFFS.open(fronius_conf, "r");
   if (!configFile) {

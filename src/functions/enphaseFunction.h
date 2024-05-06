@@ -23,7 +23,7 @@ int nbErreurGetJsonProd = 0;
 bool TockenValide=false;
 //////////////////// gestion FS
 
-bool loadenphase(const char *filename, Configmodule &configmodule) {
+bool loadenphase(const char *filename) {
   // Open file for reading
   File configFile = SPIFFS.open(enphase_conf, "r");
   if (!configFile) {

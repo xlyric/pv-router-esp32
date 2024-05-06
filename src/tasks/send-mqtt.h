@@ -38,8 +38,7 @@ extern Mqtt configmqtt;
       extern HA temperature_HA;
 
       extern HA power_factor;
-      extern HA power_vrms;
-      extern HA power_irms;
+            
       extern HA power_apparent;
 
 #endif
@@ -81,8 +80,7 @@ void send_to_mqtt(void * parameter){ // NOSONAR
                         device_routed.send(String(gDisplayValues.puissance_route));
                         device_dimmer_power.send(String(int((unified_dimmer.get_power()) * config.charge/100)));
                         power_apparent.send(String(int(PVA)));
-                        power_vrms.send(String(int(Vrms)));
-                        power_irms.send(String(Irms));
+                      
                         power_factor.send(String(PowerFactor));
 
                         temperature_HA.send(String(gDisplayValues.temperature));

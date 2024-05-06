@@ -4,6 +4,13 @@
 #include <Preferences.h> 
 #include <TimeLib.h>
 #include <NTPClient.h>
+#include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
+
+// File System
+#ifdef ESP32
+#include <FS.h>
+#include "SPIFFS.h"
+#endif
 
 #include <Arduino.h>
 #ifndef LIGHT_FIRMWARE
@@ -60,6 +67,7 @@ struct DisplayValues {
 };
 
 struct Config {
+public:
   char hostname[16];  // à vérifier si on peut pas le supprimer // NOSONAR
   int port;  // idem  
   char apiKey[64];  // clé pour jeedom // NOSONAR 
@@ -106,6 +114,7 @@ struct Config {
   int charge;
 
   Preferences preferences;
+  const char *filename_conf = "/config.json";
 
 public:
   bool sauve_polarity() {
@@ -125,8 +134,185 @@ public:
   void calcul_charge() {
     charge = resistance + charge2 + charge3;
   }
+
+  //***********************************
+//************* Gestion de la configuration - Lecture du fichier de configuration
+//***********************************
+  // Loads the configuration from a file
+  String loadConfiguration() {
+    String message = "";
+    // Open file for reading
+    File configFile = SPIFFS.open(filename_conf, "r");
+
+    // Allocate a temporary JsonDocument
+    // Don't forget to change the capacity to match your requirements.
+    // Use arduinojson.org/v6/assistant to compute the capacity.
+    DynamicJsonDocument doc(1024);
+
+    // Deserialize the JSON document
+    DeserializationError error = deserializeJson(doc, configFile);
+    if (error) {
+      Serial.println(F("Failed to read, using default configuration in function loadConfiguration"));
+      
+      message = "Failed to read, using default configuration in function loadConfiguration\r\n";
+
+
+    }
+
+    
+    // Copy values from the JsonDocument to the Config
+    port = doc["port"] | 8080;
+    strlcpy(hostname,                  // <- destination
+            doc["hostname"] | "none", // <- source
+            sizeof(hostname));         // <- destination's capacity
+    
+    strlcpy(apiKey,                  // <- destination
+            doc["apiKey"] | "Myapikeystring", // <- source
+            sizeof(apiKey));         // <- destination's capacity
+        
+    UseDomoticz = doc["UseDomoticz"] | false; 
+    UseJeedom = doc["UseJeedom"] | false; 
+    IDX = doc["IDX"] | 100; 
+    IDXdimmer = doc["IDXdimmer"] | 110; 
+    IDXdallas = doc["IDXdallas"] | 900; 
+    strlcpy(otapassword,                  // <- destination
+            doc["otapassword"] | "Pvrouteur2", // <- source
+            sizeof(otapassword));         // <- destination's capacity
+    
+    facteur = doc["facteur"] | 0.86; 
+    delta = doc["delta"] | 50; 
+    num_fuse = doc["fuse"] | 70;
+    deltaneg = doc["deltaneg"] | 0; 
+    cosphi = doc["cosphi"] | 5; 
+    readtime = doc["readtime"] | 555;
+    cycle = doc["cycle"] | 72;
+
+    resistance = doc["resistance"] | 1000;
+    charge2 = doc["charge2"] | 0;
+    charge3 = doc["charge3"] | 0;
+    calcul_charge();
+
+    sending = doc["sending"] | true;
+    autonome = doc["autonome"] | true;
+    mqtt = doc["mqtt"] | true;
+    mqttport = doc["mqttport"] | 1883;
+    
+    dimmerlocal = doc["dimmerlocal"] | false;
+    flip = doc["flip"] | true;
+    tmax = doc["tmax"] | 65;
+    localfuse = doc["localfuse"] | 50;
+    voltage = doc["voltage"] | 233;
+    offset = doc["offset"] | -10;
+    relayoff = doc["relayoff"] | 95;
+    relayon = doc["relayon"] | 100;
+    SCT_13 = doc["SCT_13"] | 30;
+
+    polarity = doc["polarity"] | false;
+    strlcpy(dimmer,                  // <- destination
+            doc["dimmer"] | "none", // <- source
+            sizeof(dimmer));         // <- destination's capacity
+
+    strlcpy(mqttserver,                  // <- destination
+            doc["mqttserver"] | "none", // <- source
+            sizeof(mqttserver));         // <- destination's capacity
+    strlcpy(Publish,                  // <- destination
+            doc["Publish"] | "domoticz/in", // <- source
+            sizeof(Publish));         // <- destination's mqtt
+    ScreenTime = doc["screentime"] | 0 ; // timer to switch of screen
+    
+    strlcpy(topic_Shelly,                  // <- destination
+            doc["topic_Shelly"] | "none", // <- source
+            sizeof(topic_Shelly));
+
+    Shelly_tri = doc["Shelly_tri"] | false; /// récupération shelly mode triphasé ou monophasé
+    configFile.close();
+
+    recup_polarity();
+    message = "config file loaded\r\n";
+  return message;
+  }
+
+
+
+//***********************************
+//************* Gestion de la configuration - sauvegarde du fichier de configuration
+//***********************************
+
+  String saveConfiguration() {
+    String message = "";
+    // Open file for writing
+    File configFile = SPIFFS.open(filename_conf, "w");
+    if (!configFile) {
+      Serial.println(F("Failed to open config file for writing in function Save configuration"));
+      message = "Failed to open config file for writing in function Save configuration\r\n";
+      return message;
+    } 
+
+    // Allocate a temporary JsonDocument
+    // Don't forget to change the capacity to match your requirements.
+    // Use arduinojson.org/assistant to compute the capacity.
+    DynamicJsonDocument doc(1024);
+
+    // Set the values in the document
+    doc["hostname"] = hostname;
+    doc["port"] = port;
+    doc["apiKey"] = apiKey;
+    doc["UseDomoticz"] = UseDomoticz;
+    doc["UseJeedom"] = UseJeedom;
+    doc["IDX"] = IDX;
+    doc["IDXdimmer"] = IDXdimmer;
+    doc["IDXdallas"] = IDXdallas;
+    doc["otapassword"] = otapassword;
+    doc["delta"] = delta;
+    doc["deltaneg"] = deltaneg;
+    doc["cosphi"] = cosphi;
+    doc["readtime"] = readtime;
+    doc["cycle"] = cycle;
+    doc["sending"] = sending;
+    doc["autonome"] = autonome;
+    doc["dimmer"] = dimmer;
+
+    doc["dimmerlocal"] = dimmerlocal;
+    doc["tmax"] = tmax;
+    doc["localfuse"] = localfuse;
+
+    doc["facteur"] = facteur;
+    doc["fuse"] = num_fuse;
+    doc["mqtt"] = mqtt;
+    doc["mqttserver"] = mqttserver; 
+    doc["mqttport"] = mqttport; 
+    
+    doc["resistance"] = resistance;
+    doc["charge2"] = charge2;
+    doc["charge3"] = charge3;
+
+    doc["polarity"] = polarity; 
+    doc["Publish"] = Publish;
+    doc["screentime"] = ScreenTime; 
+    doc["voltage"] = voltage; 
+    doc["offset"] = offset; 
+    doc["flip"] = flip; 
+    
+    doc["relayon"] = relayon; 
+    doc["relayoff"] = relayoff; 
+    doc["topic_Shelly"] = topic_Shelly; 
+    doc["Shelly_tri"] = Shelly_tri;
+    doc["SCT_13"] = SCT_13;
+    message = "config file saved\r\n";
+
+    // Serialize JSON to file
+    if (serializeJson(doc, configFile) == 0) {
+      Serial.println(F("Failed to write to file in function Save configuration "));
+      message = "Failed to write to file in function Save configuration\r\n";
+    }
+    // Close the file
+    configFile.close();
+    return message;
+  }
 };
 
+/// @brief //////////
+// structure pour la configuration de la partie  wifi 
 struct Configwifi {
   
   Preferences preferences;
@@ -160,6 +346,83 @@ public:
   char username[50]; // NOSONAR
   char password[50]; // NOSONAR
   bool HA;
+
+///////////////////////////////////
+////////config MQTT
+///////////////////////////////////
+const char *mqtt_conf = "/mqtt.json";
+
+
+String loadmqtt() {
+  String message = "";
+  // Open file for reading
+  File configFile = SPIFFS.open(mqtt_conf, "r");
+
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/v6/assistant to compute the capacity.
+  DynamicJsonDocument doc(512);
+
+  // Deserialize the JSON document
+  DeserializationError error = deserializeJson(doc, configFile);
+  if (error) {
+    Serial.println(F("Failed to read MQTT config "));
+    
+    message = "Failed to read MQTT config\r\n";
+    return message;
+  }
+
+  
+  // Copy values from the JsonDocument to the Config
+  
+  strlcpy(username,                  // <- destination
+          doc["MQTT_USER"] | "", // <- source
+          sizeof(username));         // <- destination's capacity
+  
+  strlcpy(password,                  // <- destination
+          doc["MQTT_PASSWORD"] | "", // <- source
+          sizeof(password));         // <- destination's capacity
+  HA = doc["HA"] | true;
+  configFile.close();
+  
+  message = "MQTT config loaded\r\n";
+
+return message;    
+}
+
+String savemqtt() {
+  String message = "";
+  // Open file for writing
+   File configFile = SPIFFS.open(mqtt_conf, "w");
+  if (!configFile) {
+    Serial.println(F("Failed to open config file for writing in function mqtt configuration"));
+    
+    message = "Failed to open config file for writing in function mqtt configuration\r\n";
+    return message;
+  } 
+
+  // Allocate a temporary JsonDocument
+  // Don't forget to change the capacity to match your requirements.
+  // Use arduinojson.org/assistant to compute the capacity.
+  DynamicJsonDocument doc(512);
+
+  // Set the values in the document
+  doc["MQTT_USER"] = username;
+  doc["MQTT_PASSWORD"] = password;
+  doc["HA"] = HA;
+  message = "MQTT config saved\r\n";
+  // Serialize JSON to file
+  if (serializeJson(doc, configFile) == 0) {
+    Serial.println(F("Failed to write to file in function Save configuration "));
+    message = "Failed to write to file in function Save configuration\r\n";
+  }
+
+  // Close the file
+  configFile.close();
+  return message;
+}
+
+
 };
 
 struct Memory {

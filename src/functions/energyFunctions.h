@@ -193,8 +193,4 @@ gDisplayValues.watt = int( positive ) ;
 
 }
 
-int half = 0 ;
-double Vrms = 0;
-double Irms = 0;
-
 #endif

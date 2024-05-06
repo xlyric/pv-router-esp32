@@ -269,7 +269,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                           
 	   // doc /get?cycle=x
     if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
-                          saveConfiguration(filename_conf, config);   
+                          logging.Set_log_init("Configuration saved\r\n",true); // configuration sauvegardée
                             }
                            
 	 if (request->hasParam(PARAM_INPUT_2)) { config.cycle = request->getParam(PARAM_INPUT_2)->value().toInt(); }
@@ -329,7 +329,8 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    //// MQTT
    if (request->hasParam(PARAM_INPUT_mqttserver)) { request->getParam(PARAM_INPUT_mqttserver)->value().toCharArray(config.mqttserver,16);  }
    if (request->hasParam(PARAM_INPUT_publish)) { request->getParam(PARAM_INPUT_publish)->value().toCharArray(config.Publish,100); 
-      saveConfiguration(filename_conf, config);   }
+      logging.Set_log_init("Configuration saved\r\n",true); // configuration sauvegardée   
+      }
    if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,50);  }
    if (request->hasParam("mqttport")) { config.mqttport = request->getParam("mqttport")->value().toInt();}
    if (request->hasParam("mqttpassword")) {
@@ -338,7 +339,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
           if (strcmp(password,SECURITEPASS) != 0) {  ///sécurisation du mot de passe pas en clair     
               request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
           }
-       savemqtt(mqtt_conf, configmqtt); 
+       logging.Set_log_init(configmqtt.savemqtt(),true); // configuration sauvegardée
        }
 
   //// Dimmer local
@@ -352,8 +353,8 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_servermode)) { inputMessage = request->getParam( PARAM_INPUT_servermode)->value();
                                             getServermode(inputMessage);
                                             request->send(200, "text/html", getconfig().c_str());
-                                            saveConfiguration(filename_conf, config);
-                                            savemqtt(mqtt_conf, configmqtt);
+                                            logging.Set_log_init("Configuration saved\r\n",true); // configuration sauvegardée
+                                            logging.Set_log_init(configmqtt.savemqtt(),true); // configuration sauvegardée
                                         }
 
     /// relays : 0 : off , 1 : on , other : switch 
