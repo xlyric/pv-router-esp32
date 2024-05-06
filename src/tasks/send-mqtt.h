@@ -13,16 +13,18 @@
 #include "functions/Mqtt_http_Functions.h"
 #include "functions/energyFunctions.h"
 
+#ifndef LIGHT_FIRMWARE
+  #include <PubSubClient.h>
+  extern PubSubClient client;
+#endif
+
 extern DisplayValues gDisplayValues;
 extern Config config;
 extern Configmodule configmodule; 
 extern Logs Logging;
 extern Mqtt configmqtt;
 
-#ifndef LIGHT_FIRMWARE
-  #include <PubSubClient.h>
-  extern PubSubClient client;
-#endif
+
 
 
 #ifndef LIGHT_FIRMWARE
@@ -39,10 +41,6 @@ extern Mqtt configmqtt;
       extern HA power_vrms;
       extern HA power_irms;
       extern HA power_apparent;
-     // extern HA enphase_cons_whLifetime;
-      //extern HA enphase_prod_whLifetime;
-      //extern HA enphase_current_power_consumption;
-      //extern HA enphase_current_power_production;
 
 #endif
 

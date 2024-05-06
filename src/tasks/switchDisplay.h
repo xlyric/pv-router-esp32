@@ -79,7 +79,6 @@ void switchDisplay(void * parameter){ // NOSONAR
                 config.sauve_polarity();
                 gDisplayValues.option = 0 ;
                 call_display(); 
-                //saveConfiguration(filename_conf, config);
             break;
           default:
                 gDisplayValues.option = 0 ;

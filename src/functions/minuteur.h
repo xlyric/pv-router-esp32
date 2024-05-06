@@ -43,7 +43,7 @@ struct Programme {
     bool run; 
     int heure;
     int minute;
-  //public:String name2;
+
   private:char name_minuteur[12];  // NOSONAR
   
   // setter name 
@@ -205,7 +205,7 @@ public:bool stop_progr() {
 }
 
  /// vérification de la conformité de la donnée heure_demarrage[6]; 
- bool check_data(char data[6]){
+ bool check_data(char data[6]){ // NOSONAR
   int heures; 
   int minutes;
   int result = sscanf(data, "%d:%d", &heures, &minutes);

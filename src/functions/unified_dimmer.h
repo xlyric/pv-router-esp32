@@ -23,19 +23,19 @@ struct gestion_puissance
 public:float power;
 
 // setter
-void set_power(float power){
-  if ( gDisplayValues.temperature > config.tmax ) { power = 0; } /// si la température est supérieur à la température max on coupe tout
-  else if ( power > config.localfuse )  { power = config.localfuse; }
+void set_power(float unified_power){
+  if ( gDisplayValues.temperature > config.tmax ) { unified_power = 0; } /// si la température est supérieur à la température max on coupe tout
+  else if ( unified_power > config.localfuse )  { unified_power = config.localfuse; }
 
   /// vérification de la température 
   
-  this->power = power;
+  this->power = unified_power;
 
   /// pour le dimmer robotdyn et SSR Random 
   
     // On transforme la puissance totale à envoyer aux dimmers en watts pour mieux les répartir entre les 3 SSR
     // Meilleure précision en float 
-    float tmp_pwr_watt = power * config.charge / 100; 
+    float tmp_pwr_watt = unified_power * config.charge / 100; 
     int dimmer1_pwr = 0;
     int dimmer2_pwr = 0;
     int dimmer3_pwr = 0;

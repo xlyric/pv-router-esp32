@@ -26,7 +26,6 @@ extern Logs logging;
  */
 void keepWiFiAlive(void * parameter){ // NOSONAR
     for(;;){ 
-        //serial_println(F("Wifi task"));
         if(WiFi.status() == WL_CONNECTED){
                 if (AP) { search_wifi_ssid(); }
             vTaskDelay(pdMS_TO_TICKS(30000));

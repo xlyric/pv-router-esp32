@@ -27,13 +27,10 @@ int demoloop = 0;
 void measureElectricity(void * parameter) // NOSONAR
 {
     for(;;){
-    //  serial_println("[ENERGY] Measuring...");
+
        /// vérification qu'une autre task ne va pas fausser les valeurs
       long start = millis();
       int porteuse; 
-      /*if ( configmodule.enphase_present || configmodule.Fronius_present || strcmp(config.topic_Shelly,"none") != 0 ) {
-            porteuse = false; || (String(configmodule.envoy) == "R")
-      }*/ /// refaire des tests... 
 
       //// recherche du mode de fonctionnement
       int mode = 0;   /// 0 = porteuse  ; 1 = shelly , 2 = enphase 3 = fronius  , 4 = demo 
