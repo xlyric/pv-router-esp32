@@ -187,7 +187,7 @@ public:
     readtime = doc["readtime"] | 555;
     cycle = doc["cycle"] | 72;
 
-    resistance = doc["resistance"] | 1000;
+    resistance = doc["resistance"] | 3000;
     charge2 = doc["charge2"] | 0;
     charge3 = doc["charge3"] | 0;
     calcul_charge();
