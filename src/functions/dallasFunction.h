@@ -18,114 +18,70 @@ DeviceAddress insideThermometer;
 byte i;
 
 bool dallaspresent () {
-logging.clean_log_init();
-
-if ( !ds.search(dallas.addr)) {
-    Serial.println("Dallas not connected");
-    
-    logging.Set_log_init("Dallas not connected\r\n",true);
-    Serial.println();
-    ds.reset_search();
-    delay(250);
-    return false;
-  }
-  
-  Serial.print("ROM =");
-  for(i = 0; i < 8; i++) {
-    Serial.write(' ');
-    Serial.print(dallas.addr[i], HEX);
-  }
-
-   Serial.println();
- 
-  // the first ROM byte indicates which chip
-  switch (dallas.addr[0]) {
-    case 0x10:
-      Serial.println(DALLAS_TEXT);  // or old DS1820
-      dallas.type_s = 1;
-      break;
-    case 0x28:
-      Serial.println(DALLAS_TEXT);
-      dallas.type_s = 0;
-      break;
-    case 0x22:
-      Serial.println(DALLAS_TEXT);
-      dallas.type_s = 0;
-      break;
-    default:
-      Serial.println("Device is not a DS18x20 family device.");
+  for (int i = 0; i < deviceCount; i++) {
+    if (!ds.search(addr[i])) {
+      logging.Set_log_init("Unable to find temperature sensors address \r\n",true);
+      ds.reset_search();
+      delay(350);
       return false;
-  } 
+      }
+  }
+  for (int a = 0; a < deviceCount; a++) {
+    String address = "";
+    Serial.print("ROM =");
+      for (uint8_t i = 0; i < 8; i++) {
+        if (addr[a][i] < 16) address += "0";
+        address += String(addr[a][i], HEX);
+        Serial.write(' ');
+        Serial.print(addr[a][i], HEX);
+      }
+    devAddrNames[a] = address;
+    Serial.println();
+      if (strcmp(address.c_str(), config.DALLAS) == 0) {
+        dallas.dallas_maitre = a;
+        logging.Set_log_init("MAIN " );
+      }
 
-  ds.reset();
-  ds.select(dallas.addr);
-  ds.write(0x44, 1);        // start conversion, with parasite power on at the end
+    logging.Set_log_init("Dallas sensor " );
+    logging.Set_log_init(String(a).c_str()); 
+    logging.Set_log_init(" found. Address : " );
+    logging.Set_log_init(String(address).c_str()); 
+    logging.Set_log_init("\r\n");
+
+    delay(250);
+
+
+
+    ds.reset();
+    ds.select(addr[a]);
+
+    ds.write(0x44, 1);        // start conversion, with parasite power on at the end
   
-  delay(1000);     // maybe 750ms is enough, maybe not
+    delay(1000);     // maybe 750ms is enough, maybe not
   // we might do a ds.depower() here, but the reset will take care of it.
   
-  dallas.present = ds.reset();    ///  byte 0 > 1 si present
-  ds.select(dallas.addr);    
-  ds.write(0xBE);         // Read Scratchpad
-  
-  Serial.print("  present = ");
-  Serial.println(dallas.present, HEX);
-      
-      logging.Set_log_init("Dallas present at address",true);
-      logging.Set_log_init(String(dallas.present, HEX).c_str());
-      logging.Set_log_init("\r\n");
-
-#ifndef LIGHT_FIRMWARE
-  if (!discovery_temp) {
-    discovery_temp = true;
-    temperature_HA.discovery();
-  }
-#endif
-
-  return true;
-   
+    dallas.present = ds.reset();    ///  byte 0 > 1 si present
+    ds.select(addr[a]);    
+    ds.write(0xBE);         // Read Scratchpad
+   }
+   return true;
   }
 
     //***********************************
     //************* récupération d'une température du 18b20
     //***********************************
-int dallas_error = 0;
 
 float CheckTemperature(String label, byte deviceAddress[12]){ // NOSONAR
-  sensors.requestTemperatures(); 
-   
-  delay(400); // conseillé 375 ms pour une 18b20
+
 
   float tempC = sensors.getTempC(deviceAddress);
 
-    if ( (tempC == -127.0) || (tempC == -255.0) ) {
-    
+  if ( (tempC == -127.00) || (tempC == -255.00) ) {
+    delay(250);
     //// cas d'une sonde trop longue à préparer les valeurs 
-    delay(187); /// attente de 187ms ( temps de réponse de la sonde )
+     /// attente de 187ms ( temps de réponse de la sonde )
     tempC = sensors.getTempC(deviceAddress);
-      if ( (tempC == -127.0) || (tempC == -255.0) ) {
-      Serial.print("Error getting temperature");
-
-       /// si erreur on reprends l'ancienne valeur
-       tempC = gDisplayValues.temperature; 
-       dallas_error++;
-      }
-  } else {
-    //réduction du retour à 1 décimale 
-    tempC = (int(tempC*10))/10.0;
-    dallas_error = 0;  
-    return tempC ; 
-   
-    
   }  
-
-  if (dallas_error > 5) {
-    Serial.print("Error getting temperature");
-    logging.Set_log_init("Local Dallas on error 5 times\r\n");
-    tempC = gDisplayValues.temperature; 
-    /// mise en securité du dimmer local
-        unified_dimmer.dimmer_off();
-    }
   return tempC; 
 }
 

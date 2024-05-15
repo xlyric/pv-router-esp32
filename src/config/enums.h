@@ -19,6 +19,7 @@
 #endif
 
 #define SECURITEPASS "MyPassword" // NOSONAR
+#define MAX_DALLAS 8 // NOSONAR
 
 // The state in which the device can be. This mainly affects what
 // is drawn on the display.
@@ -112,6 +113,8 @@ public:
   int charge3;
 /// @brief  // Somme des 3 charges déclarées dans la page web
   int charge;
+///déclaration de la dallas maitre
+  char DALLAS[17]  = "to_define"; 
 
   Preferences preferences;
   const char *filename_conf = "/config.json";
@@ -528,12 +531,15 @@ public:void Set_log_init(String setter, bool logtime=false) {
 struct Dallas{
   byte i;
   byte present = 0;
+  bool discovery_temp = false;
   byte type_s;
   byte data[12]; // NOSONAR
   byte addr[8]; // NOSONAR
-  float celsius = 0.00 ;
+  //float celsius = 0.00 ;
   byte security = 0;
   bool detect = false; 
+  float celsius[MAX_DALLAS] = {0.00};
+  int dallas_maitre=0;
 };
 
 
@@ -564,6 +570,18 @@ struct Dallas{
 
           private:String icon; 
           public:void Set_icon(String setter) {icon = R"("ic": ")" + setter + R"(", )"; }
+
+          private:int qos; 
+          public:void Set_entity_qos(int setter) {qos; }
+
+          private:bool retain_flag; 
+          public:void Set_retain_flag(bool setter) {retain_flag=setter; }
+
+          private:String object_id; 
+          public:void Set_object_id(String setter) {object_id=setter; }
+
+          private:String entity_type; 
+          public:void Set_entity_type(String setter) {entity_type=setter; }
 
           bool cmd_t; 
 

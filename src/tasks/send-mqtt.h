@@ -23,6 +23,7 @@ extern Config config;
 extern Configmodule configmodule; 
 extern Logs Logging;
 extern Mqtt configmqtt;
+extern Dallas dallas;   
 
 
 
@@ -35,7 +36,7 @@ extern Mqtt configmqtt;
       extern HA device_inject; 
       extern HA compteur_inject;
       extern HA compteur_grid;
-      extern HA temperature_HA;
+      extern HA temperature_HA[MAX_DALLAS];
 
       extern HA power_factor;
             
@@ -83,7 +84,7 @@ void send_to_mqtt(void * parameter){ // NOSONAR
                       
                         power_factor.send(String(PowerFactor));
 
-                        temperature_HA.send(String(gDisplayValues.temperature));
+                        temperature_HA[dallas.dallas_maitre].send(String(gDisplayValues.temperature));
                         device_dimmer.send(String(int(unified_dimmer.get_power()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
 
                         

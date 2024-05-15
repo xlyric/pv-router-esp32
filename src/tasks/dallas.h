@@ -7,12 +7,16 @@
     #include "../functions/dallasFunction.h"
     #include "mqtt-home-assistant.h"
    
-
+extern DeviceAddress addr[MAX_DALLAS]; 
+extern float previous_celsius[MAX_DALLAS]; // température précédente
 extern DisplayValues gDisplayValues;
 extern Dallas dallas ;
-#ifndef LIGHT_FIRMWARE
-    extern HA temperature_HA;
-#endif
+extern int deviceCount; // nombre de sonde(s) dallas détectée(s)
+int dallas_error[MAX_DALLAS] = {0}; // compteur d'erreur dallas
+extern HA devicetemp[MAX_DALLAS];
+//#ifndef LIGHT_FIRMWARE
+//    extern HA temperature_HA[MAX_DALLAS];
+//#endif
 
 /**
  * Task: Lecture de la sonde de température Dallas toute les 10s
@@ -23,22 +27,30 @@ extern Memory task_mem;
 void dallasread(void * parameter){
   for (;;){
     if (dallas.detect) {
-    float Old_temperature = gDisplayValues.temperature;
-    gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
 
-      // réduction de la précision de la température
-      //char buffer[5];
-      //dtostrf(gDisplayValues.temperature,2, 1, buffer); // conversion en n.1f 
-      //gDisplayValues.temperature=buffer;
-
-    /// pour éviter le spam dans les logs
-    if (Old_temperature != gDisplayValues.temperature) {
-      Serial.print(" Temp C: ");
-      Serial.println(gDisplayValues.temperature);
-      logging.Set_log_init("temp :");
-      logging.Set_log_init(String(gDisplayValues.temperature).c_str());
-      logging.Set_log_init("\r\n");
+    sensors.requestTemperatures();
+    delay(400);
+        for (int a = 0; a < deviceCount; a++) {
+      dallas.celsius[a]=CheckTemperature("temp_" + devAddrNames[a],addr[a]);
+      //gestion des erreurs DS18B20
+      if ( (dallas.celsius[a] == -127.00) || (dallas.celsius[a] == -255.00) || (dallas.celsius[a] > 200.00) ) {
+        dallas.celsius[a]=previous_celsius[a];
+        dallas_error[a] ++; // incrémente le compteur d'erreur
+        logging.Set_log_init("Dallas" + String(a) + " : échec "+ String(dallas_error[a]) + "\r\n",true);
+          }
+          else { 
+        dallas.celsius[a] = (roundf(dallas.celsius[a] * 10) / 10 ) + 0.1; // pour les valeurs min
+        gDisplayValues.temperature = dallas.celsius[a];
+        dallas_error[a] = 0; // remise à zéro du compteur d'erreur
+      }   
     }
+
+         if (!dallas.discovery_temp) {
+        dallas.discovery_temp = true;
+          for (int i = 0; i < deviceCount; i++) {
+            temperature_HA[i].discovery();
+          }
+        }
 
    } 
    task_mem.task_dallas_read = uxTaskGetStackHighWaterMark(NULL);

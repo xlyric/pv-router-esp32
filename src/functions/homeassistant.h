@@ -3,8 +3,16 @@
 
 #include <Arduino.h>
 
+
 #ifndef LIGHT_FIRMWARE
   #include <PubSubClient.h>
+
+  #include <OneWire.h>
+  #include <DallasTemperature.h>
+
+extern DeviceAddress addr[MAX_DALLAS];  // array of (up to) 15 temperature sensors
+extern String devAddrNames[MAX_DALLAS];  // array of (up to) 15 temperature sensors
+extern int deviceCount ; // nombre de sonde(s) dallas détectée(s)
 
 
 extern HA device_dimmer; 
@@ -16,10 +24,12 @@ extern HA device_inject;
 extern HA compteur_inject;
 extern HA compteur_grid;
 extern HA switch_1;
-extern HA temperature_HA;
+extern HA temperature_HA[MAX_DALLAS];
 extern HA power_factor;
 
 extern HA power_apparent;
+
+
 
 
 void init_HA_sensor(){
@@ -67,10 +77,17 @@ void init_HA_sensor(){
         compteur_inject.Set_stat_cla("total_increasing");
         compteur_inject.Set_dev_cla("energy");      
                 
-        temperature_HA.Set_name("Dallas");
-        temperature_HA.Set_dev_cla("temperature"); 
-        temperature_HA.Set_unit_of_meas("°C");
-        temperature_HA.Set_stat_cla("measurement");
+        
+     for (int i = 0; i < deviceCount; i++) {
+      temperature_HA[i].Set_name("Température");
+      temperature_HA[i].Set_object_id("temperature_"+ devAddrNames[i]);
+      temperature_HA[i].Set_unit_of_meas("°C");
+      temperature_HA[i].Set_stat_cla("measurement");
+      temperature_HA[i].Set_dev_cla("temperature");
+      temperature_HA[i].Set_entity_type("sensor");
+      temperature_HA[i].Set_entity_qos(1);
+      temperature_HA[i].Set_retain_flag(true);
+    }
 
         switch_1.Set_name("Switch1");
         switch_1.Set_dev_cla("switch"); 
@@ -95,7 +112,7 @@ void init_HA_sensor(){
         device_inject.discovery();
         compteur_inject.discovery();
         compteur_grid.discovery();
-        temperature_HA.discovery();
+        //temperature_HA.discovery();
 
 
 }

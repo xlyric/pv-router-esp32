@@ -23,7 +23,7 @@ extern TFT_eSPI display;
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule;
 
-#define TFT_PIN 4
+#define TFT_PIN 4 // GPIO4 // NOSONAR
 
 /**
  * Metafunction that takes care of drawing all the different
