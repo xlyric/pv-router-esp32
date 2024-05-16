@@ -8,14 +8,14 @@
     #include "mqtt-home-assistant.h"
    
 extern DeviceAddress addr[MAX_DALLAS]; 
-extern float previous_celsius[MAX_DALLAS]; // température précédente
+//extern float previous_celsius[MAX_DALLAS]; // température précédente
 extern DisplayValues gDisplayValues;
 extern Dallas dallas ;
-extern int deviceCount; // nombre de sonde(s) dallas détectée(s)
-int dallas_error[MAX_DALLAS] = {0}; // compteur d'erreur dallas
-extern HA devicetemp[MAX_DALLAS];
+//extern int deviceCount; // nombre de sonde(s) dallas détectée(s)
+
+//extern HA devicetemp[MAX_DALLAS];
 //#ifndef LIGHT_FIRMWARE
-//    extern HA temperature_HA[MAX_DALLAS];
+    extern HA temperature_HA[MAX_DALLAS];
 //#endif
 
 /**
@@ -30,24 +30,24 @@ void dallasread(void * parameter){
 
     sensors.requestTemperatures();
     delay(400);
-        for (int a = 0; a < deviceCount; a++) {
+        for (int a = 0; a < dallas.deviceCount; a++) {
       dallas.celsius[a]=CheckTemperature("temp_" + devAddrNames[a],addr[a]);
       //gestion des erreurs DS18B20
       if ( (dallas.celsius[a] == -127.00) || (dallas.celsius[a] == -255.00) || (dallas.celsius[a] > 200.00) ) {
-        dallas.celsius[a]=previous_celsius[a];
-        dallas_error[a] ++; // incrémente le compteur d'erreur
-        logging.Set_log_init("Dallas" + String(a) + " : échec "+ String(dallas_error[a]) + "\r\n",true);
+        dallas.celsius[a]=dallas.previous_celsius[a];
+        dallas.dallas_error[a] ++; // incrémente le compteur d'erreur
+        logging.Set_log_init("Dallas" + String(a) + " : échec "+ String(dallas.dallas_error[a]) + "\r\n",true);
           }
           else { 
         dallas.celsius[a] = (roundf(dallas.celsius[a] * 10) / 10 ) + 0.1; // pour les valeurs min
         gDisplayValues.temperature = dallas.celsius[a];
-        dallas_error[a] = 0; // remise à zéro du compteur d'erreur
+        dallas.dallas_error[a] = 0; // remise à zéro du compteur d'erreur
       }   
     }
 
          if (!dallas.discovery_temp) {
         dallas.discovery_temp = true;
-          for (int i = 0; i < deviceCount; i++) {
+          for (int i = 0; i < dallas.deviceCount; i++) {
             temperature_HA[i].discovery();
           }
         }

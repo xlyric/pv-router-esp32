@@ -12,7 +12,8 @@
 
 extern DeviceAddress addr[MAX_DALLAS];  // array of (up to) 15 temperature sensors
 extern String devAddrNames[MAX_DALLAS];  // array of (up to) 15 temperature sensors
-extern int deviceCount ; // nombre de sonde(s) dallas détectée(s)
+//extern int deviceCount ; // nombre de sonde(s) dallas détectée(s)
+extern Dallas dallas ;
 
 
 extern HA device_dimmer; 
@@ -78,7 +79,7 @@ void init_HA_sensor(){
         compteur_inject.Set_dev_cla("energy");      
                 
         
-     for (int i = 0; i < deviceCount; i++) {
+     for (int i = 0; i < dallas.deviceCount; i++) {
       temperature_HA[i].Set_name("Température");
       temperature_HA[i].Set_object_id("temperature_"+ devAddrNames[i]);
       temperature_HA[i].Set_unit_of_meas("°C");

@@ -18,7 +18,7 @@ DeviceAddress insideThermometer;
 byte i;
 
 bool dallaspresent () {
-  for (int i = 0; i < deviceCount; i++) {
+  for (int i = 0; i < dallas.deviceCount; i++) {
     if (!ds.search(addr[i])) {
       logging.Set_log_init("Unable to find temperature sensors address \r\n",true);
       ds.reset_search();
@@ -26,7 +26,7 @@ bool dallaspresent () {
       return false;
       }
   }
-  for (int a = 0; a < deviceCount; a++) {
+  for (int a = 0; a < dallas.deviceCount; a++) {
     String address = "";
     Serial.print("ROM =");
       for (uint8_t i = 0; i < 8; i++) {

@@ -5,6 +5,8 @@
 #include <TimeLib.h>
 #include <NTPClient.h>
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
+#include <OneWire.h>
+#include <DallasTemperature.h>
 
 // File System
 #ifdef ESP32
@@ -281,6 +283,7 @@ public:
 
     doc["facteur"] = facteur;
     doc["fuse"] = num_fuse;
+    if (strlen(mqttserver) == 0) { strlcpy(mqttserver,"none",16); }
     doc["mqtt"] = mqtt;
     doc["mqttserver"] = mqttserver; 
     doc["mqttport"] = mqttport; 
@@ -540,6 +543,9 @@ struct Dallas{
   bool detect = false; 
   float celsius[MAX_DALLAS] = {0.00};
   int dallas_maitre=0;
+  float previous_celsius[MAX_DALLAS] = {0.00};
+  int deviceCount = 0;
+  int dallas_error[MAX_DALLAS] = {0}; // compteur d'erreur dallas
 };
 
 
