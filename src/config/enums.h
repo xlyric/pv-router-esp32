@@ -93,7 +93,7 @@ public:
   char mqttserver[16]; // NOSONAR
   int mqttport; 
   int IDXdimmer;
-  int resistance;  // résistance de la charge
+  
   bool polarity; 
   char Publish[100]; // NOSONAR
   int  ScreenTime;
@@ -106,6 +106,7 @@ public:
   char topic_Shelly[100];  // NOSONAR
   bool Shelly_tri;
   int SCT_13=30;
+  int charge1;  // Puissance de la charge 1 déclarée dans la page web
 /// @brief  // Puissance de la charge 2 déclarée dans la page web
   int charge2; 
 /// @brief  // Puissance de la charge 3 déclarée dans la page web
@@ -132,7 +133,7 @@ public:
   }
   
   void calcul_charge() {
-    charge = resistance + charge2 + charge3;
+    charge = charge1 + charge2 + charge3;
   }
 
   //***********************************
@@ -187,9 +188,10 @@ public:
     readtime = doc["readtime"] | 555;
     cycle = doc["cycle"] | 72;
 
-    resistance = doc["resistance"] | 3000;
+    charge1 = doc["charge1"] | 3000;
     charge2 = doc["charge2"] | 0;
     charge3 = doc["charge3"] | 0;
+    /// provisionne la somme des charges
     calcul_charge();
 
     sending = doc["sending"] | true;
@@ -284,7 +286,7 @@ public:
     doc["mqttserver"] = mqttserver; 
     doc["mqttport"] = mqttport; 
     
-    doc["resistance"] = resistance;
+    doc["charge1"] = charge1;
     doc["charge2"] = charge2;
     doc["charge3"] = charge3;
 
@@ -535,7 +537,11 @@ struct Dallas{
   byte addr[8]; // NOSONAR
   float celsius = 0.00 ;
   byte security = 0;
-  bool detect = false; 
+  bool detect = false;
+  bool lost = false; 
+  
+
+
 };
 
 

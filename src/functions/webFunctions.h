@@ -171,6 +171,10 @@ server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "application/json", getState().c_str());
   });
 
+  server.on("/statefull", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "application/json", getStateFull().c_str());
+  });
+
   
   server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send_P(200, "application/json", getconfig().c_str());
@@ -289,10 +293,10 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_dimmer_power)) {gDisplayValues.dimmer = request->getParam( PARAM_INPUT_dimmer_power)->value().toInt(); gDisplayValues.change = 1 ;  } 
    if (request->hasParam(PARAM_INPUT_facteur)) { config.facteur = request->getParam(PARAM_INPUT_facteur)->value().toFloat();}
    if (request->hasParam(PARAM_INPUT_tmax)) { config.tmax = request->getParam(PARAM_INPUT_tmax)->value().toInt();}
-   if (request->hasParam("resistance")) { config.resistance = request->getParam("resistance")->value().toInt(); config.calcul_charge(); }
+   if (request->hasParam("resistance")) { config.charge1 = request->getParam("resistance")->value().toInt(); config.calcul_charge(); }
    if (request->hasParam("resistance2")) { config.charge2 = request->getParam("resistance2")->value().toInt(); config.calcul_charge();}
    if (request->hasParam("resistance3")) { config.charge3 = request->getParam("resistance3")->value().toInt(); config.calcul_charge();}
-   if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt();config.calcul_charge(); } 
+   if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt(); } 
    if (request->hasParam("voltage")) { config.voltage = request->getParam("voltage")->value().toInt();}
    if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toInt();}
    

@@ -54,13 +54,13 @@
   #include <driver/adc.h>
 
    
-#if DALLAS
+
 // Dallas 18b20
   #include <OneWire.h>
   #include <DallasTemperature.h>
   #include "tasks/dallas.h"
   #include "functions/dallasFunction.h"
-#endif
+
 
 /// déclaration dimmer
 #include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
@@ -125,9 +125,9 @@ TaskHandle_t serialTaskHandle = NULL;
 //***********************************
 //************* Dallas
 //***********************************
-#if DALLAS
+
 Dallas dallas; 
-#endif
+
 
 
 #ifndef LIGHT_FIRMWARE
@@ -149,13 +149,13 @@ Dallas dallas;
 /***************************
  *  Dimmer init
  **************************/
-
-dimmerLamp dimmer_hard(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
-#ifdef ESP32D1MINI_FIRMWARE
+/// Déclaration des dimmers
+dimmerLamp dimmer1(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
+#ifdef outputPin2
   dimmerLamp dimmer2(outputPin2, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
   dimmerLamp dimmer3(outputPin3, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 #endif
-
+// déclaration de la gestion des dimmers
 gestion_puissance unified_dimmer;
 
 void setup()
@@ -263,12 +263,12 @@ void setup()
   loadenphase(enphase_conf);
  
   /// recherche d'une sonde dallas
-  #if DALLAS
+  
   Serial.println("start 18b20");
   sensors.begin();
   /// recherche d'une sonde dallas
   dallas.detect = dallaspresent();
-  #endif
+  
 
   // Setup the ADC
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
@@ -425,7 +425,7 @@ ntpinit();
   #endif
 
 
-#if DALLAS
+
   if (dallas.detect) {
     // ----------------------------------------------------------------
     // Task: Read Dallas Temp
@@ -439,7 +439,7 @@ ntpinit();
       NULL       // Task handle
     ); 
   }
-#endif
+
 
 #ifdef  TTGO
   // ----------------------------------------------------------------
@@ -656,19 +656,19 @@ if (config.dimmerlocal) {
     if (programme.run) { 
         //  minuteur en cours
         if (programme.stop_progr()) { 
-          dimmer_hard.setPower(0); 
+            //dimmer1.setPower(0); // plus forcément utile --> unified dimmer
             unified_dimmer.dimmer_off();
-            #ifdef ESP32D1MINI_FIRMWARE
             unified_dimmer.set_power(0);
-            #endif
+            dallas.security=true;
+
           DEBUG_PRINTLN("programme.run");
           Serial.println("stop minuteur dimmer");
           //arret du ventilateur
           digitalWrite(COOLER, LOW);
           /// retrait de la securité dallas
-          #if DALLAS
-          dallas.security=false;
-          #endif
+          
+          
+          
           /// remonté MQTT
           #ifndef LIGHT_FIRMWARE
             Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
@@ -682,13 +682,7 @@ if (config.dimmerlocal) {
     else { 
       // minuteur à l'arret
       if (programme.start_progr()){ 
-            #ifndef ESP32D1MINI_FIRMWARE
-            dimmer_on();
-            dimmer_hard.setPower(config.localfuse); 
-            #endif
-            #ifdef ESP32D1MINI_FIRMWARE
-            unified_dimmer.set_power(config.localfuse);
-            #endif
+        unified_dimmer.set_power(config.localfuse);
         delay (50);
         Serial.println("start minuteur ");
         //demarrage du ventilateur 

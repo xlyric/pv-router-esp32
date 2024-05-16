@@ -14,11 +14,10 @@ extern Configwifi configwifi;
 extern Mqtt configmqtt; 
 extern Logs logging;
 extern Configmodule configmodule; 
-extern dimmerLamp dimmer_hard; 
+extern dimmerLamp dimmer1; 
 
-#ifdef ESP32D1MINI_FIRMWARE
 extern gestion_puissance unified_dimmer; 
-#endif
+extern Dallas dallas;
 
 #ifdef  TTGO
 #include <TFT_eSPI.h>
@@ -121,6 +120,38 @@ String getState() {
   return String(state);
 }
 
+String getStateFull() {
+  String state=STABLE; 
+  if (gDisplayValues.watt >= config.delta  ) {   state = GRID; }
+  if (gDisplayValues.watt <= config.deltaneg ) {   state = INJECTION; }
+ 
+  const String fs_update = String("<br>!! FS pas à jour !!") ;
+  const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+
+  DynamicJsonDocument doc(512);
+  doc["state"] = state;
+  doc["gDisplayValues.watt"] = int(gDisplayValues.watt);
+  doc["unified_dimmer.get_power"]= unified_dimmer.get_power();
+  doc["dimmer"] = gDisplayValues.puissance_route;
+  doc["gDisplayValues.dimmer"]  = gDisplayValues.dimmer;
+
+  doc["temperature"] = gDisplayValues.temperature;
+  if (test_fs_version()) { doc["version"] = VERSION ; 
+  } else { doc["version"] = VERSION + fs_update; 
+  }
+  doc["RSSI"] = WiFi.RSSI();
+  doc["name"] =  String(pvname); 
+  doc["dallas.lost"] = dallas.lost;  //perte de la data dallas
+  doc["security"] = gDisplayValues.security;
+  doc["dallas.security"] = dallas.security;
+  
+
+
+  state=""; 
+  serializeJson(doc, state);
+  return String(state);
+}
+
 
 String stringbool(bool mybool){
   String truefalse = "true";
@@ -134,11 +165,8 @@ String getServermode(String Servermode) {
   if ( Servermode == "Autonome" ) {   config.autonome = !config.autonome; }
   if ( Servermode == "Dimmer local" ) {   
                     config.dimmerlocal = !config.dimmerlocal;  
-                    /// correction bug #26 
-                    dimmer_hard.setPower(0);
-                    #ifdef ESP32D1MINI_FIRMWARE
+                    //dimmer1.setPower(0);
                     unified_dimmer.set_power(0);
-                    #endif 
                     
   }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
@@ -196,7 +224,7 @@ String getconfig() {
   dtostrf(config.facteur, 5, 2, buffer); 
   doc["facteur"] = buffer;
 
-  doc["resistance"] = config.resistance;
+  doc["resistance"] = config.charge1;
   doc["resistance2"] = config.charge2;
   doc["resistance3"] = config.charge3;
   doc["polarity"] = config.polarity;
@@ -217,7 +245,7 @@ String getconfig() {
 
 String getenvoy() {
   String VERSION_http = String(VERSION) + " " + String(COMPILE_NAME) ; 
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION_http) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.resistance+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+config.relayon+";"+config.relayoff;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION_http) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.charge1+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+config.relayon+";"+config.relayoff;
   return String(configweb);
 }
 //***********************************

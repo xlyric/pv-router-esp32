@@ -35,10 +35,7 @@
  * Time between 2 mesure of dimmer temp
  */
 #define GETTEMPREFRESH 5
-/**
- * Set this to false to disable Serial logging
- */
-#define DEBUG true
+
 //#define configMAX_PRIORITIES 1024
 
 
@@ -161,7 +158,7 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20240504"
+#define RELEASE "Version 20240601"
 constexpr const int FS_RELEASE= 20240504 ;
 
     #ifdef LIGHT_FIRMWARE
@@ -199,7 +196,12 @@ bool AP=true;
     #define COOLER 18 // Pin for COOLER. (switch on dimmer)
 #endif
 
-  #ifdef Debug
+/**
+ * Set this to false to disable Serial logging
+ */
+#define DEBUG true
+//#define DEBUGLEVEL1 false
+  #ifdef DEBUGLEVEL1
     #define DEBUG_PRINTLN(x) Serial.println(x)
   #else
     #define DEBUG_PRINTLN(x)
