@@ -142,7 +142,6 @@ Dallas dallas;
     HA switch_1;
     HA temperature_HA;
     HA power_factor;
-
     HA power_apparent;
 
 #endif

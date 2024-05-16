@@ -90,7 +90,6 @@ float PowerFactor; //
  */
 
 #define DIMMER true
-#define DALLAS true
 #define TRIGGER 10   /// 
 
 ///// PVROUTER false dans le cas d'un enphase en pilote full 
@@ -102,11 +101,10 @@ float PowerFactor; //
     #define COOLER 12 // Pin for COOLER. (switch on dimmer)
 
 
-#if DALLAS
+
     #define ONE_WIRE_BUS  25
     #define TEMPERATURE_PRECISION 10
     #define TRIGGER 10   /// Trigger % for max temp protection. max temp configuration is in config.json 
- #endif
 bool discovery_temp = false;
 
 
@@ -217,11 +215,10 @@ bool AP=true;
       #define outputPin3 21  // (SSR3) use RELAY2/SSR3 output for 3rd Robotdyn/Random SSR ( for old boards )
 
 
-  #if DALLAS
+
       #define ONE_WIRE_BUS  23
       #define TEMPERATURE_PRECISION 10
       #define TRIGGER 5   /// Trigger % for max temp protection. max temp configuration is in config.json
-   #endif
    
   #define OLED_ON false
   #define RELAY1 17
