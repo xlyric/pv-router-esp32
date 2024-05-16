@@ -54,13 +54,13 @@
   #include <driver/adc.h>
 
    
-#if DALLAS
+
 // Dallas 18b20
   #include <OneWire.h>
   #include <DallasTemperature.h>
   #include "tasks/dallas.h"
   #include "functions/dallasFunction.h"
-#endif
+
 
 /// déclaration dimmer
 #include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
@@ -125,9 +125,9 @@ TaskHandle_t serialTaskHandle = NULL;
 //***********************************
 //************* Dallas
 //***********************************
-#if DALLAS
+
 Dallas dallas; 
-#endif
+
 
 
 #ifndef LIGHT_FIRMWARE
@@ -263,12 +263,12 @@ void setup()
   loadenphase(enphase_conf);
  
   /// recherche d'une sonde dallas
-  #if DALLAS
+  
   Serial.println("start 18b20");
   sensors.begin();
   /// recherche d'une sonde dallas
   dallas.detect = dallaspresent();
-  #endif
+  
 
   // Setup the ADC
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
@@ -425,7 +425,7 @@ ntpinit();
   #endif
 
 
-#if DALLAS
+
   if (dallas.detect) {
     // ----------------------------------------------------------------
     // Task: Read Dallas Temp
@@ -439,7 +439,7 @@ ntpinit();
       NULL       // Task handle
     ); 
   }
-#endif
+
 
 #ifdef  TTGO
   // ----------------------------------------------------------------
@@ -666,9 +666,9 @@ if (config.dimmerlocal) {
           //arret du ventilateur
           digitalWrite(COOLER, LOW);
           /// retrait de la securité dallas
-          #if DALLAS
+          
           dallas.security=false;
-          #endif
+          
           /// remonté MQTT
           #ifndef LIGHT_FIRMWARE
             Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
