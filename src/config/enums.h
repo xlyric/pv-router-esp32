@@ -598,22 +598,22 @@ struct Dallas{
 
           public:void discovery(){
             IPaddress =   WiFi.localIP().toString() ;
-              String device = R"(
-                  {
-                      "dev_cla": ")" + dev_cla + R"(",
-                      "unit_of_meas": ")" + unit_of_meas + R"(",
-                      "stat_cla": ")" + stat_cla + R"(",
-                      "name": ")" + name + "-" + node_mac + R"(",
-                      "state_topic": ")" + topic + "state" + R"(",
-                      "stat_t": ")" + topic + "state" + name + R"(",
-                      "avty_t": ")" + topic + "status" + R"(",
-                      "uniq_id": ")" + node_mac + "-" + name + R"(", 
-                      "value_template": "{{ value_json.)" + name + R"( }}", 
-                      "cmd_t": ")" + topic + "command" + R"(",
-                      "cmd_tpl": "{{ value_json.)" + name + R"( }}", 
-                      "exp_aft": ")" + MQTT_INTERVAL + R"(", )" + icon + device_declare() + R"(
-                  }
-              )";
+            String device= "{ \"dev_cla\": \""+dev_cla+"\","
+                  "\"unit_of_meas\": \""+unit_of_meas+"\","
+                  "\"stat_cla\": \""+stat_cla+"\"," 
+                  "\"name\": \""+ name +"-"+ node_mac + "\"," 
+                  "\"state_topic\": \""+ topic +"state\","
+                  "\"stat_t\": \""+ topic +"state"+name+"\","
+                  "\"avty_t\": \""+ topic +"status\","
+                  "\"uniq_id\": \""+ node_mac + "-" + name +"\", "
+                  "\"value_template\": \"{{ value_json."+name +" }}\", "
+                  "\"cmd_t\": \""+ topic +"command\","
+                  "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
+                  "\"exp_aft\": \""+ MQTT_INTERVAL +"\", "
+                  + icon
+                  + device_declare() + 
+                "}";
+
 
                 if (dev_cla =="" ) { dev_cla = name; }
 
