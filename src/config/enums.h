@@ -279,6 +279,8 @@ public:
     doc["facteur"] = facteur;
     doc["fuse"] = num_fuse;
     doc["mqtt"] = mqtt;
+    //proection contre les champs vides qui font planter le programme
+    if (strlen(mqttserver) == 0) { strlcpy(mqttserver,"none",16); }
     doc["mqttserver"] = mqttserver; 
     doc["mqttport"] = mqttport; 
     

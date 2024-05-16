@@ -269,7 +269,8 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
                           
 	   // doc /get?cycle=x
     if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
-                          logging.Set_log_init("Configuration saved\r\n",true); // configuration sauvegardée
+
+                                                    logging.Set_log_init(config.saveConfiguration(),true); // configuration sauvegardée
                             }
                            
 	 if (request->hasParam(PARAM_INPUT_2)) { config.cycle = request->getParam(PARAM_INPUT_2)->value().toInt(); }
@@ -329,7 +330,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    //// MQTT
    if (request->hasParam(PARAM_INPUT_mqttserver)) { request->getParam(PARAM_INPUT_mqttserver)->value().toCharArray(config.mqttserver,16);  }
    if (request->hasParam(PARAM_INPUT_publish)) { request->getParam(PARAM_INPUT_publish)->value().toCharArray(config.Publish,100); 
-      logging.Set_log_init("Configuration saved\r\n",true); // configuration sauvegardée   
+     logging.Set_log_init(config.saveConfiguration(),true); // configuration sauvegardée   
       }
    if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,50);  }
    if (request->hasParam("mqttport")) { config.mqttport = request->getParam("mqttport")->value().toInt();}
@@ -353,7 +354,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_servermode)) { inputMessage = request->getParam( PARAM_INPUT_servermode)->value();
                                             getServermode(inputMessage);
                                             request->send(200, "text/html", getconfig().c_str());
-                                            logging.Set_log_init("Configuration saved\r\n",true); // configuration sauvegardée
+                                            logging.Set_log_init(config.saveConfiguration(),true); // configuration sauvegardée
                                             logging.Set_log_init(configmqtt.savemqtt(),true); // configuration sauvegardée
                                         }
 

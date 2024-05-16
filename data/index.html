@@ -380,22 +380,21 @@
 
     });
   }, 2000);
-  
-				  
-function sendservermode (mode) {
-
-$.get( "/get", { servermode: mode } )
-.done(function(data) { 
-
-var config = data.split(";");
-document.getElementById("screen").value = config[21];
-}); 
-
 }
+</script>
+<script type='text/javascript' >
 
+    function sendservermode (mode) {
 
-		
-		</script >
+    $.get( "/get", { servermode: mode } )
+    .done(function(data) { 
+
+    var config = data.split(";");
+    document.getElementById("screen").value = config[21];
+    }); 
+
+    }
+</script>
 		
   
                      <div id='curve_chart' style=' width: auto; height: 500px;'>

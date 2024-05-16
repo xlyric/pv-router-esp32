@@ -232,7 +232,11 @@ String getchart() {
 //***********************************
 //***********************************
 String getwifi() {
-  String retour =String(configwifi.SID) + ";" + String(SECURITEPASS)  ;
+  String retour ;
+  DynamicJsonDocument doc(256);
+  doc["ssid"] = configwifi.SID;
+  doc["password"] = SECURITEPASS;
+  serializeJson(doc, retour);
   return String(retour) ;
 }
 

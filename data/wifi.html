@@ -476,6 +476,7 @@ $( "#formulaire" ).submit(function() {
   return false;
 });
 
+
 var recupconfig =  $.getJSON('/getwifi', function(data) {
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
@@ -487,6 +488,8 @@ var recupconfig =  $.getJSON('/getwifi', function(data) {
             // Une fois la requête terminée
             recupconfig.done(function() {
         });
+    });
+    
     
 </script>
 				  
