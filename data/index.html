@@ -181,6 +181,8 @@
 
           <!-- Content Row -->
 
+
+
           <div class="row">
 
             <!-- Area Chart -->
@@ -225,6 +227,24 @@
 				</div>
 			</div>
 		</div>
+  </div>
+    <div class="row">
+
+      <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Etats</h6>
+                </div>
+                <div class="card-body">
+                <b>Etat Minuteur : </b><h4 id="minuteur">N/A</h4>
+                <b>Etat Dallas Locale: </b><h4 id="dallas">N/A</h4>
+                <b>Etat Dallas T°max: </b><h4 id="securite">N/A</h4>
+                </div>
+            </div>
+          </div>
+     </div> 
 			
 		<div class="col-xl-12 col-lg-7">
             <div class="card shadow mb-4">
@@ -377,6 +397,33 @@
       document.getElementById("version").innerHTML = version;
       document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi + ' dBm';
       document.getElementById("name").innerHTML = name  ;
+
+      // ecriture de "minuteur" dans le div minuteur si l'état est à 1
+          if (data.minuteur == 1) {
+            document.getElementById("minuteur").innerHTML = "Minuteur";
+            document.getElementById("minuteur").style.color = "red";
+        } else {
+            document.getElementById("minuteur").innerHTML = "Non actif";
+            document.getElementById("minuteur").style.color = "";
+        }
+
+        // ecriture de "ON" dans le div relais 1 si l'état est à 1
+          if (data.dallas == 0) {
+            document.getElementById("dallas").innerHTML = "Connect";
+            document.getElementById("dallas").style.color = "";
+        } else {
+            document.getElementById("dallas").innerHTML = "Disconnect";
+            document.getElementById("dallas").style.color = "red";
+        }
+
+        // ecriture de "ON" dans le div relais 1 si l'état est à 1
+          if (data.security == 0) {
+            document.getElementById("securite").innerHTML = "OK";
+            document.getElementById("securite").style.color = "";
+        } else {
+            document.getElementById("securite").innerHTML = "Refroidissement";
+            document.getElementById("securite").style.color = "red";
+        }
 
     });
   }, 2000);

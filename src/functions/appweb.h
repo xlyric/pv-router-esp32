@@ -6,6 +6,7 @@
 #include "spiffsFunctions.h"
 #include <RBDdimmer.h>
 #include "unified_dimmer.h"
+#include "minuteur.h"
 
 String configweb; 
 extern DisplayValues gDisplayValues;
@@ -18,6 +19,7 @@ extern dimmerLamp dimmer1;
 
 extern gestion_puissance unified_dimmer; 
 extern Dallas dallas;
+extern Programme programme;
 
 #ifdef  TTGO
 #include <TFT_eSPI.h>
@@ -115,6 +117,10 @@ String getState() {
   }
   doc["RSSI"] = WiFi.RSSI();
   doc["name"] =  String(pvname); 
+  doc["dallas"] = dallas.lost;  //perte de la data dallas
+  doc["minuteur"] = programme.run; 
+  doc[ "security" ] = dallas.security;
+
   state=""; 
   serializeJson(doc, state);
   return String(state);

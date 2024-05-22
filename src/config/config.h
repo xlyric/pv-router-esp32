@@ -159,7 +159,7 @@ bool discovery_temp = false;
 #endif
 
 #define RELEASE "Version 20240601"
-constexpr const int FS_RELEASE= 20240504 ;
+constexpr const int FS_RELEASE= 20240601 ;
 
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE

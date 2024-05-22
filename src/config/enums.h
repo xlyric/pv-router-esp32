@@ -202,7 +202,7 @@ public:
     dimmerlocal = doc["dimmerlocal"] | false;
     flip = doc["flip"] | true;
     tmax = doc["tmax"] | 65;
-    localfuse = doc["localfuse"] | 50;
+    localfuse = doc["localfuse"] | 20;
     voltage = doc["voltage"] | 233;
     offset = doc["offset"] | -10;
     relayoff = doc["relayoff"] | 95;
@@ -536,7 +536,7 @@ struct Dallas{
   byte data[12]; // NOSONAR
   byte addr[8]; // NOSONAR
   float celsius = 0.00 ;
-  byte security = 0;
+  bool security = 0;
   bool detect = false;
   bool lost = false; 
   
