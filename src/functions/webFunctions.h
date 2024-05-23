@@ -196,10 +196,12 @@ server.on("/wifi.html", HTTP_GET, [](AsyncWebServerRequest *request){
       compress_html(request,"/wifi.html.gz", "text/html");
   });
 
-
 server.on("/getwifi", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   serveur_response(request, getwifi());
-  
+});
+
+server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request) {
+  request->send(200, "text/plain", "pong");
 });
 
 ///////////////
@@ -212,13 +214,10 @@ server.on("/mqtt.html", HTTP_GET, [](AsyncWebServerRequest *request){
 
 server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(200, "application/json",  getmqtt().c_str()); 
-
 });
 
 server.on("/log.txt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(SPIFFS, "/log.txt", "text/plain"); 
-  
-
 });
  /// il serait bien que /getmqtt et getwifi soit directement en processing de l'appel de la page 
 
@@ -233,7 +232,6 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
     serveur_response(request, logging.Get_log_init().c_str());
     // reinit de logging.log_init 
     logging.reset_log_init(); 
-
   });
 
 

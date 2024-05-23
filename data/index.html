@@ -375,9 +375,9 @@
       var dimmer = data.dimmer;
       var temperature = data.temperature;
       if (temperature == null) { temperature = 0 ; }
-      var version = data.version; 
+     // var version = data.version; 
       var rssi = data.RSSI;
-      var name = data.name;
+      //var name = data.name;
       // Mettre à jour les éléments HTML
       dataGaugePA.setValue(0, 0, state);
       dataGaugePA.setValue(0, 1, watt);
@@ -394,9 +394,9 @@
 		
 		  document.getElementById("state").innerHTML = state;
 		  document.getElementById("sigma").innerHTML = watt;
-      document.getElementById("version").innerHTML = version;
+      document.getElementById("version").innerHTML = data.version;
       document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi + ' dBm';
-      document.getElementById("name").innerHTML = name  ;
+      document.getElementById("name").innerHTML = data.name  ;
 
       // ecriture de "minuteur" dans le div minuteur si l'état est à 1
           if (data.minuteur == 1) {

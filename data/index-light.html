@@ -33,7 +33,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Pv router</div>
+        <div class="sidebar-brand-text mx-3" id="name">Pv router</div>
       </a>
 
       <!-- Divider -->
@@ -44,7 +44,8 @@
         <a class="nav-link" href="/">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span><br>
-		<span id="version">version: </span> -->
+          <span id="version">Version: </span><br>
+          <span id="RSSI">RSSI : </span>
 </a> 
 		  
       </li>
@@ -219,7 +220,7 @@
       <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
 				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Temperature</h6>
+          <h6 class="m-0 font-weight-bold text-primary">Température Dallas</h6>
 				</div>
 				<div class="card-body">
 					<div id='curve_temp' style=' width: auto; height: 200px;'>
@@ -228,6 +229,24 @@
 				</div>
 			</div>
 		</div>
+  </div>
+    <div class="row">
+
+      <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Etats</h6>
+                </div>
+                <div class="card-body">
+                <b>Etat Minuteur : </b><h4 id="minuteur">N/A</h4>
+                <b>Etat Dallas Locale: </b><h4 id="dallas">N/A</h4>
+                <b>Etat Dallas T°max: </b><h4 id="securite">N/A</h4>
+                </div>
+            </div>
+          </div>
+     </div> 
 			
 		<div class="col-xl-12 col-lg-7">
             <div class="card shadow mb-4">
@@ -353,6 +372,9 @@ $.getJSON('/state', function(data) {
     var dimmer = data.dimmer;
     var temperature = data.temperature;
     if (temperature == null) { temperature = 0 ; }
+    //var version = data.version; 
+    var rssi = data.RSSI;
+    //var name = data.name;
     // Mettre à jour les éléments HTML
     dataGaugePA.setValue(0, 0, state);
     dataGaugePA.setValue(0, 1, watt);
@@ -368,7 +390,37 @@ $.getJSON('/state', function(data) {
     gaugePAtemp.draw(dataGaugePAtemp,optionsGaugetemp);
   
     document.getElementById("state").innerHTML = state;
-    document.getElementById("sigma").innerHTML = watt;
+		  document.getElementById("sigma").innerHTML = watt;
+      document.getElementById("version").innerHTML = data.version;
+      document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi + ' dBm';
+      document.getElementById("name").innerHTML = data.name  ;
+
+            // ecriture de "minuteur" dans le div minuteur si l'état est à 1
+            if (data.minuteur == 1) {
+            document.getElementById("minuteur").innerHTML = "Minuteur";
+            document.getElementById("minuteur").style.color = "red";
+        } else {
+            document.getElementById("minuteur").innerHTML = "Non actif";
+            document.getElementById("minuteur").style.color = "";
+        }
+
+        // ecriture de "ON" dans le div relais 1 si l'état est à 1
+          if (data.dallas == 0) {
+            document.getElementById("dallas").innerHTML = "Connect";
+            document.getElementById("dallas").style.color = "";
+        } else {
+            document.getElementById("dallas").innerHTML = "Disconnect";
+            document.getElementById("dallas").style.color = "red";
+        }
+
+        // ecriture de "ON" dans le div relais 1 si l'état est à 1
+          if (data.security == 0) {
+            document.getElementById("securite").innerHTML = "OK";
+            document.getElementById("securite").style.color = "";
+        } else {
+            document.getElementById("securite").innerHTML = "Refroidissement";
+            document.getElementById("securite").style.color = "red";
+        }
 
   });
 }, 2000);
