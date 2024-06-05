@@ -34,7 +34,9 @@ void set_power(float unified_power){
     // On transforme la puissance totale à envoyer aux dimmers en watts pour mieux les répartir entre les 3 SSR
     // Meilleure précision en float 
     config.calcul_charge();
-    float tmp_pwr_watt = unified_power * config.charge / 100; 
+    float tmp_pwr_watt = 0;
+    if ( int(unified_power) >= 0 ) { tmp_pwr_watt = unified_power * config.charge / 100;  }
+    
     int dimmer1_pwr = 0;
     int dimmer2_pwr = 0;
     int dimmer3_pwr = 0;
@@ -42,7 +44,9 @@ void set_power(float unified_power){
 
     // Calcul de la puissance à envoyer à chaque dimmer
     if (tmp_pwr_watt <= config.charge1){ // Un seul dimmer à fournir
-      dimmer1_pwr = tmp_pwr_watt * 100 / config.charge1 ;
+      if ( tmp_pwr_watt > 0 ) { dimmer1_pwr = tmp_pwr_watt * 100 / config.charge1 ;  }
+      else
+      { dimmer1_pwr = 0; }
       dimmer2_pwr = 0;
       dimmer3_pwr = 0;
     }
