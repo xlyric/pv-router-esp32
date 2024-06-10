@@ -215,6 +215,7 @@ public:
     relayon = doc["relayon"] | 100;
     SCT_13 = doc["SCT_13"] | 30;
     trigger = doc["trigger"] | 10;
+    check_trigger();
 
 
     polarity = doc["polarity"] | false;
@@ -238,7 +239,7 @@ public:
     configFile.close();
 
     recup_polarity();
-    check_trigger();
+    
     message = "config file loaded\r\n";
   return message;
   }
