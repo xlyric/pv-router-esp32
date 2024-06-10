@@ -87,7 +87,7 @@ float PowerFactor; //
  */
 
 #define DIMMER true
-#define TRIGGER 10   /// 
+//#define TRIGGER 10   /// 
 
 ///// PVROUTER false dans le cas d'un enphase en pilote full 
 #define PVROUTER true
@@ -101,7 +101,7 @@ float PowerFactor; //
 
     #define ONE_WIRE_BUS  25
     #define TEMPERATURE_PRECISION 10
-    #define TRIGGER 10   /// Trigger % for max temp protection. max temp configuration is in config.json 
+    //#define TRIGGER 10   /// Trigger % for max temp protection. max temp configuration is in config.json 
 bool discovery_temp = false;
 
 
@@ -158,8 +158,8 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20240606"
-constexpr const int FS_RELEASE= 20240601 ;
+#define RELEASE "Version 20240610"
+constexpr const int FS_RELEASE= 20240610 ;
 
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE
@@ -220,7 +220,7 @@ bool AP=true;
 
       #define ONE_WIRE_BUS  23
       #define TEMPERATURE_PRECISION 10
-      #define TRIGGER 5   /// Trigger % for max temp protection. max temp configuration is in config.json
+      //#define TRIGGER 5   /// Trigger % for max temp protection. max temp configuration is in config.json
    
   #define OLED_ON false
   #define RELAY1 17

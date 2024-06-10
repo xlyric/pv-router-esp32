@@ -89,6 +89,7 @@ public:
   int num_fuse;
   int localfuse;
   int tmax;
+  int trigger;
   bool mqtt;
   char mqttserver[16]; // NOSONAR
   int mqttport; 
@@ -134,6 +135,11 @@ public:
   
   void calcul_charge() {
     charge = charge1 + charge2 + charge3;
+  }
+
+  void check_trigger() {
+    if (trigger < 0) { trigger = 0; }
+    if (trigger > 100) { trigger = 100; }
   }
 
   //***********************************
@@ -208,6 +214,8 @@ public:
     relayoff = doc["relayoff"] | 95;
     relayon = doc["relayon"] | 100;
     SCT_13 = doc["SCT_13"] | 30;
+    trigger = doc["trigger"] | 10;
+
 
     polarity = doc["polarity"] | false;
     strlcpy(dimmer,                  // <- destination
@@ -230,6 +238,7 @@ public:
     configFile.close();
 
     recup_polarity();
+    check_trigger();
     message = "config file loaded\r\n";
   return message;
   }
@@ -250,6 +259,7 @@ public:
       return message;
     } 
 
+    check_trigger();  // vérification de la valeur de trigger
     // Allocate a temporary JsonDocument
     // Don't forget to change the capacity to match your requirements.
     // Use arduinojson.org/assistant to compute the capacity.
@@ -280,6 +290,7 @@ public:
 
     doc["facteur"] = facteur;
     doc["fuse"] = num_fuse;
+    doc["trigger"] = trigger;
     doc["mqtt"] = mqtt;
     //proection contre les champs vides qui font planter le programme
     if (strlen(mqttserver) == 0) { strlcpy(mqttserver,"none",16); }

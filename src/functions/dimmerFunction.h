@@ -215,7 +215,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
             
         float dallas_int = gDisplayValues.temperature;
         if (dallas.security) {
-          float temp_trigger = float(config.tmax) - float(config.tmax*TRIGGER/100) ;
+          float temp_trigger = float(config.tmax) - float(config.tmax*config.trigger/100) ;
           if ( dallas_int < temp_trigger ) {  
           dallas.security = false ; // retrait securité si inférieur au trigger
           ///affichage dans les logs de l état sécurité

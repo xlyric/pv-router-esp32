@@ -243,6 +243,7 @@ String getconfig() {
   doc["relaystart"] = config.relayon;
   doc["relaystop"] = config.relayoff;
   doc["SCT_13"] = config.SCT_13;
+  doc["trigger"] = config.trigger;
   
   
   serializeJson(doc, configweb);

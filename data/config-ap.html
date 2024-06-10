@@ -481,9 +481,15 @@ footer.sticky-footer .copyright{line-height:1;font-size:.8rem;}
                     <div class="col-sm-3"><span>Charge connectée</span>
                       <input type="text" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
                     </div>
+                    <div class="col-sm-3"></div>
+
+                    <div class="col-sm-3"></div>
                     <div class="col-sm-3">
-                      Max temp : <input type="text" class="form-control form-control-user" id="maxtemp" placeholder="%MAXTEMP%">
-                  </div>
+                      Max temp (°C): <input type="number" step="1"class="form-control form-control-user" id="maxtemp" placeholder="%MAXTEMP%">
+                    </div>
+                    <div class="col-sm-3">
+                      Trigger (%): <input type="number" step="1"class="form-control form-control-user" id="trigger" placeholder="%TRIGGER%">
+                    </div>  
 
                 </div>
               </div>
@@ -683,7 +689,7 @@ footer.sticky-footer .copyright{line-height:1;font-size:.8rem;}
 
   $( "#formulaire" ).submit(function() {
 
-    var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(),'voltage':$('#voltage').val(), 'offset':$('#offset').val() } 
+    var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(),'voltage':$('#voltage').val(), 'offset':$('#offset').val(),'trigger':$('#trigger').val() } 
 
       
           $.ajax({

@@ -297,6 +297,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam("screentime")) { config.ScreenTime = request->getParam("screentime")->value().toInt(); } 
    if (request->hasParam("voltage")) { config.voltage = request->getParam("voltage")->value().toInt();}
    if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toInt();}
+   if (request->hasParam("trigger")) { config.trigger = request->getParam("trigger")->value().toInt();}
    
    /// @brief  wifi
    bool wifimodif=false ; 
