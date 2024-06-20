@@ -62,7 +62,7 @@ struct DisplayValues {
   double enp_current_power_production;
   int puissance_route=0;
   bool dimmer_disengaged=false;
-  const String pvname = "PV ROUTER " + WiFi.macAddress().substring(12,14) + WiFi.macAddress().substring(15,17);
+  const String pvname = "PV-ROUTER-" + WiFi.macAddress().substring(12,14) + WiFi.macAddress().substring(15,17);
   int serial_timeout = 0 ; ///arret du service serial après x loop d'inactivité
 };
 
@@ -83,7 +83,7 @@ public:
   int cycle;  // cycle de lecture des capteurs
   bool sending; 
   bool autonome; // si dimmer en local 
-  char dimmer[16];  // adresse IP du dimmer // NOSONAR
+  char dimmer[64];  // adresse IP du dimmer // NOSONAR
   bool dimmerlocal; // si dimmer en local
   float facteur; // facteur de correction de la puissance
   int num_fuse;

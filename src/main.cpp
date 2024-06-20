@@ -3,6 +3,7 @@
 
 
 #include "WiFiClientSecure.h"
+#include <ESPmDNS.h>
 
   #include <driver/adc.h>
   #include "config/config.h"
@@ -286,6 +287,19 @@ void setup()
 ///  WIFI INIT
  
   connect_to_wifi();
+
+  // Initialize mDNS
+  //config.say_my_name)
+  if (!MDNS.begin(gDisplayValues.pvname)) {   
+    Serial.println("Error setting up MDNS responder!");
+    while(1) {
+      delay(1000);
+    }
+  }
+  Serial.println("mDNS responder started");
+  Serial.println(gDisplayValues.pvname);
+  logging.Set_log_init("mDNS responder started\r\n",true);
+  logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);
 
 #if OLED_ON == true
     Serial.println(OLEDSTART);
