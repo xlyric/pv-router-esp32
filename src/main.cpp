@@ -39,6 +39,7 @@
   #include "tasks/Serial_task.h"
   #include "tasks/send-mqtt.h"
   #include "tasks/watchdog_memory.h"
+  #include "tasks/mDNS.h"
   
   #include "functions/spiffsFunctions.h"
   #include "functions/Mqtt_http_Functions.h"
@@ -386,6 +387,16 @@ ntpinit();
     xTaskCreate(
       watchdog_memory,
       "watchdog_memory",  // Task name
+      6000,            // Stack size (bytes)
+      NULL,             // Parameter
+      5,                // Task priority
+      NULL          // Task handle
+    );  
+
+        // task de recherche dimmer 
+    xTaskCreate(
+      mdns_discovery,
+      "mdns_discovery",  // Task name
       6000,            // Stack size (bytes)
       NULL,             // Parameter
       5,                // Task priority
