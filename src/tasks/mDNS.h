@@ -6,7 +6,7 @@
 #include "../config/enums.h"
 
 extern Config config; 
-extern Logs Logging;
+extern Logs logging;
 
 void mdns_discovery(void * parameter) // NOSONAR
 {
@@ -30,11 +30,11 @@ void mdns_discovery(void * parameter) // NOSONAR
                             name_dimmer.toCharArray(config.dimmer, name_dimmer.length()+1);
                             Serial.print("Dimmer found: ");
                             Serial.println(config.dimmer);
-                            //Logging.Set_log_init("Dimmer found: ");
-                            //Logging.Set_log_init(config.dimmer);
-                            //Logging.Set_log_init("\r\n");
+                            logging.Set_log_init("Dimmer found: ");
+                            logging.Set_log_init(config.dimmer);
+                            logging.Set_log_init("\r\n");
                             //sauvegarde de la configuration
-                            //config.saveConfiguration();
+                            config.saveConfiguration();
                             break;
                         }
                     }
