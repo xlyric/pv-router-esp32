@@ -365,12 +365,20 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
     if (request->hasParam("relay1")) { int relay = request->getParam("relay1")->value().toInt(); 
         if ( relay == 0 ) { digitalWrite(RELAY1 , LOW); }
         else if ( relay == 1 ) { digitalWrite(RELAY1 , HIGH); } 
-        else digitalWrite(RELAY1, !digitalRead(RELAY1));
+        else if (relay == 2) { digitalWrite(RELAY1, !digitalRead(RELAY1)); }
+        int relaystate = digitalRead(RELAY1); 
+        char str[8];// NOSONAR
+        itoa( relaystate, str, 10 );
+        request->send(200, "text/html", str );
     }
     if (request->hasParam("relay2")) { int relay = request->getParam("relay2")->value().toInt(); 
         if ( relay == 0) { digitalWrite(RELAY2 , LOW); }
         else if ( relay == 1 ) { digitalWrite(RELAY2 , HIGH); } 
-        else digitalWrite(RELAY2, !digitalRead(RELAY2));
+        else if (relay == 2) { digitalWrite(RELAY2, !digitalRead(RELAY2)); }
+        int relaystate = digitalRead(RELAY2); 
+        char str[8];// NOSONAR
+        itoa( relaystate, str, 10 );
+        request->send(200, "text/html", str );
     }
     //if (request->hasParam("relaystart")) { config.relayon = request->getParam("relaystart")->value().toInt();}
     //if (request->hasParam("relaystop")) { config.relayoff = request->getParam("relaystop")->value().toInt();}

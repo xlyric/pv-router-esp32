@@ -252,7 +252,7 @@ String getconfig() {
 
 String getenvoy() {
   String VERSION_http = String(VERSION) + " " + String(COMPILE_NAME) ; 
-  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION_http) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.charge1+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+config.relayon+";"+config.relayoff;
+  configweb = String(config.IDXdimmer) + ";" +  config.num_fuse + ";"  + String(config.IDX) + ";"  +  String(VERSION_http) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.charge1+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA);
   return String(configweb);
 }
 //***********************************
