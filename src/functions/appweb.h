@@ -240,8 +240,8 @@ String getconfig() {
   doc["voltage"] = config.voltage;
   doc["offset"] = config.offset;
   doc["flip"] = config.flip;
-  doc["relaystart"] = config.relayon;
-  doc["relaystop"] = config.relayoff;
+  //doc["relaystart"] = config.relayon;
+  //doc["relaystop"] = config.relayoff;
   doc["SCT_13"] = config.SCT_13;
   doc["trigger"] = config.trigger;
   

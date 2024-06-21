@@ -101,8 +101,8 @@ public:
   int voltage; 
   int offset; 
   bool flip;
-  int relayon; 
-  int relayoff;
+  //int relayon; 
+  //int relayoff;
   bool restart;
   char topic_Shelly[100];  // NOSONAR
   bool Shelly_tri;
@@ -211,8 +211,8 @@ public:
     localfuse = doc["localfuse"] | 20;
     voltage = doc["voltage"] | 233;
     offset = doc["offset"] | -10;
-    relayoff = doc["relayoff"] | 95;
-    relayon = doc["relayon"] | 100;
+    //relayoff = doc["relayoff"] | 95;
+    //relayon = doc["relayon"] | 100;
     SCT_13 = doc["SCT_13"] | 30;
     trigger = doc["trigger"] | 10;
     check_trigger();
@@ -309,8 +309,8 @@ public:
     doc["offset"] = offset; 
     doc["flip"] = flip; 
     
-    doc["relayon"] = relayon; 
-    doc["relayoff"] = relayoff; 
+    //doc["relayon"] = relayon; 
+    //doc["relayoff"] = relayoff; 
     doc["topic_Shelly"] = topic_Shelly; 
     doc["Shelly_tri"] = Shelly_tri;
     doc["SCT_13"] = SCT_13;

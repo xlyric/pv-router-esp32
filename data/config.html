@@ -304,31 +304,6 @@
             <br>
 
             <div class="card position-relative">
-              <div class="card-header py-6">
-                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" data-placement="top" title="Aide" data-bs-content="A utiliser dans le cas d'un Relay suplémentaire branché (SSR conseillé)">Relay ℹ</h6>
-                  <span id="saveform"></span>
-              </div>
-              <div class="card-body">
-
-                <div class="form-group row"> 
-                  
-                    <div class="col-sm-3">
-                        Mise en route à X% : <input type="number" step="1" class="form-control form-control-user" id="relaystart" placeholder="%RELAYSTART%">
-                    </div>
-                    <div class="col-sm-3">
-                       Arret à X% : <input type="number" step="1" class="form-control form-control-user" id="relaystop" placeholder="%RELAYSTOP%">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <br>
-
-
-							
-
-
-            <div class="card position-relative">
               <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Pv Routeur</h6>
                   <span id="saveform"></span>
@@ -523,7 +498,7 @@ $( "#save" ).click(function() {
 $( "#formulaire" ).submit(function() {
     
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() , 'relaystart':$('#relaystart').val(), 'relaystop':$('#relaystop').val(),'SCT_13': $('#SCT_13').val(), 'trigger':$('#trigger').val()  }; 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() ,'SCT_13': $('#SCT_13').val(), 'trigger':$('#trigger').val()  }; 
 
 		
         $.ajax({
