@@ -120,6 +120,8 @@ String getState() {
   doc["dallas"] = dallas.lost;  //perte de la data dallas
   doc["minuteur"] = programme.run; 
   doc[ "security" ] = dallas.security;
+  doc["relay1"]   = digitalRead(RELAY1);
+  doc["relay2"]   = digitalRead(RELAY2);
 
   state=""; 
   serializeJson(doc, state);
@@ -240,8 +242,7 @@ String getconfig() {
   doc["voltage"] = config.voltage;
   doc["offset"] = config.offset;
   doc["flip"] = config.flip;
-  //doc["relaystart"] = config.relayon;
-  //doc["relaystop"] = config.relayoff;
+
   doc["SCT_13"] = config.SCT_13;
   doc["trigger"] = config.trigger;
   

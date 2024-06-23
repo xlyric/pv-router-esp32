@@ -100,6 +100,8 @@ Configmodule configmodule;
 
 ///déclaration des programmateurs 
 Programme programme; 
+Programme programme_relay1;
+Programme programme_relay2;
 
 /// declare logs 
 Logs logging;
@@ -352,9 +354,17 @@ ntpinit();
 
 /// chargement des conf de minuteries
   Serial.println("Loading minuterie");
-  programme.Set_name("/dimmer");
+  programme.set_name("/dimmer");
   programme.loadProgramme();
   programme.saveProgramme();
+
+  programme_relay1.set_name("/relay1");
+  programme_relay1.loadProgramme();
+  programme_relay1.saveProgramme();
+
+  programme_relay2.set_name("/relay2");
+  programme_relay2.loadProgramme();
+  programme_relay2.saveProgramme();
 
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
@@ -724,6 +734,37 @@ if (config.dimmerlocal) {
       }
     }
 }
+
+if (programme_relay1.run) { 
+      if (programme_relay1.stop_progr()) { 
+        logging.Set_log_init("stop minuteur relay1\r\n",true);
+        digitalWrite(RELAY1 , LOW);
+//        device_relay1.send(String(0));
+
+      }
+ }
+ else {
+      if (programme_relay1.start_progr()){ 
+        logging.Set_log_init("start minuteur relay1\r\n",true);
+        digitalWrite(RELAY1 , HIGH);
+      //  device_relay1.send(String(1));
+      }
+ }
+
+ if (programme_relay2.run) { 
+      if (programme_relay2.stop_progr()) { 
+        logging.Set_log_init("stop minuteur relay2\r\n",true);
+        digitalWrite(RELAY2 , LOW);
+    //    device_relay2.send(String(0));
+      }
+ }
+ else {
+      if (programme_relay2.start_progr()){ 
+        logging.Set_log_init("start minuteur relay2\r\n",true);
+        digitalWrite(RELAY2 , HIGH);
+      //device_relay2.send(String(1));
+      }
+ }
 
 /// fonction de reboot hebdomadaire ( lundi 00:00 )
 

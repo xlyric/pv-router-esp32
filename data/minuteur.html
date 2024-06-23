@@ -111,6 +111,8 @@
                             <div id="tabs">
                                 <ul class="nav nav-tabs">
                                   <li class="nav-item"><a class="nav-link" href="#dimmer">Configuration dimmer</a></li>
+                                  <li class="nav-item"><a class="nav-link" href="#relay1">Configuration relais 1</a></li>
+                                  <li class="nav-item"><a class="nav-link" href="#relay2">Configuration relais 2</a></li>
                                 </ul>
 
                                 <div id="dimmer">
@@ -130,6 +132,42 @@
                                       <input type="submit" value="Application des paramètres dimmer" class="btn btn-primary btn-user btn-block">
                                     </form>
                                   </div>
+
+                                  <div id="relay1">
+                                    <form class="user" id="relay1-form" method="post" action="">
+                                      <div class="form-group">
+                                        Heure de démarrage: (format hh:mm)
+                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_relay1" placeholder="%heure_demarrage%">
+                                      </div>
+                                      <div class="form-group">
+                                        Heure d'arrêt:
+                                        <input type="text" class="form-control form-control-user" id="heure_arret_relay1" placeholder="%heure_arret%">
+                                      </div>
+                                      <div class="form-group">
+                                        Température de consigne (°C):
+                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_relay1" placeholder="%temperature%">
+                                      </div>
+                                      <input type="submit" value="Application des paramètres relais 1" class="btn btn-primary btn-user btn-block">
+                                    </form>
+                                  </div>
+
+                                  <div id="relay2">
+                                    <form class="user" id="relay2-form" method="post" action="">
+                                      <div class="form-group">
+                                        Heure de démarrage: (format hh:mm)
+                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_relay2" placeholder="%heure_demarrage%">
+                                      </div>
+                                      <div class="form-group">
+                                        Heure d'arrêt:
+                                        <input type="text" class="form-control form-control-user" id="heure_arret_relay2" placeholder="%heure_arret%">
+                                      </div>
+                                      <div class="form-group">
+                                        Température de consigne (°C):
+                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_relay2" placeholder="%temperature%">
+                                      </div>
+                                       <input type="submit" value="Application des paramètres relais 2" class="btn btn-primary btn-user btn-block">
+                                    </form>
+                                  </div>
                     </div>
                 </div>
             </div>
@@ -137,6 +175,22 @@
 <script>
   $(document).ready(function() {
     // Récupération des heures de démarrage et d'arrêt depuis le serveur
+    $.get("/getminiteur?relay2", function(data) {
+      $("#heure_demarrage_relay2").val(data.heure_demarrage);
+      $("#heure_arret_relay2").val(data.heure_arret);
+      $("#temperature_relay2").val(data.temperature);
+      // Affichage de l'heure au format 2 digits
+      var heure = data.heure < 10 ? "0" + data.heure : data.heure;
+      var minute = data.minute < 10 ? "0" + data.minute : data.minute;
+      $("#heure").html( heure + ":" + minute );
+    });
+
+    $.get("/getminiteur?relay1", function(data) {
+      $("#heure_demarrage_relay1").val(data.heure_demarrage);
+      $("#heure_arret_relay1").val(data.heure_arret);
+      $("#temperature_relay1").val(data.temperature);
+    });
+
     $.get("/getminiteur?dimmer", function(data) {
       $("#heure_demarrage_dimmer").val(data.heure_demarrage);
       $("#heure_arret_dimmer").val(data.heure_arret);
@@ -153,6 +207,22 @@
       var heure_arret = $("#heure_arret_dimmer").val();
       var temperature = $("#temperature_dimmer").val();
       $.get("/setminiteur?dimmer", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
+    });
+
+    $("#relay1-form").submit(function(event) {
+      event.preventDefault();
+      var heure_demarrage = $("#heure_demarrage_relay1").val();
+      var heure_arret = $("#heure_arret_relay1").val();
+      var temperature = $("#temperature_relay1").val();
+      $.get("/setminiteur?relay1", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
+    });
+
+    $("#relay2-form").submit(function(event) {
+      event.preventDefault();
+      var heure_demarrage = $("#heure_demarrage_relay2").val();
+      var heure_arret = $("#heure_arret_relay2").val();
+      var temperature = $("#temperature_relay2").val();
+      $.get("/setminiteur?relay2", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
     });
   
   });

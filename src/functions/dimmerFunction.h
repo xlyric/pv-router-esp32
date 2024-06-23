@@ -299,11 +299,6 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
           }
         }
 
-        /// Relay
-
-       // if ( gDisplayValues.dimmer >= config.relayon ) {   digitalWrite(RELAY1, HIGH); }
-       // if ( gDisplayValues.dimmer <= config.relayoff ) {   digitalWrite(RELAY1, LOW ); }
-
     }
 
     else { dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer, puissance_dispo ) ;  }

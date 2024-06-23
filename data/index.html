@@ -241,6 +241,8 @@
                 <b>Etat Minuteur : </b><h4 id="minuteur">N/A</h4>
                 <b>Etat Dallas Locale: </b><h4 id="dallas">N/A</h4>
                 <b>Etat Dallas T°max: </b><h4 id="securite">N/A</h4>
+                <b>Etat Relais 1 : </b><h4 id="relais 1">N/A</h4>
+                <b>Etat Relais 2 : </b><h4 id="relais 2">N/A</h4>
                 </div>
             </div>
           </div>
@@ -374,6 +376,9 @@
       var watt = data.watt;
       var dimmer = data.dimmer;
       var temperature = data.temperature;
+      var relais1 = data.relay1;
+      var relais2 = data.relay2;
+      
       if (temperature == null) { temperature = 0 ; }
      // var version = data.version; 
       var rssi = data.RSSI;
@@ -405,6 +410,24 @@
         } else {
             document.getElementById("minuteur").innerHTML = "Non actif";
             document.getElementById("minuteur").style.color = "";
+        }
+
+    // ecriture de "ON" dans le div relais 1 si l'état est à 1
+        if (relais1 == 1) {
+            document.getElementById("relais 1").innerHTML = "ON";
+            document.getElementById("relais 1").style.color = "red";
+        } else {
+            document.getElementById("relais 1").innerHTML = "OFF";
+            document.getElementById("relais 1").style.color = "";
+        }
+
+    // ecriture de "ON" dans le div relais 2 si l'état est à 1
+        if (relais2 == 1) {
+            document.getElementById("relais 2").innerHTML = "ON";
+            document.getElementById("relais 2").style.color = "red";
+        } else {
+            document.getElementById("relais 2").innerHTML = "OFF";
+            document.getElementById("relais 2").style.color = "";
         }
 
         // ecriture de "ON" dans le div relais 1 si l'état est à 1
