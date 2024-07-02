@@ -717,7 +717,11 @@ if (config.dimmerlocal) {
     else { 
       // minuteur à l'arret
       if (programme.start_progr()){ 
-        unified_dimmer.set_power(config.localfuse);
+        int sysvar_puissance; 
+        if ( programme.puissance > config.localfuse ) {     sysvar_puissance=config.localfuse; }
+        else { sysvar_puissance = programme.puissance; } 
+
+        unified_dimmer.set_power(sysvar_puissance);
         delay (50);
         Serial.println("start minuteur ");
         //demarrage du ventilateur 

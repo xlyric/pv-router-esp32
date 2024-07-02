@@ -167,25 +167,26 @@ String stringbool(bool mybool){
   return String(truefalse);
   }
 
-String getServermode(String Servermode) {
-  if ( Servermode == "screen" ) {  gDisplayValues.screenstate = !gDisplayValues.screenstate; }
-  if ( Servermode == "Jeedom" ) {   config.UseJeedom = !config.UseJeedom;}
-  if ( Servermode == "Autonome" ) {   config.autonome = !config.autonome; }
-  if ( Servermode == "Dimmer local" ) {   
+bool getServermode(String Servermode) {
+  if ( Servermode == "screen" ) {  gDisplayValues.screenstate = !gDisplayValues.screenstate; return true;}
+  if ( Servermode == "Jeedom" ) {   config.UseJeedom = !config.UseJeedom; return true;}
+  if ( Servermode == "Autonome" ) {   config.autonome = !config.autonome; return true;}
+  if ( Servermode == "dimmerlocal" ) {   
                     config.dimmerlocal = !config.dimmerlocal;  
                     //dimmer1.setPower(0);
                     unified_dimmer.set_power(0);
-                    
-  }
-  if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; }
-  if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; config.sauve_polarity();}
-  if ( Servermode == "envoy" ) {   configmodule.enphase_present = !configmodule.enphase_present; }
-  if ( Servermode == "fronius" ) {   configmodule.Fronius_present = !configmodule.Fronius_present; }
-  if ( Servermode == "TRI" ) {   config.Shelly_tri = !config.Shelly_tri; }
+                    return true;
+                    }
+  if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; return true;}
+  if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; config.sauve_polarity(); return true;}
+  if ( Servermode == "envoy" ) {   configmodule.enphase_present = !configmodule.enphase_present; return true;}
+  if ( Servermode == "fronius" ) {   configmodule.Fronius_present = !configmodule.Fronius_present; return true;}
+  if ( Servermode == "TRI" ) {   config.Shelly_tri = !config.Shelly_tri; return true;}
 
   #ifndef LIGHT_FIRMWARE
     if ( Servermode == "HA" ) {   configmqtt.HA = !configmqtt.HA; 
                       if (configmqtt.HA) init_HA_sensor(); 
+                      return true;
                       }
   #endif
   
@@ -195,10 +196,11 @@ String getServermode(String Servermode) {
               if (config.flip) display.setRotation(3);
               else display.setRotation(1);
               #endif
+              return true;
               }
-  
+ 
 
-return String(Servermode);
+return false;
 }
 //***********************************
 String getSigma() {

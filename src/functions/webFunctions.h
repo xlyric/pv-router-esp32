@@ -106,38 +106,16 @@ else {
 }
 
 
-  server.on("/all.min.css",  HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request,"/all.min.css.gz", "text/css");
-  });
+  server.serveStatic("/all.min.css", SPIFFS, "/all.min.css");
+  server.serveStatic("/jquery.min.js", SPIFFS, "/jquery.min.js");
+  server.serveStatic("/bootstrap.bundle.min.js", SPIFFS, "/bootstrap.bundle.min.js");
+  server.serveStatic("/bootstrap.bundle.min.js.map", SPIFFS, "/bootstrap.bundle.min.js.map");
+  server.serveStatic("/fa-solid-900.woff2", SPIFFS, "/fa-solid-900.woff2");
+  server.serveStatic("/favicon.ico", SPIFFS, "/favicon.ico");
+  server.serveStatic("/sb-admin-2.min.css", SPIFFS, "/sb-admin-2.min.css");
+  server.serveStatic("/sb-admin-2.js", SPIFFS, "/sb-admin-2.js");
 
-server.on("/jquery.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request,"/jquery.min.js.gz", "text/css");
-  });
-
-server.on("/bootstrap.bundle.min.js",  HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request,"/bootstrap.bundle.min.js.gz", "text/css");
-  });
-
-server.on("/bootstrap.bundle.min.js.map",  HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request,"/bootstrap.bundle.min.js.map.gz", "text/css");
-  });
-
-server.on("/favicon.ico",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/favicon.ico", "image/png");
-  });
-
-server.on("/fa-solid-900.woff2", HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request, "/fa-solid-900.woff2.gz", "text/css");
-  });
   
-server.on("/sb-admin-2.js", HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request, "/sb-admin-2.js.gz", "text/javascript");
-  });
-
-server.on("/sb-admin-2.min.css", HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request, "/sb-admin-2.min.css.gz", "text/css");
-  });
-
 server.on("/mqtt.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/mqtt.json", "text/css");
   });
@@ -356,11 +334,12 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    if (request->hasParam(PARAM_INPUT_reset)) {Serial.println("Resetting ESP");  ESP.restart();}
 
    //// for check boxs in web pages  
-   if (request->hasParam(PARAM_INPUT_servermode)) { inputMessage = request->getParam( PARAM_INPUT_servermode)->value();
-                                            getServermode(inputMessage);
-                                            request->send(200, "text/html", getconfig().c_str());
+   if (request->hasParam("servermode")) { inputMessage = request->getParam( PARAM_INPUT_servermode)->value();
+                                            if (getServermode(inputMessage)) {
                                             logging.Set_log_init(config.saveConfiguration(),true); // configuration sauvegardée
                                             logging.Set_log_init(configmqtt.savemqtt(),true); // configuration sauvegardée
+                                            }
+                                            request->send(200, "text/html", getconfig().c_str());
                                         }
 
     /// relays : 0 : off , 1 : on , other : switch 
@@ -410,6 +389,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
               if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme.heure_demarrage,6);  }
               if (request->hasParam("heure_arret")) { request->getParam("heure_arret")->value().toCharArray(programme.heure_arret,6);  }
               if (request->hasParam("temperature")) { programme.temperature = request->getParam("temperature")->value().toInt();   }
+              if (request->hasParam("puissance")) { programme.puissance = request->getParam("puissance")->value().toInt(); }
               programme.saveProgramme();
         request->send(200, "application/json",  getMinuteur(programme));  
       }
@@ -442,7 +422,8 @@ String getMinuteur(const Programme& minuteur) {
     doc["heure_arret"] = minuteur.heure_arret;
     doc["temperature"] = minuteur.temperature;
     doc["heure"] = timeinfo.tm_hour;
-    doc["minute"] = timeinfo.tm_min;;
+    doc["minute"] = timeinfo.tm_min;
+    doc["puissance"] = minuteur.puissance;
 
     String retour;
     serializeJson(doc, retour);
