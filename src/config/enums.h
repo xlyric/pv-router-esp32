@@ -186,7 +186,7 @@ public:
     
     facteur = doc["facteur"] | 0.86; 
     delta = doc["delta"] | 50; 
-    num_fuse = doc["fuse"] | 70;
+    num_fuse = 500;
     deltaneg = doc["deltaneg"] | 0; 
     cosphi = doc["cosphi"] | 5; 
     readtime = doc["readtime"] | 555;
@@ -286,7 +286,6 @@ public:
     doc["localfuse"] = localfuse;
 
     doc["facteur"] = facteur;
-    doc["fuse"] = num_fuse;
     doc["trigger"] = trigger;
     doc["mqtt"] = mqtt;
     //proection contre les champs vides qui font planter le programme
