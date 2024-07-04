@@ -36,7 +36,7 @@ bool loadenphase(const char *filename) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(768);
+  JsonDocument doc;
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
@@ -98,7 +98,7 @@ void saveenphase(const char *filename, const Configmodule &configmodule_save) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  DynamicJsonDocument doc(768);
+  JsonDocument doc;
 
   // Set the values in the document
   doc["IP_ENPHASE"] = configmodule_save.hostname;
@@ -167,7 +167,7 @@ void Enphase_get_5(void) {
   if (httpResponseCode == HTTP_CODE_OK) {
     String payload = httpenphase.getString();
 
-    DynamicJsonDocument doc(1800); ///passé de 3200 à 1800 
+    JsonDocument doc; ///passé de 3200 à 1800 
     DeserializationError error = deserializeJson(doc, payload);
     if (error) {
       Serial.print(F("Enphase_get_5() failed: "));
@@ -241,7 +241,7 @@ bool Enphase_get_7_Production(void){
       if (httpCode == HTTP_CODE_MOVED_PERMANENTLY)
         Serial.println(https.getLocation());
         
-      DynamicJsonDocument doc(1600); ///passé de 3072 à 1600
+      JsonDocument doc; ///passé de 3072 à 1600
       DeserializationError error = deserializeJson(doc, payload);
       switch (error.code()) {
           case DeserializationError::Ok:

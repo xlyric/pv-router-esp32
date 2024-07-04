@@ -107,7 +107,7 @@ String getState() {
  
   const String fs_update = String("<br>!! FS pas à jour !!") ;
   const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-  DynamicJsonDocument doc(256);
+  JsonDocument doc;
   doc["state"] = state;
   doc["watt"] = int(gDisplayValues.watt);
   doc["dimmer"] = gDisplayValues.puissance_route;
@@ -136,7 +136,7 @@ String getStateFull() {
   const String fs_update = String("<br>!! FS pas à jour !!") ;
   const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
 
-  DynamicJsonDocument doc(512);
+  JsonDocument doc;
   doc["state"] = state;
   doc["gDisplayValues.watt"] = int(gDisplayValues.watt);
   doc["unified_dimmer.get_power"]= unified_dimmer.get_power();
@@ -221,7 +221,7 @@ String getpuissance() {
 //***********************************
 String getconfig() {
   String configweb; 
-  DynamicJsonDocument doc(512);
+  JsonDocument doc;
   doc["Fusible"] = config.num_fuse;
   doc["version"] = String(VERSION);
   doc["delta"] = config.delta;
@@ -271,7 +271,7 @@ String getchart() {
 //***********************************
 String getwifi() {
   String retour ;
-  DynamicJsonDocument doc(256);
+  JsonDocument doc;
   doc["ssid"] = configwifi.SID;
   doc["password"] = SECURITEPASS;
   serializeJson(doc, retour);
@@ -280,7 +280,7 @@ String getwifi() {
 
 String getmqtt() {
   String retour; 
-  DynamicJsonDocument doc(512);
+  JsonDocument doc;
   doc["server"] = config.mqttserver;
   doc["topic"] = config.Publish;
   doc["user"] = configmqtt.username;

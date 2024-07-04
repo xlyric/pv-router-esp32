@@ -44,7 +44,7 @@ void compress_html(AsyncWebServerRequest *request,String filefs , String format 
 }
 
 void serveur_response(AsyncWebServerRequest *request, String response) {
-  request->send_P(200, "text/plain", response.c_str());
+  request->send(200, "text/plain", response.c_str());
 }
 
 
@@ -57,7 +57,7 @@ if (AP) {
     if(SPIFFS.exists("/index.html.gz")){
       compress_html(request,"/index-ap.html.gz", "text/html");
     }
-    else {request->send_P(200, "text/html", "<html><body>Filesystem is not present. <a href='https://ota.apper-solaire.org/firmware/spiffs-ttgo.bin'>download it here</a> <br>and after  <a href='/update'>upload on the ESP here </a></body></html>" ); }
+    else {request->send(200, "text/html", "<html><body>Filesystem is not present. <a href='https://ota.apper-solaire.org/firmware/spiffs-ttgo.bin'>download it here</a> <br>and after  <a href='/update'>upload on the ESP here </a></body></html>" ); }
   });
 
   server.on("/config.html", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -144,20 +144,20 @@ server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
 /// Appel de fonction 
 
   server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "application/json", getchart().c_str());
+    request->send(200, "application/json", getchart().c_str());
   }); 
 
   server.on("/state", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "application/json", getState().c_str());
+    request->send(200, "application/json", getState().c_str());
   });
 
   server.on("/statefull", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "application/json", getStateFull().c_str());
+    request->send(200, "application/json", getStateFull().c_str());
   });
 
   
   server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send_P(200, "application/json", getconfig().c_str());
+    request->send(200, "application/json", getconfig().c_str());
 
   });
 
@@ -416,7 +416,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 }
 
 String getMinuteur(const Programme& minuteur) {
-    DynamicJsonDocument doc(128);
+    JsonDocument doc;
     getLocalTime(&timeinfo);
     doc["heure_demarrage"] = minuteur.heure_demarrage;
     doc["heure_arret"] = minuteur.heure_arret;
@@ -431,7 +431,7 @@ String getMinuteur(const Programme& minuteur) {
 }
 
 String getMinuteur() {
-    DynamicJsonDocument doc(128);
+    JsonDocument doc;
     getLocalTime(&timeinfo);
     doc["heure"] = timeinfo.tm_hour;
     doc["minute"] = timeinfo.tm_min;
@@ -442,7 +442,7 @@ String getMinuteur() {
 }
 
 String return_Memory() {
-    DynamicJsonDocument doc(512);
+    JsonDocument doc;
     doc["task_GetDImmerTemp"] = task_mem.task_GetDImmerTemp;
     doc["task_dallas_read"] = task_mem.task_dallas_read;
     doc["task_keepWiFiAlive2"] = task_mem.task_keepWiFiAlive2;

@@ -34,7 +34,7 @@ bool loadfronius(const char *filename) {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(512);
+  JsonDocument doc;
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
@@ -77,7 +77,7 @@ Serial.println(httpResponseCode);
 #if(httpResponseCode == HTTP_CODE_OK)
 
     String payload = httpfronius.getString();
-    DynamicJsonDocument doc(900);
+    JsonDocument doc;
     DeserializationError error = deserializeJson(doc, payload);
     if (error) {
         Serial.print(F("Fronius_get() failed: "));
@@ -100,7 +100,7 @@ httpResponseCode = httpfronius.GET();
 
 
     payload = http2.getString();
-    DynamicJsonDocument doc2(2048);
+    JsonDocument doc2;
     error = deserializeJson(doc2, payload);
     if (error) {
         Serial.print(F("Fronius_get() failed: "));

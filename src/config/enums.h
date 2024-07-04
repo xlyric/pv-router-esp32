@@ -152,7 +152,7 @@ public:
     // Allocate a temporary JsonDocument
     // Don't forget to change the capacity to match your requirements.
     // Use arduinojson.org/v6/assistant to compute the capacity.
-    DynamicJsonDocument doc(1024);
+    JsonDocument doc;
 
     // Deserialize the JSON document
     DeserializationError error = deserializeJson(doc, configFile);
@@ -260,7 +260,7 @@ public:
     // Allocate a temporary JsonDocument
     // Don't forget to change the capacity to match your requirements.
     // Use arduinojson.org/assistant to compute the capacity.
-    DynamicJsonDocument doc(1024);
+    JsonDocument doc;
 
     // Set the values in the document
     doc["hostname"] = hostname;
@@ -371,7 +371,7 @@ String loadmqtt() {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/v6/assistant to compute the capacity.
-  DynamicJsonDocument doc(512);
+  JsonDocument doc;
 
   // Deserialize the JSON document
   DeserializationError error = deserializeJson(doc, configFile);
@@ -414,7 +414,7 @@ String savemqtt() {
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
   // Use arduinojson.org/assistant to compute the capacity.
-  DynamicJsonDocument doc(512);
+  JsonDocument doc;
 
   // Set the values in the document
   doc["MQTT_USER"] = username;

@@ -34,7 +34,7 @@ HTTPClient shelly_http;
         shelly_http.end();
         if (httpResponseCode==200) {
             shelly_watt = 99999;
-            DynamicJsonDocument doc(1024);
+            JsonDocument doc;
             DeserializationError error = deserializeJson(doc, shelly_state);
 
             /// protection de la validité du json

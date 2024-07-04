@@ -18,7 +18,7 @@
   #include "tasks/fetch-time-from-ntp.h"
   #endif
 
-#include <AsyncElegantOTA.h>
+#include <ElegantOTA.h>
 
 // File System
 #include <FS.h>
@@ -560,7 +560,7 @@ ntpinit();
 
 
       #if WEBSSERVER == true
-        AsyncElegantOTA.begin(&server);
+        ElegantOTA.begin(&server);
         server.begin(); 
       #endif
   #ifndef LIGHT_FIRMWARE

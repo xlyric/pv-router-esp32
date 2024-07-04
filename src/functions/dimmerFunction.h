@@ -361,7 +361,7 @@ int dimmer_getState() {
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
 
-      DynamicJsonDocument doc(256);
+      JsonDocument doc;
       DeserializationError error = deserializeJson(doc, payload);
       if (error) {
         /// Modif RV - 20240221
