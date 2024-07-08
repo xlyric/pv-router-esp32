@@ -85,7 +85,8 @@ void send_to_mqtt(void * parameter){ // NOSONAR
 
                         temperature_HA.send(String(gDisplayValues.temperature));
                         device_dimmer.send(String(int(unified_dimmer.get_power()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
-
+                        switch_relay1.send(String(digitalRead(RELAY1)));
+                        switch_relay2.send(String(digitalRead(RELAY2)));
                         
                   }
 

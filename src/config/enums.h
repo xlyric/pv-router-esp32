@@ -564,7 +564,9 @@ struct Dallas{
           public:String Get_name() {return name;}
 
           private:String dev_cla; 
-          public:void Set_dev_cla(String setter) {dev_cla=setter; }
+          public:void Set_dev_cla(String setter) {dev_cla=setter; 
+            if (setter=="switch") { topic = "homeassistant/switch/"+ node_id +"/"; }
+          }
 
           private:String unit_of_meas; 
           public:void Set_unit_of_meas(String setter) {unit_of_meas=setter; }
@@ -588,7 +590,10 @@ struct Dallas{
           
           private:const String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
           private:const String node_id = String("PvRouter-") + node_mac; 
-          public:const String topic = "homeassistant/sensor/"+ node_id +"/";
+          public:String topic = "homeassistant/sensor/"+ node_id +"/";
+
+
+           
           private:String device_declare() { 
                   String info = R"(
                       "dev": {
@@ -608,16 +613,32 @@ struct Dallas{
 
 
           public:void discovery(){
+            String dev_switch= "";
+
+            if (dev_cla =="switch" ) { 
+              dev_switch = R"(
+                  "pl_on": "{ \")" + name + R"(\" : \"1\" }",
+                  "pl_off": "{ \")" + name + R"(\" : \"0\" }",
+                  "stat_on": 1,
+                  "stat_off": 0,
+                  )";
+            }
+            else {
+              dev_switch = R"(
+                  "unit_of_meas": ")" + unit_of_meas + R"(",
+                  "stat_cla": ")" + stat_cla + R"(","
+                  )"; 
+            }
+
             IPaddress =   WiFi.localIP().toString() ;
             String device= "{ \"dev_cla\": \""+dev_cla+"\","
-                  "\"unit_of_meas\": \""+unit_of_meas+"\","
-                  "\"stat_cla\": \""+stat_cla+"\"," 
                   "\"name\": \""+ name +"-"+ node_mac + "\"," 
-                  "\"state_topic\": \""+ topic +"state\","
+                 // "\"state_topic\": \""+ topic +"state\","
                   "\"stat_t\": \""+ topic +"state"+name+"\","
                   "\"avty_t\": \""+ topic +"status\","
                   "\"uniq_id\": \""+ node_mac + "-" + name +"\", "
-                  "\"value_template\": \"{{ value_json."+name +" }}\", "
+                  "\"val_tpl\": \"{{ value_json."+name +" }}\", "
+                  + dev_switch + 
                   "\"cmd_t\": \""+ topic +"command\","
                   "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
                   "\"exp_aft\": \""+ MQTT_INTERVAL +"\", "

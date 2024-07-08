@@ -18,6 +18,8 @@ extern HA compteur_grid;
 extern HA switch_1;
 extern HA temperature_HA;
 extern HA power_factor;
+extern HA switch_relay1;
+extern HA switch_relay2;
 
 extern HA power_apparent;
 
@@ -85,7 +87,12 @@ void init_HA_sensor(){
         power_apparent.Set_stat_cla("measurement");
         power_apparent.Set_dev_cla("apparent_power");
 
+        switch_relay1.Set_name("Relay1");
+        switch_relay1.Set_dev_cla("switch");
 
+        switch_relay2.Set_name("Relay2");
+        switch_relay2.Set_dev_cla("switch");
+        
         client.setBufferSize(1024);
         device_routeur.discovery();
         device_routed.discovery();
@@ -96,7 +103,8 @@ void init_HA_sensor(){
         compteur_inject.discovery();
         compteur_grid.discovery();
         temperature_HA.discovery();
-
+        switch_relay1.discovery();
+        switch_relay2.discovery();
 
 }
 #endif
