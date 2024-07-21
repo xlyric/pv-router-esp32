@@ -178,7 +178,7 @@ bool getServermode(String Servermode) {
                     return true;
                     }
   if ( Servermode == "MQTT" ) {   config.mqtt = !config.mqtt; return true;}
-  if ( Servermode == "polarité" ) {   config.polarity = !config.polarity; config.sauve_polarity(); return true;}
+  if ( Servermode == "polarity" ) {   config.polarity = !config.polarity; config.sauve_polarity(); return true;}
   if ( Servermode == "envoy" ) {   configmodule.enphase_present = !configmodule.enphase_present; return true;}
   if ( Servermode == "fronius" ) {   configmodule.Fronius_present = !configmodule.Fronius_present; return true;}
   if ( Servermode == "TRI" ) {   config.Shelly_tri = !config.Shelly_tri; return true;}
