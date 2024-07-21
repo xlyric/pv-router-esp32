@@ -20,8 +20,8 @@ void serial_read_task(void * parameter){ // NOSONAR
     }
     if (gDisplayValues.serial_timeout == timeout_task) {
       // remonté comme quoi le service serial est arrêté
-      logging.Set_log_init("Serial service stopped\r\n");
-      Serial.println("Serial service stopped");
+      logging.Set_log_init(Serial_service_stopped);
+      Serial.println(Serial_service_stopped);
       gDisplayValues.serial_timeout ++ ;
     }
 

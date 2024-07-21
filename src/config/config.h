@@ -4,8 +4,8 @@
 /**
  * Language 
  */
-#define LANG_FR true
-#define LANG_EN false
+//#define LANG_FR true
+//#define LANG_EN false
 
 #define CLEAN false
 #define NTP false

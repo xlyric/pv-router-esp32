@@ -21,9 +21,9 @@ bool dallaspresent () {
 logging.clean_log_init();
 
 if ( !ds.search(dallas.addr)) {
-    Serial.println("Dallas not connected");
+    Serial.println(Alerte_Dallas_not_found);
     
-    logging.Set_log_init("Dallas not connected\r\n",true);
+    logging.Set_log_init(Alerte_Dallas_not_found,true);
     Serial.println();
     ds.reset_search();
     delay(250);
@@ -71,7 +71,7 @@ if ( !ds.search(dallas.addr)) {
   Serial.print("  present = ");
   Serial.println(dallas.present, HEX);
       
-      logging.Set_log_init("Dallas present at address",true);
+      logging.Set_log_init(found_Address,true);
       logging.Set_log_init(String(dallas.present, HEX).c_str());
       logging.Set_log_init("\r\n");
 
@@ -105,7 +105,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){ // NOSONAR
     tempC = sensors.getTempC(deviceAddress);
       if ( (tempC == -127.0) || (tempC == -255.0) ) {
       Serial.print("Error getting temperature");
-      logging.Set_log_init("Local Dallas lost\r\n");
+      logging.Set_log_init(Dallas_lost);
        /// si erreur on reprends l'ancienne valeur
        tempC = gDisplayValues.temperature; 
        dallas_error++;
@@ -120,7 +120,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){ // NOSONAR
 
   if (dallas_error > 5) {
     Serial.print("Error getting temperature");
-    logging.Set_log_init("Local Dallas on error "+ String(dallas_error) + " times\r\n");
+    logging.Set_log_init(String(Dallas_lost) + String(dallas_error) + " times\r\n");
     tempC = gDisplayValues.temperature; 
     /// mise en securité du dimmer local
         unified_dimmer.dimmer_off();

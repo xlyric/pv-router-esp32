@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "driver/ledc.h"
-
+#include "langues/lang.h"
 
 #include "WiFiClientSecure.h"
 #include <ESPmDNS.h>
@@ -28,6 +28,7 @@
   #include "tasks/updateDisplay.h"
   #include "tasks/switchDisplay.h"
  
+  
   
   #include "tasks/wifi-connection.h"
   #include "tasks/measure-electricity.h"
@@ -174,16 +175,16 @@ void setup()
   #endif
   Serial.println("\n================== " + String(VERSION) + " ==================");
   logging.Set_log_init("197}11}1");
-  logging.Set_log_init("#################  Restart reason  ###############\r\n");
+  logging.Set_log_init("#################  "+ String(Reason_for_reset) +"  ###############\r\n");
   esp_reset_reason_t reason = esp_reset_reason();
   logging.Set_log_init(String(reason).c_str());
-  logging.Set_log_init("\r\n#################  Starting System  ###############\r\n");
+  logging.Set_log_init("\r\n#################  "+ String(Starting_System)+ "  ###############\r\n");
   
   //démarrage file system
   Serial.println("start SPIFFS");
   test_fs_version();
   
-  logging.Set_log_init("Start Filesystem\r\n",true);
+  logging.Set_log_init(Start_filesystem,true);
   
   if (!SPIFFS.begin(true)) {
     Serial.println("SPIFFS Initialization failed!");
@@ -243,7 +244,7 @@ void setup()
 
   if (configwifi.recup_wifi()){
      
-     logging.Set_log_init("Wifi config \r\n",true);
+     logging.Set_log_init(Loading_wifi_configuration,true);
        AP=false; 
   } 
   else {
@@ -301,9 +302,9 @@ void setup()
       delay(1000);
     }
   }
-  Serial.println("mDNS responder started");
+  Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
-  logging.Set_log_init("mDNS responder started\r\n",true);
+  logging.Set_log_init(mDNS_Responder_Started,true);
   logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);
 
 #if OLED_ON == true
@@ -358,15 +359,15 @@ ntpinit();
   Serial.println("Loading minuterie");
   programme.set_name("/dimmer");
   programme.loadProgramme();
-  programme.saveProgramme();
+  //programme.saveProgramme(); //retrait 09/07/2024
 
   programme_relay1.set_name("/relay1");
   programme_relay1.loadProgramme();
-  programme_relay1.saveProgramme();
+  //programme_relay1.saveProgramme();
 
   programme_relay2.set_name("/relay2");
   programme_relay2.loadProgramme();
-  programme_relay2.saveProgramme();
+  //programme_relay2.saveProgramme();
 
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
@@ -599,7 +600,7 @@ esp_register_shutdown_handler( handler_before_reset );
 logging.power=true; logging.sct=true; logging.sinus=true; 
 
 /// affichage de l'heure  GMT +1 dans la log
-logging.Set_log_init("-- fin du demarrage  \r\n",true);
+logging.Set_log_init(End_Start,true);
 
 savelogs(" -- fin du précédent reboot -- ");
 
@@ -743,7 +744,7 @@ if (config.dimmerlocal) {
 
 if (programme_relay1.run) { 
       if (programme_relay1.stop_progr()) { 
-        logging.Set_log_init("stop minuteur relay1\r\n",true);
+        logging.Set_log_init(Stop_minuteur_relay1,true);
         digitalWrite(RELAY1 , LOW);
 //        device_relay1.send(String(0));
 
@@ -751,7 +752,7 @@ if (programme_relay1.run) {
  }
  else {
       if (programme_relay1.start_progr()){ 
-        logging.Set_log_init("start minuteur relay1\r\n",true);
+        logging.Set_log_init(Start_minuteur_relay1,true);
         digitalWrite(RELAY1 , HIGH);
       //  device_relay1.send(String(1));
       }
@@ -759,14 +760,14 @@ if (programme_relay1.run) {
 
  if (programme_relay2.run) { 
       if (programme_relay2.stop_progr()) { 
-        logging.Set_log_init("stop minuteur relay2\r\n",true);
+        logging.Set_log_init(Stop_minuteur_relay2,true);
         digitalWrite(RELAY2 , LOW);
     //    device_relay2.send(String(0));
       }
  }
  else {
       if (programme_relay2.start_progr()){ 
-        logging.Set_log_init("start minuteur relay2\r\n",true);
+        logging.Set_log_init(Start_minuteur_relay2,true);
         digitalWrite(RELAY2 , HIGH);
       //device_relay2.send(String(1));
       }
@@ -806,7 +807,7 @@ void connect_to_wifi() {
       WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
       
-      logging.Set_log_init("Start Wifi Network ",true);
+      logging.Set_log_init(Start_Wifi_Network,true);
       logging.Set_log_init(configwifi.SID);
       logging.Set_log_init("\r\n");
       
@@ -817,9 +818,9 @@ void connect_to_wifi() {
 
         if (timeoutwifi > 40 ) {
               
-              logging.Set_log_init("timeout, go to AP mode \r\n",true);
+              logging.Set_log_init(timeout_AP_mode,true);
               
-              logging.Set_log_init("Wifi State :",true);
+              logging.Set_log_init(Wifi_State,true);
               logging.Set_log_init("",true);
               
               switch (WiFi.status()) {
@@ -848,18 +849,18 @@ void connect_to_wifi() {
         //// timeout --> AP MODE 
         if ( timeoutwifi > 40 ) {
               WiFi.disconnect(); 
-              serial_println("timeout, go to AP mode ");
+              serial_println(timeout_AP_mode);
               
               gDisplayValues.currentState = DEVICE_STATE::UP;
               APConnect(); 
         }
 
 
-      serial_println("WiFi connected");
-      logging.Set_log_init("Wifi connected\r\n",true);
+      serial_println(Wifi_connected);
+      logging.Set_log_init(Wifi_connected,true);
       serial_println("IP address: ");
       serial_println(WiFi.localIP());
-        serial_print("force du signal:");
+        serial_print(signal_level);
         serial_print(WiFi.RSSI());
         serial_println("dBm");
       gDisplayValues.currentState = DEVICE_STATE::UP;

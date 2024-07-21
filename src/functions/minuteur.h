@@ -134,7 +134,7 @@ struct Programme {
   void commande_run(){
           digitalWrite(COOLER, HIGH);
           run=true; 
-          logging.Set_log_init("minuteur: start\r\n",true);
+          logging.Set_log_init(Start_minuteur,true);
   }
 
    public:bool start_progr() {
@@ -201,7 +201,7 @@ public:bool stop_progr() {
   /// sécurité temp
   if ( gDisplayValues.temperature >= config.tmax  || gDisplayValues.temperature >= temperature ) { 
     digitalWrite(COOLER, LOW);
-    logging.Set_log_init("minuteur: stop temp\r\n",true);
+    logging.Set_log_init(Stop_minuteur_temp,true);
     run=false; 
 
      // protection flicking
@@ -215,7 +215,7 @@ public:bool stop_progr() {
   sscanf(heure_arret, "%d:%d", &heures, &minutes);
   if(getLocalTime( &timeinfo )) {
     if (heures == timeinfo.tm_hour && minutes == timeinfo.tm_min ) {
-        logging.Set_log_init("minuteur: stop \r\n",true);
+        logging.Set_log_init(Stop_minuteur,true);
         digitalWrite(COOLER, LOW);
         run=false; 
         return true; 

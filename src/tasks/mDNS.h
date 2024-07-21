@@ -28,9 +28,9 @@ void mdns_discovery(void * parameter) // NOSONAR
                         if (MDNS.port(i) == 1308 ){
                             String name_dimmer = MDNS.hostname(i)+".local";
                             name_dimmer.toCharArray(config.dimmer, name_dimmer.length()+1);
-                            Serial.print("Dimmer found: ");
+                            Serial.print(Dimmer_found);
                             Serial.println(config.dimmer);
-                            logging.Set_log_init("Dimmer found: ");
+                            logging.Set_log_init(Dimmer_found);
                             logging.Set_log_init(config.dimmer);
                             logging.Set_log_init("\r\n");
                             //sauvegarde de la configuration

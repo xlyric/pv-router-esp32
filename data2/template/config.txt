@@ -1,0 +1,441 @@
+<!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+            <li class="nav-item dropdown no-arrow d-sm-none">
+
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+
+              </div>
+            </li>
+
+
+
+
+            
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+        
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+		  <h1 class="h3 mb-2 text-gray-800">Configuration</h1>
+      <p class="mb-4">Page de configuration de votre pv routeur, pensez à sauvegarder votre configuration sur la flash après l'avoir appliquée.</p>
+		  <p class="mb-4">page rapide d'aide : <a href="https://wiki.apper-solaire.org/" target="_blank" rel="noopener"> ici </a></p>
+  
+
+          <!-- Content Row -->
+          <div class="row">
+
+<!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">State</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state">0</span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-leaf fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Sigma</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma">0</span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-plug fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+			
+
+
+
+          </div>
+		  
+		            <!-- Content Row -->
+          <div class="row">
+
+<!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Sauvegarder sur la flash</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="save"   ><a href="#">SAUVEGARDER</a></span><br><span id="savemsg"></span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-download fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+		 </div>
+
+
+		<div class="col-lg-6">
+    <form class="user" id="formulaire" method="post" action=""  >
+    
+      <div class="card position-relative">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Configuration</h6>
+            <span id="saveform"></span>
+        </div>
+        <div class="card-body">
+          <div class="col-lg-12">
+           
+
+
+            <br>
+
+
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" data-placement="top" title="Aide" data-bs-content="Mettre l'IP du dimmer ou laissez à 'none'">Dimmer Distant ℹ</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+
+                <div class="form-group row">
+                      <div class="col-sm-6">
+                              Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
+                    </div>
+                    <div class="col-sm-6" id="dimmer-url">
+                      <!-- L'url sera ajoutée ici -->
+                  </div>
+
+                </div> 
+              </div>
+            </div>
+            <br>
+
+            <div class="card position-relative">
+              <div class="card-header py-6">
+                <h6 class="m-0 font-weight-bold text-primary" data-toggle="popover" data-placement="top" title="Aide" data-bs-content="Cochez et configurez si utilisation d'un dimmer local">Dimmer Local ℹ</h6>
+                  <span id="saveform"></span>
+              </div>
+              <div class="card-body">
+
+                <div class="form-group row"> 
+                  
+                    <div class="col-sm-3">
+                    <div class="custom-control custom-checkbox small">
+                            <input type="checkbox" class="custom-control-input" id="dimmerlocal" onchange="sendservermode('dimmerlocal');">
+                            <label class="custom-control-label" for="dimmerlocal" >Dimmer local</label>
+                    </div>
+                    </div>
+                    <div class="col-sm-3">
+                        Limiteur local (%): <input type="number"  step="1" class="form-control form-control-user" id="Fusiblelocal" placeholder="%FUSELOCAL%">
+                    </div>
+                    <div class="col-sm-3"><span>Charge connectée (W):</span>
+                      <input type="number" step="1" class="form-control form-control-user" id="resistance" placeholder="%RESISTANCE%">
+                    </div>
+                    <div class="col-sm-3"></div>
+
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                      Max temp (°C): <input type="number" step="1"class="form-control form-control-user" id="maxtemp" placeholder="%MAXTEMP%">
+                    </div>
+                    <div class="col-sm-3">
+                      Trigger (%): <input type="number" step="1"class="form-control form-control-user" id="trigger" placeholder="%TRIGGER%">
+                    </div>                    
+
+                </div>
+              </div>
+            </div>
+
+            <br>
+
+            <div class="card position-relative">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Pv Routeur</h6>
+                  <span id="saveform"></span>
+              </div>
+                <div class="card-body">        
+                <div class="form-group row">
+                <div class="col-sm-4 delta" data-toggle="popover" title="Aide" data-bs-content="Le routage diminura en dessous de cette valeur"><span>Limite Consommation (Delta)(W) ℹ</span> </div>
+                  <div class="col-sm-4 deltaneg" data-toggle="popover" title="Aide" data-bs-content="Le routage augmentera au dessus de cette valeur"><span>Limite Injection (deltaneg)(W) ℹ</span> </div>
+                </div>
+				
+                <div class="form-group row">
+                  <div class="col-sm-4">
+                  <input type="number" step="1" class="form-control form-control-user" id="delta" placeholder="%DELTA%">
+                </div>
+                <div class="col-sm-4">
+                  <input type="number" step="1" class="form-control form-control-user" id="deltaneg" placeholder="%DELTANEG%">
+                </div>
+
+				  
+				  
+		            </div>
+				
+                <div class="form-group row">
+                  <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="A modifier si la sonde na une légère dé rive (default: 0.86)">Facteur de correction ℹ</div>
+                
+                </div>
+                <div class="form-group row">
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control form-control-user" id="facteur" placeholder="%facteur%">
+                  </div>
+                  
+
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="Pour les réseaux à tension différente"><span>Correction Voltage (V) ℹ</span></div>
+                  <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="Offset de la sonde SCT-013 (conseille une valeur de -130)">Correction Offset (W) ℹ</div>
+                  <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="Valeur de la sonde SCT-013">SCT (A/1V) ℹ</div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-4">
+                    <input type="number" step="1" class="form-control form-control-user" id="voltage" placeholder="%voltage%">
+                  </div>
+                  <div class="col-sm-4">
+                    <input type="number" step="1" class="form-control form-control-user" id="offset" placeholder="%offset%">
+                  </div>
+                  <div class="col-sm-4">
+                    <input type="number" step="1" class="form-control form-control-user" id="SCT_13" placeholder="%SCT_13%">
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="Pour inverser la mesure sans toucher à la sonde">Inversion de la mesure (+/-) : ℹ </div>
+                  <div class="col-sm-4">
+                    <div class="custom-control custom-checkbox small">
+                      <input type="checkbox" class="custom-control-input" id="polarity" onchange="sendservermode('polarity');">
+                      <label class="custom-control-label" for="polarity">polarité</label>
+                    </div>
+                  </div>
+               </div>
+
+              <div class="form-group row">
+                <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="Temporisation de l'écran, '0' pour tout le temps Allumé/éteins ">Screen switch off ℹ </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-sm-4">
+                  <input type="number" step="1" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
+                </div>
+                <div class="col-sm-4">
+                  <div class="custom-control custom-checkbox small">
+                    <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="custom-control custom-checkbox small">
+                    <input type="checkbox" class="custom-control-input" id="flip" onchange="sendservermode('flip');">
+                    <label class="custom-control-label" for="flip" >flip screen</label>
+                  </div>
+                </div>
+              </div> 
+            </div>
+          </div>
+          <br>
+				
+	
+				
+				<input type="submit" value=" Application des paramètres" class="btn btn-primary btn-user btn-block">
+				
+                <hr>
+
+              </form>
+              <hr>
+            </div>
+          </div>
+                </div>
+              </div>
+
+            </div>
+
+
+          <!-- Content Row -->
+
+
+<!-- Core plugin JavaScript avec chargement local si non dispo-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+  <script>
+  if (typeof jQuery == 'undefined') {
+    document.write('<script src="/jquery.min.js"><\/script>');
+  }
+</script>
+				
+<script type='text/javascript'> 
+      //<!-- rafraichissement valeurs -->
+      setInterval(function refreshsend( ) {
+        $.getJSON('/state', function(data) {
+          // Récupérer les données du JSON
+            var state = data.state;
+            var watt = data.watt;
+            var version = data.version;
+            var rssi = data.RSSI;
+            var name = data.name;
+          document.getElementById("state").innerHTML = state; 
+                  if (state == 'Reseau') {state = 'Réseau' ; }
+          document.getElementById("sigma").innerHTML = watt;
+          document.getElementById("version").innerHTML = version;
+          document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi  + ' dBm';
+          document.getElementById("name").innerHTML = name  ;
+          });
+          }, 5000);
+
+function sendmode (mode) {
+
+		$.get( "/get", { send: 	mode } )
+		.done(function(data) {
+		document.getElementById("sendmode").innerHTML = "Request sent";
+		document.getElementById("sendmode2").innerHTML = "Request sent";
+		});
+
+
+}
+
+function sendservermode (mode) {
+
+		$.get( "/get", { servermode: mode } )
+		.done(function(data) { 
+		$( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
+		}); 
+}
+
+function save () {				  
+  		$.get( "/get", { save: "yes" } )
+		.done(function(data) {
+		});		
+}
+
+
+		
+		</script >
+           
+
+
+
+
+<!-- de la doc -->
+
+
+
+  <script>
+
+          $(function () {
+          $('[data-toggle="popover"]').popover()
+          })
+  </script>
+
+<script>
+
+
+<!--- sauvegarde de la configuration --> 
+$( "#save" ).click(function() {
+
+  
+  		$.get( "/get", { save: "yes" } )
+		.done(function(data) {
+		$( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
+		});	
+		
+
+});
+
+$( "#formulaire" ).submit(function() {
+    
+
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() ,'SCT_13': $('#SCT_13').val(), 'trigger':$('#trigger').val()  }; 
+
+		
+        $.ajax({
+            type: "GET",
+            data: data,
+            url: "get",
+
+            success: function(retour){
+                $( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
+                     
+            }
+        });
+  return false;
+});
+
+$(document).ready(function(){
+            // Fonction pour générer le lien
+            function generateLink(dimmerValue) {
+                if (dimmerValue !== 'none') {
+                    var dimmerURL = "http://" + dimmerValue;
+                    $('#dimmer-url').html('<a href="' + dimmerURL + '" target="_blank" rel="noopener">' + dimmerURL + '</a>');
+                }
+            }
+
+            // Requête JSON pour récupérer la configuration
+            var recupconfig =  $.getJSON('/config', function(data) {
+              for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                  var element = document.getElementById(key);
+                  if (element) {
+                    element.value = data[key];
+                    if (element.type === 'checkbox') {
+                      element.checked = data[key];
+                    }
+                  }
+                }
+              }
+            });
+
+            // Une fois la requête terminée
+            recupconfig.done(function() {
+                // Générer le lien avec la valeur initiale
+                var dimmerValue = $('#dimmer').val();
+                generateLink(dimmerValue);
+            });
+
+            // Lorsque le champ de texte change
+            $('#dimmer').on('input', function() {
+                var dimmerValue = $(this).val();
+                generateLink(dimmerValue);
+            });
+        });
+        
+</script>
+	  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->

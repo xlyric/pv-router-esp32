@@ -1,0 +1,91 @@
+<!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item active">
+        <a class="nav-link" href="/" >
+          <i class="fas fa-fw fa-tachometer-alt"></i>
+          <span>Dashboard</span><br>
+          <span id="version">Version: </span><br>
+          <span id="RSSI">RSSI (dB): </span>
+        </a>
+	  </li>
+
+
+
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+
+      <!-- Heading -->
+      <div class="sidebar-heading">
+        Interface
+      </div>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+	  <li class="nav-item active">
+        <a class="nav-link" href="/">
+          <i class="fas fa-fw fa-plug"></i>
+          <span>Retour conso</span>
+        </a>
+      </li>
+
+    <li class="nav-item active">
+        <a class="nav-link" href="/wifi.html">
+          <i class="fas fa-fw fa-wifi"></i>
+          <span>Configuration Wifi</span>
+        </a>
+    </li>
+ 
+    <li class="nav-item active">
+        <a class="nav-link" href="/mqtt.html">
+            <i class="fas fa-fw fa-book"></i>
+            <span>Configuration mqtt</span>
+        </a>
+    </li>
+    
+    <li class="nav-item active">
+        <a class="nav-link" href="/minuteur.html">
+            <i class="fas fa-fw fa-moon"></i>
+            <span>Config Minuteur</span>
+        </a>
+    </li>
+    
+    <li class="nav-item active">
+        <a class="nav-link" href="/envoy.html">
+            <i class="fas fa-fw fa-book"></i>
+            <span>BETA: Config Envoy</span>
+        </a>
+    </li>
+    
+
+    <li class="nav-item active">
+      <a class="nav-link" href="/log.html">
+        <i class="fas fa-fw fa-info"></i>
+        <span>Console logs</span>
+      </a>
+    </li>
+  
+    <li class="nav-item active">
+      <a class="nav-link" href="/update">
+        <i class="fas fa-fw fa-download"></i>
+        <span>OTA</span>
+      </a>
+    </li>
+
+    <li class="nav-item active">
+        <a class="nav-link" href="/reboot">
+          <i class="fas fa-fw fa-power-off"></i>
+          <span>Reboot</span>
+        </a>
+    </li>  
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->

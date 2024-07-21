@@ -45,7 +45,7 @@ void reconnect();
         Serial.println("-----------------------------");
         Serial.println("Attempting MQTT reconnection...");
         
-        logging.Set_log_init("MQTT attempting reco \r\n",true);
+        logging.Set_log_init(Attempting_MQTT_connexion,true);
         //affichage du RSSI
         logging.Set_log_init(String(WiFi.RSSI())+" dBm\r\n");
 
@@ -56,8 +56,8 @@ void reconnect();
           client.setKeepAlive(30);
 
           
-          logging.Set_log_init("MQTT : Reconnected\r\n",true);
-          Serial.println("MQTT connected");
+          logging.Set_log_init(MQTT_connected,true);
+          Serial.println(MQTT_connected);
         } else {
           Serial.print("MQTT failed, retcode="); 
           Serial.print(client.state());

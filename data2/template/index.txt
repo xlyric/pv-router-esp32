@@ -1,0 +1,408 @@
+<!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+           
+          </div>
+
+          <!-- Content Row -->
+          <div class="row">
+
+<!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Réseau</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="state">0</span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-leaf fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Wattmètre</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="sigma">0</span></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-plug fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+			
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Switch Screen</div>
+                      <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled </button>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-display fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+
+
+          </div>
+
+          <!-- Content Row -->
+
+
+
+          <div class="row">
+
+            <!-- Area Chart -->
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Réseau</h6>
+				</div>
+				<div class="card-body">
+					<div id='curve_chart2' style=' width: auto; height: 200px;'>
+										
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Puissance Routée</h6>
+				</div>
+				<div class="card-body">
+					<div id='curve_power' style=' width: auto; height: 200px;'>
+										
+					</div>
+				</div>
+			</div>
+		</div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+				<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Température Dallas</h6>
+				</div>
+				<div class="card-body">
+					<div id='curve_temp' style=' width: auto; height: 200px;'>
+										
+					</div>
+				</div>
+			</div>
+		</div>
+  </div>
+    <div class="row">
+
+      <!-- Earnings (Monthly) Card Example -->
+          <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Etats</h6>
+                </div>
+                <div class="card-body">
+                <b>Etat Minuteur : </b><h4 id="minuteur">N/A</h4>
+                <b>Etat Dallas Locale: </b><h4 id="dallas">N/A</h4>
+                <b>Etat Dallas T°max: </b><h4 id="securite">N/A</h4>
+                <b>Etat Relais 1 : </b><h4 id="relais 1">N/A</h4>
+                <b>Etat Relais 2 : </b><h4 id="relais 2">N/A</h4>
+                </div>
+            </div>
+          </div>
+     </div> 
+			
+		<div class="col-xl-12 col-lg-7">
+            <div class="card shadow mb-4">
+			<a href="#collapseOscillo" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseOscillo">
+
+                  <h6 class="m-0 font-weight-bold text-primary">Oscillo</h6>
+                </a>
+   				
+                <!-- Card Body -->
+				<div class="collapse " id="collapseOscillo">
+                <div class="card-body">
+				<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script> 
+				
+				  <script type='text/javascript'> 
+				  
+				 
+				  
+				  google.charts.load('current', {'packages':['corechart','gauge','line']}); 
+				  google.charts.setOnLoadCallback(drawChart);
+				  
+				  var chart ;
+				  var options = { title: 'Oscilloscope Mode', curveType: 'function', legend: { position: 'bottom' } };
+				  var data ;
+				  var inc;
+				  
+				  function drawChart() {    
+
+				var optionsGauge = {           
+          redFrom: -100, 
+          redTo: -25,
+           
+          yellowFrom: 50, 
+          yellowTo: 400, 
+           
+          greenFrom: -50, 
+          greenTo: 50, 
+		  	  
+          minorTicks: 4,
+		  
+          min: -100, 
+          max: 400, 
+ 
+        };
+       
+	   
+	      var optionsGaugepower = {           
+          redFrom: 0, 
+          redTo: 250,
+           
+          yellowFrom: 250, 
+          yellowTo: 500, 
+           
+          greenFrom: 500, 
+          greenTo: 1500, 
+		  	  
+          minorTicks: 5,
+		  
+          min: 0, 
+          max: 1500, 
+          
+        };
+				  
+        var optionsGaugetemp = {           
+          redFrom: 75, 
+          redTo: 100,
+           
+          yellowFrom: 0, 
+          yellowTo: 40, 
+           
+          greenFrom: 40, 
+          greenTo: 75, 
+		  	  
+          minorTicks: 5,
+		  
+          min: 0, 
+          max: 90, 
+          
+        }; 			  
+				
+				  setInterval(function ( ) {
+				  
+					var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));  	 
+					var data2 = new google.visualization.DataTable(); 
+					data2.addColumn('number', 'time');
+					data2.addColumn('number', 'half wave');
+					data2.addColumn('number', 'Analog out (Ampere)');
+				
+				 	var jsondata = $.ajax ({
+						url : '/chart.json',
+						type : 'GET',
+						dataType: "json",
+						async: false
+						 }).responseText; 
+					
+					data2.addRows( JSON.parse(jsondata)  );
+					chart.draw(data2, options);
+					document.getElementById("rawdata").innerHTML = jsondata;
+					
+					}, 8000 ) ;
+
+	
+		// mise à jour de la jauge  --> 	
+		var gaugePA = new google.visualization.Gauge(document.getElementById('curve_chart2'));
+	  var dataGaugePA = new google.visualization.DataTable();
+	    dataGaugePA.addColumn('string', 'Reseau');
+		  dataGaugePA.addColumn('number', 'Value');
+		  dataGaugePA.addRows(1);
+			
+	
+		var gaugePApower = new google.visualization.Gauge(document.getElementById('curve_power'));
+	  var  dataGaugePApower = new google.visualization.DataTable();
+	    dataGaugePApower.addColumn('string', 'Power');
+		  dataGaugePApower.addColumn('number', 'Value');
+		  dataGaugePApower.addRows(1);
+
+		var gaugePAtemp = new google.visualization.Gauge(document.getElementById('curve_temp'));
+	  var dataGaugePAtemp = new google.visualization.DataTable();
+	    dataGaugePAtemp.addColumn('string', 'Temp °C');
+		  dataGaugePAtemp.addColumn('number', 'Value');
+		  dataGaugePAtemp.addRows(1);
+
+	  setInterval(function ( ) {
+
+  $.getJSON('/state', function(data) {
+// Récupérer les données du JSON
+      var state = data.state;
+      var watt = data.watt;
+      var dimmer = data.dimmer;
+      var temperature = data.temperature;
+      var relais1 = data.relay1;
+      var relais2 = data.relay2;
+      
+      if (temperature == null) { temperature = 0 ; }
+     // var version = data.version; 
+      var rssi = data.RSSI;
+      //var name = data.name;
+      // Mettre à jour les éléments HTML
+      dataGaugePA.setValue(0, 0, state);
+      dataGaugePA.setValue(0, 1, watt);
+
+      dataGaugePApower.setValue(0, 0, "Watt"); 
+		  dataGaugePApower.setValue(0, 1, dimmer);
+
+      dataGaugePAtemp.setValue(0, 0, "Temp °C"); 
+      dataGaugePAtemp.setValue(0, 1, temperature);
+
+      gaugePA.draw(dataGaugePA,optionsGauge);
+		  gaugePApower.draw(dataGaugePApower,optionsGaugepower);
+      gaugePAtemp.draw(dataGaugePAtemp,optionsGaugetemp);
+		
+		  document.getElementById("state").innerHTML = state;
+		  document.getElementById("sigma").innerHTML = watt;
+      document.getElementById("version").innerHTML = data.version;
+      document.getElementById("RSSI").innerHTML = 'RSSI : ' + rssi + ' dBm';
+      document.getElementById("name").innerHTML = data.name  ;
+
+      // ecriture de "minuteur" dans le div minuteur si l'état est à 1
+          if (data.minuteur == 1) {
+            document.getElementById("minuteur").innerHTML = "Minuteur";
+            document.getElementById("minuteur").style.color = "red";
+        } else {
+            document.getElementById("minuteur").innerHTML = "Non actif";
+            document.getElementById("minuteur").style.color = "";
+        }
+
+    // ecriture de "ON" dans le div relais 1 si l'état est à 1
+        if (relais1 == 1) {
+            document.getElementById("relais 1").innerHTML = "ON";
+            document.getElementById("relais 1").style.color = "red";
+        } else {
+            document.getElementById("relais 1").innerHTML = "OFF";
+            document.getElementById("relais 1").style.color = "";
+        }
+
+    // ecriture de "ON" dans le div relais 2 si l'état est à 1
+        if (relais2 == 1) {
+            document.getElementById("relais 2").innerHTML = "ON";
+            document.getElementById("relais 2").style.color = "red";
+        } else {
+            document.getElementById("relais 2").innerHTML = "OFF";
+            document.getElementById("relais 2").style.color = "";
+        }
+
+        // ecriture de "ON" dans le div relais 1 si l'état est à 1
+          if (data.dallas == 0) {
+            document.getElementById("dallas").innerHTML = "Connect";
+            document.getElementById("dallas").style.color = "";
+        } else {
+            document.getElementById("dallas").innerHTML = "Disconnect";
+            document.getElementById("dallas").style.color = "red";
+        }
+
+        // ecriture de "ON" dans le div relais 1 si l'état est à 1
+          if (data.security == 0) {
+            document.getElementById("securite").innerHTML = "OK";
+            document.getElementById("securite").style.color = "";
+        } else {
+            document.getElementById("securite").innerHTML = "Refroidissement";
+            document.getElementById("securite").style.color = "red";
+        }
+
+    });
+  }, 2000);
+}
+</script>
+<script type='text/javascript' >
+
+    function sendservermode (mode) {
+
+    $.get( "/get", { servermode: mode } )
+    .done(function(data) { 
+
+    var config = data.split(";");
+    document.getElementById("screen").value = config[21];
+    }); 
+
+    }
+</script>
+		
+  
+                     <div id='curve_chart' style=' width: auto; height: 500px;'>
+                  </div>
+		   </div>
+        </div>	
+	   </div>		
+	</div>	
+			
+			<div class="col-xl-12 col-lg-7">
+              			<!-- Collapsable Card Example -->
+			<div class="card shadow mb-4">
+
+                <div class="collapse " id="collapserawdata">
+                  <div class="card-body">
+					<form action="javascript:alert( 'success!' );">
+  <div>
+    <input type="text">
+    <input type="submit">
+  </div>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+<script>
+$( "form" ).submit(function( event ) {
+  if ( $( "input" ).first().val() === "correct" ) {
+    $( "span" ).text( "Validated..." ).show();
+    return;
+  }
+ 
+  $( "span" ).text( "Not valid!" ).show().fadeOut( 1000 );
+  event.preventDefault();
+});
+</script>
+<span></span>
+                  </div>
+                </div>
+            </div>
+				                        
+		   </div>
+            
+				  
+				  </div>
+				  
+                  
+
+				   
+				  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.container-fluid -->
+      </div>
+      <!-- End of Main Content -->

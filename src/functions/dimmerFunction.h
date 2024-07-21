@@ -79,9 +79,10 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
             }
         if (logging.power) {    
             
-            logging.Set_log_init(POWER_COMMAND,true);
-            logging.Set_log_init(String(dimmervalue).c_str());
-            logging.Set_log_init("% " + String(puissance_dispo) + "W\r\n");
+            logging.Set_log_init(POWER_COMMAND);
+            //logging.Set_log_init(String(dimmervalue).c_str());
+            //logging.Set_log_init("% "); 
+            logging.Set_log_init(String(puissance_dispo) + "W\r\n");
         }
       }
       //// Mqtt send information
@@ -219,7 +220,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
           if ( dallas_int < temp_trigger ) {  
           dallas.security = false ; // retrait securité si inférieur au trigger
           ///affichage dans les logs de l état sécurité
-          logging.Set_log_init("Security off\r\n");
+          logging.Set_log_init(Security_off);
 
           gDisplayValues.dimmer = 0 ; 
           //dimmer_on();
@@ -261,7 +262,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
             }
             dallas.security = true ;   /// mise en place sécurité thermique
             Serial.println("security off -> on ");
-            logging.Set_log_init("Security On\r\n");
+            logging.Set_log_init(Security_on);
             unified_dimmer.dimmer_off();
           }
           else {

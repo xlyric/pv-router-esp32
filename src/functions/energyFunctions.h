@@ -156,7 +156,7 @@ positive = ( ( positive * config.voltage  ) / ( FACTEURPUISSANCE * nombre_cycle 
 logging.clean_log_init();
 if ( zero > 75 ) { 
   if (logging.sct) {    
-    logging.Set_log_init("--> SCT013 Prob not connected  ?\r\n");
+    logging.Set_log_init(Prob_not_connected);
     logging.sct = false; }
 }
 
