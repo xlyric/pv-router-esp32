@@ -626,7 +626,7 @@ struct Dallas{
             else {
               dev_switch = R"(
                   "unit_of_meas": ")" + unit_of_meas + R"(",
-                  "stat_cla": ")" + stat_cla + R"(","
+                  "stat_cla": ")" + stat_cla + R"(",
                   )"; 
             }
 
