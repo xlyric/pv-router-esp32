@@ -71,11 +71,7 @@ bool checkIP(String inputString) {
   IPAddress ip;
   
   // Essayez de convertir la chaîne en adresse IP
-  if (ip.fromString(inputString)) {
-    return true;
-  } else {
-    return false;
-  }
+  return (ip.fromString(inputString));
 }
 
 
