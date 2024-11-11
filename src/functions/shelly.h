@@ -17,18 +17,41 @@ int shelly_get_data(String url) {
  /// récupération en wget des informations du shelly 
 HTTPClient shelly_http;
   int shelly_watt = 0;
+  int port = 80;
   
   if (WiFi.status() == WL_CONNECTED) {   // si connecté on wget
 
     String baseurl = "/emeter/0" ; 
         /// mode triphasé
-      if ( config.Shelly_tri ) {
-        baseurl = "/rpc/EM.GetStatus?id=0" ; 
+      if ( config.Shelly_tri && config.Shelly_mode == 0) {
+        baseurl = "/rpc/EM.GetStatus?id=0" ; // pour le 3EM
       }
 
-    shelly_http.begin(String(url),80,baseurl);   
-        
-        int httpResponseCode = shelly_http.GET();
+      if ( config.Shelly_tri && config.Shelly_mode == 1) {
+        baseurl = "/status" ; // pour le 3EM
+      }
+
+   // détection de si l'url à un :port
+   // if (url.indexOf(":") > 0) {
+  //      port = url.substring(url.indexOf(":")+1).toInt();
+  //      url = url.substring(0,url.indexOf(":"));
+  //  }
+    
+  //  Serial.println("info shelly");
+  //  Serial.println(url);
+  //  Serial.println(port);
+//Serial.println(baseurl);
+
+    shelly_http.begin(String(url),port,baseurl);   
+    int httpResponseCode = shelly_http.GET();
+
+   if (httpResponseCode==404) {
+        config.Shelly_mode = 1;
+        return shelly_watt;
+    }
+       
+       //Serial.println(httpResponseCode);
+
         String shelly_state = "0"; 
         shelly_state = shelly_http.getString();
         shelly_http.end();
@@ -48,11 +71,22 @@ HTTPClient shelly_http;
 
             auto powerValue = doc["power"];
               /// mode triphasé
-              if (config.Shelly_tri ) { 
+              if (config.Shelly_tri && config.Shelly_mode == 0) { 
                 powerValue = doc["total_act_power"];
               }
-
+              if (config.Shelly_tri && config.Shelly_mode == 1) { 
+                powerValue = doc["total_power"];
+              }
             
+            // affichage dans le sérial de doc["total_power"] en tant que string ; 
+            Serial.println("Shelly Watt : ");
+            Serial.println(doc["total_power"].as<String>());
+           Serial.println(baseurl);
+
+            if ( powerValue.isNull() || doc["total_power"].as<String>() == "null") {
+                 config.Shelly_mode = 1;
+                return shelly_watt;
+            } 
 
             /// protection de la donnée
             if (powerValue.is<int>() || powerValue.is<float>()) {
