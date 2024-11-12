@@ -23,12 +23,13 @@ HTTPClient shelly_http;
 
     String baseurl = "/emeter/0" ; 
         /// mode triphasé
-      if ( config.Shelly_tri && config.Shelly_mode == 0) {
-        baseurl = "/rpc/EM.GetStatus?id=0" ; // pour le 3EM
-      }
-
-      if ( config.Shelly_tri && config.Shelly_mode == 1) {
-        baseurl = "/status" ; // pour le 3EM
+      if ( config.Shelly_tri ) {
+        if (config.Shelly_mode == 0) {
+          baseurl = "/rpc/EM.GetStatus?id=0" ; // pour le 3EM
+        }
+        if (config.Shelly_mode == 1) {
+          baseurl = "/status" ; // pour le 3EM type 2 
+        }
       }
 
    // détection de si l'url à un :port
@@ -71,24 +72,25 @@ HTTPClient shelly_http;
 
             auto powerValue = doc["power"];
               /// mode triphasé
-              if (config.Shelly_tri && config.Shelly_mode == 0) { 
-                powerValue = doc["total_act_power"];
-              }
-              if (config.Shelly_tri && config.Shelly_mode == 1) { 
-                powerValue = doc["total_power"];
+              if (config.Shelly_tri ) {
+                if (config.Shelly_mode == 0) { 
+                  powerValue = doc["total_act_power"];
+                }
+                if (config.Shelly_mode == 1) { 
+                  powerValue = doc["total_power"];
+                }
+                if ( powerValue.isNull() || doc["total_power"].as<String>() == "null") {
+                 config.Shelly_mode = 1;
+                return shelly_watt;
+                }
               }
             
             // affichage dans le sérial de doc["total_power"] en tant que string ; 
             Serial.println("Shelly Watt : ");
             Serial.println(doc["total_power"].as<String>());
-           Serial.println(baseurl);
+            Serial.println(baseurl);
 
-            if ( powerValue.isNull() || doc["total_power"].as<String>() == "null") {
-                 config.Shelly_mode = 1;
-                return shelly_watt;
-            } 
-
-            /// protection de la donnée
+             /// protection de la donnée
             if (powerValue.is<int>() || powerValue.is<float>()) {
                 shelly_watt = powerValue.as<int>();
             }
