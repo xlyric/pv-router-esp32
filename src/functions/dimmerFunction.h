@@ -54,15 +54,18 @@ extern Dallas dallas ;
 /// Modif RV 20240219 
 /// Plus besoin !
 #define FACTEUR_REGULATION 1 // NOSONAR
+/// fonction d'envoie de commande au dimmer distant 
+
 void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puissance_dispo) { // NOSONAR
 
   puissance_dispo= int(puissance_dispo*FACTEUR_REGULATION);
+  
     /// envoyer la commande avec la valeur gDisplayValues.dimmer vers le dimmer config.dimmer
 
-      #if WIFI_ACTIVE == true
-      /// control dimmer 
+    #if WIFI_ACTIVE == true
 
-if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
+      /// control dimmer 
+    if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
         #ifndef POURCENTAGE
       const String  baseurl = "/?POWER=" + String(dimmervalue) +"&puissance=" + String(puissance_dispo) ; 
         #else
@@ -84,6 +87,7 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
             logging.Set_log_init("% " + String(puissance_dispo) + "W\r\n");
         }
       }
+
       //// Mqtt send information
       #ifndef LIGHT_FIRMWARE
         if (!AP) {
@@ -105,17 +109,16 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
 //***********************************
 //************* Fonction aservissement autonome
 //***********************************
-
+// fonction de commande de puissance en fonction de la production
 void dimmer(){
-gDisplayValues.change = 0; 
+  gDisplayValues.change = 0; 
 
-
+  // vérifie que la puissance n'a pas déjà été appliquée
   if (!gDisplayValues.wattIsValid){
     return;
   }
   else {
    gDisplayValues.wattIsValid = false ;
-
   }
    
    int puissance_dispo = 0; 
@@ -129,29 +132,23 @@ gDisplayValues.change = 0;
 
   // 0 -> linky ; 1-> injection  ; 2-> stabilisé
 
-
-	/// Ajout de la variable delta_cible pour réutilisations multiples
+	/// Ajout de la variable delta_cible pour réutilisations multiples , on prends la moyenne des deux valeurs
 	int delta_cible = (config.delta+config.deltaneg)/2;
-// puissance dispo 
+// puissance dispo à envoyer au dimmer distant ou local
   puissance_dispo = -(gDisplayValues.watt-delta_cible);
   //DEBUG_PRINTLN("------- puissance dispo " + String(puissance_dispo) + " -----------");
 
-
 if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
-
     gDisplayValues.dimmer += -abs((gDisplayValues.watt-delta_cible)*COMPENSATION/config.charge); 
-    
-    
     gDisplayValues.dimmer += 1 ;
     gDisplayValues.change = 1; 
-
     } 
 
     // injection 
     /// si grosse injection on augmente la puissance par extrapolation
   else if ( gDisplayValues.watt <= config.deltaneg ) {   
     
-gDisplayValues.dimmer += abs((delta_cible-gDisplayValues.watt)*COMPENSATION/config.charge) ; 
+    gDisplayValues.dimmer += abs((delta_cible-gDisplayValues.watt)*COMPENSATION/config.charge) ; 
     gDisplayValues.change = 1 ; 
 
     } 
@@ -202,7 +199,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
     } 
 
   ///// si pas de changement on ne fait rien
-  if  (gDisplayValues.change  )  {
+  if  (gDisplayValues.change)  {
 
       /// si configuration en dimmer local
     if (config.dimmerlocal) {
@@ -214,7 +211,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
 
             
         float dallas_int = gDisplayValues.temperature;
-        if (dallas.security) {
+        if (dallas.security) {  // si sécurité alors on envoie la puissance à 0
           float temp_trigger = float(config.tmax) - float(config.tmax*config.trigger/100) ;
           if ( dallas_int < temp_trigger ) {  
           dallas.security = false ; // retrait securité si inférieur au trigger
@@ -245,7 +242,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
       
         else { 
 
-          if ( config.tmax < dallas_int ) {
+          if ( config.tmax < dallas_int ) {  // si température supérieure à la température max alors on coupe le dimmer local
             dimmer1.setPower(0); 
             unified_dimmer.dimmer_off();
               #ifdef ESP32D1MINI_FIRMWARE
@@ -265,14 +262,16 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
             unified_dimmer.dimmer_off();
           }
           else {
-            if (!dallas.security){  
+            if (!dallas.security){  // si pas de sécurité alors on envoie la puissance
+                // vérification du mode equal si c'est le cas on divise par 2 la puissance et on envoye la puissance dispo aussi au dimmer distant
+                if (config.equal)  { gDisplayValues.dimmer = gDisplayValues.dimmer / 2 ; puissance_dispo = puissance_dispo / 2 ; dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer, puissance_dispo ) ;} 
                 /// fonctionnement du dimmer local 
-                 
-                if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { 
-              //    dimmer1.setPower(gDisplayValues.dimmer); 
-                 unified_dimmer.set_power(gDisplayValues.dimmer);
-                  DEBUG_PRINTLN("------- dimmerFunction " + String(__LINE__) + " -----------");                 
-                  dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;
+                if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { // si dimmer < localfuse et pas de minuteur alors on envoie la puissance
+                  //    dimmer1.setPower(gDisplayValues.dimmer); 
+                  unified_dimmer.set_power(gDisplayValues.dimmer);
+                  DEBUG_PRINTLN("------- dimmerFunction " + String(__LINE__) + " -----------");     
+                  // si en mode équal on ne coupe pas le dimmer distant             
+                  if (!config.equal) { dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ; }  // sinon ça coupe le dimmer distant en mode équal
                  // ledcWrite(0, gDisplayValues.dimmer*256/100);  
                 }
                 else {

@@ -171,6 +171,7 @@ bool getServermode(String Servermode) {
   if ( Servermode == "screen" ) {  gDisplayValues.screenstate = !gDisplayValues.screenstate; return true;}
   if ( Servermode == "Jeedom" ) {   config.UseJeedom = !config.UseJeedom; return true;}
   if ( Servermode == "Autonome" ) {   config.autonome = !config.autonome; return true;}
+  if ( Servermode == "equal" ) {   config.equal = !config.equal; return true;}
   if ( Servermode == "dimmerlocal" ) {   
                     config.dimmerlocal = !config.dimmerlocal;  
                     //dimmer1.setPower(0);
@@ -226,6 +227,8 @@ String getconfig() {
   doc["delta"] = config.delta;
   doc["deltaneg"] = config.deltaneg;
   doc["dimmer"] = config.dimmer;
+  doc["dimmer2"] = config.dimmer2;
+  doc["mode"] = config.mode;
   doc["cosphi"] = config.cosphi;
   doc["dimmerlocal"] = config.dimmerlocal;
   
@@ -233,6 +236,7 @@ String getconfig() {
   dtostrf(config.facteur, 5, 2, buffer); 
   doc["facteur"] = buffer;
 
+  doc["equal"] = config.equal;
   doc["resistance"] = config.charge1;
   doc["resistance2"] = config.charge2;
   doc["resistance3"] = config.charge3;
@@ -254,7 +258,7 @@ String getconfig() {
 
 String getenvoy() {
   String VERSION_http = String(VERSION) + " " + String(COMPILE_NAME) ; 
-  configweb = String(config.IDXdimmer) + ";" + String(config.IDX) + ";"  +  String(VERSION_http) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.charge1+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA);
+  configweb = String(config.IDXdimmer) + ";" + String(config.IDX) + ";"  +  String(VERSION_http) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.charge1+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA)+";"+stringbool(config.equal);
   return String(configweb);
 }
 //***********************************

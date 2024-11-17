@@ -23,7 +23,7 @@ int slowlog = TEMPOLOG - 1 ;
 
 extern Memory task_mem; 
 int demoloop = 0;
-
+// task to measure electricity, return the value in watt in gDisplayValues.watt
 void measureElectricity(void * parameter) // NOSONAR
 {
     for(;;){
@@ -152,7 +152,7 @@ long end = millis();
       // taking into account how long measurement took) ///&& configmodule.pilote
       if (mode != 0 ) {
             ///// le shelly et l'enphase sont plus lents et font des mesures à 1s ce qui peut créer des doublons de commandes
-            vTaskDelay(pdMS_TO_TICKS(4000));
+            vTaskDelay(pdMS_TO_TICKS(5000));
       }
       else
       {      

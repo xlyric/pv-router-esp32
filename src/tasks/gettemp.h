@@ -14,7 +14,7 @@ extern DisplayValues gDisplayValues;
 extern Config config; 
 extern Dallas dallas ;
 extern Memory task_mem; 
-
+// task to get temperature from dimmer ( internal or external s)
 void GetDImmerTemp(void * parameter){
  for (;;){ 
 // create get request 

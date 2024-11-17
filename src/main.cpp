@@ -619,12 +619,7 @@ snprintf(raison, bufferSize, "restart : %s", logging.loguptime());
 void loop()
 {
 
-
-
-
-
-
-//// si perte du wifi après  6h, reboot
+  //// si perte du wifi après  6h, reboot
   if (AP) {
     reboot_after_lost_wifi(6);
   }
@@ -637,13 +632,10 @@ void loop()
     ESP.restart();
   }
 
-
-   ///  vérification de la tailld du buffer log_init ( 600 caractères max ) il est créé à 650 caractères ( enums.h )
+   ///  vérification de la taille du buffer log_init ( 600 caractères max ) il est créé à 650 caractères ( enums.h )
    /// pour éviter les buffer overflow et fuite mémoire. 
   logging.clean_log_init();
 // affichage en mode serial de la taille de la chaine de caractère logging.log_init
-
-
 
 // vérification de la connexion wifi 
   if ( WiFi.status() != WL_CONNECTED ) {

@@ -49,7 +49,7 @@ float WHtempinject;
 long beforetime; 
 #define timemilli 3.6e+6 
 extern Memory task_mem; 
-
+// task to send data to MQTT
 void send_to_mqtt(void * parameter){ // NOSONAR
   for (;;){
             if(!WiFi.isConnected()){   /// si pas de connexion Wifi test dans 10 s 

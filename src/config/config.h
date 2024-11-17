@@ -158,8 +158,8 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20241112"
-constexpr const int FS_RELEASE= 20240704 ;
+#define RELEASE "Version 20241115"
+constexpr const int FS_RELEASE= 20241115 ;
 
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE

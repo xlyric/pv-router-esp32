@@ -83,7 +83,11 @@ public:
   int cycle;  // cycle de lecture des capteurs
   bool sending; 
   bool autonome; // si dimmer en local 
+  // gestion du multi dimmer non prévu
+  char mode[10] = "off"; // NOSONAR
   char dimmer[64];  // adresse IP du dimmer // NOSONAR
+  char dimmer2[64];  // adresse IP du dimmer 2// NOSONAR
+  bool equal = false;
   bool dimmerlocal; // si dimmer en local
   float facteur; // facteur de correction de la puissance
   int num_fuse;
@@ -104,6 +108,7 @@ public:
   bool restart;
   char topic_Shelly[100];  // NOSONAR
   bool Shelly_tri;
+  int Shelly_mode=0;
   int SCT_13=30;
   int charge1;  // Puissance de la charge 1 déclarée dans la page web
 /// @brief  // Puissance de la charge 2 déclarée dans la page web
@@ -195,6 +200,7 @@ public:
     charge1 = doc["charge1"] | 3000;
     charge2 = doc["charge2"] | 0;
     charge3 = doc["charge3"] | 0;
+    equal = doc["equal"] | false;
     /// provisionne la somme des charges
     calcul_charge();
 
@@ -218,7 +224,12 @@ public:
     strlcpy(dimmer,                  // <- destination
             doc["dimmer"] | "none", // <- source
             sizeof(dimmer));         // <- destination's capacity
-
+    strlcpy(dimmer2,                  // <- destination
+            doc["dimmer2"] | "none", // <- source
+            sizeof(dimmer2));         // <- destination's capacity
+    strlcpy(mode,                  // <- destination
+            doc["mode"] | "off", // <- source
+            sizeof(mode));         // <- destination's capacity
     strlcpy(mqttserver,                  // <- destination
             doc["mqttserver"] | "none", // <- source
             sizeof(mqttserver));         // <- destination's capacity
@@ -279,7 +290,11 @@ public:
     doc["cycle"] = cycle;
     doc["sending"] = sending;
     doc["autonome"] = autonome;
+    
     doc["dimmer"] = dimmer;
+    doc["dimmer2"] = dimmer2;
+    doc["mode"] = mode;
+    doc["equal"] = equal;
 
     doc["dimmerlocal"] = dimmerlocal;
     doc["tmax"] = tmax;

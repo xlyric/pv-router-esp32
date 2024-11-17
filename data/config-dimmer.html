@@ -247,9 +247,19 @@
               <div class="card-body">
 
                 <div class="form-group row">
-                      <div class="col-sm-6">
-                              Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
-                    </div>
+                  <div class="col-sm-4">
+                          Dimmer IP:<input type="text" class="form-control form-control-user" id="dimmer" placeholder="%DIMMER%">
+                  </div>
+              <!--    <div class="col-sm-4">
+                    Dimmer 2 IP:<input type="text" class="form-control form-control-user" id="dimmer2" placeholder="%DIMMER2%">
+                  </div>
+                  <div class="col-sm-4">
+                    mode :
+                    <select id="mode" class="form-control form-control-user">
+                      <option value="off">off</option>
+                      <option value="delester">délester</option>
+                    </select>
+                  </div>-->
 
                 </div> 
               </div>
@@ -266,15 +276,20 @@
                 <div class="form-group row"> 
                   
                     <div class="col-sm-3">
-                    <div class="custom-control custom-checkbox small">
+                      <div class="custom-control custom-checkbox small">
                             <input type="checkbox" class="custom-control-input" id="dimmerlocal" onchange="sendservermode('dimmerlocal');">
-                            <label class="custom-control-label" for="dimmerlocal" >Dimmer local</label>
-                    </div>
+                            <label class="custom-control-label" for="dimmerlocal" >Dimmer local</label><br/>
+                      </div>
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="equal" onchange="sendservermode('equal');">
+                        <label class="custom-control-label" for="equal" >equal</label>
+                      </div>
                     </div>
                     <div class="col-sm-3">
                         Limiteur local (%): <input type="number"  step="1" class="form-control form-control-user" id="Fusiblelocal" placeholder="%FUSELOCAL%">
                     </div>
-                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                    </div>
 
                     <div class="col-sm-3"></div>
                     <div class="col-sm-3">
@@ -329,14 +344,14 @@
 
 
 
-              <div class="form-group row">
+         <!--      <div class="form-group row">
                 <div class="col-sm-4" data-toggle="popover" title="Aide" data-bs-content="Temporisation de l'écran, '0' pour tout le temps Allumé/éteins ">Screen switch off ℹ </div>
               </div>
-              <div class="form-group row">
+             <div class="form-group row">
                 <div class="col-sm-4">
                   <input type="number" step="1" class="form-control form-control-user" id="screentime" placeholder="%SCREENTIME%">
                 </div>
-                <div class="col-sm-4">
+            <div class="col-sm-4">
                   <div class="custom-control custom-checkbox small">
                     <button type="button" class="btn btn-primary btn-user btn-block" id="screen" onclick="sendservermode('screen');" >ON/OFF Oled</button>
                   </div>
@@ -347,8 +362,8 @@
                     <input type="checkbox" class="custom-control-input" id="flip" onchange="sendservermode('flip');" >
                     <label class="custom-control-label" for="flip" >flip screen</label>
                   </div>
-                </div>
-              </div> 
+                </div>  
+              </div> -->
             </div>
           </div>
           <br>
@@ -461,19 +476,42 @@ $( "#save" ).click(function() {
 $( "#formulaire" ).submit(function() {
     
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'resistance2':$('#resistance2').val(),'resistance3':$('#resistance3').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() ,'SCT_13': $('#SCT_13').val(), 'trigger':$('#trigger').val() } 
-
-		
-        $.ajax({
+	 var data = {
+    'server':$('#hostname').val(), 
+    'idx':$('#IDX').val(), 
+    'idxdimmer':$('#IDXDIMMER').val(),
+    'cosphi':$('#cosphi').val(),
+    'fuse':$('#Fusible').val(),
+    'cycle':$('#cycle').val(),
+    'dimmer':$('#dimmer').val(),
+    'dimmer2':$('#dimmer2').val(),
+    'mode': $("#mode").val(),
+    'port':$('#port').val(),
+    'delta':$('#delta').val(),
+    'deltaneg':$('#deltaneg').val(),
+    'apiKey':$('#apiKey').val(),
+    'facteur':$('#facteur').val(),
+    'mqttserver':$('#mqttserver').val(),
+    'publish':$('#publish').val(),
+    'resistance':$('#resistance').val(),
+    'resistance2':$('#resistance2').val(),
+    'resistance3':$('#resistance3').val(),
+    'screentime':$('#screentime').val(),
+    'Fusiblelocal':$('#Fusiblelocal').val(),
+    'maxtemp':$('#maxtemp').val(),
+    'voltage':$('#voltage').val(),
+    'offset':$('#offset').val(),
+    'SCT_13': $('#SCT_13').val(),
+    'trigger':$('#trigger').val() 
+    };
+    $.ajax({
             type: "GET",
             data: data,
             url: "get",
-
             success: function(retour){
                 $( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
-                     
             }
-        });
+    });
   return false;
 });
 

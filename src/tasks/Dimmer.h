@@ -20,6 +20,7 @@ extern dimmerLamp dimmer1;
  * récupère les informations, conso ou injection et fait varier le dimmer en conséquence
  * 
  */
+// fonction pour récupérer la puissance actuelle de l'enfant dimmer
 int get_dimmer_child_power (){
     http.begin("http://" + String(config.dimmer) + "/state");   
                 int httpResponseCode = http.GET();
@@ -52,6 +53,8 @@ int get_dimmer_child_power (){
 }
 extern Memory task_mem; 
 
+/// @brief  task de mise à jour du dimmer et récupération des infos de puissance
+/// @param parameter 
 void updateDimmer(void * parameter){
   for (;;){
   gDisplayValues.task = true;
@@ -59,11 +62,9 @@ void updateDimmer(void * parameter){
     /// application de la consigne de puissance uniquement si le minuteur n'est pas actif et que la dallas n'est pas perdu
     if (!programme.run && !dallas.lost ) {
         DEBUG_PRINTLN("------- dimmer.h " + String(__LINE__) + " -----------");
-        dimmer();
+        dimmer();  // c'est la fonction qui fait varier le dimmer en fonction de la production
     }
-    
-    
-   
+       
     #ifndef POURCENTAGE
         int local_power = 0 ;
         int child_power = 0 ;
