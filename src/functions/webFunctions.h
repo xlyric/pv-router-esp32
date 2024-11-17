@@ -106,15 +106,15 @@ else {
 }
 
 
-  server.serveStatic("/all.min.css", SPIFFS, "/all.min.css");
-  server.serveStatic("/jquery.min.js", SPIFFS, "/jquery.min.js");
-  server.serveStatic("/bootstrap.bundle.min.js", SPIFFS, "/bootstrap.bundle.min.js");
-  server.serveStatic("/bootstrap.bundle.min.js.map", SPIFFS, "/bootstrap.bundle.min.js.map");
-  server.serveStatic("/fa-solid-900.woff2", SPIFFS, "/fa-solid-900.woff2");
-  server.serveStatic("/favicon.ico", SPIFFS, "/favicon.ico");
-  server.serveStatic("/sb-admin-2.min.css", SPIFFS, "/sb-admin-2.min.css");
-  server.serveStatic("/sb-admin-2.js", SPIFFS, "/sb-admin-2.js");
-
+  server.serveStatic("/all.min.css", SPIFFS, "/all.min.css").setCacheControl("max-age=31536000");
+  server.serveStatic("/jquery.min.js", SPIFFS, "/jquery.min.js").setCacheControl("max-age=31536000");
+  server.serveStatic("/bootstrap.bundle.min.js", SPIFFS, "/bootstrap.bundle.min.js").setCacheControl("max-age=31536000");
+  server.serveStatic("/bootstrap.bundle.min.js.map", SPIFFS, "/bootstrap.bundle.min.js.map").setCacheControl("max-age=31536000");
+  server.serveStatic("/fa-solid-900.woff2", SPIFFS, "/fa-solid-900.woff2").setCacheControl("max-age=31536000");
+  server.serveStatic("/favicon.ico", SPIFFS, "/favicon.ico").setCacheControl("max-age=31536000");
+  server.serveStatic("/sb-admin-2.min.css", SPIFFS, "/sb-admin-2.min.css").setCacheControl("max-age=31536000");
+  server.serveStatic("/sb-admin-2.js", SPIFFS, "/sb-admin-2.js").setCacheControl("max-age=31536000");
+  server.serveStatic("/log.html", SPIFFS, "/log.html").setCacheControl("max-age=31536000");
   
 server.on("/mqtt.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/mqtt.json", "text/css");
@@ -130,10 +130,6 @@ server.on("/envoy.html", HTTP_GET, [](AsyncWebServerRequest *request){
 
 server.on("/enphase.json", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/enphase.json", "application/json");
-  });
-
-server.on("/log.html", HTTP_ANY, [](AsyncWebServerRequest *request){
-      compress_html(request,"/log.html.gz", "text/html");
   });
 
 server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
