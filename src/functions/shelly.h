@@ -24,10 +24,10 @@ HTTPClient shelly_http;
     String baseurl = "/emeter/0" ; 
         /// mode triphasé
       if ( config.Shelly_tri ) {
-        if (config.Shelly_mode == 0) {
+        if (!config.Shelly_mode) {
           baseurl = "/rpc/EM.GetStatus?id=0" ; // pour le 3EM
         }
-        if (config.Shelly_mode == 1) {
+        if (config.Shelly_mode) {
           baseurl = "/status" ; // pour le 3EM type 2 
         }
       }
@@ -47,7 +47,7 @@ HTTPClient shelly_http;
     int httpResponseCode = shelly_http.GET();
 
    if (httpResponseCode==404) {
-        config.Shelly_mode = 1;
+        config.Shelly_mode = true;
         return shelly_watt;
     }
        
@@ -73,14 +73,14 @@ HTTPClient shelly_http;
             auto powerValue = doc["power"];
               /// mode triphasé
               if (config.Shelly_tri ) {
-                if (config.Shelly_mode == 0) { 
+                if (!config.Shelly_mode) { 
                   powerValue = doc["total_act_power"];
                 }
-                if (config.Shelly_mode == 1) { 
+                if (config.Shelly_mode) { 
                   powerValue = doc["total_power"];
                 }
                 if ( powerValue.isNull() || doc["total_power"].as<String>() == "null") {
-                 config.Shelly_mode = 1;
+                 config.Shelly_mode = true;
                 return shelly_watt;
                 }
               }
