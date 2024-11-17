@@ -1,0 +1,77 @@
+name: Build all supported platforms's firmware & filesystem and publish new release
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+            ~/.venv
+          key: ${{ runner.os }}-pio
+      - name: Install requirements
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes --no-install-recommends lsb-release git python3-pip python3-venv curl gzip
+          python3 -m venv ~/.venv
+      - name: Install PlatformIO Core
+        run: ~/.venv/bin/python -m pip install platformio
+      - name: Build firmware for all supported platforms
+        run: ~/.venv/bin/pio run
+     # - name: Generate filesystem content
+     #   run: |
+     #     source ~/.venv/bin/activate
+      #    ./data-templates/generate-data.sh
+      - name: Build filesystem for all supported platforms
+        run: ~/.venv/bin/pio run -t buildfs
+      - name: Compute version name
+        id: version
+        uses: proudust/gh-describe@v2.1.0
+      - name: Prepare distribution files
+        run: |
+          mkdir dist
+          for file in .pio/build/*/*.bin; do
+            platform="$( basename "$( dirname "$file" )" )"
+            filename="${platform}_${{steps.version.outputs.describe}}_$( basename "$file" ).gz"
+            gzip --stdout "$file" > "dist/$filename"
+          done
+      - name: Upload built files
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: dist
+          path: |
+            dist/*.bin.gz
+  publish:
+    runs-on: ubuntu-latest
+    if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Download built files"
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: dist
+      - name: Generate changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5.0.0
+        with:
+          mode: "COMMIT"
+      - name: Create release
+        uses: softprops/action-gh-release@v2.0.9
+        id: create_release
+        with:
+          draft: false
+          prerelease: false
+          tag_name: ${{ steps.changelog.outputs.toTag }}
+          name: ${{ steps.changelog.outputs.toTag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          make_latest: "true"
+          files: |
+            *.bin.gz
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
