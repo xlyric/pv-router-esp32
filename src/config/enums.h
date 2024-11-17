@@ -104,6 +104,7 @@ public:
   bool restart;
   char topic_Shelly[100];  // NOSONAR
   bool Shelly_tri;
+  bool Shelly_mode=false;
   int SCT_13=30;
   int charge1;  // Puissance de la charge 1 déclarée dans la page web
 /// @brief  // Puissance de la charge 2 déclarée dans la page web
