@@ -207,7 +207,7 @@ bool Enphase_get_7_Production(void){
   HTTPClient https;
   int httpCode;
   bool retour = false;
-  String adr = String(configmodule.hostname);
+  auto adr = String(configmodule.hostname);
   String url = "/404.html" ;
 
   if (String(configmodule.envoy) == "R") {
@@ -311,7 +311,7 @@ bool Enphase_get_7_JWT(void) {
   bool retour = false;
   String url = "/404.html";
   url = String(EnvoyJ);
-  String adr = String(configmodule.hostname);
+  auto adr = String(configmodule.hostname);
  
   // Ne redemmande pas le tocken a chaque fois
   if (TockenValide)

@@ -25,14 +25,7 @@ extern Dallas dallas ;
     int dimmer_security = 60;  // coupe le dimmer toute les X minutes en cas de probleme externe. 
     int dimmer_security_count = 0; 
 
-
-  //void dimmer_on();
-
-  String dimmergetState(); 
-
-
-
-
+    String dimmergetState(); 
 
     extern DisplayValues gDisplayValues;
     extern Config config; 
@@ -80,8 +73,6 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
         if (logging.power) {    
             
             logging.Set_log_init(POWER_COMMAND);
-            //logging.Set_log_init(String(dimmervalue).c_str());
-            //logging.Set_log_init("% "); 
             logging.Set_log_init(String(puissance_dispo) + "W\r\n");
         }
       }
@@ -135,24 +126,20 @@ gDisplayValues.change = 0;
 	int delta_cible = (config.delta+config.deltaneg)/2;
 // puissance dispo 
   puissance_dispo = -(gDisplayValues.watt-delta_cible);
-  //DEBUG_PRINTLN("------- puissance dispo " + String(puissance_dispo) + " -----------");
-
-
+  
 if ( gDisplayValues.dimmer != 0 && gDisplayValues.watt >= (config.delta) ) {
 
     gDisplayValues.dimmer += -abs((gDisplayValues.watt-delta_cible)*COMPENSATION/config.charge); 
-    
-    
+      
     gDisplayValues.dimmer += 1 ;
     gDisplayValues.change = 1; 
-
     } 
 
     // injection 
     /// si grosse injection on augmente la puissance par extrapolation
   else if ( gDisplayValues.watt <= config.deltaneg ) {   
     
-gDisplayValues.dimmer += abs((delta_cible-gDisplayValues.watt)*COMPENSATION/config.charge) ; 
+    gDisplayValues.dimmer += abs((delta_cible-gDisplayValues.watt)*COMPENSATION/config.charge) ; 
     gDisplayValues.change = 1 ; 
 
     } 
@@ -223,12 +210,9 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
           logging.Set_log_init(Security_off);
 
           gDisplayValues.dimmer = 0 ; 
-          //dimmer_on();
-          //dimmer1.setPower(gDisplayValues.dimmer);
           DEBUG_PRINTLN("------- dimmerFunction" + String(__LINE__) + " -----------");
           
-            unified_dimmer.set_power(gDisplayValues.dimmer);
-          // ledcWrite(0, gDisplayValues.dimmer*256/100);  //pas compris pourquoi on mettait 0 ici
+          unified_dimmer.set_power(gDisplayValues.dimmer);
           Serial.println("security on -> off");
           
           }
@@ -270,14 +254,13 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
                 /// fonctionnement du dimmer local 
                  
                 if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { 
-              //    dimmer1.setPower(gDisplayValues.dimmer); 
-                 unified_dimmer.set_power(gDisplayValues.dimmer);
+                  unified_dimmer.set_power(gDisplayValues.dimmer);
                   DEBUG_PRINTLN("------- dimmerFunction " + String(__LINE__) + " -----------");                 
                   dimmer_change( config.dimmer, config.IDXdimmer, 0, puissance_dispo ) ;
-                 // ledcWrite(0, gDisplayValues.dimmer*256/100);  
+
                 }
                 else {
-                    //dimmer_on();
+
 /// Modif RV - 20240303
                 /// Ajout de ce if() AVANT de modifier la puissance locale ... sinon ça ne sert à rien
                 if (unified_dimmer.get_power() < config.localfuse){ // permet d'éviter de trop de donner de puissance au dimmer enfant quand gros soleil d'un coup
@@ -285,7 +268,6 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
                     DEBUG_PRINTLN("------- dimmerFunction " + String(__LINE__) + " -----------");
                 }
                     if (!dallas.lost) { /// Sécurité si pas de perte de la dallas sinon ça clignote
-                      //dimmer1.setPower(config.localfuse); 
 
                       DEBUG_PRINTLN("------- dimmerFunction " + String(__LINE__) + " -----------");
                         
@@ -330,19 +312,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
       serial_println("Dimmer started...");
 
     }
-
-    /// fonction pour mettre en pause ou allumer le dimmer 
-    /*void dimmer_on()
-    {
-
-      if (dimmer1.getState()==0) {
-        dimmer1.setState(ON);
-        delay(50);
-        Serial.println("dimmer on");
-        }
-    }*/
-
-
+    
     String dimmergetState() {
       String state; 
       int pow=unified_dimmer.get_power(); 

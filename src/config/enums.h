@@ -436,33 +436,33 @@ String savemqtt() {
 };
 
 struct Memory {
-public: 
-  int task_keepWiFiAlive2=5000;   
-  int task_serial_read_task=5000;
+  public: 
+    int task_keepWiFiAlive2=5000;   
+    int task_serial_read_task=5000;
 
-  int task_dallas_read=5000;
-  int task_updateDimmer=5000;; 
-  int task_GetDImmerTemp=5000;
+    int task_dallas_read=5000;
+    int task_updateDimmer=5000;; 
+    int task_GetDImmerTemp=5000;
 
-  int task_measure_electricity=5000;
- 
-  int task_send_mqtt=5000;
+    int task_measure_electricity=5000;
+  
+    int task_send_mqtt=5000;
 
-  int task_switchDisplay=5000;
-  int task_updateDisplay=5000;
-  int task_loop=5000; 
+    int task_switchDisplay=5000;
+    int task_updateDisplay=5000;
+    int task_loop=5000; 
 };
 
 
 struct Configmodule {
-public: 
-  char hostname[16]; // NOSONAR
-  char port[5]; // NOSONAR
-  bool enphase_present=false; 
-  bool Fronius_present=false;
-  char envoy[5]; // NOSONAR
-  char version[2]; // NOSONAR 
-  char token[512]; //correction suite remonté de multinet // NOSONAR
+  public: 
+    char hostname[16]; // NOSONAR
+    char port[5]; // NOSONAR
+    bool enphase_present=false; 
+    bool Fronius_present=false;
+    char envoy[5]; // NOSONAR
+    char version[2]; // NOSONAR 
+    char token[512]; //correction suite remonté de multinet // NOSONAR
 };
 
 /// @brief  partie délicate car pas mal d'action sur la variable log_init et donc protection de la variable ( pour éviter les pb mémoire )
@@ -470,6 +470,7 @@ struct Logs {
   private:
       char log_init[LOG_MAX_STRING_LENGTH]; // NOSONAR
       int MaxString = LOG_MAX_STRING_LENGTH * .9 ;
+      bool lock_log = false; // protection en écriture de la variable log_init
 
   public:
     bool sct;
@@ -478,19 +479,29 @@ struct Logs {
     bool serial=false; 
 
   ///setter log_init --> ajout du texte dans la log
-public:void Set_log_init(String setter, bool logtime=false) {
-        // Vérifier si la longueur de la chaîne ajoutée ne dépasse pas LOG_MAX_STRING_LENGTH
-        if ( strlen(setter.c_str()) + strlen(log_init) < static_cast<size_t>(MaxString) )  { 
-            if (logtime) { 
-              if ( strlen(setter.c_str()) + strlen(log_init) + strlen(loguptime()) < static_cast<size_t>(MaxString))  { 
-                strcat(log_init,loguptime()); }
-              }
-          strcat(log_init,setter.c_str());  
-        } else {  
-          // Si la taille est trop grande, réinitialiser le log_init
-          reset_log_init();
-        }     
-      }
+  public:void Set_log_init(String setter, bool logtime=false) {
+        if (lock_log) {
+          return;
+        } else {
+          lock_log = true;
+          // Vérifier si la longueur de la chaîne ajoutée ne dépasse pas LOG_MAX_STRING_LENGTH
+          size_t setterLength = strlen(setter.c_str()); // NOSONAR
+          size_t logInitLength = strlen(log_init);  // NOSONAR
+          size_t logUptimeLength = strlen(loguptime()); // NOSONAR
+          size_t maxLength = static_cast<size_t>(MaxString); // NOSONAR
+
+          if ( setterLength + logInitLength < maxLength )  { 
+            if ( logtime && ( setterLength + logInitLength + logUptimeLength < maxLength)) { 
+                strncat(log_init, loguptime(), maxLength - logInitLength - 1); // NOSONAR
+            }
+            strncat(log_init, setter.c_str(), maxLength - logInitLength - 1); // NOSONAR
+          } else {  
+            // Si la taille est trop grande, réinitialiser le log_init
+            reset_log_init();
+          }   
+          lock_log = false;
+        }  
+  }
 
 
   ///getter log_init

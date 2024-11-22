@@ -21,7 +21,7 @@
  */
 #define MQTT_USER ""
 #define MQTT_PASSWORD ""
-#define MQTT_INTERVAL 60
+constexpr size_t MQTT_INTERVAL=60;
 
 /**
  * Switch Screnn button and time on
@@ -34,7 +34,7 @@
 /**
  * Time between 2 mesure of dimmer temp
  */
-#define GETTEMPREFRESH 5
+constexpr size_t GETTEMPREFRESH=5;
 
 //#define configMAX_PRIORITIES 1024
 
@@ -111,13 +111,13 @@ bool discovery_temp = false;
  * the ESP goes into deep sleep for 30seconds to try and
  * recover.
  */
-#define WIFI_TIMEOUT 30000 // 20 seconds
+constexpr size_t WIFI_TIMEOUT=30000; // 20 seconds
 
 /**
  * How long should we wait after a failed WiFi connection
  * before trying to set one up again.
  */
-#define WIFI_RECOVER_TIME_MS 30000 // 20 seconds
+constexpr size_t WIFI_RECOVER_TIME_MS=30000;// 20 seconds
 
 /**
  * Dimensions of the OLED display attached to the ESP
@@ -138,17 +138,17 @@ bool discovery_temp = false;
 /**
  * Local measurements
  */
-#define LOCAL_MEASUREMENTS 30
+constexpr size_t LOCAL_MEASUREMENTS=30;
 #define FACTEURPUISSANCE 10.50
-#define COMPENSATION 100 ///  % d'asservissement pour l'envoie de puissance au dimmer.
+constexpr size_t COMPENSATION=100; ///  % d'asservissement pour l'envoie de puissance au dimmer.
 
 /**
  * Syncing time with an NTP server
  */
 #define NTP_TIME_SYNC_ENABLED true
 #define NTP_SERVER "europe.pool.ntp.org"
-#define NTP_OFFSET_SECONDS 3600
-#define NTP_UPDATE_INTERVAL_MS 3600000 /// synch de l'heure toute les heures
+constexpr size_t NTP_OFFSET_SECONDS=3600;
+constexpr size_t NTP_UPDATE_INTERVAL_MS=3600000; /// synch de l'heure toute les heures
 
 // Check which core Arduino is running on. This is done because updating the 
 // display only works from the Arduino core.
@@ -158,8 +158,8 @@ bool discovery_temp = false;
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20241112"
-constexpr const int FS_RELEASE= 20240704 ;
+#define RELEASE "Version 20241122"
+constexpr const int FS_RELEASE=20240704;
 
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE
@@ -181,7 +181,7 @@ bool AP=true;
 #define RELAY2 15
 
 /// taille max des logs stockée
-#define LOG_MAX_STRING_LENGTH 1500 
+constexpr size_t LOG_MAX_STRING_LENGTH=1500;
 
 
 #ifdef S3

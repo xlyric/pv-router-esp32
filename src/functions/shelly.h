@@ -32,17 +32,6 @@ HTTPClient shelly_http;
         }
       }
 
-   // détection de si l'url à un :port
-   // if (url.indexOf(":") > 0) {
-  //      port = url.substring(url.indexOf(":")+1).toInt();
-  //      url = url.substring(0,url.indexOf(":"));
-  //  }
-    
-  //  Serial.println("info shelly");
-  //  Serial.println(url);
-  //  Serial.println(port);
-//Serial.println(baseurl);
-
     shelly_http.begin(String(url),port,baseurl);   
     int httpResponseCode = shelly_http.GET();
 
@@ -50,8 +39,6 @@ HTTPClient shelly_http;
         config.Shelly_mode = true;
         return shelly_watt;
     }
-       
-       //Serial.println(httpResponseCode);
 
         String shelly_state = "0"; 
         shelly_state = shelly_http.getString();

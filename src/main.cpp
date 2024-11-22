@@ -295,7 +295,7 @@ void setup()
   connect_to_wifi();
 
   // Initialize mDNS
-  //config.say_my_name)
+
   if (!MDNS.begin(gDisplayValues.pvname)) {   
     Serial.println("Error setting up MDNS responder!");
     while(1) {
@@ -359,15 +359,12 @@ ntpinit();
   Serial.println("Loading minuterie");
   programme.set_name("/dimmer");
   programme.loadProgramme();
-  //programme.saveProgramme(); //retrait 09/07/2024
 
   programme_relay1.set_name("/relay1");
   programme_relay1.loadProgramme();
-  //programme_relay1.saveProgramme();
 
   programme_relay2.set_name("/relay2");
   programme_relay2.loadProgramme();
-  //programme_relay2.saveProgramme();
 
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
@@ -694,7 +691,7 @@ if (config.dimmerlocal) {
     if (programme.run) { 
         //  minuteur en cours
         if (programme.stop_progr()) { 
-            //dimmer1.setPower(0); // plus forcément utile --> unified dimmer
+
             unified_dimmer.dimmer_off();
             unified_dimmer.set_power(0);
             dallas.security=true;
@@ -746,15 +743,12 @@ if (programme_relay1.run) {
       if (programme_relay1.stop_progr()) { 
         logging.Set_log_init(Stop_minuteur_relay1,true);
         digitalWrite(RELAY1 , LOW);
-//        device_relay1.send(String(0));
-
       }
  }
  else {
       if (programme_relay1.start_progr()){ 
         logging.Set_log_init(Start_minuteur_relay1,true);
         digitalWrite(RELAY1 , HIGH);
-      //  device_relay1.send(String(1));
       }
  }
 
@@ -762,14 +756,12 @@ if (programme_relay1.run) {
       if (programme_relay2.stop_progr()) { 
         logging.Set_log_init(Stop_minuteur_relay2,true);
         digitalWrite(RELAY2 , LOW);
-    //    device_relay2.send(String(0));
       }
  }
  else {
       if (programme_relay2.start_progr()){ 
         logging.Set_log_init(Start_minuteur_relay2,true);
         digitalWrite(RELAY2 , HIGH);
-      //device_relay2.send(String(1));
       }
  }
 
@@ -779,20 +771,16 @@ if (!AP) {
     time_reboot();
 }
 
-
-
-  task_mem.task_loop = uxTaskGetStackHighWaterMark(NULL);
+  task_mem.task_loop = uxTaskGetStackHighWaterMark(nullptr);
   vTaskDelay(pdMS_TO_TICKS(10000));
 }
 
 /// @brief / end Loop function
 
 
-
 void connect_to_wifi() {
   ///// AP WIFI INIT 
    
-
   if (AP || strcmp(configwifi.SID,"AP") == 0 ) {
       APConnect(); 
       gDisplayValues.currentState = DEVICE_STATE::UP;
