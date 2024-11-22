@@ -100,7 +100,7 @@
     void sendEnergyToHA(void * parameter){
         if(!HA_mqtt.connected()){
         serial_println("[MQTT] Can't send to HA without MQTT. Abort.");
-        vTaskDelete(NULL);
+        vTaskDelete(nullptr);
         }
 
         char msg[30];
@@ -114,7 +114,7 @@
         HA_mqtt.publish("homeassistant/sensor/" DEVICE_NAME "/state", msg);
 
         // Task is done!
-        vTaskDelete(NULL);
+        vTaskDelete(nullptr);
     }
 
         #endif

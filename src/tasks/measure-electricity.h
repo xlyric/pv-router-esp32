@@ -147,7 +147,7 @@ void measureElectricity(void * parameter) // NOSONAR
 
 
 long end = millis();
-      task_mem.task_measure_electricity = uxTaskGetStackHighWaterMark(NULL);
+      task_mem.task_measure_electricity = uxTaskGetStackHighWaterMark(nullptr);
       // Schedule the task to run again in 1 second (while
       // taking into account how long measurement took) ///&& configmodule.pilote
       if (mode != 0 ) {

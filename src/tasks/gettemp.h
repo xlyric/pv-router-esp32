@@ -66,7 +66,7 @@ if ( !dallas.detect && ( String(config.dimmer) != "" || String(config.dimmer) !=
     Serial.println("temperature:" + String(gDisplayValues.temperature));
   }
 }
-task_mem.task_GetDImmerTemp = uxTaskGetStackHighWaterMark(NULL);
+task_mem.task_GetDImmerTemp = uxTaskGetStackHighWaterMark(nullptr);
 
 // refresh every GETTEMPREFRESH seconds 
 vTaskDelay(pdMS_TO_TICKS(15000));

@@ -36,7 +36,7 @@ void updateDisplay(void* parameter) {
      if ( gDisplayValues.option == 0 && digitalRead(TFT_PIN)==HIGH){
       call_display();
       }
-      task_mem.task_updateDisplay = uxTaskGetStackHighWaterMark(NULL);
+      task_mem.task_updateDisplay = uxTaskGetStackHighWaterMark(nullptr);
       // Sleep for 5 seconds, then update display again!
       vTaskDelay(pdMS_TO_TICKS(4000));
   } // for

@@ -41,7 +41,7 @@ void dallasread(void * parameter){
     }
 
    } 
-   task_mem.task_dallas_read = uxTaskGetStackHighWaterMark(NULL);
+   task_mem.task_dallas_read = uxTaskGetStackHighWaterMark(nullptr);
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(pdMS_TO_TICKS(10000));
   }

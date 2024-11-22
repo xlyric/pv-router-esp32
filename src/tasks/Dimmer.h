@@ -91,7 +91,7 @@ void updateDimmer(void * parameter){
 
 
     gDisplayValues.task = false;
-    task_mem.task_updateDimmer = uxTaskGetStackHighWaterMark(NULL);
+    task_mem.task_updateDimmer = uxTaskGetStackHighWaterMark(nullptr);
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(pdMS_TO_TICKS(4000));
     // 24/01/2023 changement de 5 à 4s 

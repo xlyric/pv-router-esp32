@@ -132,7 +132,7 @@ void send_to_mqtt(void * parameter){ // NOSONAR
                   }
       #endif   
       } 
-      task_mem.task_send_mqtt = uxTaskGetStackHighWaterMark(NULL);
+      task_mem.task_send_mqtt = uxTaskGetStackHighWaterMark(nullptr);
    // Sleep for 10 seconds
     vTaskDelay(pdMS_TO_TICKS(1000));
   }
