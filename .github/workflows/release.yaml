@@ -52,6 +52,10 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: List Git tags
+        run: git tag -l
       - name: "Download built files"
         uses: actions/download-artifact@v4.1.8
         with:
