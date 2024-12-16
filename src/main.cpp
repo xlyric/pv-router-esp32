@@ -294,14 +294,10 @@ void setup()
  
   connect_to_wifi();
 
-  // Initialize mDNS
+  // Initialize mDNS ( déclaration du routeur sur le réseau )
 
-  if (!MDNS.begin(gDisplayValues.pvname)) {   
-    Serial.println("Error setting up MDNS responder!");
-    while(1) {
-      delay(1000);
-    }
-  }
+  mdns_hello(gDisplayValues.pvname);
+
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
   logging.Set_log_init(mDNS_Responder_Started,true);
@@ -480,8 +476,9 @@ ntpinit();
   // ----------------------------------------------------------------
   // Task: Update Dimmer power
   // ----------------------------------------------------------------
-  attachInterrupt(SWITCH, function_off_screen, FALLING);
-  attachInterrupt(BUTTON_LEFT, function_next_screen, FALLING);
+  #ifndef ESP32D1MINI_FIRMWARE
+    attachInterrupt(SWITCH, function_off_screen, FALLING);
+    attachInterrupt(BUTTON_LEFT, function_next_screen, FALLING);
 
   xTaskCreate( 
     switchDisplay,
@@ -491,8 +488,8 @@ ntpinit();
     2,                      // Task priority
     NULL                    // Task handle
   ); 
-  
   #endif
+#endif
 
 
 
