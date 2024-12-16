@@ -112,7 +112,7 @@ String getState() {
   doc["watt"] = int(gDisplayValues.watt);
   doc["dimmer"] = gDisplayValues.puissance_route;
   doc["temperature"] = gDisplayValues.temperature;
-  if (test_fs_version()) { doc["version"] = VERSION ; 
+  if (test_fs_version(false)) { doc["version"] = VERSION ; 
   } else { doc["version"] = VERSION + fs_update; 
   }
   doc["RSSI"] = WiFi.RSSI();
@@ -144,7 +144,7 @@ String getStateFull() {
   doc["gDisplayValues.dimmer"]  = gDisplayValues.dimmer;
 
   doc["temperature"] = gDisplayValues.temperature;
-  if (test_fs_version()) { doc["version"] = VERSION ; 
+  if (test_fs_version(false)) { doc["version"] = VERSION ; 
   } else { doc["version"] = VERSION + fs_update; 
   }
   doc["RSSI"] = WiFi.RSSI();

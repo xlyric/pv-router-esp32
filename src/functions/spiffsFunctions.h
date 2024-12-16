@@ -57,27 +57,27 @@ void loadlogs() {
 
 }
 
-bool test_fs_version() {
+bool test_fs_version(bool log = true) {
   // SPIFFS.begin() call is needed to use filesystem
   if (!SPIFFS.begin(true)) {
-    logging.Set_log_init(Fail_mount_FS);
+     if (log) { logging.Set_log_init(Fail_mount_FS); }
     return false;
   }
   // Open file for reading
   File file = SPIFFS.open("/version", "r");
   if (!file) {
-    logging.Set_log_init(FS_version_is_not_same);
+     if (log) { logging.Set_log_init(FS_version_is_not_same); }
     return false;
   }
    // comparaison entre le contenu du fichier et la version du code FS_RELEASE
   String version = file.readStringUntil('\n');
   file.close();
   if (version.toInt() < FS_RELEASE ) {
-    logging.Set_log_init(FS_version_is_not_same);
+     if (log) { logging.Set_log_init(FS_version_is_not_same); }
     
     return false;
   }
-  logging.Set_log_init(FS_version_is_same);
+  if (log) {  logging.Set_log_init(FS_version_is_same); }
   return true;
 }
 #endif

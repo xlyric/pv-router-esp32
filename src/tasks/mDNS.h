@@ -18,7 +18,7 @@ void mdns_hello(String esp_name) {
     }
      }
 
-    MDNS.addService("suntain", "tcp", 80);
+    MDNS.addService("sunstain", "tcp", 80);
     MDNS.addServiceTxt("sunstain", "tcp", "name", esp_name.c_str());
     MDNS.addServiceTxt("sunstain", "tcp", "version", VERSION);
     MDNS.addServiceTxt("sunstain", "tcp", "compilation", COMPILE_NAME);
