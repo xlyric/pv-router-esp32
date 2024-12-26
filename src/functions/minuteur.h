@@ -65,7 +65,7 @@ struct Programme {
   public:void saveProgramme() {
         const char * c_file = name.c_str();// NOSONAR
         JsonDocument doc;
-        Serial.println(F("save programme"));
+        Serial.println("save programme " + name);
               ////vérification cohérence des données
         if (check_data(heure_demarrage)) {strcpy(heure_demarrage, "00:00"); }
         if (check_data(heure_arret)) {strcpy(heure_arret, "00:00"); }
@@ -110,16 +110,16 @@ struct Programme {
         // Deserialize the JSON document
         DeserializationError error = deserializeJson(doc, configFile);
         if (error) {
-          Serial.println(F("Failed to read minuterie config "));
+          Serial.println("Failed to read minuterie config " + name);
           return false;
         }
       
         strlcpy(heure_demarrage,                  // <- destination
-                doc["heure_demarrage"] | "", // <- source
+                doc["heure_demarrage"] | "00:00", // <- source
                 sizeof(heure_demarrage));         // <- destination's capacity
         
         strlcpy(heure_arret,                  // <- destination
-                doc["heure_arret"] | "", // <- source
+                doc["heure_arret"] | "00:00", // <- source
                 sizeof(heure_arret));         // <- destination's capacity
         temperature = doc["temperature"] | 50 ; /// defaut à 50 °
         seuil_start = doc["seuil_start"] | 0 ; /// defaut à 0 %°

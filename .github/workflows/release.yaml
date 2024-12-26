@@ -65,6 +65,7 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v5.0.0
         with:
           mode: "COMMIT"
+          log-level: "DEBUG"
       - name: Create release
         uses: softprops/action-gh-release@v2.0.9
         id: create_release

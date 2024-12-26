@@ -46,6 +46,7 @@ void measureElectricity(void * parameter) // NOSONAR
       }
 
             /// SCT 013 
+      #ifndef ESP32D1MINI_FIRMWARE
       if (mode == 0 ) { 
                   injection2();
                   gDisplayValues.wattIsValid = true;
@@ -64,6 +65,7 @@ void measureElectricity(void * parameter) // NOSONAR
                 
                   }
       }
+      #endif
 
       if (mode == 4 ) {
                         //// mode demo
