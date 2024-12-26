@@ -339,8 +339,8 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 
     /// relays : 0 : off , 1 : on , other : switch 
     if (request->hasParam("relay1")) { int relay = request->getParam("relay1")->value().toInt(); 
-        if ( relay == 0 ) { digitalWrite(RELAY1 , LOW); }
-        else if ( relay == 1 ) { digitalWrite(RELAY1 , HIGH); } 
+        if ( relay == 0 ) { digitalWrite(RELAY1 , HIGH); } // correction bug de démarrage en GPIO 0
+        else if ( relay == 1 ) { digitalWrite(RELAY1 , LOW); } // correction bug de démarrage en GPIO 0
         else if (relay == 2) { digitalWrite(RELAY1, !digitalRead(RELAY1)); }
         int relaystate = digitalRead(RELAY1); 
         char str[8];// NOSONAR

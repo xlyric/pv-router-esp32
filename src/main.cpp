@@ -287,7 +287,7 @@ void setup()
   // déclaration switch
   pinMode(RELAY1, OUTPUT);
   pinMode(RELAY2, OUTPUT);
-  digitalWrite(RELAY1, LOW);
+  digitalWrite(RELAY1, HIGH); //correction bug de démarrage en GPIO 0
   digitalWrite(RELAY2, LOW);
 
 ///  WIFI INIT
@@ -739,13 +739,13 @@ if (config.dimmerlocal) {
 if (programme_relay1.run) { 
       if (programme_relay1.stop_progr()) { 
         logging.Set_log_init(Stop_minuteur_relay1,true);
-        digitalWrite(RELAY1 , LOW);
+        digitalWrite(RELAY1 , HIGH); //correction bug de démarrage en GPIO 0
       }
  }
  else {
       if (programme_relay1.start_progr()){ 
         logging.Set_log_init(Start_minuteur_relay1,true);
-        digitalWrite(RELAY1 , HIGH);
+        digitalWrite(RELAY1 , LOW); //correction bug de démarrage en GPIO 0
       }
  }
 
