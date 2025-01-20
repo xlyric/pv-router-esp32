@@ -147,6 +147,10 @@ server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "application/json", getState().c_str());
   });
 
+  server.on("/stateshort", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(200, "application/json", getState_short().c_str());
+  });
+
   server.on("/statefull", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "application/json", getStateFull().c_str());
   });

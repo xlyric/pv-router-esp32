@@ -57,7 +57,7 @@ HTTPClient shelly_http;
                 return shelly_watt;
             }
 
-            auto powerValue = doc["power"];
+            float powerValue = doc["power"].as<float>();
               /// mode triphasé
               if (config.Shelly_tri ) {
                 if (!config.Shelly_mode) { 
@@ -66,24 +66,18 @@ HTTPClient shelly_http;
                 if (config.Shelly_mode) { 
                   powerValue = doc["total_power"];
                 }
-                if ( powerValue.isNull() || doc["total_power"].as<String>() == "null") {
+                if ( powerValue==0 || doc["total_power"].as<String>() == "null") {
                  config.Shelly_mode = true;
                 return shelly_watt;
                 }
               }
             
             // affichage dans le sérial de doc["total_power"] en tant que string ; 
-            Serial.println("Shelly Watt : ");
-            Serial.println(doc["total_power"].as<String>());
-            Serial.println(baseurl);
+            //Serial.println("Shelly Watt : ");
+            //Serial.println(doc["total_power"].as<String>());
+            //Serial.println(baseurl);
 
-             /// protection de la donnée
-            if (powerValue.is<int>() || powerValue.is<float>()) {
-                shelly_watt = powerValue.as<int>();
-            }
-            else {
-                shelly_watt = 99999;
-            }
+            shelly_watt = int(powerValue);
 
         }
         else {

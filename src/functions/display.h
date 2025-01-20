@@ -1,6 +1,7 @@
 #ifndef DISPLAY_FUNCTIONS
 #define DISPLAY_FUNCTIONS
 
+#include <TimeLib.h>
 #include "../config/config.h"
 #include "functions/appweb.h"
 #include "functions/drawFunctions.h"
@@ -12,9 +13,24 @@ void affichage_normal();
 void affichage_autre();
 void call_display();
 
-#ifdef DEVKIT1
+#ifdef ESP32D1MINI_FIRMWARE
+
+#include <OLEDDisplay.h>
+#include "OLEDDisplayUi.h"
 #include "SSD1306Wire.h"
-extern SSD1306Wire display;
+#include <WiFiUdp.h>
+
+SSD1306Wire display(0x3c, 25, 27);
+OLEDDisplayUi   ui( &display );
+#define defaultFont ArialMT_Plain_16
+
+void display_routage(OLEDDisplay *display, OLEDDisplayUiState* state, short int x, short int y);
+void display_temperature(OLEDDisplay *display, OLEDDisplayUiState* state, short int x, short int y);
+
+void drawHeaderOverlay(OLEDDisplay *display, OLEDDisplayUiState* state);
+void drawProgress(OLEDDisplay *display, int percentage, String label);
+
+void init_ui(); 
 #endif
 
 #ifdef TTGO
@@ -28,8 +44,10 @@ extern Config config;
 
 void call_display(){
 
-    #ifdef DEVKIT1
+    #ifdef ESP32D1MINI_FIRMWARE
         display.clear();
+        display.drawString(100, 0, "dB");
+        display.display();
     #endif
     #ifdef TTGO
         display.fillScreen(0);
@@ -46,6 +64,7 @@ void call_display(){
     #endif
     // mode info 
     switch (gDisplayValues.option) {
+      #ifdef TTGO
           case 0:
               affichage_normal();
             break;
@@ -57,8 +76,13 @@ void call_display(){
               affichage_autre();
               drawtext10TTGO(0, 80, "Switch SCT-013", TFT_GREEN);
             break;
+      #endif
           default:
+              #ifdef TTGO
               affichage_normal();
+              #elif ESP32D1MINI_FIRMWARE
+              ui.update();
+              #endif
             break;
     }
 
@@ -67,7 +91,7 @@ void call_display(){
 
 void affichage_normal(){
 // Affichage de l'état de la régulation
-                  #ifdef DEVKIT1
+                  #ifdef ESP32D1MINI_FIRMWARE
                       drawtext10(64, 16, injection_type());
                   #endif
                   #ifdef TTGO
@@ -101,7 +125,7 @@ void affichage_normal(){
 
                   // Affichage des infos de puissance ( sans les virgules )
                   if (gDisplayValues.porteuse == false) {
-                    #ifdef DEVKIT1
+                    #ifdef ESP32D1MINI_FIRMWARE
                       drawtext16(64, 30, String(OLEDNOSIN));
                     #endif
                     #ifdef TTGO
@@ -110,7 +134,7 @@ void affichage_normal(){
 
                     gDisplayValues.dimmer = 0;  /// mise à zero du dimmer par sécurité
                   } else {
-                    #ifdef DEVKIT1
+                    #ifdef ESP32D1MINI_FIRMWARE
                           drawtext16(64, 30, String(gDisplayValues.watt, 0) + " W");
                     #endif
                     #ifdef TTGO
@@ -133,7 +157,7 @@ void affichage_normal(){
                   }
 
                   // Affichage des infos du dimmer
-                  #ifdef DEVKIT1
+                  #ifdef ESP32D1MINI_FIRMWARE
                       // Affichage des infos du dimmer
                       drawtext16(64, 48, String(gDisplayValues.puissance_route) + " %");
                       display.display();
@@ -149,7 +173,7 @@ void affichage_normal(){
 
                   // display Fronius ligne du bas
                   if (configmodule.Fronius_present) {
-                    #ifdef DEVKIT1
+                    #ifdef ESP32D1MINI_FIRMWARE
                           display.setTextAlignment(TEXT_ALIGN_LEFT);
                           display.setFont(ArialMT_Plain_10);
                           display.drawString(0, 63, String(gDisplayValues.Fronius_prod));
@@ -169,7 +193,7 @@ void affichage_normal(){
 
                   // display Enphase ligne du bas
                   if (configmodule.enphase_present) {
-                    #ifdef DEVKIT1
+                    #ifdef ESP32D1MINI_FIRMWARE
                       display.setTextAlignment(TEXT_ALIGN_LEFT);
                       display.setFont(ArialMT_Plain_10);
                       display.drawString(0, 63, String(gDisplayValues.Fronius_prod));
@@ -196,8 +220,158 @@ void affichage_normal(){
 }
 
 void affichage_autre(){
+  #ifdef TTGO 
    drawtext10TTGO(0, 40, "Flip screen", TFT_WHITE);
    drawtext10TTGO(0, 80, "Switch SCT-013", TFT_WHITE);
+  #endif
 }
+
+/// partie propre à l'Oled 
+#ifdef ESP32D1MINI_FIRMWARE
+
+const uint8_t activeSymbole[] PROGMEM = {
+    B00000000,
+    B00000000,
+    B00011000,
+    B00100100,
+    B01000010,
+    B01000010,
+    B00100100,
+    B00011000
+};
+
+const uint8_t inactiveSymbole[] PROGMEM = {
+    B00000000,
+    B00000000,
+    B00000000,
+    B00000000,
+    B00011000,
+    B00011000,
+    B00000000,
+    B00000000
+};
+
+
+struct Oled {
+
+// init oled
+    void init() {
+        // Initialising the UI will init the display too.
+        display.init();
+        display.clear();
+        display.display();
+        //display.flipScreenVertically();
+        display.setFont(ArialMT_Plain_10);
+        display.setTextAlignment(TEXT_ALIGN_CENTER);
+        display.setContrast(50, 100, 30);
+    } 
+ 
+// affichage de l'IP
+    void display_ip() {
+        display.setFont(ArialMT_Plain_10);
+        String ip = WiFi.localIP().toString();
+        String rssi = String(WiFi.RSSI());
+        display.drawString(0, 0, ip);
+        display.drawString(100, 0, rssi + "dB");
+        display.setFont(defaultFont);
+    }
+
+    void wait_for_wifi(uint8_t counter) {
+    display.clear();
+    display.drawString(64, 10, "Connecting to WiFi");
+    display.drawXbm(46, 30, 8, 8, counter % 3 == 0 ? activeSymbole : inactiveSymbole);
+    display.drawXbm(60, 30, 8, 8, counter % 3 == 1 ? activeSymbole : inactiveSymbole);
+    display.drawXbm(74, 30, 8, 8, counter % 3 == 2 ? activeSymbole : inactiveSymbole);
+    display.display();
+    }
+   
+};
+
+Oled oled; 
+FrameCallback frames[] = { display_temperature, display_routage };
+   int numberOfFrames = 2;
+OverlayCallback overlays[] = { drawHeaderOverlay };
+   int numberOfOverlays = 1;
+
+// task oled et meteo 
+
+void oled_task() {
+    ui.update();
+}
+    
+//// affichage des infos basse de l'écran
+    void drawHeaderOverlay(OLEDDisplay *display, OLEDDisplayUiState* state) {
+    display->setColor(WHITE);
+    display->setFont(ArialMT_Plain_10);
+    display->setTextAlignment(TEXT_ALIGN_LEFT);
+    display->drawString(0, 54, String(gDisplayValues.puissance_route));
+    display->setTextAlignment(TEXT_ALIGN_RIGHT);
+    display->drawString(128, 54, String(int(gDisplayValues.watt)) );
+    display->drawHorizontalLine(0, 52, 128);
+    }
+
+
+    void drawProgress(OLEDDisplay *display, int percentage, String label) {
+    display->clear();
+    display->setTextAlignment(TEXT_ALIGN_CENTER);
+    display->setFont(ArialMT_Plain_10);
+    display->drawString(64, 10, label);
+    display->drawProgressBar(2, 28, 124, 10, percentage);
+    display->display();
+    }
+
+    // affichage de la température
+    void display_temperature(OLEDDisplay *display, OLEDDisplayUiState* state, short int x, short int y) {
+
+        display->setTextAlignment(TEXT_ALIGN_CENTER);
+        display->setFont(ArialMT_Plain_24);
+       // int puissance_temp = unified_dimmer.get_power();
+        String info_puissance = "P: "+ String(int(gDisplayValues.watt)) + "W";
+        display->drawString(64 + x, 0 + y, String( info_puissance ));
+        display->setFont(ArialMT_Plain_24);
+        String inside_temp = String(gDisplayValues.temperature) + "°C";
+        display->drawString(64 + x, 24 + y, String( inside_temp ));
+ 
+    }
+
+    void display_routage(OLEDDisplay *display, OLEDDisplayUiState* state, short int x, short int y) {
+        display->setTextAlignment(TEXT_ALIGN_CENTER);
+        display->setFont(ArialMT_Plain_24);
+        String info_puissance =  "R: " + String(gDisplayValues.puissance_route) + "W";
+        display->drawString(64 + x, 0 + y, String( info_puissance ));
+        display->setFont(ArialMT_Plain_24);
+        String inside_temp = String(gDisplayValues.temperature) + "°C";
+        display->drawString(64 + x, 24 + y, String( inside_temp ));
+    }
+
+
+    void init_ui() {
+        ui.setTargetFPS(5);
+
+        ui.setActiveSymbol(activeSymbole);
+        ui.setInactiveSymbol(inactiveSymbole);
+
+        // TOP, LEFT, BOTTOM, RIGHT
+        ui.setIndicatorPosition(BOTTOM);
+
+        // Defines where the first frame is located in the bar.
+        ui.setIndicatorDirection(LEFT_RIGHT);
+
+        // You can change the transition that is used
+        // SLIDE_LEFT, SLIDE_RIGHT, SLIDE_TOP, SLIDE_DOWN
+        ui.setFrameAnimation(SLIDE_LEFT);
+
+        ui.setFrames(frames, numberOfFrames);
+
+        ui.setOverlays(overlays, numberOfOverlays);
+
+        ui.init();
+
+    }
+
+
+
+#endif
+
 
 #endif

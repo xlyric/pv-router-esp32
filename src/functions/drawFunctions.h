@@ -10,7 +10,7 @@
 #include "../config/enums.h"
 #include "../config/config.h"
 
-#ifdef  DEVKIT1
+#ifdef  ESP32D1MINI_FIRMWARE
 #include "SSD1306Wire.h"
 extern SSD1306Wire display;
 #endif
@@ -25,13 +25,13 @@ extern TFT_eSPI display;
 extern DisplayValues gDisplayValues;
 extern unsigned char measureIndex;
 extern Logs logging;
-
+/*
   void drawTime(){
-    #ifdef  DEVKIT1
+    #ifdef  ESP32D1MINI_FIRMWARE
         if (!AP) {
         display.setTextAlignment(TEXT_ALIGN_LEFT);
         display.setFont(ArialMT_Plain_10);
-        display.drawString(0, 0,logging.logtime());
+        //display.drawString(0, 0,logging.logtime());
       }
       #ifdef  TTGO
         display.setCursor(0, 0, 2);
@@ -42,10 +42,11 @@ extern Logs logging;
       #endif
     #endif
   }
+*/
 
 
 void drawIP(){
-  #ifdef  DEVKIT1
+  #ifdef  ESP32D1MINI_FIRMWARE
     display.setTextAlignment(TEXT_ALIGN_LEFT);
     display.setFont(ArialMT_Plain_10);
     display.drawString(64, 0,gDisplayValues.IP);
@@ -71,7 +72,7 @@ void drawIP(){
  * and is connecting to WiFi & AWS.
  */
 void drawBootscreen(){
-  #ifdef  DEVKIT1
+  #ifdef  ESP32D1MINI_FIRMWARE
   byte X = 14;
   byte Y = 70;
   byte WIDTH = 6;
@@ -89,13 +90,8 @@ void drawBootscreen(){
   display.drawString(0, Y + MAX_HEIGHT / 2 ,"Connecting" );
   
 
-  if(gDisplayValues.currentState == CONNECTING_WIFI){
+  if(gDisplayValues.currentState == DEVICE_STATE::CONNECTING_WIFI){
     display.drawString(0, Y + MAX_HEIGHT / 2 ,"   WiFi" );
-    
-  }
-
-  if(gDisplayValues.currentState == CONNECTING_AWS){
-    display.drawString(0, Y + MAX_HEIGHT / 2 ,"   AWS" );
     
   }
  #endif
@@ -110,7 +106,7 @@ void drawBootscreen(){
 
 void drawtext16(int width,int height, String text ){
   
-  #ifdef  DEVKIT1  
+  #ifdef  ESP32D1MINI_FIRMWARE  
   constexpr const int startY = 18;
   // Calculate how wide (pixels) the text will be once rendered.
   // Each character = 6 pixels, with font size 2, that is 12 pixels.
@@ -136,7 +132,7 @@ void drawtext16(int width,int height, String text ){
 
 void drawtext10(int width,int height, String text  ){
 
-  #ifdef  DEVKIT1
+  #ifdef  ESP32D1MINI_FIRMWARE
     constexpr const int startY = 12;
     
   // Calculate how wide (pixels) the text will be once rendered.

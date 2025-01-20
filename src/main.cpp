@@ -79,11 +79,8 @@ int resolution = 10; // Résolution de 8 bits, 256 valeurs possibles
 //***********************************
 //************* Afficheur Oled
 //***********************************
-#ifdef  DEVKIT1
-// Oled
-#include "SSD1306Wire.h" /// Oled ( https://github.com/ThingPulse/esp8266-oled-ssd1306 ) 
-constexpr const int I2C_DISPLAY_ADDRESS = 0x3c;
-SSD1306Wire  display(0x3c, SDA, SCL); // pin 21 SDA - 22 SCL
+#ifdef  ESP32D1MINI_FIRMWARE
+ /// deja intégré dans display.h
 #endif
 
 #ifdef  TTGO
@@ -191,6 +188,11 @@ void setup()
     return;
   }
 
+    #ifdef  ESP32D1MINI_FIRMWARE
+    oled.init();
+    oled.wait_for_wifi(0);
+    #endif
+
   /// Program & FS size
     // size of the compiled program
     uint32_t program_size = ESP.getSketchSize();
@@ -282,8 +284,9 @@ void setup()
   adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
   adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);
 
+  #ifdef TTGO
   pinMode(ADC_INPUT, INPUT);
-
+  #endif
   // déclaration switch
   pinMode(RELAY1, OUTPUT);
   pinMode(RELAY2, OUTPUT);
@@ -291,9 +294,13 @@ void setup()
   digitalWrite(RELAY2, LOW);
 
 ///  WIFI INIT
- 
+      #ifdef  ESP32D1MINI_FIRMWARE
+      oled.wait_for_wifi(1);
+      #endif
   connect_to_wifi();
-
+      #ifdef  ESP32D1MINI_FIRMWARE
+      oled.wait_for_wifi(2);
+      #endif
   // Initialize mDNS ( déclaration du routeur sur le réseau )
 
   mdns_hello(gDisplayValues.pvname);
@@ -306,12 +313,7 @@ void setup()
 #if OLED_ON == true
     Serial.println(OLEDSTART);
     // Initialising OLED
-    #ifdef  DEVKIT1
-      display.init();
-      display.flipScreenVertically();
-    
-      display.clear();
-    #endif
+
     
     #ifdef TTGO
 
@@ -443,7 +445,14 @@ ntpinit();
   //       This is pinned to the same core as Arduino
   //       because it would otherwise corrupt the OLED
   // ----------------------------------------------------------------
-  #if OLED_ON == true 
+  #if OLED_ON == true
+      #ifdef  ESP32D1MINI_FIRMWARE
+      Serial.println("init oled 0.7'' ");
+      init_ui();
+      #endif
+  #endif
+
+#if OLED_ON == true 
   xTaskCreatePinnedToCore(
     updateDisplay,
     "UpdateDisplay",  // Task name
@@ -453,9 +462,7 @@ ntpinit();
     NULL,             // Task handle
     ARDUINO_RUNNING_CORE
   );  
-  #endif
-
-
+#endif
 
   if (dallas.detect) {
     // ----------------------------------------------------------------
@@ -579,11 +586,7 @@ ntpinit();
 
 #endif
 
-  #if OLED_ON == true
-    #ifdef  DEVKIT1
-      display.clear();
-    #endif
-  #endif
+
 
 
 

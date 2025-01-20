@@ -49,7 +49,7 @@ constexpr size_t GETTEMPREFRESH=5;
  * ADC input pin that is used to read out the CT sensor
  */
 
-#ifdef  DEVKIT1
+#ifdef  ESP32D1MINI_FIRMWARE
 #define ADC_INPUT 34 // linky
 #define ADC_PORTEUSE 35 // porteuse
 #endif
@@ -158,7 +158,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS=3600000; /// synch de l'heure toute les 
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20241226"
+#define RELEASE "Version 20250120"
 constexpr const int FS_RELEASE=20240704;
 
     #ifdef LIGHT_FIRMWARE
@@ -209,21 +209,26 @@ constexpr size_t LOG_MAX_STRING_LENGTH=1500;
 
 /// Configuration pour ESP32D1MINI sur carte dimmer + récupération Shelly
 #ifdef ESP32D1MINI_FIRMWARE
-
+      #undef outputPin
       #define outputPin  18 // PSM on board
+      #undef zerocross
       #define zerocross  19 // for boards with CHANGEBLE input pins // ZC on board
+      #undef COOLER
       #define COOLER 5 // Pin for COOLER. (switch on dimmer)
       #define outputPin2 22 // use JOTTA/SSR2 (SSR2) output for 2nd Robotdyn/Random SSR
       #define outputPin3 21  // (SSR3) use RELAY2/SSR3 output for 3rd Robotdyn/Random SSR ( for old boards )
 
 
-
+      #undef ONE_WIRE_BUS
       #define ONE_WIRE_BUS  23
       #define TEMPERATURE_PRECISION 10
       //#define TRIGGER 5   /// Trigger % for max temp protection. max temp configuration is in config.json
-   
-  #define OLED_ON false
+  
+  //#undef OLED_ON
+  //#define OLED_ON TRUE
+  #undef RELAY1
   #define RELAY1 17
+  #undef RELAY2
   #define RELAY2 26
 #endif
 

@@ -99,6 +99,15 @@ return ( retour );
 //***********************************
 //************* retour des pages
 //***********************************
+String getState_short() {
+  String state_short; 
+  JsonDocument doc;
+  doc["watt"] = int(gDisplayValues.watt);
+  doc["dimmer"] = gDisplayValues.puissance_route;
+  doc["temperature"] = gDisplayValues.temperature;
+  serializeJson(doc, state_short);
+  return String(state_short);
+}
 
 String getState() {
   String state=STABLE; 
@@ -414,7 +423,7 @@ void serial_read() {
         return; 
       }
 
-
+      #ifdef TTGO
       index = message_get.indexOf("flip");
       if (index != -1 ){
                   config.flip = !config.flip; 
@@ -423,6 +432,7 @@ void serial_read() {
                   logging.Set_log_init(config.saveConfiguration(),true); ///save configuration
         return; 
       }
+      #endif
 
       if (message_get.length() !=0){
         Serial.println("Commande disponibles :");

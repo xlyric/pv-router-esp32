@@ -10,7 +10,7 @@
 #include "functions/froniusFunction.h"
 #include "functions/display.h"
 
-#ifdef DEVKIT1
+#ifdef ESP32D1MINI_FIRMWARE
 #include "SSD1306Wire.h"
 extern SSD1306Wire display;
 #endif
@@ -33,9 +33,15 @@ extern Memory task_mem;
 
 void updateDisplay(void* parameter) {
   for (;;) {
+    #ifdef TTGO
      if ( gDisplayValues.option == 0 && digitalRead(TFT_PIN)==HIGH){
       call_display();
       }
+    #elif ESP32D1MINI_FIRMWARE
+      // Serial.println("Update display");
+      ui.update();
+      // Serial.println("Update display after");
+    #endif
       task_mem.task_updateDisplay = uxTaskGetStackHighWaterMark(nullptr);
       // Sleep for 5 seconds, then update display again!
       vTaskDelay(pdMS_TO_TICKS(4000));
