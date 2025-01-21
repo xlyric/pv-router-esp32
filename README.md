@@ -102,8 +102,8 @@ ssid your_ssid
 
 reboot
 ```
-
-Vous pourrez alors voir en direct si vos informations wifi sont bonnes
+ 
+You can see directly if the wifi configuration is good
 
 [![image-1678909726040.png](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-03/scaled-1680-/image-1678909726040.png)](https://pvrouteur.apper-solaire.org/uploads/images/gallery/2023-03/image-1678909726040.png)
 
