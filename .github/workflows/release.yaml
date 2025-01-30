@@ -60,21 +60,31 @@ jobs:
         uses: actions/download-artifact@v4.1.8
         with:
           name: dist
-      - name: Generate changelog
-        id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5.0.0
-        with:
-          mode: "COMMIT"
-          log-level: "DEBUG"
+      - name: Extract version from config.h
+        id: extract_version
+        run: |
+          version=$(grep "#define RELEASE" ./src/config/config.h | awk '{print $4}' | tr -d '"' )
+          echo "VERSION=$version" >> $GITHUB_ENV
+          echo "version=$version" >> $GITHUB_OUTPUT
+      - name: Print extracted version
+        run: |
+          echo ${{ steps.extract_version.outputs.version }}
+      #- name: Generate changelog
+      #  id: changelog
+      #  uses: mikepenz/release-changelog-builder-action@v5.0.0
+      #  with:
+      #    mode: "COMMIT"
+      #    log-level: "DEBUG"
       - name: Create release
         uses: softprops/action-gh-release@v2.0.9
         id: create_release
         with:
           draft: false
           prerelease: false
-          tag_name: ${{ steps.changelog.outputs.toTag }}
-          name: ${{ steps.changelog.outputs.toTag }}
-          body: ${{ steps.changelog.outputs.changelog }}
+          tag_name: v${{ steps.extract_version.outputs.version }}
+          name: Release v${{ steps.extract_version.outputs.version }}
+          body: |
+            Changelog for version ${{ steps.extract_version.outputs.version }}
           make_latest: "true"
           files: |
             *.bin.gz

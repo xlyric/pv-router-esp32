@@ -81,9 +81,8 @@ if ( !ds.search(dallas.addr)) {
     temperature_HA.discovery();
   }
 #endif
-
+  dallas.lost = false;
   return true;
-   
   }
 
     //***********************************
@@ -118,14 +117,18 @@ float CheckTemperature(String label, byte deviceAddress[12]){ // NOSONAR
     return tempC ; 
   }  
 
-  if (dallas_error > 5) {
-    Serial.print("Error getting temperature");
+  if (dallas_error > 3) {
+    Serial.print("Error getting temperature try to reinit");
     logging.Set_log_init(String(Dallas_lost) + String(dallas_error) + " times\r\n");
     tempC = gDisplayValues.temperature; 
     /// mise en securité du dimmer local
         unified_dimmer.dimmer_off();
         unified_dimmer.set_power(0);
         dallas.lost = true; // on est perdu donc on coupe le dimmer
+        // on retente une init de la dallas b
+        dallas_error = 0;
+        dallaspresent();
+
     }
   return tempC; 
 }

@@ -59,7 +59,7 @@ if ( !dallas.detect && ( String(config.dimmer) != "" || String(config.dimmer) !=
       continue;
     }
     gDisplayValues.temperature = doc["temperature"].as<String>().toFloat();
-
+    
   }
 
   if (logging.serial){

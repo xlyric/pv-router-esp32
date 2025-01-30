@@ -278,6 +278,22 @@ void setup()
   /// recherche d'une sonde dallas
   dallas.detect = dallaspresent();
   
+  // detection d'incohérence entre une dallas précédement détecté et maintenant non détecté
+  if (dallas.detect == false && config.dallas_present == true) {
+    dallas.detect = true;  // ce qui remontera l'incohérence et la tentative de reconnexion en plus de la protection
+    logging.Set_log_init("Dallas précédente non retrouvé au reboot, mise en sécurité\r\n");
+    dallas.lost = true;
+  }
+  // inversement, si présente mais pas noté dans la conf alors on en registre
+  if (dallas.detect == true && config.dallas_present == false) {
+    config.dallas_present = true; 
+    // on sauvegarde la conf
+    config.saveConfiguration();
+  }
+  Serial.println("debugdallas");
+  Serial.println(config.dallas_present);
+  Serial.println(dallas.detect);
+  Serial.println(dallas.lost);
 
   // Setup the ADC
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
