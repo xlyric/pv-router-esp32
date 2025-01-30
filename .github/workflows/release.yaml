@@ -64,6 +64,7 @@ jobs:
         id: extract_version
         run: |
           grep "#define RELEASE" ./src/config/config.h | awk '{print $4}' | tr -d '"' > version.txt
+          cat version.txt
       #- name: Generate changelog
       #  id: changelog
       #  uses: mikepenz/release-changelog-builder-action@v5.0.0
