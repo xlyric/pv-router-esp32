@@ -221,7 +221,7 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
     char raison[bufferSize]; // NOSONAR
     getLocalTime( &timeinfo );
     snprintf(raison, bufferSize, "reboot manuel: %s", asctime(&timeinfo) ); 
-  
+
    client.publish("memory/Routeur", raison, true);
    #endif
    request->redirect("/");
@@ -229,6 +229,13 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
    ESP.restart();
   });
   
+  // reset de la detection dallas précédente 
+  server.on("/resetdallas", HTTP_ANY, [](AsyncWebServerRequest *request){
+    config.dallas_present = false; 
+    config.saveConfiguration();
+    request->redirect("/");
+  });
+
 server.onNotFound(notFound);
 
 /////////////////////////

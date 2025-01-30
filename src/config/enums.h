@@ -94,6 +94,7 @@ public:
   char mqttserver[16]; // NOSONAR
   int mqttport; 
   int IDXdimmer;
+  bool dallas_present;
   
   bool polarity; 
   char Publish[100]; // NOSONAR
@@ -212,6 +213,8 @@ public:
     offset = doc["offset"] | -10;
     SCT_13 = doc["SCT_13"] | 30;
     trigger = doc["trigger"] | 10;
+    // passe à true si au moins une fois elle a été présente
+    dallas_present = doc["dallas_present"] | false;
     check_trigger();
 
 
@@ -308,6 +311,7 @@ public:
     doc["topic_Shelly"] = topic_Shelly; 
     doc["Shelly_tri"] = Shelly_tri;
     doc["SCT_13"] = SCT_13;
+    doc["dallas_present"] = dallas_present;
     message = "config file saved\r\n";
 
     // Serialize JSON to file
