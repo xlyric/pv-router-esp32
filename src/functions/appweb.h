@@ -20,6 +20,7 @@ extern dimmerLamp dimmer1;
 extern gestion_puissance unified_dimmer; 
 extern Dallas dallas;
 extern Programme programme;
+extern Programme programme_marche_forcee;
 
 #ifdef  TTGO
 #include <TFT_eSPI.h>
@@ -63,7 +64,9 @@ String oscilloscope() {
   int moyenne; 
   int oscillo_freqmesure = 40; 
   int sigma = 0;
-  String retour = "[[";
+  String retour; 
+  #ifndef ESP32D1MINI_FIRMWARE
+  retour += "[[";
   
   front();
   
@@ -88,9 +91,10 @@ String oscilloscope() {
 
   temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
   moyenne = middleoscillo  + signe/50; 
+  
   retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
   middleoscillo = sigma / oscillo_freqmesure ;
-
+  #endif
 return ( retour ); 
   
 }
@@ -131,6 +135,11 @@ String getState() {
   doc[ "security" ] = dallas.security;
   doc["relay1"]   = digitalRead(RELAY1);
   doc["relay2"]   = digitalRead(RELAY2);
+  
+  if (programme_marche_forcee.run) {
+  doc["boost"] = programme_marche_forcee.run;
+  doc["boost_endtime"] = programme_marche_forcee.heure_arret; 
+  }
 
   state=""; 
   serializeJson(doc, state);

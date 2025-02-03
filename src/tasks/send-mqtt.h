@@ -87,6 +87,7 @@ void send_to_mqtt(void * parameter){ // NOSONAR
                         device_dimmer.send(String(int(unified_dimmer.get_power()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
                         switch_relay1.send(String(digitalRead(RELAY1)));
                         switch_relay2.send(String(digitalRead(RELAY2)));
+                        device_dimmer_boost.send(stringbool(programme_marche_forcee.run));
                         
                   }
 

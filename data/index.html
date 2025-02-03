@@ -89,12 +89,10 @@
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
 
-            <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-            <li class="nav-item dropdown no-arrow d-sm-none">
-
-              <!-- Dropdown - Messages -->
-              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-              </div>
+            <li class="nav-item dropdown no-arrow">
+              <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                <div id="time">%TIME%</div>
+              </span>
             </li>
 
 
@@ -240,6 +238,11 @@
                 <b>Etat Dallas T°max: </b><h4 id="securite">N/A</h4>
                 <b>Etat Relais 1 : </b><h4 id="relais 1">N/A</h4>
                 <b>Etat Relais 2 : </b><h4 id="relais 2">N/A</h4>
+                <b>Etat Boost : </b>
+                <div>
+                  <span class=h4 id="boost" style="cursor: pointer">N/A</span>
+                  <span class=h6 id="boost_endtime"></span>
+                </div>
                 </div>
             </div>
           </div>
@@ -258,9 +261,26 @@
 				<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script> 
 				
 				  <script type='text/javascript'> 
-				  
+          window.onload = function () {
+           horloge("time");
+          };
 				 
 				  
+          function horloge(el) {
+              if (typeof el == "string") {
+                el = document.getElementById(el);
+              }
+              function actualiser() {
+                var date = new Date();
+                var str = date.getHours();
+                str += ":" + (date.getMinutes() < 10 ? "0" : "") + date.getMinutes();
+                str += ":" + (date.getSeconds() < 10 ? "0" : "") + date.getSeconds();
+                el.innerHTML = str;
+              }
+              actualiser();
+              setInterval(actualiser, 1000);
+          };
+
 				  google.charts.load('current', {'packages':['corechart','gauge','line']}); 
 				  google.charts.setOnLoadCallback(drawChart);
 				  
@@ -444,7 +464,19 @@
             document.getElementById("securite").innerHTML = "Refroidissement";
             document.getElementById("securite").style.color = "red";
         }
+        
+        var boost = data.boost;
+        var boost_endtime = data.boost_endtime;
 
+        if (boost == 1) {
+              document.getElementById("boost").innerHTML = "ON";
+              document.getElementById("boost").style.color = "red";
+              document.getElementById("boost_endtime").innerHTML = "Heure de fin: " + boost_endtime ;
+            } else {
+              document.getElementById("boost").innerHTML = "OFF";
+              document.getElementById("boost").style.color = "";
+              document.getElementById("boost_endtime").innerHTML = "" ;
+            }
     });
   }, 2000);
 }
@@ -460,7 +492,20 @@
     document.getElementById("screen").value = config[21];
     }); 
 
-    }
+    };
+
+    document.getElementById("boost").addEventListener("click", function () {
+          fetch("/boost")
+            .then((response) => response.text())
+            .then((data) => {
+              console.log("Response:", data);
+              setTimeout(refreshvalue, 500);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+
 </script>
 		
   

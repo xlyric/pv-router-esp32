@@ -100,6 +100,7 @@ Configmodule configmodule;
 Programme programme; 
 Programme programme_relay1;
 Programme programme_relay2;
+Programme programme_marche_forcee;
 
 /// declare logs 
 Logs logging;
@@ -130,7 +131,7 @@ TaskHandle_t serialTaskHandle = NULL;
 
 Dallas dallas; 
 
-
+bool boost();
 
 #ifndef LIGHT_FIRMWARE
     HA device_dimmer; 
@@ -147,6 +148,7 @@ Dallas dallas;
     HA power_apparent;
     HA switch_relay1;
     HA switch_relay2;
+    HA device_dimmer_boost;
 
 #endif
 
@@ -373,6 +375,8 @@ ntpinit();
   Serial.println("Loading minuterie");
   programme.set_name("/dimmer");
   programme.loadProgramme();
+
+  programme_marche_forcee.set_name("/marche_forcee");
 
   programme_relay1.set_name("/relay1");
   programme_relay1.loadProgramme();
@@ -704,9 +708,9 @@ if (config.dimmerlocal) {
   ///////////////// gestion des activité minuteur 
   //// Dimmer 
     Serial.println(unified_dimmer.get_power());
-    if (programme.run) { 
+    if (programme.run || programme_marche_forcee.run) { 
         //  minuteur en cours
-        if (programme.stop_progr()) { 
+        if (programme.stop_progr() || programme_marche_forcee.stop_progr() ) { 
 
             unified_dimmer.dimmer_off();
             unified_dimmer.set_power(0);
@@ -718,7 +722,9 @@ if (config.dimmerlocal) {
           digitalWrite(COOLER, LOW);
           /// retrait de la securité dallas
           
-          
+          // on remet les valeurs de temps programme_marche_force à 00:00
+          strcpy(programme_marche_forcee.heure_demarrage, "00:00"); // NOSONAR
+          strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR
           
           /// remonté MQTT
           #ifndef LIGHT_FIRMWARE
@@ -732,7 +738,7 @@ if (config.dimmerlocal) {
     } 
     else { 
       // minuteur à l'arret
-      if (programme.start_progr()){ 
+      if (programme.start_progr() |  programme_marche_forcee.start_progr() ){ 
         int sysvar_puissance; 
         if ( programme.puissance > config.localfuse ) {     sysvar_puissance=config.localfuse; }
         else { sysvar_puissance = programme.puissance; } 
@@ -749,6 +755,9 @@ if (config.dimmerlocal) {
           if (configmqtt.HA) {
             int instant_power = unified_dimmer.get_power();
             device_dimmer.send(String(instant_power * config.charge/100));
+            if ( programme_marche_forcee.run) {
+               device_dimmer_boost.send("1");
+            }
           } 
         #endif
       }
@@ -906,3 +915,30 @@ void IRAM_ATTR function_next_screen(){
   if (gDisplayValues.option > 2 ) { gDisplayValues.option = 1 ;}; 
 }
 
+bool boost(){
+    time_t now = time(nullptr);
+    if (programme_marche_forcee.run) {
+      // on coupe le boost 
+      /*programme_marche_forcee.run = false;
+      strcpy(programme_marche_forcee.heure_demarrage, "00:00"); // NOSONAR
+      strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR
+      unified_dimmer.set_power(0);
+      */
+        // sur bug avec mqtt, on fait differement : on change l'heure de fin pour mettre à maintenant
+      strftime(programme_marche_forcee.heure_arret, 6, "%H:%M", localtime(&now));
+      now += TIME_BOOST;
+      strftime(programme_marche_forcee.heure_demarrage, 6, "%H:%M", localtime(&now));
+      return false;
+    }
+    
+    // programation de l'heure de démarrage
+    strftime(programme_marche_forcee.heure_demarrage, 6, "%H:%M", localtime(&now));
+    // ajout de 2h
+    now += TIME_BOOST;
+    // programmaton de l'heure d'arrêt
+    strftime(programme_marche_forcee.heure_arret, 6, "%H:%M", localtime(&now));
+    // ajout de la température de consigne
+    programme_marche_forcee.temperature = programme.temperature;
+    programme_marche_forcee.puissance = programme.puissance;
+    return true;
+} 

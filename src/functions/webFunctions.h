@@ -15,8 +15,10 @@ extern Logs logging;
 extern Programme programme; 
 extern Programme programme_relay1; 
 extern Programme programme_relay2; 
+extern Programme programme_marche_forcee;
 extern Memory task_mem; 
 
+extern bool boost();
 
 String inputMessage;
 
@@ -140,7 +142,11 @@ server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
 /// Appel de fonction 
 
   server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
+    #ifndef ESP32D1MINI_FIRMWARE
     request->send(200, "application/json", getchart().c_str());
+    #else
+    request->send(200, "application/json", "[]");
+    #endif
   }); 
 
   server.on("/state", HTTP_GET, [](AsyncWebServerRequest *request){
@@ -159,6 +165,12 @@ server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
   server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(200, "application/json", getconfig().c_str());
 
+  });
+
+// ajout de la commande de boost 2h   
+  server.on("/boost", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+    boost();    
+    request->send(200, "application/json",  getMinuteur(programme_marche_forcee));
   });
 
 

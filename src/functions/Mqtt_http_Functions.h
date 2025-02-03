@@ -174,6 +174,9 @@ int recup = 0;
       
     }
   if (WHtempgrid != 0 && WHtempinject !=0 ) { client.unsubscribe(("memory/"+compteur_grid.topic+"#").c_str()); }
+
+  // TODO, faire la récupération pour le mode boost
+
 }
 
 

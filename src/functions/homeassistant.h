@@ -20,6 +20,7 @@ extern HA temperature_HA;
 extern HA power_factor;
 extern HA switch_relay1;
 extern HA switch_relay2;
+extern HA device_dimmer_boost;
 
 extern HA power_apparent;
 
@@ -92,6 +93,9 @@ void init_HA_sensor(){
 
         switch_relay2.Set_name("Relay2");
         switch_relay2.Set_dev_cla("switch");
+
+        device_dimmer_boost.Set_name("Boost");
+        device_dimmer_boost.Set_dev_cla("switch");
         
         client.setBufferSize(1024);
         device_routeur.discovery();
@@ -105,6 +109,7 @@ void init_HA_sensor(){
         temperature_HA.discovery();
         switch_relay1.discovery();
         switch_relay2.discovery();
+        device_dimmer_boost.discovery();
 
 }
 #endif
