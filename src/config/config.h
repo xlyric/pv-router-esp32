@@ -158,8 +158,8 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS=3600000; /// synch de l'heure toute les 
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250203"
-constexpr const int FS_RELEASE=20250203;
+#define RELEASE "Version 20250205"
+constexpr const int FS_RELEASE=20250205;
 
     #ifdef LIGHT_FIRMWARE
         #define VERSION "Light " RELEASE

@@ -395,6 +395,7 @@
       var temperature = data.temperature;
       var relais1 = data.relay1;
       var relais2 = data.relay2;
+      var boost_max_temp = data.boost_max_temp;
       
       if (temperature == null) { temperature = 0 ; }
      // var version = data.version; 
@@ -471,11 +472,11 @@
         if (boost == 1) {
               document.getElementById("boost").innerHTML = "ON";
               document.getElementById("boost").style.color = "red";
-              document.getElementById("boost_endtime").innerHTML = "Heure de fin: " + boost_endtime ;
+              document.getElementById("boost_endtime").innerHTML = "Heure de fin: " + boost_endtime + "max:" + boost_max_temp +"°C";
             } else {
               document.getElementById("boost").innerHTML = "OFF";
               document.getElementById("boost").style.color = "";
-              document.getElementById("boost_endtime").innerHTML = "" ;
+              document.getElementById("boost_endtime").innerHTML = "max:" + boost_max_temp +"°C" ;
             }
     });
   }, 2000);

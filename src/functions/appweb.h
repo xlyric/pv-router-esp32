@@ -140,7 +140,7 @@ String getState() {
   doc["boost"] = programme_marche_forcee.run;
   doc["boost_endtime"] = programme_marche_forcee.heure_arret; 
   }
-
+  doc["boost_max_temp"] = programme_marche_forcee.temperature;
   state=""; 
   serializeJson(doc, state);
   return String(state);

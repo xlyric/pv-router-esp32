@@ -629,18 +629,13 @@ snprintf(raison, bufferSize, "restart : %s", logging.loguptime());
   client.publish("memory/Routeur", raison, true);
 #endif
 
-
+programme_marche_forcee.temperature = programme.temperature;
 }
 
 
 /// @brief / Loop function
 void loop()
 {
-
-
-
-
-
 
 //// si perte du wifi après  6h, reboot
   if (AP) {
