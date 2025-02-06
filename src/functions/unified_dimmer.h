@@ -172,9 +172,10 @@ float get_power(){
 
   // fonction de coupure automatique après un certain temps
   void auto_off(int delay_off) {
-    if (( millis() - last_time > delay_off*60*1000)  && (power > 0) ) {
+    if (( millis() - last_time >= delay_off*60*1000)  && (power > 0) ) {
       dimmer_off();
       Serial.println("dimmer auto off");
+      last_time = millis();
     }
   }
 
