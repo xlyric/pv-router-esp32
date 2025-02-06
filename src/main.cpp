@@ -791,6 +791,11 @@ if (!AP) {
     time_reboot();
 }
 
+  //// protection contre l'absence de commande  
+  if ( !programme.run && !programme_marche_forcee.run ) { 
+    unified_dimmer.auto_off(AUTO_OFF);
+  }
+  
   task_mem.task_loop = uxTaskGetStackHighWaterMark(nullptr);
   vTaskDelay(pdMS_TO_TICKS(10000));
 }

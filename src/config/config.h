@@ -82,6 +82,8 @@ float PVA;  //Power in VA
 double PW;   //Power in Watt
 float PowerFactor; // 
 
+#define AUTO_OFF 5 // temps de coupure automatique en minutes
+
 /**
  *  Dimmer 
  */
@@ -158,7 +160,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS=3600000; /// synch de l'heure toute les 
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250205"
+#define RELEASE "Version 20250206"
 constexpr const int FS_RELEASE=20250205;
 
     #ifdef LIGHT_FIRMWARE
