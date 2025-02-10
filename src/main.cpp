@@ -629,7 +629,7 @@ snprintf(raison, bufferSize, "restart : %s", logging.loguptime());
   client.publish("memory/Routeur", raison, true);
 #endif
 
-programme_marche_forcee.temperature = programme.temperature;
+programme_marche_forcee.temperature = config.tmax;
 }
 
 
@@ -938,7 +938,7 @@ bool boost(){
     // programmaton de l'heure d'arrêt
     strftime(programme_marche_forcee.heure_arret, 6, "%H:%M", localtime(&now));
     // ajout de la température de consigne
-    programme_marche_forcee.temperature = programme.temperature;
+    programme_marche_forcee.temperature = config.tmax;
     programme_marche_forcee.puissance = programme.puissance;
     return true;
 } 
