@@ -271,10 +271,17 @@ String getconfig() {
 }
 
 String getenvoy() {
-  String VERSION_http = String(VERSION) + " " + String(COMPILE_NAME) ; 
-  configweb = String(config.IDXdimmer) + ";" + String(config.IDX) + ";"  +  String(VERSION_http) +";" + "middle" +";"+ config.delta +";"+config.cycle+";"+config.dimmer+";"+config.cosphi+";"+config.readtime +";"+stringbool(config.UseDomoticz)+";"+stringbool(config.UseJeedom)+";"+stringbool(config.autonome)+";"+config.apiKey+";"+stringbool(config.dimmerlocal)+";"+config.facteur+";"+stringbool(config.mqtt)+";"+config.mqttserver+ ";"  + String(config.Publish)+";"+config.deltaneg+";"+config.charge1+";"+config.polarity+";"+config.ScreenTime+";"+config.localfuse+";"+config.tmax+";"+config.voltage+";"+config.offset+";"+stringbool(config.flip)+";"+stringbool(configmqtt.HA);
-  return String(configweb);
+  String retour ;
+  JsonDocument doc;
+  doc["IP_ENPHASE"] = configmodule.hostname;
+  doc["PORT_ENPHASE"] = configmodule.port;
+  doc["Type"] = configmodule.version;
+  doc["version"] = configmodule.envoy;
+  doc["token"] = configmodule.token;
+  serializeJson(doc, retour);
+  return String(retour) ;
 }
+
 //***********************************
 String getchart() {
   String retour ="" ;

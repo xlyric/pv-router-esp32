@@ -198,6 +198,18 @@ server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request) {
 });
 
 ///////////////
+//// Enphase
+///////////////
+
+server.on("/envoy.html", HTTP_GET, [](AsyncWebServerRequest *request){
+  compress_html(request,"/envoy.html.gz", "text/html");
+});
+
+server.on("/getenvoy", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+serveur_response(request, getenvoy());
+});
+
+///////////////
 ///// MQTT
 ///////////////
 
@@ -324,6 +336,7 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
    // enphase
    bool enphasemodif=false ; 
    if (request->hasParam("envoyserver")) { request->getParam("envoyserver")->value().toCharArray(configmodule.hostname,16); enphasemodif=true; }
+   if (request->hasParam("envoyport")) { request->getParam("envoyport")->value().toCharArray(configmodule.port,5); enphasemodif=true; }
    if (request->hasParam("envmodele")) { request->getParam("envmodele")->value().toCharArray(configmodule.envoy,2);  enphasemodif=true;}
    if (request->hasParam("envversion")) { request->getParam("envversion")->value().toCharArray(configmodule.version,2); enphasemodif=true; }
    if (request->hasParam("envtoken")) { request->getParam("envtoken")->value().toCharArray(configmodule.token,512); enphasemodif=true; }

@@ -24,6 +24,8 @@ bool TockenValide=false;
 //////////////////// gestion FS
 
 bool loadenphase(const char *filename) {
+  Serial.println("******************LOAD ENPHASE*********************");
+
   // Open file for reading
   File configFile = SPIFFS.open(enphase_conf, "r");
   if (!configFile) {
@@ -35,7 +37,7 @@ bool loadenphase(const char *filename) {
 
   // Allocate a temporary JsonDocument
   // Don't forget to change the capacity to match your requirements.
-  // Use arduinojson.org/v6/assistant to compute the capacity.
+  // Use arduinojson.org/v6/assistant to compute the capacity.  
   JsonDocument doc;
 
   // Deserialize the JSON document
@@ -52,28 +54,35 @@ bool loadenphase(const char *filename) {
   strlcpy(configmodule.hostname,                // <- destination
           doc["IP_ENPHASE"] | "",  // <- source
           sizeof(configmodule.hostname));       // <- destination's capacity
-  strlcpy(configmodule.port, doc["PORT_ENPHASE"] | "80",
+  strlcpy(configmodule.port, doc["PORT_ENPHASE"] | "443",
           sizeof(configmodule.port));   // <- destination's capacity
   strlcpy(configmodule.envoy,           // <- destination
           doc["Type"] | "S",            // <- source
           sizeof(configmodule.envoy));  // <- destination's capacity
   strlcpy(configmodule.version,           // <- destination
-          doc["version"] | "5",            // <- source
+          doc["version"] | "7",            // <- source
           sizeof(configmodule.version));
   strlcpy(configmodule.token,         
           doc["token"] | "",            
           sizeof(configmodule.token));
 
-  if (strcmp(configmodule.hostname,"") == 0) { configmodule.enphase_present=false ; configFile.close(); Serial.println("no enphase"); return false; } 
+  if (strcmp(configmodule.hostname,"") == 0) { 
+    configmodule.enphase_present=false ; 
+    configFile.close(); 
+    Serial.println("no enphase"); 
+    return false; 
+  } 
   configmodule.enphase_present=true; 
   Serial.println(configmodule.hostname);
   configFile.close();
 
-  Serial.println(" enphase config : " + String(configmodule.hostname));
+  Serial.println(" enphase hostname : " + String(configmodule.hostname));
   Serial.println(" enphase version : " + String(configmodule.version));
   Serial.println(" enphase mode : " + String(configmodule.envoy));
-  Serial.println(" enphase : actif");
+  Serial.println(" enphase port : " + String(configmodule.port));
   Serial.println(" enphase token : " + String(configmodule.token));
+
+  Serial.println(" CONCLUSION enphase : actif");
   
   logging.Set_log_init("Enphase used type ",true);
   logging.Set_log_init(String(configmodule.envoy).c_str());
@@ -123,7 +132,8 @@ void saveenphase(const char *filename, const Configmodule &configmodule_save) {
 void Enphase_get(void) {
   if (String(configmodule.version) == "7") {
     if (String(configmodule.token)!="") {
-
+      Serial.println("Enphase v7");
+      Serial.println("==>IP: " + String(configmodule.hostname));
       Enphase_get_7();
     } else {
       Serial.println("Enphase version 7 : Token vide");
@@ -131,7 +141,7 @@ void Enphase_get(void) {
     
     
   } else {
-
+    Serial.println("Enphase v5");
     Enphase_get_5();
   }
 }
@@ -207,8 +217,17 @@ bool Enphase_get_7_Production(void){
   HTTPClient https;
   int httpCode;
   bool retour = false;
-  auto adr = String(configmodule.hostname);
   String url = "/404.html" ;
+  String adr = String(configmodule.hostname);
+  String port = String(configmodule.port);
+  String debut;
+
+  if (String(configmodule.port) == "443")
+    debut = "https://";
+  else
+    debut = "http://";
+
+  Serial.println("**** Enphase_get_7_Production ****");  
 
   if (String(configmodule.envoy) == "R") {
     url = String(EnvoyR);
@@ -221,10 +240,11 @@ bool Enphase_get_7_Production(void){
     Serial.println(url);
   }
          
-  Serial.println("Enphase Get production : https://" + adr + url);
+  String fullurl = debut+adr+":"+port+url;
+  Serial.println("Enphase Get production : " + fullurl);
   Serial.println("With SessionId : " + SessionId);
 
-  if (https.begin("https://" + adr + url)) {
+  if (https.begin(fullurl)) {
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
     https.setAuthorizationType("Bearer");
     https.setAuthorization(configmodule.token);
@@ -241,7 +261,7 @@ bool Enphase_get_7_Production(void){
       if (httpCode == HTTP_CODE_MOVED_PERMANENTLY)
         Serial.println(https.getLocation());
         
-      JsonDocument doc; ///passé de 3072 à 1600
+      JsonDocument doc; ///passé de 3072 à 1600      
       DeserializationError error = deserializeJson(doc, payload);
       switch (error.code()) {
           case DeserializationError::Ok:
@@ -288,21 +308,15 @@ bool Enphase_get_7_Production(void){
     } else {
       Serial.println("[1.Enphase Get production] GET... failed, error: " + String(httpCode));
       nbErreurGetJsonProd++;
-      // NEW
       https.end();
-
-      // FIN NEW
     }
     https.end();
   }
   else {
-  
     nbErreurGetJsonProd++;
-    // NEW
-
-    // FIN NEW
   }
-
+  https.end();
+  
   return retour;
 }
 
@@ -311,28 +325,60 @@ bool Enphase_get_7_JWT(void) {
   bool retour = false;
   String url = "/404.html";
   url = String(EnvoyJ);
-  auto adr = String(configmodule.hostname);
- 
+  String adr = String(configmodule.hostname);
+  String port = String(configmodule.port);
+  String debut;
+
+  Serial.println("**** Enphase_get_7_JWT ****");    
   // Ne redemmande pas le tocken a chaque fois
   if (TockenValide)
     return true;
 
-  Serial.println("Enphase contrôle tocken : https://" + adr + url);
-  //Initializing an HTTPS communication using the secure client
-  if (https.begin("https://" + adr + url)) {
+  if (String(configmodule.port) == "443")
+    debut = "https://";
+  else
+    debut = "http://";
+
+  String fullurl = debut+adr+":"+port+url;
+  //String fullurl = debut+adr+url;
+  Serial.println("full url : " + fullurl);
+
+  //new 2025
+  Serial.println("Enphase contrôle token : " + fullurl + "<----");
+  //Serial.println("avec le token ===>" + String(configmodule.token)+"<===");
+  //WiFiClientSecure client;
+  //client.setFingerprint("6B:A3:FD:17:7E:10:83:A3:B9:DA:0D:49:86:24:37:14:36:F2:DB:8E");
+  //client.setInsecure();  // À utiliser uniquement si le certificat SSL pose problème
+  //client.setTLSVersion(TLS_VERSION_1_2);
+  //fin new 2025
+
+  if (https.begin(fullurl)) { 
+    Serial.println("Connexion réussie, préparation des headers (token etc)");
     https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
     https.setAuthorizationType("Bearer");
     https.setAuthorization(configmodule.token);
+    //https.addHeader("Authorization", "Bearer " + String(configmodule.token));
+    //https.addHeader("Accept", "*/*");
+    //https.addHeader("Connection", "keep-alive");    
+    //https.addHeader("Content-Type", "application/octet-stream");
     https.addHeader("Accept-Encoding","gzip, deflate, br");
     https.addHeader("User-Agent","PvRouter/1.1.1");
-    const char * headerkeys[] = {"Set-Cookie"}; // NOSONAR
+    const char * headerkeys[] = {"Set-Cookie"};
     https.collectHeaders(headerkeys, sizeof(headerkeys)/sizeof(char*));
     https.setReuse(true);
     int httpCode = https.GET();
-   
-    // httpCode will be negative on error
+    
+    //new 2025
+    Serial.println("Réponse Headers :");
+    for (int i = 0; i < https.headers(); i++) {
+        Serial.println(https.headerName(i) + ": " + https.header(i));
+    }    
+    Serial.println("Erreur HTTPS : " + https.errorToString(httpCode));   
 
+    // httpCode will be negative on error
     if (httpCode > 0) {
+      Serial.println("JWT : code retour : " + String(httpCode));
+
       if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
         retour = true;
         // Token valide
@@ -344,6 +390,7 @@ bool Enphase_get_7_JWT(void) {
           retour=false;
           SessionId.clear();
           Serial.println("Enphase contrôle token : PAS DE SESSION ID !!!");
+          Serial.println("SessionId : " + SessionId);
         } else {
           SessionId.remove(0, SessionId.indexOf("sessionId"));
           if (SessionId.indexOf(";")) {SessionId.remove(SessionId.indexOf(";"));}
@@ -351,23 +398,31 @@ bool Enphase_get_7_JWT(void) {
         }
       } else {
           Serial.println("Enphase contrôle token : TOKEN INVALIDE !!!");
+          nbErreurCtrlTocken++;
       }
     }
     else {
       Serial.println("Error code : " + String(httpCode));
+      nbErreurCtrlTocken++;
     }
   }
-  nbErreurCtrlTocken++;
-  if (  nbErreurCtrlTocken == 10 )  {
-      Serial.println("Trop d'erreur  : redemmarrage");
-      ESP.restart();
-    }
+  //new 2025 (else)
+  else 
+    nbErreurCtrlTocken++;
+  
+  if (nbErreurCtrlTocken == 10)  {
+    Serial.println("Trop d'erreur  : redemmarrage");
+    ESP.restart();
+  }
+  
+  //new 2025
+  https.end();
   return retour;
 }
 
 
 void Enphase_get_7(void) {
-  if(WiFi.isConnected() ) {
+  if(WiFi.isConnected() ) {    
     //create an HTTPClient instance
      if (SessionId.isEmpty() || ( (Enphase_get_7_Production() == false) && (nbErreurGetJsonProd > 10) ) ) { // Permet de lancer le contrôle du token une fois au démarrage (Empty SessionId)
       //DEBUG
@@ -383,11 +438,8 @@ void Enphase_get_7(void) {
       Enphase_get_7_JWT();
     }
   } else {
-    Serial.println("Enphase version 7 : ERROR");
+    Serial.println("Enphase_get_7 : Wifi not connected");
   } 
-  
 }
-
-
 
 #endif

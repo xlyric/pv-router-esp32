@@ -151,7 +151,9 @@
               Serveur  :<input type="text" class="form-control form-control-user" id="server" placeholder="N/A">
             </div>
 
-
+            <div class="form-group">
+              Port  :<input type="text" class="form-control form-control-user" id="port" placeholder="N/A">
+            </div>
 
             <div class="form-group">
               Modele :<input type="modele" class="form-control form-control-user" id="modele" placeholder="N/A">
@@ -169,13 +171,9 @@
 				  
 		    </div>
 				
-      </div> 
-				
-				<input type="submit" value=" Application des paramètres" class="btn btn-primary btn-user btn-block">
-				
-
-
-    </form>
+      </div> 				
+				<input type="submit" value=" Application des paramètres" class="btn btn-primary btn-user btn-block">			
+      </form>
 
 
 
@@ -206,24 +204,20 @@
 <!-- sauvegarde de la configuration --> 
 
 $( "#save" ).click(function() {
-
-  
-  		$.get( "getmqtt", { save: "yes" } )
+  		$.get( "/getenvoy", { save: "yes" } )
 		.done(function(data) {
 		$( "#savemsg" ).text( "Configuration sauvegardée" ).show().fadeOut( 5000 );
 		});	
-		
-
 });
 
 $( "#formulaire" ).submit(function() {
+  var data = {'envoyserver':$('#server').val(), 'envoyport':$('#port').val(), 'envmodele':$('#modele').val(), 'envversion':$('#version').val(), 'envtoken':$('#token').val()} 
 
-	 var data = {'envoyserver':$('#server').val(), 'envport':$('#port').val(), 'envmodele':$('#modele').val(), 'envversion':$('#version').val(), 'envtoken':$('#token').val()} 
 
         $.ajax({
             type: "GET",
             data: data,
-            url: "get",
+            url: "/get",
 
             success: function(retour){
                 $( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
@@ -239,12 +233,14 @@ $( "#formulaire" ).submit(function() {
       .then(data => {
         // Récupérer les valeurs du fichier JSON
     let server = data.IP_ENPHASE;
+    let port = data.PORT_ENPHASE;
     let modele = data.Type;
     let version = data.version;
     let token = data.token;
 
     // Affecter les valeurs aux champs de formulaire
     document.getElementById('server').value = server;
+    document.getElementById('port').value = port;
     document.getElementById('modele').value = modele;
     document.getElementById('version').value = version;
     document.getElementById('token').value = token;
