@@ -77,6 +77,7 @@ Serial.println(httpResponseCode);
 #if(httpResponseCode == HTTP_CODE_OK)
 
     String payload = httpfronius.getString();
+    httpfronius.end();
     JsonDocument doc;
     DeserializationError error = deserializeJson(doc, payload);
     if (error) {
@@ -93,13 +94,14 @@ Serial.println(httpResponseCode);
 
 httpfronius.end();
 
-HTTPClient http2;
+//HTTPClient http2;
 httpfronius.begin(String(configmodule.hostname),80,url2);
 httpResponseCode = httpfronius.GET();
 #if(httpResponseCode == HTTP_CODE_OK)
 
 
-    payload = http2.getString();
+    payload = httpfronius.getString();
+    httpfronius.end();
     JsonDocument doc2;
     error = deserializeJson(doc2, payload);
     if (error) {

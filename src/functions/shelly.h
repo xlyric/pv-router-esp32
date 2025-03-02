@@ -12,6 +12,7 @@ extern Logs logging;
 extern Config config;
 extern DisplayValues gDisplayValues;
 
+int shelly_get_response;
 
 int shelly_get_data(String url) {
  /// récupération en wget des informations du shelly 
@@ -21,22 +22,25 @@ HTTPClient shelly_http;
   
   if (WiFi.status() == WL_CONNECTED) {   // si connecté on wget
 
-    String baseurl = "/emeter/0" ; 
-        /// mode triphasé
-      if ( config.Shelly_tri ) {
-        if (!config.Shelly_mode) {
-          baseurl = "/rpc/EM.GetStatus?id=0" ; // pour le 3EM
-        }
-        if (config.Shelly_mode) {
-          baseurl = "/status" ; // pour le 3EM type 2 
-        }
-      }
+  // tableau de pointeur d'url pour les différents shelly
+  String baseurl[] = {"/emeter/0","/status","/rpc/EM.GetStatus?id=0","/rpc/EM1.GetStatus?id=0"};
 
-    shelly_http.begin(String(url),port,baseurl);   
+     // serial_print("Shelly URL : ");
+     // serial_println(baseurl[shelly_get_response]);
+
+    shelly_http.begin(String(url),port,baseurl[shelly_get_response]); //HTTP  
     int httpResponseCode = shelly_http.GET();
 
-   if (httpResponseCode==404) {
-        config.Shelly_mode = true;
+   /// Serial.print("Shelly HTTP Response code: ");
+   // Serial.println(httpResponseCode);
+
+   if (httpResponseCode>=400) {
+        Serial.println("Shelly HTTP Error");
+        shelly_http.end();
+        shelly_get_response ++;
+        if (shelly_get_response > 3) {
+          shelly_get_response = 0;
+        }
         return shelly_watt;
     }
 
@@ -53,32 +57,27 @@ HTTPClient shelly_http;
                 Serial.print(F("deserializeJson() failed: "));
                 logging.Set_log_init("deserializeJson() failed: ",true);
                 Serial.println(error.c_str());
-                shelly_watt = 99999;
                 return shelly_watt;
             }
 
-            float powerValue = doc["power"].as<float>();
-              /// mode triphasé
-              if (config.Shelly_tri ) {
-                if (!config.Shelly_mode) { 
-                  powerValue = doc["total_act_power"];
-                }
-                if (config.Shelly_mode) { 
-                  powerValue = doc["total_power"];
-                }
-                if ( powerValue==0 || doc["total_power"].as<String>() == "null") {
-                 config.Shelly_mode = true;
+            float powerValue = 0;
+            /// récupération de la valeur de la puissance en fonction du mode triphasé ou non
+            if (doc.containsKey("power"))  {  powerValue = doc["power"].as<float>();   }
+            else if (doc.containsKey("total_power") ) { powerValue = doc["total_power"].as<float>(); }
+            else if (config.Shelly_tri && doc.containsKey("total_act_power")) { powerValue = doc["total_act_power"].as<float>(); }
+            else if (doc.containsKey("a_act_power")) { powerValue = doc["a_act_power"].as<float>(); }
+            else if (doc.containsKey("act_power")) { powerValue = doc["act_power"].as<float>(); }
+
+            else {
+                shelly_watt = 99999;
                 return shelly_watt;
-                }
-              }
-            
+            }
+           
             // affichage dans le sérial de doc["total_power"] en tant que string ; 
-            //Serial.println("Shelly Watt : ");
-            //Serial.println(doc["total_power"].as<String>());
-            //Serial.println(baseurl);
+            Serial.println("Shelly Watt : ");
+            Serial.println(powerValue);
 
-            shelly_watt = int(powerValue);
-
+            return int(powerValue);
         }
         else {
             shelly_watt = 99999;

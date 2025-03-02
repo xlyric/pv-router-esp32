@@ -65,8 +65,8 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
         if ( dimmervalue == 0 && gDisplayValues.puissance_route == 0 ) { return ; }
         
         http.begin(dimmerurl,80,baseurl);   
-        http.GET();
-        http.end(); 
+        http.GET(); // envoie de la commande
+        http.end(); // fermeture de la connexion
             if (logging.serial){
             Serial.println(POWER_COMMAND + String(dimmervalue));
             }
@@ -331,7 +331,7 @@ int dimmer_getState() {
     int httpCode = http.GET();                                                                  //Send the request
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
-
+      http.end();   //Close connection
       JsonDocument doc;
       DeserializationError error = deserializeJson(doc, payload);
       if (error) {
@@ -349,7 +349,7 @@ int dimmer_getState() {
         dimmer = (dimmerWatt*100/config.charge);
       }
     }
-    http.end();   //Close connection
+    
   }  
 
   if (dimmer != 0 ) {  

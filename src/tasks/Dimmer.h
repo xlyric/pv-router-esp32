@@ -34,7 +34,7 @@ int get_dimmer_child_power (){
                 Serial.print(F("get_dimmer_child_power() failed: "));
                 logging.Set_log_init("get_dimmer_child_power() failed: \r\n",true);
                 Serial.println(error.c_str());
-                
+                http.end();
                 return 0 ; 
             }
 
@@ -46,6 +46,7 @@ int get_dimmer_child_power (){
 
         }
         else {
+            http.end();
             return 0 ;
         }
      http.end();
@@ -81,7 +82,7 @@ void updateDimmer(void * parameter){
         gDisplayValues.puissance_route = local_power + child_power;
 
         /// Actualisation de gDisplayValues.dimmer à chaque requêtage du dimmer enfant
-        gDisplayValues.dimmer = gDisplayValues.puissance_route * 100/config.charge;
+       // gDisplayValues.dimmer = gDisplayValues.puissance_route * 100/config.charge;
 
         #else
             gDisplayValues.puissance_route = config.charge * gDisplayValues.dimmer/100; // watts

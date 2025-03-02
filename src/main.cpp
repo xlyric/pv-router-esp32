@@ -51,6 +51,10 @@
   #include "functions/WifiFunctions.h"
   #include "functions/homeassistant.h"
 
+  #ifdef WEBSOCKET_CLIENT
+  #include "functions/websocket.h"
+  #endif
+
   #include "functions/minuteur.h"
 
   #include "uptime.h"
@@ -550,7 +554,7 @@ ntpinit();
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------
-  if (!dallas.detect) {
+ /* if (!dallas.detect) {
       xTaskCreate(
         GetDImmerTemp,
         "Update temp",  // Task name
@@ -559,7 +563,7 @@ ntpinit();
         4,                      // Task priority
         NULL                    // Task handle
       );  
-  }
+  }*/
 
 // ----------------------------------------------------------------
   // Task: MQTT send
@@ -628,6 +632,9 @@ snprintf(raison, bufferSize, "restart : %s", logging.loguptime());
 #ifndef LIGHT_FIRMWARE 
   client.publish("memory/Routeur", raison, true);
 #endif
+#ifdef WEBSOCKET_CLIENT
+setupWebSocket(); // initialisation du socket web
+#endif
 
 programme_marche_forcee.temperature = config.tmax;
 }
@@ -637,6 +644,10 @@ programme_marche_forcee.temperature = config.tmax;
 void loop()
 {
 
+  #ifdef WEBSOCKET_CLIENT
+  //handleWebSocket(); // Keep the WebSocket connection alive
+  webSocket.loop();
+  #endif
 //// si perte du wifi après  6h, reboot
   if (AP) {
     reboot_after_lost_wifi(6);

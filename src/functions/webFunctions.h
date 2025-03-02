@@ -7,7 +7,9 @@
 #include "appweb.h"
 
 #include "functions/minuteur.h"
+#ifdef WEBSOCKET_CLIENT
 #include "functions/websocket.h"
+#endif
 
 extern DisplayValues gDisplayValues;
 extern Configmodule configmodule; 
@@ -108,36 +110,36 @@ else {
 
 }
 
+/// pages  statiques
 
-  server.serveStatic("/all.min.css", SPIFFS, "/all.min.css").setCacheControl("max-age=31536000");
-  server.serveStatic("/jquery.min.js", SPIFFS, "/jquery.min.js").setCacheControl("max-age=31536000");
-  server.serveStatic("/bootstrap.bundle.min.js", SPIFFS, "/bootstrap.bundle.min.js").setCacheControl("max-age=31536000");
-  server.serveStatic("/bootstrap.bundle.min.js.map", SPIFFS, "/bootstrap.bundle.min.js.map").setCacheControl("max-age=31536000");
-  server.serveStatic("/fa-solid-900.woff2", SPIFFS, "/fa-solid-900.woff2").setCacheControl("max-age=31536000");
-  server.serveStatic("/favicon.ico", SPIFFS, "/favicon.ico").setCacheControl("max-age=31536000");
-  server.serveStatic("/sb-admin-2.min.css", SPIFFS, "/sb-admin-2.min.css").setCacheControl("max-age=31536000");
-  server.serveStatic("/sb-admin-2.js", SPIFFS, "/sb-admin-2.js").setCacheControl("max-age=31536000");
-  server.serveStatic("/log.html", SPIFFS, "/log.html").setCacheControl("max-age=31536000");
-  
-server.on("/mqtt.json", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/mqtt.json", "text/css");
-  });
-
-server.on("/config.json", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/config.json", "application/json");
-  });
-
-server.on("/envoy.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    compress_html(request,"/envoy.html.gz", "text/html");
-  });
-
-server.on("/enphase.json", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/enphase.json", "application/json");
-  });
-
-server.on("/minuteur.html",  HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/minuteur.html", "text/html");
-  });
+  // Define static files array with URL paths and file paths
+  const char* staticFiles[][2] = {
+    {"/all.min.css", "/all.min.css"},
+    {"/jquery.min.js", "/jquery.min.js"},
+    {"/bootstrap.bundle.min.js", "/bootstrap.bundle.min.js"},
+    {"/bootstrap.bundle.min.js.map", "/bootstrap.bundle.min.js.map"},
+    {"/fa-solid-900.woff2", "/fa-solid-900.woff2"},
+    {"/favicon.ico", "/favicon.ico"},
+    {"/sb-admin-2.min.css", "/sb-admin-2.min.css"},
+    {"/sb-admin-2.js", "/sb-admin-2.js"},
+    {"/log.html", "/log.html"},
+    {"/envoy.html", "/envoy.html"},
+    {"/minuteur.html", "/minuteur.html"},
+    {"/wifi.html", "/wifi.html"},
+    {"/mqtt.html", "/mqtt.html"},
+    {"/mqtt.json", "/mqtt.json"},
+    {"/wifi.json", "/wifi.json"},
+    {"/config.json", "/config.json"},
+    {"/enphase.json", "/enphase.json"}
+  };
+ 
+  for (const auto& file : staticFiles) {
+    if (strstr(file[0], ".json")) {
+      server.serveStatic(file[0], SPIFFS, file[1]); // les json ne sont pas en cache
+    } else {
+      server.serveStatic(file[0], SPIFFS, file[1]).setCacheControl("max-age=31536000"); // par contre les autres fichiers sont en cache
+    }
+  }
 
 ///// Pages 
 /// Appel de fonction 
@@ -185,10 +187,6 @@ server.on("/cosphi", HTTP_GET, [](AsyncWebServerRequest *request){
 //// wifi
 ///////////////
 
-server.on("/wifi.html", HTTP_GET, [](AsyncWebServerRequest *request){
-      compress_html(request,"/wifi.html.gz", "text/html");
-  });
-
 server.on("/getwifi", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   serveur_response(request, getwifi());
 });
@@ -201,10 +199,6 @@ server.on("/ping", HTTP_GET, [](AsyncWebServerRequest *request) {
 //// Enphase
 ///////////////
 
-server.on("/envoy.html", HTTP_GET, [](AsyncWebServerRequest *request){
-  compress_html(request,"/envoy.html.gz", "text/html");
-});
-
 server.on("/getenvoy", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 serveur_response(request, getenvoy());
 });
@@ -212,10 +206,6 @@ serveur_response(request, getenvoy());
 ///////////////
 ///// MQTT
 ///////////////
-
-server.on("/mqtt.html", HTTP_GET, [](AsyncWebServerRequest *request){
-    compress_html(request,"/mqtt.html.gz", "text/html");
-  });
 
 server.on("/getmqtt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
   request->send(200, "application/json",  getmqtt().c_str()); 
@@ -290,7 +280,11 @@ server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 	 if (request->hasParam(PARAM_INPUT_2)) { config.cycle = request->getParam(PARAM_INPUT_2)->value().toInt(); }
 	 if (request->hasParam(PARAM_INPUT_3)) { config.readtime = request->getParam(PARAM_INPUT_3)->value().toInt();}
 	 if (request->hasParam(PARAM_INPUT_4)) { config.cosphi = request->getParam(PARAM_INPUT_4)->value().toInt();  }
-   if (request->hasParam(PARAM_INPUT_dimmer)) { request->getParam(PARAM_INPUT_dimmer)->value().toCharArray(config.dimmer,64); closeWebSocket(); setupWebSocket(); }
+   if (request->hasParam(PARAM_INPUT_dimmer)) { request->getParam(PARAM_INPUT_dimmer)->value().toCharArray(config.dimmer,64); 
+    #ifdef WEBSOCKET_CLIENT
+    closeWebSocket(); setupWebSocket(); 
+    #endif
+  }
    if (request->hasParam(PARAM_INPUT_server)) { request->getParam(PARAM_INPUT_server)->value().toCharArray(config.hostname,16);  }
    if (request->hasParam(PARAM_INPUT_delta)) { config.delta = request->getParam(PARAM_INPUT_delta)->value().toInt(); }
    if (request->hasParam(PARAM_INPUT_deltaneg)) { config.deltaneg = request->getParam(PARAM_INPUT_deltaneg)->value().toInt(); }
