@@ -328,7 +328,7 @@ void setup()
   //      Petit contournement le temps de trouver pourquoi le service MDNS empeche le GET securisé sur enphase
   //      activation du mdns que si pas enphase
   if (!configmodule.enphase_present)
-    mdns_hello_new(gDisplayValues.pvname);
+    mdns_hello(gDisplayValues.pvname);
 
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
