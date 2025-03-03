@@ -324,8 +324,11 @@ void setup()
       oled.wait_for_wifi(2);
       #endif
   // Initialize mDNS ( déclaration du routeur sur le réseau )
-
-  mdns_hello(gDisplayValues.pvname);
+  // Multinet : 
+  //      Petit contournement le temps de trouver pourquoi le service MDNS empeche le GET securisé sur enphase
+  //      activation du mdns que si pas enphase
+  if (!configmodule.enphase_present)
+    mdns_hello_new(gDisplayValues.pvname);
 
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
@@ -425,7 +428,11 @@ ntpinit();
       NULL          // Task handle
     );  
 
-        // task de recherche dimmer 
+  // task de recherche dimmer 
+  // Multinet : 
+  //      Petit contournement le temps de trouver pourquoi le service MDNS empeche le GET securisé sur enphase
+  //      activation du mdns que si pas enphase
+  if (!configmodule.enphase_present)    
     xTaskCreate(
       mdns_discovery,
       "mdns_discovery",  // Task name
