@@ -1,6 +1,8 @@
 #ifndef ESP32_INFO
 #define ESP32_INFO
 
+// ajouté par multinet33
+
 String getShortChipModel() {
   String fullModel = ESP.getChipModel();
   int spaceIndex = fullModel.indexOf(' ');  // Trouve le premier espace

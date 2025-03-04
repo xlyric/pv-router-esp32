@@ -8,6 +8,7 @@
 
 extern Config config;
 extern Logs logging;
+extern SemaphoreHandle_t mutex;
 
 void mdns_bye(String esp_name)
 {
@@ -119,14 +120,17 @@ void mdns_discovery(void *parameter) // NOSONAR
 {    
     for (;;)
     {        
-        if (WiFi.status() == WL_CONNECTED && (strcmp(config.dimmer, "") == 0 || strcmp(config.dimmer, "none") == 0))
-        {                       
-            /// recherche d'un dimmer
-            if (!mdns_search("sunstain", 80))
-            {
-                /// recherche de l'ancienne version dimmer  ( à supprimer 01/07/2025 )
-                mdns_search("http", 1308);
+        if (xSemaphoreTake(mutex, portMAX_DELAY)) {  
+            if (WiFi.status() == WL_CONNECTED && (strcmp(config.dimmer, "") == 0 || strcmp(config.dimmer, "none") == 0))
+            {                       
+                /// recherche d'un dimmer
+                if (!mdns_search("sunstain", 80))
+                {
+                    /// recherche de l'ancienne version dimmer  ( à supprimer 01/07/2025 )
+                    mdns_search("http", 1308);
+                }
             }
+            xSemaphoreGive(mutex);  // Libère le mutex
         }
         vTaskDelay(10000 / portTICK_PERIOD_MS);
     }

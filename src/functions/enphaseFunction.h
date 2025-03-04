@@ -1,6 +1,8 @@
 #ifndef ENPHASE_FUNCTIONS
 #define ENPHASE_FUNCTIONS
 
+// géré par multinet33
+
 #include <Arduino.h>
 #include <FS.h>
 #include "../config/config.h"

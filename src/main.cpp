@@ -90,6 +90,8 @@ TaskHandle_t myTaskmeasureelectricity;
 TaskHandle_t myTaskupdatedimmer;
 TaskHandle_t myTaskssendtomqtt;
 
+SemaphoreHandle_t mutex;  // Déclaration du mutex
+
 
 //***********************************
 //************* Afficheur Oled
@@ -187,6 +189,7 @@ void setup()
   #if CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
     Serial.setDebugOutput(true);
   #endif
+  
   Serial.println("\n================== " + String(VERSION) + " ==================");
   logging.Set_log_init("197}11}1");
   logging.Set_log_init("#################  "+ String(Reason_for_reset) +"  ###############\r\n");
@@ -244,10 +247,10 @@ void setup()
 /// test ACD 
 
     adc1_config_width(ADC_WIDTH_BIT_12);
-    adc1_config_channel_atten(ADC1_CHANNEL_0,ADC_ATTEN_DB_11);
-    adc1_config_channel_atten(ADC1_CHANNEL_3, ADC_ATTEN_DB_11);
-    adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
-    adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);
+    adc1_config_channel_atten(ADC1_CHANNEL_0,ADC_ATTEN_DB_12);
+    adc1_config_channel_atten(ADC1_CHANNEL_3, ADC_ATTEN_DB_12);
+    adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_12);
+    adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_12);
    
 
     //***********************************
@@ -313,9 +316,9 @@ void setup()
   Serial.println(dallas.lost);
 
   // Setup the ADC
-  adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_11);
-  adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_11);
-  adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_11);
+  adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_12);
+  adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_12);
+  adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_12);
 
   #ifdef TTGO
   pinMode(ADC_INPUT, INPUT);
@@ -410,6 +413,8 @@ ntpinit();
 
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
+
+  mutex = xSemaphoreCreateMutex();  // Création du mutex
 
 #if WIFI_ACTIVE == true
   #if WEBSSERVER == true
@@ -629,12 +634,6 @@ ntpinit();
 
 #endif
 
-
-
-
-
-
-
 esp_register_shutdown_handler( handler_before_reset );
 
 logging.power=true; logging.sct=true; logging.sinus=true; 
@@ -658,6 +657,7 @@ setupWebSocket(); // initialisation du socket web
 programme_marche_forcee.temperature = config.tmax;
 }
 
+// @multinet33 : c'est un peu crade ;) 
 void myTask(void *pvParameters) {
     while (1) {
         Serial.print("Stack disponible : ");
@@ -665,6 +665,7 @@ void myTask(void *pvParameters) {
         vTaskDelay(1000 / portTICK_PERIOD_MS); // Pause 1 seconde
     }
 }
+
 /// @brief / Loop function
 void loop()
 {

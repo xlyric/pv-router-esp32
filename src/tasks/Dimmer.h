@@ -12,6 +12,7 @@ extern HTTPClient http;
 extern DisplayValues gDisplayValues;
 extern  Config config;
 extern dimmerLamp dimmer1; 
+extern xSemaphoreHandle mutex;
 
 
 /**
@@ -55,8 +56,9 @@ extern Memory task_mem;
 
 void updateDimmer(void * parameter){
   for (;;){
-  gDisplayValues.task = true;
-#if WIFI_ACTIVE == true
+    if (xSemaphoreTake(mutex, portMAX_DELAY)) {
+    gDisplayValues.task = true;
+    #if WIFI_ACTIVE == true
     /// application de la consigne de puissance uniquement si le minuteur n'est pas actif et que la dallas n'est pas perdu
     if (!programme.run && !dallas.lost ) {
         DEBUG_PRINTLN("------- dimmer.h " + String(__LINE__) + " -----------");
@@ -76,7 +78,7 @@ void updateDimmer(void * parameter){
     
     // si dimmer distant alors calcul de puissance routée
     if ( strcmp(config.dimmer,"") != 0 && strcmp(config.dimmer,"none") != 0 ) {  
-        child_power = get_dimmer_child_power();  // watts
+        child_power = get_dimmer_child_power();  // watts -->  REQUETE HTTP
         }
 
         gDisplayValues.puissance_route = local_power + child_power;
@@ -92,6 +94,8 @@ void updateDimmer(void * parameter){
 
 
     gDisplayValues.task = false;
+    xSemaphoreGive(mutex);  // Libère le mutex
+    }   
     task_mem.task_updateDimmer = uxTaskGetStackHighWaterMark(nullptr);
    // Sleep for 5 seconds, avant de refaire une analyse
     vTaskDelay(pdMS_TO_TICKS(4000));
