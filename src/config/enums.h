@@ -29,6 +29,15 @@ enum class DEVICE_STATE {
   UP,
 };
 
+struct ESP32Info {
+  String chipModel;
+  String chipModelShort;
+  int chipRevision;
+  int chipCores;
+  String boardName;
+  uint64_t chipID;
+};
+
 // Place to store all the variables that need to be displayed.
 // All other functions should update these!
 struct DisplayValues {

@@ -50,6 +50,7 @@
   #include "functions/enphaseFunction.h"
   #include "functions/WifiFunctions.h"
   #include "functions/homeassistant.h"
+  #include "functions/ESP32.h"
 
   #ifdef WEBSOCKET_CLIENT
   #include "functions/websocket.h"
@@ -78,6 +79,16 @@ int pwmChannel = 0; //Choisit le canal 0
 int frequence = 1000; //Fréquence PWM de 1 KHz
 int resolution = 10; // Résolution de 8 bits, 256 valeurs possibles
 
+TaskHandle_t myTaskmdnsdiscovery; // Handle pour suivre la tâche
+TaskHandle_t myTaskwatchdogmemory;
+TaskHandle_t myTaskkeepwifialive2;
+TaskHandle_t myTaskserialreadtask;
+TaskHandle_t myTaskupdatedisplay;
+TaskHandle_t myTaskdallasread;
+TaskHandle_t myTaskswitcholed;
+TaskHandle_t myTaskmeasureelectricity;
+TaskHandle_t myTaskupdatedimmer;
+TaskHandle_t myTaskssendtomqtt;
 
 
 //***********************************
@@ -324,13 +335,22 @@ void setup()
       oled.wait_for_wifi(2);
       #endif
   // Initialize mDNS ( déclaration du routeur sur le réseau )
-
   mdns_hello(gDisplayValues.pvname);
 
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
   logging.Set_log_init(mDNS_Responder_Started,true);
   logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);
+
+
+  /* récuperation des info ESP32*/
+  ESP32Info espInfo = getESP32Info();
+  Serial.println("=== ESP32 Information ===");
+  Serial.print("Chip Model: "); Serial.println(espInfo.chipModel);
+  Serial.print("Chip Revision: "); Serial.println(espInfo.chipRevision);
+  Serial.print("Number of CPU Cores: "); Serial.println(espInfo.chipCores);
+  Serial.print("Board Name: "); Serial.println(espInfo.boardName);
+  Serial.print("Chip ID: "); Serial.println(espInfo.chipID, HEX);
 
 #if OLED_ON == true
     Serial.println(OLEDSTART);
@@ -422,17 +442,18 @@ ntpinit();
       6000,            // Stack size (bytes)
       NULL,             // Parameter
       5,                // Task priority
-      NULL          // Task handle
+      &myTaskwatchdogmemory          // Task handle
     );  
 
-        // task de recherche dimmer 
-    xTaskCreate(
+  // task de recherche dimmer 
+  xTaskCreatePinnedToCore(
       mdns_discovery,
       "mdns_discovery",  // Task name
-      6000,            // Stack size (bytes)
+      3000,            // Stack size (bytes)
       NULL,             // Parameter
-      5,                // Task priority
-      NULL          // Task handle
+      0,                // Task priority
+      &myTaskmdnsdiscovery,          // Task handle
+      ARDUINO_RUNNING_CORE
     );  
 
 
@@ -443,7 +464,7 @@ ntpinit();
       6000,            // Stack size (bytes)
       NULL,             // Parameter
       5,                // Task priority
-      NULL          // Task handle
+      &myTaskkeepwifialive2          // Task handle
       
     );
 
@@ -460,7 +481,7 @@ ntpinit();
       4000,            // Stack size (bytes)
       NULL,             // Parameter
       1,                // Task priority
-      NULL              // Task handle
+      &myTaskserialreadtask              // Task handle
     );  
 
 
@@ -483,7 +504,7 @@ ntpinit();
     5000,            // Stack size (bytes)
     NULL,             // Parameter
     2,                // Task priority
-    NULL,             // Task handle
+    &myTaskupdatedisplay,             // Task handle
     ARDUINO_RUNNING_CORE
   );  
 #endif
@@ -498,7 +519,7 @@ ntpinit();
       5000,                  // Stack size (bytes)
       NULL,                   // Parameter
       2,                      // Task priority
-      NULL       // Task handle
+      &myTaskdallasread       // Task handle
     ); 
   }
 
@@ -517,7 +538,7 @@ ntpinit();
     5000,                  // Stack size (bytes)
     NULL,                   // Parameter
     2,                      // Task priority
-    NULL                    // Task handle
+    &myTaskswitcholed                    // Task handle
   ); 
   #endif
 #endif
@@ -533,8 +554,7 @@ ntpinit();
     8000,                  // Stack size (bytes)
     NULL,                   // Parameter
     7,                      // Task priority
-    NULL                    // Task handle
-  
+    &myTaskmeasureelectricity                    // Task handle
   );  
 
 #if WIFI_ACTIVE == true
@@ -548,13 +568,13 @@ ntpinit();
     5000,                  // Stack size (bytes)
     NULL,                   // Parameter
     4,                      // Task priority
-    NULL                    // Task handle
+    &myTaskupdatedimmer                    // Task handle
   );
   
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------
- /* if (!dallas.detect) {
+  if (!dallas.detect) {
       xTaskCreate(
         GetDImmerTemp,
         "Update temp",  // Task name
@@ -563,7 +583,7 @@ ntpinit();
         4,                      // Task priority
         NULL                    // Task handle
       );  
-  }*/
+  }
 
 // ----------------------------------------------------------------
   // Task: MQTT send
@@ -575,9 +595,8 @@ ntpinit();
     8000,                  // Stack size (bytes)
     NULL,                   // Parameter
     5,                      // Task priority
-    NULL                    // Task handle
+    &myTaskssendtomqtt                    // Task handle
   );  
-
 
   #endif
 
@@ -639,10 +658,62 @@ setupWebSocket(); // initialisation du socket web
 programme_marche_forcee.temperature = config.tmax;
 }
 
-
+void myTask(void *pvParameters) {
+    while (1) {
+        Serial.print("Stack disponible : ");
+        Serial.println(uxTaskGetStackHighWaterMark(NULL)); // Vérifie la pile de cette tâche
+        vTaskDelay(1000 / portTICK_PERIOD_MS); // Pause 1 seconde
+    }
+}
 /// @brief / Loop function
 void loop()
 {
+
+  // Vérifie la pile de la tâche
+  if (myTaskmdnsdiscovery != NULL) {
+    Serial.print("Stack min restante de myTaskmdnsdiscovery : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskmdnsdiscovery));
+  }
+  if (myTaskssendtomqtt != NULL) {
+    Serial.print("Stack min restante de myTaskssendtomqtt : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskssendtomqtt));
+  }
+  if (myTaskupdatedimmer != NULL) {
+    Serial.print("Stack min restante de myTaskupdatedimmer : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskupdatedimmer));
+  }
+  if (myTaskmeasureelectricity != NULL) {
+    Serial.print("Stack min restante de myTaskmeasureelectricity : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskmeasureelectricity));
+  }
+  if (myTaskswitcholed != NULL) {
+    Serial.print("Stack min restante de myTaskswitcholed : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskswitcholed));    
+  }
+  if (myTaskdallasread != NULL) {
+    Serial.print("Stack min restante de myTaskdallasread : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskdallasread));
+  }
+  if (myTaskupdatedisplay != NULL) {
+    Serial.print("Stack min restante de myTaskupdatedisplay : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskupdatedisplay));
+  }
+  if (myTaskserialreadtask != NULL) {
+    Serial.print("Stack min restante de myTaskserialreadtask : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskserialreadtask));
+  }
+  if (myTaskkeepwifialive2 != NULL) {
+    Serial.print("Stack min restante de myTaskkeepwifialive2 : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskkeepwifialive2));
+  }
+    if (myTaskwatchdogmemory != NULL) {
+    Serial.print("Stack min restante de myTaskwatchdogmemory : ");
+    Serial.println(uxTaskGetStackHighWaterMark(myTaskwatchdogmemory));
+  }
+  
+
+
+
 
   #ifdef WEBSOCKET_CLIENT
   //handleWebSocket(); // Keep the WebSocket connection alive
