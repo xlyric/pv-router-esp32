@@ -669,51 +669,29 @@ void myTask(void *pvParameters) {
 void loop()
 {
 
-  // Vérifie la pile de la tâche
-  if (myTaskmdnsdiscovery != NULL) {
-    Serial.print("Stack min restante de myTaskmdnsdiscovery : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskmdnsdiscovery));
-  }
-  if (myTaskssendtomqtt != NULL) {
-    Serial.print("Stack min restante de myTaskssendtomqtt : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskssendtomqtt));
-  }
-  if (myTaskupdatedimmer != NULL) {
-    Serial.print("Stack min restante de myTaskupdatedimmer : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskupdatedimmer));
-  }
-  if (myTaskmeasureelectricity != NULL) {
-    Serial.print("Stack min restante de myTaskmeasureelectricity : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskmeasureelectricity));
-  }
-  if (myTaskswitcholed != NULL) {
-    Serial.print("Stack min restante de myTaskswitcholed : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskswitcholed));    
-  }
-  if (myTaskdallasread != NULL) {
-    Serial.print("Stack min restante de myTaskdallasread : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskdallasread));
-  }
-  if (myTaskupdatedisplay != NULL) {
-    Serial.print("Stack min restante de myTaskupdatedisplay : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskupdatedisplay));
-  }
-  if (myTaskserialreadtask != NULL) {
-    Serial.print("Stack min restante de myTaskserialreadtask : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskserialreadtask));
-  }
-  if (myTaskkeepwifialive2 != NULL) {
-    Serial.print("Stack min restante de myTaskkeepwifialive2 : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskkeepwifialive2));
-  }
-    if (myTaskwatchdogmemory != NULL) {
-    Serial.print("Stack min restante de myTaskwatchdogmemory : ");
-    Serial.println(uxTaskGetStackHighWaterMark(myTaskwatchdogmemory));
-  }
+#ifdef DEBUGLEVEL1
+  // Function to check stack for a specific task and print the result
+  auto printTaskStack = [](TaskHandle_t taskHandle, const char* taskName) {
+    if (taskHandle != NULL) {
+      Serial.print("Stack min restante de ");
+      Serial.print(taskName);
+      Serial.print(" : ");
+      Serial.println(uxTaskGetStackHighWaterMark(taskHandle));
+    }
+  };
   
-
-
-
+  // Check stack space for all tasks
+  printTaskStack(myTaskmdnsdiscovery, "myTaskmdnsdiscovery");
+  printTaskStack(myTaskssendtomqtt, "myTaskssendtomqtt");
+  printTaskStack(myTaskupdatedimmer, "myTaskupdatedimmer");
+  printTaskStack(myTaskmeasureelectricity, "myTaskmeasureelectricity");
+  printTaskStack(myTaskswitcholed, "myTaskswitcholed");
+  printTaskStack(myTaskdallasread, "myTaskdallasread");
+  printTaskStack(myTaskupdatedisplay, "myTaskupdatedisplay");
+  printTaskStack(myTaskserialreadtask, "myTaskserialreadtask");
+  printTaskStack(myTaskkeepwifialive2, "myTaskkeepwifialive2");
+  printTaskStack(myTaskwatchdogmemory, "myTaskwatchdogmemory");
+#endif
 
   #ifdef WEBSOCKET_CLIENT
   //handleWebSocket(); // Keep the WebSocket connection alive
