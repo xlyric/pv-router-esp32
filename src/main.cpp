@@ -574,7 +574,7 @@ ntpinit();
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------
- /* if (!dallas.detect) {
+  if (!dallas.detect) {
       xTaskCreate(
         GetDImmerTemp,
         "Update temp",  // Task name
@@ -583,7 +583,7 @@ ntpinit();
         4,                      // Task priority
         NULL                    // Task handle
       );  
-  }*/
+  }
 
 // ----------------------------------------------------------------
   // Task: MQTT send
