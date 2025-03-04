@@ -50,6 +50,7 @@
   #include "functions/enphaseFunction.h"
   #include "functions/WifiFunctions.h"
   #include "functions/homeassistant.h"
+  #include "functions/ESP32.h"
 
   #ifdef WEBSOCKET_CLIENT
   #include "functions/websocket.h"
@@ -340,6 +341,16 @@ void setup()
   Serial.println(gDisplayValues.pvname);
   logging.Set_log_init(mDNS_Responder_Started,true);
   logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);
+
+
+  /* récuperation des info ESP32*/
+  ESP32Info espInfo = getESP32Info();
+  Serial.println("=== ESP32 Information ===");
+  Serial.print("Chip Model: "); Serial.println(espInfo.chipModel);
+  Serial.print("Chip Revision: "); Serial.println(espInfo.chipRevision);
+  Serial.print("Number of CPU Cores: "); Serial.println(espInfo.chipCores);
+  Serial.print("Board Name: "); Serial.println(espInfo.boardName);
+  Serial.print("Chip ID: "); Serial.println(espInfo.chipID, HEX);
 
 #if OLED_ON == true
     Serial.println(OLEDSTART);
