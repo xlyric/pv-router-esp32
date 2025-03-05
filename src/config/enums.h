@@ -454,7 +454,7 @@ struct Memory {
     int task_serial_read_task=5000;
 
     int task_dallas_read=5000;
-    int task_updateDimmer=5000;; 
+    int task_updateDimmer=5000; 
     int task_GetDImmerTemp=5000;
 
     int task_measure_electricity=5000;
@@ -464,6 +464,7 @@ struct Memory {
     int task_switchDisplay=5000;
     int task_updateDisplay=5000;
     int task_loop=5000; 
+    int task_mdns_discovery = 5000;    
 };
 
 

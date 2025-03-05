@@ -168,8 +168,14 @@ void Enphase_get_5(void) {
 
   /// workaround because envoy is too slow
   int httpResponseCode;
-  while ((httpResponseCode = httpenphase.GET()) != 200)
-    ;
+  int retryCount = 0;
+  const int maxRetries = 10; // Arrêter après 10 tentatives
+  
+  while ((httpResponseCode = httpenphase.GET()) != 200 && retryCount < maxRetries)
+  {
+      retryCount++;
+      delay(1000); // Attendre 1 seconde entre chaque tentative
+  }
 
   // start connection and send HTTP header
 
@@ -204,7 +210,7 @@ void Enphase_get_5(void) {
     gDisplayValues.porteuse = true; // si FALSE affiche No-Sin sur l'ecran
 
   } else {
-    Serial.println("timeout");
+    Serial.println("Enphase Get 5 timeout");
   }
 
   httpenphase.end();
@@ -216,7 +222,7 @@ void Enphase_get_5(void) {
 }
 
 bool Enphase_get_7_Production(void){
-  HTTPClient https;
+  HTTPClient httpenphase;
   int httpCode;
   bool retour = false;
   String url = "/404.html" ;
@@ -246,22 +252,22 @@ bool Enphase_get_7_Production(void){
   Serial.println("Enphase Get production : " + fullurl);
   Serial.println("With SessionId : " + SessionId);
 
-  if (https.begin(fullurl)) {
-    https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
-    https.setAuthorizationType("Bearer");
-    https.setAuthorization(configmodule.token);
-    https.addHeader("Accept-Encoding","gzip, deflate, br");
-    https.addHeader("User-Agent","PvRouter/1.1.1");
+  if (httpenphase.begin(fullurl)) {
+    httpenphase.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
+    httpenphase.setAuthorizationType("Bearer");
+    httpenphase.setAuthorization(configmodule.token);
+    httpenphase.addHeader("Accept-Encoding","gzip, deflate, br");
+    httpenphase.addHeader("User-Agent","PvRouter/1.1.1");
     if (!SessionId.isEmpty()) {
-      https.addHeader("Cookie",SessionId);
+      httpenphase.addHeader("Cookie",SessionId);
     }
-    httpCode = https.GET();
+    httpCode = httpenphase.GET();
     if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
-      String payload = https.getString();
+      String payload = httpenphase.getString();
       if (httpCode == HTTP_CODE_OK )
         Serial.println(payload);
       if (httpCode == HTTP_CODE_MOVED_PERMANENTLY)
-        Serial.println(https.getLocation());
+        Serial.println(httpenphase.getLocation());
         
       JsonDocument doc; ///passé de 3072 à 1600      
       DeserializationError error = deserializeJson(doc, payload);
@@ -310,20 +316,20 @@ bool Enphase_get_7_Production(void){
     } else {
       Serial.println("[1.Enphase Get production] GET... failed, error: " + String(httpCode));
       nbErreurGetJsonProd++;
-      https.end();
+      httpenphase.end();
     }
-    https.end();
+    httpenphase.end();
   }
   else {
     nbErreurGetJsonProd++;
   }
-  https.end();
+  httpenphase.end();
   
   return retour;
 }
 
 bool Enphase_get_7_JWT(void) {
-  HTTPClient https;
+  HTTPClient httpenphase;
   bool retour = false;
   String url = "/404.html";
   url = String(EnvoyJ);
@@ -342,40 +348,29 @@ bool Enphase_get_7_JWT(void) {
     debut = "http://";
 
   String fullurl = debut+adr+":"+port+url;
-  //String fullurl = debut+adr+url;
   Serial.println("full url : " + fullurl);
 
   //new 2025
   Serial.println("Enphase contrôle token : " + fullurl + "<----");
-  //Serial.println("avec le token ===>" + String(configmodule.token)+"<===");
-  //WiFiClientSecure client;
-  //client.setFingerprint("6B:A3:FD:17:7E:10:83:A3:B9:DA:0D:49:86:24:37:14:36:F2:DB:8E");
-  //client.setInsecure();  // À utiliser uniquement si le certificat SSL pose problème
-  //client.setTLSVersion(TLS_VERSION_1_2);
-  //fin new 2025
 
-  if (https.begin(fullurl)) { 
+  if (httpenphase.begin(fullurl)) { 
     Serial.println("Connexion réussie, préparation des headers (token etc)");
-    https.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
-    https.setAuthorizationType("Bearer");
-    https.setAuthorization(configmodule.token);
-    //https.addHeader("Authorization", "Bearer " + String(configmodule.token));
-    //https.addHeader("Accept", "*/*");
-    //https.addHeader("Connection", "keep-alive");    
-    //https.addHeader("Content-Type", "application/octet-stream");
-    https.addHeader("Accept-Encoding","gzip, deflate, br");
-    https.addHeader("User-Agent","PvRouter/1.1.1");
+    httpenphase.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
+    httpenphase.setAuthorizationType("Bearer");
+    httpenphase.setAuthorization(configmodule.token);
+    httpenphase.addHeader("Accept-Encoding","gzip, deflate, br");
+    httpenphase.addHeader("User-Agent","PvRouter/1.1.1");
     const char * headerkeys[] = {"Set-Cookie"};
-    https.collectHeaders(headerkeys, sizeof(headerkeys)/sizeof(char*));
-    https.setReuse(true);
-    int httpCode = https.GET();
+    httpenphase.collectHeaders(headerkeys, sizeof(headerkeys)/sizeof(char*));
+    httpenphase.setReuse(true);
+    int httpCode = httpenphase.GET();
     
     //new 2025
     Serial.println("Réponse Headers :");
-    for (int i = 0; i < https.headers(); i++) {
-        Serial.println(https.headerName(i) + ": " + https.header(i));
+    for (int i = 0; i < httpenphase.headers(); i++) {
+        Serial.println(httpenphase.headerName(i) + ": " + httpenphase.header(i));
     }    
-    Serial.println("Erreur HTTPS : " + https.errorToString(httpCode));   
+    Serial.println("Erreur HTTPS : " + httpenphase.errorToString(httpCode));   
 
     // httpCode will be negative on error
     if (httpCode > 0) {
@@ -387,7 +382,7 @@ bool Enphase_get_7_JWT(void) {
         Serial.println("Enphase contrôle token : TOKEN VALIDE ");
         TockenValide=true;
         SessionId.clear();
-        SessionId = https.header("Set-Cookie");
+        SessionId = httpenphase.header("Set-Cookie");
         if (SessionId.indexOf("sessionId") < 0) {
           retour=false;
           SessionId.clear();
@@ -418,7 +413,7 @@ bool Enphase_get_7_JWT(void) {
   }
   
   //new 2025
-  https.end();
+  httpenphase.end();
   return retour;
 }
 
