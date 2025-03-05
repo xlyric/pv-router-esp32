@@ -122,7 +122,7 @@ float CheckTemperature(String label, byte deviceAddress[12]){ // NOSONAR
     logging.Set_log_init(String(Dallas_lost) + String(dallas_error) + " times\r\n");
     tempC = gDisplayValues.temperature; 
     /// mise en securité du dimmer local
-        unified_dimmer.dimmer_off();
+        unified_dimmer.dimmer_off("Dallas lost");
         unified_dimmer.set_power(0);
         dallas.lost = true; // on est perdu donc on coupe le dimmer
         // on retente une init de la dallas b

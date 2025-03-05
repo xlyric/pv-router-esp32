@@ -768,9 +768,11 @@ if (config.dimmerlocal) {
         //  minuteur en cours
         if (programme.stop_progr() || programme_marche_forcee.stop_progr() ) { 
 
-            unified_dimmer.dimmer_off();
-            unified_dimmer.set_power(0);
+            unified_dimmer.dimmer_off("minuteur"); 
+            unified_dimmer.set_power(0); 
+            if (dallas.detect) {
             dallas.security=true;
+            }
 
           DEBUG_PRINTLN("programme.run");
           Serial.println("stop minuteur dimmer");
@@ -794,7 +796,7 @@ if (config.dimmerlocal) {
     } 
     else { 
       // minuteur à l'arret
-      if (programme.start_progr() |  programme_marche_forcee.start_progr() ){ 
+      if (programme.start_progr() ||  programme_marche_forcee.start_progr() ){ 
         int sysvar_puissance; 
         if ( programme.puissance > config.localfuse ) {     sysvar_puissance=config.localfuse; }
         else { sysvar_puissance = programme.puissance; } 
@@ -979,13 +981,8 @@ void IRAM_ATTR function_next_screen(){
 bool boost(){
     time_t now = time(nullptr);
     if (programme_marche_forcee.run) {
-      // on coupe le boost 
-      /*programme_marche_forcee.run = false;
-      strcpy(programme_marche_forcee.heure_demarrage, "00:00"); // NOSONAR
-      strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR
-      unified_dimmer.set_power(0);
-      */
-        // sur bug avec mqtt, on fait differement : on change l'heure de fin pour mettre à maintenant
+
+      // sur bug avec mqtt, on fait differement : on change l'heure de fin pour mettre à maintenant
       strftime(programme_marche_forcee.heure_arret, 6, "%H:%M", localtime(&now));
       now += TIME_BOOST;
       strftime(programme_marche_forcee.heure_demarrage, 6, "%H:%M", localtime(&now));

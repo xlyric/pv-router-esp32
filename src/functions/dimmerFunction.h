@@ -196,13 +196,13 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
     if (config.dimmerlocal) {
 
         /// COOLER 
-        if ( gDisplayValues.dimmer > 10  || programme.run ) { digitalWrite(COOLER, HIGH); } // start COOLER at 10%  }
+        if ( gDisplayValues.dimmer > 10  || programme.run  || programme_marche_forcee.run ) { digitalWrite(COOLER, HIGH); } // start COOLER at 10%  }
         else { digitalWrite(COOLER, LOW); }
 
 
             
         float dallas_int = gDisplayValues.temperature;
-        if (dallas.security) {
+        if (dallas.security && dallas.detect) {
           float temp_trigger = float(config.tmax) - float(config.tmax*config.trigger/100) ;
           if ( dallas_int < temp_trigger ) {  
           dallas.security = false ; // retrait securité si inférieur au trigger
@@ -217,8 +217,9 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
           
           }
           else {
+            logging.Set_log_init(Security_on);
             unified_dimmer.set_power(0);
-            unified_dimmer.dimmer_off();
+            unified_dimmer.dimmer_off("Security");
             programme.run=false;
             ledcWrite(0, 0);
 /// Modif RV 20240219 - ajout du test pour ne pas chercher à envoyer une requête vers un fils non configuré
@@ -232,7 +233,7 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
 
           if ( config.tmax < dallas_int ) {
             dimmer1.setPower(0); 
-            unified_dimmer.dimmer_off();
+            unified_dimmer.dimmer_off("Dallas");
               #ifdef ESP32D1MINI_FIRMWARE
               unified_dimmer.set_power(0);
               #endif
@@ -247,10 +248,10 @@ if ( !config.dimmerlocal && gDisplayValues.dimmer >= config.num_fuse) {
             dallas.security = true ;   /// mise en place sécurité thermique
             Serial.println("security off -> on ");
             logging.Set_log_init(Security_on);
-            unified_dimmer.dimmer_off();
+            unified_dimmer.dimmer_off("Dallas 2");
           }
           else {
-            if (!dallas.security){  
+            if (!dallas.security && dallas.detect ){  
                 /// fonctionnement du dimmer local 
                  
                 if ( gDisplayValues.dimmer < config.localfuse && !programme.run ) { 

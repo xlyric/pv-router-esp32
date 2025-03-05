@@ -25,7 +25,7 @@ private: unsigned long last_time = millis();
 public:float power;
 
 // setter
-void set_power(float unified_power){
+void set_power(float unified_power,String reason="") {   /// le string reason est principalement utilisé pour le debug
   last_time = millis();
   if ( gDisplayValues.temperature > config.tmax ) { unified_power = 0; } /// si la température est supérieur à la température max on coupe tout
   else if ( unified_power > config.localfuse )  { unified_power = config.localfuse; } /// si puissance demandée supérieur à ma puissance max reglé alors puissance max
@@ -72,7 +72,7 @@ void set_power(float unified_power){
      if (dimmer1_pwr == 0 && dimmer1.getState()==1) {  /// si puissance demandée = 0 et dimmer allumé alors on éteint
       dimmer1.setPower(0);
       dimmer1.setState(OFF);
-      logging.Set_log_init("Dimmer1 Off\r\n");
+      logging.Set_log_init("Dimmer1 Off "+ reason +"\r\n");
       delay(50);
      }
      else if (dimmer1_pwr != 0 && dimmer1.getState()==0) {  /// si puissance demandée différente de 0 et dimmer éteint alors on allume
@@ -145,13 +145,13 @@ float get_power(){
 }
 
 
-  void dimmer_off()
+  void dimmer_off(String reason="")
   {
 
       if (dimmer1.getState()) {
         dimmer1.setPower(0);
         dimmer1.setState(OFF);
-        logging.Set_log_init("Dimmer Off\r\n");
+        logging.Set_log_init("Dimmer Off "+ reason +" \r\n");
         delay(50);
       }
       #ifdef outputPin2

@@ -160,7 +160,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS=3600000; /// synch de l'heure toute les 
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250304"
+#define RELEASE "Version 20250305"
 constexpr const int FS_RELEASE=20250302;
 
     #ifdef LIGHT_FIRMWARE
@@ -181,7 +181,7 @@ bool AP=true;
 
 #define RELAY1 13
 #define RELAY2 15
-#define TIME_BOOST 3600 // temps de boost
+#define TIME_BOOST 60 // temps de boost
 
 /// taille max des logs stockée
 constexpr size_t LOG_MAX_STRING_LENGTH=1500;
