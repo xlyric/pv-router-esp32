@@ -181,7 +181,7 @@ bool AP=true;
 
 #define RELAY1 13
 #define RELAY2 15
-#define TIME_BOOST 60 // temps de boost
+#define TIME_BOOST 3600 // temps de boost
 
 /// taille max des logs stockée
 constexpr size_t LOG_MAX_STRING_LENGTH=1500;
