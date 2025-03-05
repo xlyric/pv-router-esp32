@@ -18,41 +18,45 @@ void watchdog_memory(void * parameter){ // NOSONAR
       need_reboot = true; 
     }
 
-    if (task_mem.task_serial_read_task < 500) {
+    if (task_mem.task_serial_read_task < 100) {
       need_reboot = true; 
     }
 
-    if (task_mem.task_dallas_read < 500) {
+    if (task_mem.task_dallas_read < 100) {
       need_reboot = true; 
     }
 
-    if (task_mem.task_updateDimmer < 500) {
+    if (task_mem.task_updateDimmer < 100) {
         need_reboot = true; 
     }
 
-    if (task_mem.task_GetDImmerTemp < 500) {
+    if (task_mem.task_GetDImmerTemp < 100) {
       need_reboot = true; 
     }
 
-    if (task_mem.task_measure_electricity < 500) {
+    if (task_mem.task_measure_electricity < 100) {
       need_reboot = true; 
     }
 
-    if (task_mem.task_send_mqtt < 500) {
+    if (task_mem.task_send_mqtt < 100) {
       need_reboot = true; 
     }
 
-    if (task_mem.task_switchDisplay < 500) {
+    if (task_mem.task_switchDisplay < 100) {
       need_reboot = true; 
     }
 
-    if (task_mem.task_updateDisplay < 500) {
+    if (task_mem.task_updateDisplay < 100) {
       need_reboot = true; 
     }
 
-    if (task_mem.task_loop < 500) {
+    if (task_mem.task_loop < 100) {
       need_reboot = true; 
     }
+
+    if (task_mem.task_mdns_discovery < 100) {
+      need_reboot = true; 
+    }    
      
     // si need  reboot alors reboot
     if (need_reboot) {
