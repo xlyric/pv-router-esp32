@@ -1,7 +1,6 @@
 #ifndef SPIFFS_FUNCTIONS
 #define SPIFFS_FUNCTIONS
 
-
 //***********************************
 //************* LIBRAIRIES ESP
 //***********************************
