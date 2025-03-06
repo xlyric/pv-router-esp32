@@ -38,7 +38,9 @@
   #include "tasks/gettemp.h"
 
   #include "tasks/Serial_task.h"
-  #include "tasks/send-mqtt.h"
+  #ifndef LIGHT_FIRMWARE
+    #include "tasks/send-mqtt.h"
+  #endif
   #include "tasks/watchdog_memory.h"
   #include "tasks/mDNS.h"
   
@@ -595,20 +597,20 @@ xTaskCreate(
       );  
   }
 
-// ----------------------------------------------------------------
-  // Task: MQTT send
-  // ----------------------------------------------------------------
-
-  xTaskCreatePinnedToCore(
-    send_to_mqtt,
-    "Update MQTT",  // Task name
-    4500,                  // Stack size (bytes)
-    NULL,                   // Parameter
-    2,                      // Task priority
-    &myTasksendtomqtt,                  // Task handle
-    ARDUINO_RUNNING_CORE
-  );  
-
+    // ----------------------------------------------------------------
+    // Task: MQTT send
+    // ----------------------------------------------------------------
+    #ifndef LIGHT_FIRMWARE
+    xTaskCreatePinnedToCore(
+      send_to_mqtt,
+      "Update MQTT",  // Task name
+      4500,                  // Stack size (bytes)
+      NULL,                   // Parameter
+      2,                      // Task priority
+      &myTasksendtomqtt,                  // Task handle
+      ARDUINO_RUNNING_CORE
+    );  
+    #endif
   #endif
 
 #endif
