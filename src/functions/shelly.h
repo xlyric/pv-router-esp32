@@ -62,11 +62,19 @@ HTTPClient shelly_http;
 
             float powerValue = 0;
             /// récupération de la valeur de la puissance en fonction du mode triphasé ou non
+            /* 2025 avant modification pour lever l'alerte compilation sur la fonction constrainsKey depréciée
             if (doc.containsKey("power"))  {  powerValue = doc["power"].as<float>();   }
             else if (doc.containsKey("total_power") ) { powerValue = doc["total_power"].as<float>(); }
             else if (config.Shelly_tri && doc.containsKey("total_act_power")) { powerValue = doc["total_act_power"].as<float>(); }
             else if (doc.containsKey("a_act_power")) { powerValue = doc["a_act_power"].as<float>(); }
             else if (doc.containsKey("act_power")) { powerValue = doc["act_power"].as<float>(); }
+            */
+           // Nouveau code 20250306
+           if (doc["power"].is<float>()) { powerValue = doc["power"].as<float>(); }
+           else if (doc["total_power"].is<float>()) { powerValue = doc["total_power"].as<float>(); }
+           else if (config.Shelly_tri && doc["total_act_power"].is<float>()) { powerValue = doc["total_act_power"].as<float>(); }
+           else if (doc["a_act_power"].is<float>()) { powerValue = doc["a_act_power"].as<float>(); }
+           else if (doc["act_power"].is<float>()) { powerValue = doc["act_power"].as<float>(); }
 
             else {
                 shelly_watt = 99999;
