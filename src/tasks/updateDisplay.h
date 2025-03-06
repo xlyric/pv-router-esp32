@@ -44,7 +44,7 @@ void updateDisplay(void* parameter) {
     #endif
       task_mem.task_updateDisplay = uxTaskGetStackHighWaterMark(nullptr);
       // Sleep for 5 seconds, then update display again!
-      vTaskDelay(pdMS_TO_TICKS(4000));
+      vTaskDelay(pdMS_TO_TICKS(4000+(esp_random() % 61) - 30));
   } // for
 } // updateDisplay
 

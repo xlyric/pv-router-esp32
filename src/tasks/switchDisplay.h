@@ -96,7 +96,7 @@ void switchDisplay(void * parameter){ // NOSONAR
       }
     }
     task_mem.task_switchDisplay = uxTaskGetStackHighWaterMark(nullptr);
-    vTaskDelay(pdMS_TO_TICKS(1000));  
+    vTaskDelay(pdMS_TO_TICKS(1000+(esp_random() % 61) - 30));  
   } 
 } 
 #endif

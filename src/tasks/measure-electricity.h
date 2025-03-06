@@ -163,11 +163,11 @@ void measureElectricity(void *parameter) // NOSONAR
             if (mode != 0)
             {
                   ///// le shelly et l'enphase sont plus lents et font des mesures à 1s ce qui peut créer des doublons de commandes
-                  vTaskDelay(pdMS_TO_TICKS(4000));
+                  vTaskDelay(pdMS_TO_TICKS(4000+(esp_random() % 61) - 30));
             }
             else
             {
-                  vTaskDelay(pdMS_TO_TICKS(3000));
+                  vTaskDelay(pdMS_TO_TICKS(3000+(esp_random() % 61) - 30));
             }
       }
 }

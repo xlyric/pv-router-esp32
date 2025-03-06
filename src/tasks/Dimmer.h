@@ -98,7 +98,7 @@ void updateDimmer(void * parameter){
     }   
     task_mem.task_updateDimmer = uxTaskGetStackHighWaterMark(nullptr);
    // Sleep for 5 seconds, avant de refaire une analyse
-    vTaskDelay(pdMS_TO_TICKS(4000));
+    vTaskDelay(pdMS_TO_TICKS(4000+(esp_random() % 61) - 30));
     // 24/01/2023 changement de 5 à 4s 
   }
 }

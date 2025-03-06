@@ -135,11 +135,16 @@ void send_to_mqtt(void * parameter){ // NOSONAR
                         }
             #endif   
             } 
+
+                  // plus trop  utilisé, juste en cas de fuite mémoire
+            //client.publish(("memory/"+gDisplayValues.pvname).c_str(), String(esp_get_free_heap_size()).c_str()) ;
+            //client.publish(("memory/"+gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
+      client.loop(); // on envoie ce qui est en attente
       xSemaphoreGive(mutex);  // Libère le mutex
     }
       task_mem.task_send_mqtt = uxTaskGetStackHighWaterMark(nullptr);
    // Sleep for 10 seconds
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(1500+(esp_random() % 61) - 30));
   }
 }
 

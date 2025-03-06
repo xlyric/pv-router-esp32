@@ -220,6 +220,7 @@ server.on("/log.txt", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 ///////////////
 //// logs ////
 ///////////////
+extern SemaphoreHandle_t mutex; 
 
 server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
 
@@ -236,8 +237,10 @@ server.on("/cs", HTTP_ANY, [](AsyncWebServerRequest *request){
     char raison[bufferSize]; // NOSONAR
     getLocalTime( &timeinfo );
     snprintf(raison, bufferSize, "reboot manuel: %s", asctime(&timeinfo) ); 
-
-   client.publish("memory/Routeur", raison, true);
+    if (xSemaphoreTake(mutex, portMAX_DELAY)) {  // Prend le mutex
+      client.publish("memory/Routeur", raison, true);
+      xSemaphoreGive(mutex);  // Libère le mutex
+    }
    #endif
    request->redirect("/");
    config.restart = true;

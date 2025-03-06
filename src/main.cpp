@@ -441,25 +441,27 @@ ntpinit();
     } */ // NOSONAR
 
     // task du watchdog de la mémoire
-    xTaskCreate(
+  /*  
+    xTaskCreatePinnedToCore(
       watchdog_memory,
       "watchdog_memory",  // Task name
       4000,            // Stack size (bytes)
       NULL,             // Parameter
-      5,                // Task priority
-      &myTaskwatchdogmemory          // Task handle
+      3,                // Task priority
+      &myTaskwatchdogmemory ,           // Task handle
+      0
     );  
-
+  */ 
   // task de recherche dimmer 
   xTaskCreatePinnedToCore(
       mdns_discovery,
       "mdns_discovery",  // Task name
       3000,            // Stack size (bytes)
       NULL,             // Parameter
-      0,                // Task priority
+      1,                // Task priority
       &myTaskmdnsdiscovery,          // Task handle
       ARDUINO_RUNNING_CORE
-    );  
+    );    // le service est arreté si un dimmer est trouvé ou déjà configuré --> necessite reboot pour rechercher de nouveau
 
 
      //// task pour remettre le wifi en route en cas de passage en mode AP
@@ -468,7 +470,7 @@ ntpinit();
       "keepWiFiAlive",  // Task name
       3000,            // Stack size (bytes)
       NULL,             // Parameter
-      5,                // Task priority
+      2,                // Task priority
       &myTaskkeepwifialive2          // Task handle
       
     );
@@ -480,14 +482,14 @@ ntpinit();
   // TASK: envoie d'information série
   // ----------------------------------------------------------------
    //// la task a un timeout et le mode série ne répond plus après 2 minutes ce qui laisse le temps de faire les reglages wifi sur l'OTA
-      xTaskCreate(
+   xTaskCreate(
       serial_read_task,
       "Serial Read",      // Task name
       3000,            // Stack size (bytes)
       NULL,             // Parameter
-      1,                // Task priority
-      &myTaskserialreadtask              // Task handle
-    );  
+      2,                // Task priority
+      &myTaskserialreadtask             // Task handle
+    );  /// le service est arreté après 2 minutes
 
 
   // ----------------------------------------------------------------
@@ -503,14 +505,14 @@ ntpinit();
   #endif
 
 #if OLED_ON == true 
-  xTaskCreatePinnedToCore(
+xTaskCreate(
     updateDisplay,
     "UpdateDisplay",  // Task name
     3500,            // Stack size (bytes)
     NULL,             // Parameter
     2,                // Task priority
-    &myTaskupdatedisplay,             // Task handle
-    ARDUINO_RUNNING_CORE
+    &myTaskupdatedisplay           // Task handle
+
   );  
 #endif
 
@@ -558,7 +560,7 @@ ntpinit();
     "Measure electricity",  // Task name
     5000,                  // Stack size (bytes)
     NULL,                   // Parameter
-    7,                      // Task priority
+    4,                      // Task priority
     &myTaskmeasureelectricity                    // Task handle
   );  
 
@@ -567,26 +569,29 @@ ntpinit();
   // ----------------------------------------------------------------
   // Task: Update Dimmer power
   // ----------------------------------------------------------------
-  xTaskCreate(
+   
+  xTaskCreatePinnedToCore(
     updateDimmer,
     "Update Dimmer",  // Task name
     4000,                  // Stack size (bytes)
     NULL,                   // Parameter
     4,                      // Task priority
-    &myTaskupdatedimmer                    // Task handle
+    &myTaskupdatedimmer  ,                  // Task handle
+    ARDUINO_RUNNING_CORE
   );
   
   // ----------------------------------------------------------------
   // Task: Get Dimmer temp
   // ----------------------------------------------------------------
   if (!dallas.detect) {
-      xTaskCreate(
+    xTaskCreatePinnedToCore(
         GetDImmerTemp,
         "Update temp",  // Task name
         4000,                  // Stack size (bytes)
         NULL,                   // Parameter
-        4,                      // Task priority
-        NULL                    // Task handle
+        2,                      // Task priority
+        NULL,                  // Task handle
+        ARDUINO_RUNNING_CORE
       );  
   }
 
@@ -594,13 +599,14 @@ ntpinit();
   // Task: MQTT send
   // ----------------------------------------------------------------
 
-    xTaskCreate(
+  xTaskCreatePinnedToCore(
     send_to_mqtt,
     "Update MQTT",  // Task name
     4500,                  // Stack size (bytes)
     NULL,                   // Parameter
-    5,                      // Task priority
-    &myTasksendtomqtt                    // Task handle
+    2,                      // Task priority
+    &myTasksendtomqtt,                  // Task handle
+    ARDUINO_RUNNING_CORE
   );  
 
   #endif
@@ -683,17 +689,21 @@ void loop()
   };
   
   // Check stack space for all tasks
-  printTaskStack(myTaskmdnsdiscovery, "myTaskmdnsdiscovery");
+  //printTaskStack(myTaskmdnsdiscovery, "myTaskmdnsdiscovery"); // la tache s'arrete 
   printTaskStack(myTasksendtomqtt, "myTasksendtomqtt");
   printTaskStack(myTaskupdatedimmer, "myTaskupdatedimmer");
   printTaskStack(myTaskmeasureelectricity, "myTaskmeasureelectricity");
   printTaskStack(myTaskswitcholed, "myTaskswitcholed");
   printTaskStack(myTaskdallasread, "myTaskdallasread");
   printTaskStack(myTaskupdatedisplay, "myTaskupdatedisplay");
-  printTaskStack(myTaskserialreadtask, "myTaskserialreadtask");
+  //printTaskStack(myTaskserialreadtask, "myTaskserialreadtask"); // la tache s'arrete
   printTaskStack(myTaskkeepwifialive2, "myTaskkeepwifialive2");
   printTaskStack(myTaskwatchdogmemory, "myTaskwatchdogmemory");
 #endif
+
+  
+  
+
 
   #ifdef WEBSOCKET_CLIENT
   //handleWebSocket(); // Keep the WebSocket connection alive
@@ -738,28 +748,6 @@ void loop()
 
     }
   }
-/// connexion MQTT
-#ifndef LIGHT_FIRMWARE
-    if (!AP) {
-      #if WIFI_ACTIVE == true
-          if (config.mqtt) {
-            if (!client.connected() && (WiFi.status() == WL_CONNECTED )) { reconnect(); delay (1000); }
-          client.loop();
-          
-          }
-
-      #endif
-    }
-#endif
-//// surveillance des fuites mémoires 
-#ifndef LIGHT_FIRMWARE
-  client.publish(("memory/"+gDisplayValues.pvname).c_str(), String(esp_get_free_heap_size()).c_str()) ;
-  client.publish(("memory/"+gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
-  
-#endif
-
- 
-
 
 if (config.dimmerlocal) {
   ///////////////// gestion des activité minuteur 
@@ -787,11 +775,14 @@ if (config.dimmerlocal) {
           
           /// remonté MQTT
           #ifndef LIGHT_FIRMWARE
-            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-            if (configmqtt.HA) {
-              int instant_power = unified_dimmer.get_power();
-              device_dimmer.send(String(instant_power * config.charge/100));
-            } 
+            if (xSemaphoreTake(mutex, portMAX_DELAY)) { 
+              Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
+              if (configmqtt.HA) {
+                int instant_power = unified_dimmer.get_power();
+                device_dimmer.send(String(instant_power * config.charge/100));
+              } 
+              xSemaphoreGive(mutex);
+            }
           #endif
         } 
     } 
@@ -810,14 +801,17 @@ if (config.dimmerlocal) {
         
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
+        if (xSemaphoreTake(mutex, portMAX_DELAY)) {
           Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-          if (configmqtt.HA) {
-            int instant_power = unified_dimmer.get_power();
-            device_dimmer.send(String(instant_power * config.charge/100));
-            if ( programme_marche_forcee.run) {
-               device_dimmer_boost.send("1");
-            }
-          } 
+            if (configmqtt.HA) {
+              int instant_power = unified_dimmer.get_power();
+              device_dimmer.send(String(instant_power * config.charge/100));
+              if ( programme_marche_forcee.run) {
+                device_dimmer_boost.send("1");
+              }
+            } 
+            xSemaphoreGive(mutex);
+          }
         #endif
       }
     }

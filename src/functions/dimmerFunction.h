@@ -77,16 +77,19 @@ if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
         }
       }
       //// Mqtt send information
+      /*
       #ifndef LIGHT_FIRMWARE
         if (!AP) {
             if (config.mqtt)  {
             /// A vérifier que c'est necessaire ( envoie double ? )
             /// la valeur 0 doit quand meme être envoyé 
+            
               Mqtt_send(String(dimmerIDX), String(dimmervalue),"","dimmer"); 
               
             }
         }
       #endif
+      */
       delay (500); // delay de transmission réseau dimmer et application de la charge } 
       /// 24/01/2023 passage de 1500 à 500ms 
 

@@ -74,7 +74,7 @@ void GetDImmerTemp(void * parameter){
     task_mem.task_GetDImmerTemp = uxTaskGetStackHighWaterMark(nullptr);
   }
     // refresh every GETTEMPREFRESH seconds 
-    vTaskDelay(pdMS_TO_TICKS(15000));
+    vTaskDelay(pdMS_TO_TICKS(15000+(esp_random() % 61) - 30));
       }
 
 }

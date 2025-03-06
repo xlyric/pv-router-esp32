@@ -24,6 +24,8 @@ extern float WHtempgrid;
 extern float WHtempinject;
 #ifndef LIGHT_FIRMWARE
 
+extern xSemaphoreHandle mutex;
+
 
 void reconnect();
 /***
@@ -210,10 +212,11 @@ void Mqtt_init() {
   client.subscribe(("memory/"+compteur_grid.topic+"#").c_str());
   client.loop();
 
-
+  if (xSemaphoreTake(mutex, portMAX_DELAY)) {  // Prend le mutex  
      if (config.IDXdimmer != 0 ){ Mqtt_send(String(config.IDXdimmer),"0","","Dimmer"); }
     if (strcmp(config.topic_Shelly,"none") != 0) client.subscribe(config.topic_Shelly);
-
+    xSemaphoreGive(mutex);  // Libère le mutex
+  }
 
 }
 

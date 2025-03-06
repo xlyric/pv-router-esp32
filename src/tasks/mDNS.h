@@ -117,7 +117,7 @@ bool mdns_search(String type, uint16_t port)
 }
 
 void mdns_discovery(void *parameter) // NOSONAR
-{    
+{       
     for (;;)
     {        
         int Taskdelay = 10000;
@@ -134,10 +134,17 @@ void mdns_discovery(void *parameter) // NOSONAR
                 }
             }
             else {
-                Taskdelay = 600000; // 10 minutes
+                Taskdelay = 600000+(esp_random() % 61) - 30; // 10 minutes
              }
 
             xSemaphoreGive(mutex);  // Libère le mutex
+        }
+
+        //si config.dimmer défini, on arrête la tâche
+        if (strcmp(config.dimmer, "") != 0 && strcmp(config.dimmer, "none") != 0)
+        {
+            vTaskDelete(NULL);
+            Serial.println("Service mDNS arrêté, dimmer trouvé.");
         }
         vTaskDelay(Taskdelay / portTICK_PERIOD_MS);
     }
