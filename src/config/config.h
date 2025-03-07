@@ -6,7 +6,7 @@
  */
 // #define LANG_FR true
 // #define LANG_EN false
-#define DEBUGLEVEL1 false
+//#define DEBUGLEVEL1 false
 
 #define CLEAN false
 #define NTP false
