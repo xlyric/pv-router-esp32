@@ -221,6 +221,14 @@ void Enphase_get_5(void) {
   Serial.println(" total conso: " + String(gDisplayValues.Fronius_totalconso));
 }
 
+String http_mode(String port) {
+    if (port == "443")
+      return "https://";
+    else
+      return "http://"; //NOSONAR
+}
+
+
 bool Enphase_get_7_Production(void){
   HTTPClient httpenphase;
   int httpCode;
@@ -230,10 +238,7 @@ bool Enphase_get_7_Production(void){
   String port = String(configmodule.port);
   String debut;
 
-  if (String(configmodule.port) == "443")
-    debut = "https://";
-  else
-    debut = "http://";
+  debut = http_mode(String(configmodule.port));
 
   Serial.println("**** Enphase_get_7_Production ****");  
 
@@ -342,10 +347,7 @@ bool Enphase_get_7_JWT(void) {
   if (TockenValide)
     return true;
 
-  if (String(configmodule.port) == "443")
-    debut = "https://";
-  else
-    debut = "http://";
+  debut = http_mode(String(configmodule.port));
 
   String fullurl = debut+adr+":"+port+url;
   Serial.println("full url : " + fullurl);
