@@ -91,7 +91,7 @@ void GetDImmerTemp(void * parameter){
     }
 
     // refresh every GETTEMPREFRESH seconds 
-    vTaskDelay(pdMS_TO_TICKS(15000));
+    vTaskDelay(pdMS_TO_TICKS(15000+(esp_random() % 61) - 30));
   }
 }
 
