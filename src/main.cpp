@@ -30,7 +30,9 @@
 #include "tasks/gettemp.h"
 #include "tasks/mDNS.h"
 #include "tasks/measure-electricity.h"
-#include "tasks/send-mqtt.h"
+#ifndef LIGHT_FIRMWARE
+  #include "tasks/send-mqtt.h"
+#endif  
 #include "tasks/switchDisplay.h"
 #include "tasks/updateDisplay.h"
 #include "tasks/watchdog_memory.h"
@@ -658,15 +660,17 @@ void setup()
       // ----------------------------------------------------------------
       // Task: MQTT send
       // ----------------------------------------------------------------
-      xTaskCreatePinnedToCore(
-        send_to_mqtt,
-        "Update MQTT",  // Task name
-        4500,                  // Stack size (bytes)
-        NULL,                   // Parameter
-        2,                      // Task priority
-        &myTasksendtomqtt,                    // Task handle
-        ARDUINO_RUNNING_CORE
-      );  
+      #ifndef LIGHT_FIRMWARE
+        xTaskCreatePinnedToCore(
+          send_to_mqtt,
+          "Update MQTT",  // Task name
+          4500,                  // Stack size (bytes)
+          NULL,                   // Parameter
+          2,                      // Task priority
+          &myTasksendtomqtt,                    // Task handle
+          ARDUINO_RUNNING_CORE
+        );  
+      #endif
     #endif // DIMMER = true
   #endif // WIFI_ACTIVE=true
 
