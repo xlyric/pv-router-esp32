@@ -32,6 +32,12 @@ extern Programme programme_relay1;
 extern Programme programme_relay2; 
 extern Programme programme_marche_forcee;
 extern Memory task_mem; 
+extern SemaphoreHandle_t mutex; 
+
+
+//***********************************
+//************* Déclaration de fonctions
+//***********************************
 extern bool boost();
 
 //***********************************
@@ -241,7 +247,10 @@ void call_pages() {
       getLocalTime( &timeinfo );
       snprintf(raison, bufferSize, "reboot manuel: %s", asctime(&timeinfo) ); 
 
-      client.publish("memory/Routeur", raison, true);
+      if (xSemaphoreTake(mutex, portMAX_DELAY)) {  // Prend le mutex
+        client.publish("memory/Routeur", raison, true);
+        xSemaphoreGive(mutex);  // Libère le mutex
+      }
     #endif
     request->redirect("/");
     config.restart = true;
