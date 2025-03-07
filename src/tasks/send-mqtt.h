@@ -18,7 +18,9 @@
 #include "../config/config.h"
 #include "../config/enums.h"
 #include "mqtt-home-assistant.h"
-#include "functions/Mqtt_http_Functions.h"
+#ifndef LIGHT_FIRMWARE
+  #include "functions/Mqtt_http_Functions.h"
+#endif
 #include "functions/energyFunctions.h"
 
 //***********************************

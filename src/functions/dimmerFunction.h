@@ -14,7 +14,9 @@
 #include "../config/enums.h"
 #include "../config/config.h"
 #include "../functions/spiffsFunctions.h"
-#include "../functions/Mqtt_http_Functions.h"
+#ifndef LIGHT_FIRMWARE
+  #include "../functions/Mqtt_http_Functions.h"
+#endif
 #include "../functions/minuteur.h"
 #include "unified_dimmer.h"
 

@@ -39,7 +39,9 @@
 #include "tasks/watchdog_memory.h"
 #include "tasks/wifi-connection.h"
 #include "functions/ESP32.h"
+#ifndef LIGHT_FIRMWARE
 #include "functions/Mqtt_http_Functions.h"
+#endif
 #include "functions/WifiFunctions.h"
 #include "functions/dallasFunction.h"
 #include "functions/dimmerFunction.h"
