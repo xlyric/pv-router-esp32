@@ -125,7 +125,7 @@ void measureElectricity(void *parameter) { // NOSONAR
           if (WiFi.status() == WL_CONNECTED) {
             // inversion des valeurs pour enphase piloteur
             Serial.println("⚠️ Measure Electricity - Mode 2 : appel de Get Enphase");
-            Enphase_get();
+            Enphase_get();            
             int tempo = gDisplayValues.watt;
             gDisplayValues.watt = gDisplayValues.Fronius_conso;
             gDisplayValues.Fronius_conso = tempo;
@@ -133,7 +133,7 @@ void measureElectricity(void *parameter) { // NOSONAR
           }
           else
             Serial.println("⚠️ Measure Electricity - Mode 2 : pas de wifi");
-          Serial.flush();
+          Serial.flush();          
         } // mode ==2
 
         // fronius
@@ -153,10 +153,10 @@ void measureElectricity(void *parameter) { // NOSONAR
     // taking into account how long measurement took) ///&& configmodule.pilote
     if (mode != 0) {
       // le shelly et l'enphase sont plus lents et font des mesures à 1s ce qui peut créer des doublons de commandes
-      vTaskDelay(pdMS_TO_TICKS(4000));
+      vTaskDelay(pdMS_TO_TICKS(4000+(esp_random() % 61) - 30));
     }
     else {
-      vTaskDelay(pdMS_TO_TICKS(3000));
+      vTaskDelay(pdMS_TO_TICKS(3000+(esp_random() % 61) - 30));
     }
   }
 }
