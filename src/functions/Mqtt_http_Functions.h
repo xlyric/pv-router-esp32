@@ -42,6 +42,7 @@ extern HA power_apparent;
 extern HA switch_relay1;
 extern HA switch_relay2;
 extern HA device_dimmer_boost;
+extern xSemaphoreHandle mutex;
 
 //***********************************
 //************* Variables locales
@@ -226,12 +227,14 @@ WiFiClient espClient;
     client.subscribe(("memory/"+compteur_grid.topic+"#").c_str());
     client.loop();
  
-    if (config.IDXdimmer != 0 ) { 
-      Mqtt_send(String(config.IDXdimmer),"0","","Dimmer"); 
+    if (xSemaphoreTake(mutex, portMAX_DELAY)) {  // Prend le mutex  
+      if (config.IDXdimmer != 0 ) {  
+        Mqtt_send(String(config.IDXdimmer),"0","","Dimmer"); 
+      }
+      if (strcmp(config.topic_Shelly,"none") != 0) 
+        client.subscribe(config.topic_Shelly);
+      xSemaphoreGive(mutex);  // Libère le mutex
     }
-    
-    if (strcmp(config.topic_Shelly,"none") != 0) 
-      client.subscribe(config.topic_Shelly);
   }
 #endif //ifndef LIGHT_FIRMWARE
 #endif //ifndef MQTT_FUNCTIONS
