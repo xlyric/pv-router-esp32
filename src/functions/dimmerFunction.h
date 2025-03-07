@@ -81,6 +81,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
     }
 
     //// Mqtt send information
+    /*
     #ifndef LIGHT_FIRMWARE
       if (!AP) {
         if (config.mqtt)  {
@@ -90,6 +91,7 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
         }
       }
     #endif // not LIGHT_FIRMWARE
+    */
     delay (500); // delay de transmission réseau dimmer et application de la charge } 
     /// 24/01/2023 passage de 1500 à 500ms 
   #endif // WIFI_ACTIVE
