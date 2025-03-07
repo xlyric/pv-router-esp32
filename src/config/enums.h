@@ -332,8 +332,8 @@ struct Config {
       doc["facteur"] = facteur;
       doc["trigger"] = trigger;
       doc["mqtt"] = mqtt;
-      //proection contre les champs vides qui font planter le programme
-      if (strlen(mqttserver) == 0) { 
+      //protection contre les champs vides qui font planter le programme
+      if (strlen(mqttserver) == 0) { //NOSONAR
         strlcpy(mqttserver,"none",16); 
       }
       doc["mqttserver"] = mqttserver; 
