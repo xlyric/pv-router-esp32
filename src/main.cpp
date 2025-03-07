@@ -1,87 +1,115 @@
+//***********************************
+//************* LIBRAIRIES ESP
+//***********************************
 #include <Arduino.h>
 #include "driver/ledc.h"
-#include "langues/lang.h"
-
 #include "WiFiClientSecure.h"
 #include <ESPmDNS.h>
-
-  #include <driver/adc.h>
-  #include "config/config.h"
-  #include "config/enums.h"
-  #include "config/traduction.h"
-  #ifdef S3
-  #include "pin_config.h"
-  #endif
-
-  #if  NTP
-  #include <NTPClient.h>
-  #include "tasks/fetch-time-from-ntp.h"
-  #endif
-
+#include <driver/adc.h>
 #include <ElegantOTA.h>
-
-// File System
 #include <FS.h>
 #include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
 #include <ArduinoJson.h> // ArduinoJson : https://github.com/bblanchon/ArduinoJson
-
-  #include "tasks/updateDisplay.h"
-  #include "tasks/switchDisplay.h"
- 
-  
-  
-  #include "tasks/wifi-connection.h"
-  #include "tasks/measure-electricity.h"
-  
-  #include "tasks/Dimmer.h"
- 
-  #include "tasks/gettemp.h"
-
-  #include "tasks/Serial_task.h"
-  #ifndef LIGHT_FIRMWARE
-    #include "tasks/send-mqtt.h"
-  #endif
-  #include "tasks/watchdog_memory.h"
-  #include "tasks/mDNS.h"
-  
-  #include "functions/spiffsFunctions.h"
-  #include "functions/Mqtt_http_Functions.h"
-  #include "functions/webFunctions.h"
-
-  #include "functions/froniusFunction.h"
-  #include "functions/enphaseFunction.h"
-  #include "functions/WifiFunctions.h"
-  #include "functions/homeassistant.h"
-  #include "functions/ESP32.h"
-
-  #ifdef WEBSOCKET_CLIENT
-  #include "functions/websocket.h"
-  #endif
-
-  #include "functions/minuteur.h"
-
-  #include "uptime.h"
-  #include <driver/adc.h>
-
-   
-
-// Dallas 18b20
-  #include <OneWire.h>
-  #include <DallasTemperature.h>
-  #include "tasks/dallas.h"
-  #include "functions/dallasFunction.h"
-
-
-/// déclaration dimmer
+#include "uptime.h"
+#include <driver/adc.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
 #include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
-#include "functions/unified_dimmer.h"
-#include "functions/dimmerFunction.h"
 
+
+//***********************************
+//************* PROGRAMME PVROUTEUR
+//***********************************
+#include "config/config.h"
+#include "config/enums.h"
+#include "config/traduction.h"
+#include "langues/lang.h"
+#include "functions/spiffsFunctions.h"
+#include "tasks/Dimmer.h"
+#include "tasks/Serial_task.h"
+#include "tasks/dallas.h"
+#include "tasks/gettemp.h"
+#include "tasks/mDNS.h"
+#include "tasks/measure-electricity.h"
+#ifndef LIGHT_FIRMWARE
+  #include "tasks/send-mqtt.h"
+#endif  
+#include "tasks/switchDisplay.h"
+#include "tasks/updateDisplay.h"
+#include "tasks/watchdog_memory.h"
+#include "tasks/wifi-connection.h"
+#include "functions/ESP32.h"
+#include "functions/Mqtt_http_Functions.h"
+#include "functions/WifiFunctions.h"
+#include "functions/dallasFunction.h"
+#include "functions/dimmerFunction.h"
+#include "functions/enphaseFunction.h"
+#include "functions/froniusFunction.h"
+#include "functions/homeassistant.h"
+#include "functions/minuteur.h"
+#include "functions/unified_dimmer.h"
+#include "functions/webFunctions.h"
+
+
+//***********************************
+//************* S3 NON DECLARE
+//************* A SUPPRIMER ?
+//***********************************
+#ifdef S3
+  #include "pin_config.h"
+#endif
+
+//***********************************
+//************* NTP valorisé dans 
+//************* src/config/config.h
+//***********************************
+#if NTP
+  #include <NTPClient.h>
+  #include "tasks/fetch-time-from-ntp.h"
+#endif
+
+//***********************************
+//************* WEBSOCKET_CLIENT
+//************ Déprécié : a supprimer
+//************ Usage futur : à conserver
+//***********************************
+#ifdef WEBSOCKET_CLIENT
+  #include "functions/websocket.h"
+#endif
+
+//***********************************
+//************* Afficheur Oled
+//************* ESP32D1MINI_FIRMWARE
+//************* option build
+//************* plus nécessaire
+//***********************************
+#ifdef  ESP32D1MINI_FIRMWARE
+ /// deja intégré dans display.h
+#endif
+
+//***********************************
+//************* Afficheur TTGO
+//************* TTGO
+//************* option build
+//***********************************
+#ifdef  TTGO
+  #include <TFT_eSPI.h>
+  #include <SPI.h>
+  TFT_eSPI display = TFT_eSPI();   
+#endif
+
+//***********************************
+//************* VARIABLES GLOBALES
+//***********************************
 int pwmChannel = 0; //Choisit le canal 0
 int frequence = 1000; //Fréquence PWM de 1 KHz
 int resolution = 10; // Résolution de 8 bits, 256 valeurs possibles
 
-TaskHandle_t myTaskmdnsdiscovery; // Handle pour suivre la tâche
+//***********************************
+//************* VARIABLES GLOBALES
+//************* GESTION TACHES
+//***********************************
+TaskHandle_t myTaskmdnsdiscovery; 
 TaskHandle_t myTaskwatchdogmemory;
 TaskHandle_t myTaskkeepwifialive2;
 TaskHandle_t myTaskserialreadtask;
@@ -91,67 +119,61 @@ TaskHandle_t myTaskswitcholed;
 TaskHandle_t myTaskmeasureelectricity;
 TaskHandle_t myTaskupdatedimmer;
 TaskHandle_t myTasksendtomqtt;
-
-SemaphoreHandle_t mutex;  // Déclaration du mutex
-
+TaskHandle_t serialTaskHandle = NULL;
+SemaphoreHandle_t mutex;  
 
 //***********************************
-//************* Afficheur Oled
+//************* VARIABLES GLOBALES
+//************* GESTION DISPLAY
 //***********************************
-#ifdef  ESP32D1MINI_FIRMWARE
- /// deja intégré dans display.h
-#endif
-
-#ifdef  TTGO
-#include <TFT_eSPI.h>
-#include <SPI.h>
-TFT_eSPI display = TFT_eSPI();   // Invoke library
-#endif
-
-
 DisplayValues gDisplayValues;
 
+//***********************************
+//************* VARIABLES GLOBALES
+//************* CONFIGURATION
+//***********************************
 Config config; 
 Configwifi configwifi; 
 Configmodule configmodule; 
 
-///déclaration des programmateurs 
+//***********************************
+//************* VARIABLES GLOBALES
+//************* PROGRAMMATEURS
+//***********************************
 Programme programme; 
 Programme programme_relay1;
 Programme programme_relay2;
 Programme programme_marche_forcee;
 
-/// declare logs 
+//***********************************
+//************* VARIABLES GLOBALES
+//************* LOGS
+//***********************************
 Logs logging;
-/// declare MQTT 
+
+//***********************************
+//************* VARIABLES GLOBALES
+//************* MQTT
+//***********************************
 Mqtt configmqtt;
-/// surveillance mémoire
+
+//***********************************
+//************* VARIABLES GLOBALES
+//************* SURVEILLANCE MEMOIRE
+//***********************************
 Memory task_mem; 
 
-
-int retry_wifi = 0;
-void connect_to_wifi();
-void handler_before_reset();
-void reboot_after_lost_wifi(int timeafterlost);
-void IRAM_ATTR function_off_screen();
-void IRAM_ATTR function_next_screen();
-
-
-// Place to store local measurements before sending them off to AWS
-unsigned short measurements[LOCAL_MEASUREMENTS]; // NOSONAR
-unsigned char measureIndex = 0;
-
-///gestion des tasks
-TaskHandle_t serialTaskHandle = NULL;
-
 //***********************************
-//************* Dallas
+//************* VARIABLES GLOBALES
+//************* SONDE DALLAS
 //***********************************
-
 Dallas dallas; 
 
-bool boost();
-
+//***********************************
+//************* VARIABLES GLOBALES
+//************* MQTT HA
+//***********************************
+unsigned short measurements[LOCAL_MEASUREMENTS]; // NOSONAR
 #ifndef LIGHT_FIRMWARE
     HA device_dimmer; 
     HA device_routeur; 
@@ -168,30 +190,53 @@ bool boost();
     HA switch_relay1;
     HA switch_relay2;
     HA device_dimmer_boost;
-
 #endif
 
-/***************************
- *  Dimmer init
- **************************/
-/// Déclaration des dimmers
+//***********************************
+//************* VARIABLES GLOBALES
+//************* DEPRECIEES A SUPPR
+//*************   measureIndex dans drawFunction.h
+//***********************************
+unsigned char measureIndex = 0;
+
+//***********************************
+//************* VARIABLES FONCTIONS
+//***********************************
+void connect_to_wifi();
+void handler_before_reset();
+void reboot_after_lost_wifi(int timeafterlost);
+void IRAM_ATTR function_off_screen();
+void IRAM_ATTR function_next_screen();
+bool boost();
+void myTask(void *pvParameters);
+
+//***********************************
+//************* VARIABLES GLOBALES
+//************* DIMMERS
+//***********************************
+gestion_puissance unified_dimmer;
 dimmerLamp dimmer1(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 #ifdef outputPin2
   dimmerLamp dimmer2(outputPin2, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
   dimmerLamp dimmer3(outputPin3, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 #endif
-// déclaration de la gestion des dimmers
-gestion_puissance unified_dimmer;
 
+//***********************************
+//************* SETUP
+//***********************************
 void setup()
 {
   #if DEBUG == true
     Serial.begin(115200);
   #endif 
+
+  // Redirection des messages de DEBUG ves le port série
+  // CORE_DEBUG_LEVEL est définie dans les options de BUILD
   #if CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
     Serial.setDebugOutput(true);
   #endif
-  
+
+  // Initialisation de la LOG
   Serial.println("\n================== " + String(VERSION) + " ==================");
   logging.Set_log_init("197}11}1");
   logging.Set_log_init("#################  "+ String(Reason_for_reset) +"  ###############\r\n");
@@ -201,73 +246,78 @@ void setup()
   
   //démarrage file system
   Serial.println("start SPIFFS");
-  test_fs_version();
-  
   logging.Set_log_init(Start_filesystem,true);
-  
   if (!SPIFFS.begin(true)) {
     Serial.println("SPIFFS Initialization failed!");
     return;
   }
 
-    #ifdef  ESP32D1MINI_FIRMWARE
+  // Vérification de la version du File System
+  test_fs_version();
+
+  // Program & FS size
+  // size of the compiled program
+  uint32_t program_size = ESP.getSketchSize();
+  // size of the file system
+  uint32_t file_system_size = SPIFFS.totalBytes();
+  // used size of the file system
+  uint32_t file_system_used = SPIFFS.usedBytes();
+  // free size in the flash memory
+  uint32_t free_size = ESP.getFlashChipSize() - program_size - file_system_size + file_system_used;
+  Serial.println("Program size: " + String(program_size) + " bytes");
+  Serial.println("File system size: " + String(file_system_size) + " bytes");
+  Serial.println ("File system used: " + String(file_system_used) + " bytes");
+  Serial.println("Free space: " + String(free_size) + " bytes");  
+  
+  // Initialisation de l'écran OLED
+  // ESP32D1MINI_FIRMWARE : option de BUILD
+  #ifdef ESP32D1MINI_FIRMWARE
     oled.init();
     oled.wait_for_wifi(0);
-    #endif
+  #endif
 
-  /// Program & FS size
-    // size of the compiled program
-    uint32_t program_size = ESP.getSketchSize();
+  // ACTIVATION DU COOLER
+  pinMode(COOLER, OUTPUT);
+  digitalWrite(COOLER, HIGH);
 
-    // size of the file system
-    uint32_t file_system_size = SPIFFS.totalBytes();
+  // Configuration du canal PWM (Pulse With Modulation)
+  ledcSetup(pwmChannel, frequence, resolution);
+  //ledcAttachPin(outputPin, pwmChannel); // NOSONAR
 
-    // used size of the file system
-    uint32_t file_system_used = SPIFFS.usedBytes();
+  // Gestion JOTTA/SSR2 (outputPin2)
+  // Gestion RELAY3/SSR3 (outputPin3)
+  #ifdef ESP32D1MINI_FIRMWARE
+    pinMode(outputPin2, OUTPUT);
+    pinMode(outputPin3, OUTPUT);
+    //ledcAttachPin(outputPin2, pwmChannel); // NOSONAR 
+    //ledcAttachPin(outputPin3, pwmChannel);  // NOSONAR
+  #endif
 
-    // free size in the flash memory
-    uint32_t free_size = ESP.getFlashChipSize() - program_size - file_system_size + file_system_used;
-
-    Serial.println("Program size: " + String(program_size) + " bytes");
-    Serial.println("File system size: " + String(file_system_size) + " bytes");
-    Serial.println ("File system used: " + String(file_system_used) + " bytes");
-    Serial.println("Free space: " + String(free_size) + " bytes");
-
-    pinMode(COOLER, OUTPUT);
-    digitalWrite(COOLER, HIGH);
-
-    ledcSetup(pwmChannel, frequence, resolution);
-    //ledcAttachPin(outputPin, pwmChannel); // NOSONAR
-
-    #ifdef ESP32D1MINI_FIRMWARE
-        pinMode(outputPin2, OUTPUT);
-        pinMode(outputPin3, OUTPUT);
-        //ledcAttachPin(outputPin2, pwmChannel); // NOSONAR 
-        //ledcAttachPin(outputPin3, pwmChannel);  // NOSONAR
-    #endif
-//**********************************    
-/// test ACD 
-
-    adc1_config_width(ADC_WIDTH_BIT_12);
-    adc1_config_channel_atten(ADC1_CHANNEL_0,ADC_ATTEN_DB_12);
-    adc1_config_channel_atten(ADC1_CHANNEL_3, ADC_ATTEN_DB_12);
-    adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_12);
-    adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_12);
+  // Configuration de la résolution des conversions analogique-numérique (ACD)
+  // Résolution ACD 12bits 
+  adc1_config_width(ADC_WIDTH_BIT_12);
+  adc1_config_channel_atten(ADC1_CHANNEL_0,ADC_ATTEN_DB_12);
+  adc1_config_channel_atten(ADC1_CHANNEL_3, ADC_ATTEN_DB_12);
+  adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_12);
+  adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_12);
    
 
-    //***********************************
-    //************* Setup -  récupération du fichier de configuration
-    //***********************************
-  
+  //***********************************
+  //************* Setup -  récupération du fichier de configuration
+  //***********************************
   // Should load default config if run for the first time
   Serial.println(F("Loading configuration..."));
   config.loadConfiguration();
 
-  // récup des logs
+  //***********************************
+  //************* Setup -  récupération des LOGS
+  //***********************************
   loadlogs();
 
-  if (configwifi.recup_wifi()){
-     
+  //***********************************
+  //************* Setup -  récupération de la config Wifi ou AP
+  //***********************************
+  if (configwifi.recup_wifi()) {
      logging.Set_log_init(Loading_wifi_configuration,true);
        AP=false; 
   } 
@@ -275,9 +325,9 @@ void setup()
     Serial.println(F("mode AP please configure password before Wifi"));
   }
 
-  configmodule.enphase_present=false; 
-  configmodule.Fronius_present=false;
-
+  //***********************************
+  //************* Setup -  setup MQTT
+  //***********************************
   configmqtt.loadmqtt();
   // vérification que le nom du serveur MQTT est différent de none
   if (strcmp(config.mqttserver,"none") == 0 ) {
@@ -287,19 +337,25 @@ void setup()
     config.mqtt = true; 
   }
   
-  // test if Fronius is present ( and load conf )
+  //***********************************
+  //************* Setup -  setup FRONIUS
+  //***********************************  
+  configmodule.Fronius_present=false;
   configmodule.Fronius_present = loadfronius(fronius_conf);
 
-  // test if Enphase is present ( and load conf )
+  //***********************************
+  //************* Setup -  setup ENPHASE
+  //***********************************  
+  configmodule.enphase_present=false;   
   loadenphase(enphase_conf);
  
-  /// recherche d'une sonde dallas
-  
+  //***********************************
+  //************* Setup -  sonde DALLAS 18B20 locale
+  //***********************************  
   Serial.println("start 18b20");
   sensors.begin();
-  /// recherche d'une sonde dallas
+  // Recherche de sonde
   dallas.detect = dallaspresent();
-  
   // detection d'incohérence entre une dallas précédement détecté et maintenant non détecté
   if (dallas.detect == false && config.dallas_present == true) {
     dallas.detect = true;  // ce qui remontera l'incohérence et la tentative de reconnexion en plus de la protection
@@ -317,13 +373,13 @@ void setup()
   Serial.println(dallas.detect);
   Serial.println(dallas.lost);
 
-  // Setup the ADC
+  // Mise à jour de la résolution des conversions analogique-numérique (ACD)
+  // Résolution ACD 12bits 
   adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_12);
   adc1_config_channel_atten(ADC1_CHANNEL_4, ADC_ATTEN_DB_12);
   adc1_config_channel_atten(ADC1_CHANNEL_5, ADC_ATTEN_DB_12);
-
   #ifdef TTGO
-  pinMode(ADC_INPUT, INPUT);
+    pinMode(ADC_INPUT, INPUT);
   #endif
   // déclaration switch
   pinMode(RELAY1, OUTPUT);
@@ -331,24 +387,32 @@ void setup()
   digitalWrite(RELAY1, HIGH); //correction bug de démarrage en GPIO 0
   digitalWrite(RELAY2, LOW);
 
-///  WIFI INIT
-      #ifdef  ESP32D1MINI_FIRMWARE
-      oled.wait_for_wifi(1);
-      #endif
+  //***********************************
+  //************* Setup - connexion Wifi
+  //***********************************    
+  // Affichage OLED 1
+  #ifdef  ESP32D1MINI_FIRMWARE
+    oled.wait_for_wifi(1);
+  #endif
+  // Connexion WiFi
   connect_to_wifi();
-      #ifdef  ESP32D1MINI_FIRMWARE
-      oled.wait_for_wifi(2);
-      #endif
-  // Initialize mDNS ( déclaration du routeur sur le réseau )
+  // Affichage OLED 1
+  #ifdef  ESP32D1MINI_FIRMWARE
+    oled.wait_for_wifi(2);
+  #endif
+  
+  //***********************************
+  //************* Setup - mDNS
+  //***********************************    
   mdns_hello(gDisplayValues.pvname);
-
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
   logging.Set_log_init(mDNS_Responder_Started,true);
-  logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);
+  logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);  
 
-
-  /* récuperation des info ESP32*/
+  //***********************************
+  //************* Setup - infos ESP32
+  //***********************************    
   ESP32Info espInfo = getESP32Info();
   Serial.println("=== ESP32 Information ===");
   Serial.print("Chip Model: "); Serial.println(espInfo.chipModel);
@@ -357,13 +421,13 @@ void setup()
   Serial.print("Board Name: "); Serial.println(espInfo.boardName);
   Serial.print("Chip ID: "); Serial.println(espInfo.chipID, HEX);
 
-#if OLED_ON == true
+  //***********************************
+  //************* Setup - init Affichage OLED
+  //***********************************    
+  #if OLED_ON == true
     Serial.println(OLEDSTART);
-    // Initialising OLED
-
-    
+    // Initialising OLED   
     #ifdef TTGO
-
         pinMode(SWITCH,INPUT_PULLUP);
         pinMode(BUTTON_LEFT,INPUT_PULLUP);
 
@@ -371,157 +435,170 @@ void setup()
         display.setRotation(1);
         
         if (config.flip) {
-        display.setRotation(3);
+          display.setRotation(3);
         }
 
         display.fillScreen(TFT_BLACK); // Black screen fill
         display.setCursor(0, 0, 2);
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
         display.println(BOOTING);
-    #endif
-#endif
+    #endif // TTGO
+  #endif // OLED_ON
 
-/// init du NTP
-ntpinit(); 
+  //***********************************
+  //************* Setup - NPT
+  //***********************************
+  ntpinit(); 
 
+  //***********************************
+  //************* Setup - Dimmer
+  //***********************************  
   Dimmer_setup();
 
-
-   // vérification de la présence d'index.html
+  //***********************************
+  //************* Setup - vérif FS
+  //***********************************   
+  // vérification de la présence d'index.html
   if(!SPIFFS.exists("/index.html.gz")){
     Serial.println(SPIFFSNO);  
-    
     logging.Set_log_init(SPIFFSNO,true);
   }
 
+  //***********************************
+  //************* Setup - Chargement config
+  //***********************************   
+  // vérification de la présence du fichier de configuration
   if(!SPIFFS.exists(config.filename_conf)){
     Serial.println(CONFNO);  
     logging.Set_log_init(CONFNO,true);
-
   }
-
-/// chargement des conf de minuteries
+  /// chargement des conf de minuteries
   Serial.println("Loading minuterie");
   programme.set_name("/dimmer");
   programme.loadProgramme();
-
   programme_marche_forcee.set_name("/marche_forcee");
-
   programme_relay1.set_name("/relay1");
   programme_relay1.loadProgramme();
-
   programme_relay2.set_name("/relay2");
   programme_relay2.loadProgramme();
-
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
 
+  //***********************************
+  //************* Setup - init Semaphore
+  //***********************************   
   mutex = xSemaphoreCreateMutex();  // Création du mutex
 
-#if WIFI_ACTIVE == true
-  #if WEBSSERVER == true
-  //***********************************
-	//************* Setup -  demarrage du webserver et affichage de l'oled
-	//***********************************
-   Serial.println("start Web server");
-   call_pages();
-  #endif
+  #if WIFI_ACTIVE == true
+    #if WEBSSERVER == true
+      //***********************************
+      //************* Setup -  demarrage du webserver et affichage de l'oled
+      //***********************************
+      Serial.println("start Web server");
+      call_pages();
+    #endif // WEBSERVER
 
-  // ----------------------------------------------------------------
-  // TASK: Connect to WiFi & keep the connection alive.
-  // ----------------------------------------------------------------
-  /*if (!AP){ // NOSONAR
-    xTaskCreate( // NOSONAR
-      keepWiFiAlive, // NOSONAR
-      "keepWiFiAlive",  // Task name // NOSONAR
-      8000,            // Stack size (bytes) // NOSONAR
-      NULL,             // Parameter // NOSONAR
-      5,                // Task priority // NOSONAR
-      NULL          // Task handle // NOSONAR
-      
-    );  //pdMS_TO_TICKS(30000)// NOSONAR
-    } */ // NOSONAR
 
-    // task du watchdog de la mémoire
-  /*  
+    //***********************************
+    //************* Setup -  init xTask
+    //***********************************
+    // ----------------------------------------------------------------
+    // TASK: Connect to WiFi & keep the connection alive (dépréciée -> keepWifiAlive2)
+    // ----------------------------------------------------------------
+    /*
+    if (!AP) { // NOSONAR
+      xTaskCreate( // NOSONAR
+        keepWiFiAlive, // NOSONAR
+        "keepWiFiAlive",  // Task name // NOSONAR
+        8000,            // Stack size (bytes) // NOSONAR
+        NULL,             // Parameter // NOSONAR
+        5,                // Task priority // NOSONAR
+        NULL          // Task handle // NOSONAR      
+      );  //pdMS_TO_TICKS(30000)// NOSONAR
+    } //AP // NOSONAR
+    */
+    // ----------------------------------------------------------------
+    // TASK: watchdog Mémory
+    // ----------------------------------------------------------------
+    /*
+
     xTaskCreatePinnedToCore(
       watchdog_memory,
       "watchdog_memory",  // Task name
       4000,            // Stack size (bytes)
       NULL,             // Parameter
       3,                // Task priority
-      &myTaskwatchdogmemory ,           // Task handle
+
+      &myTaskwatchdogmemory,          // Task handle
       0
     );  
-  */ 
-  // task de recherche dimmer 
-  xTaskCreatePinnedToCore(
-      mdns_discovery,
-      "mdns_discovery",  // Task name
-      3000,            // Stack size (bytes)
-      NULL,             // Parameter
-      1,                // Task priority
-      &myTaskmdnsdiscovery,          // Task handle
-      ARDUINO_RUNNING_CORE
-    );    // le service est arreté si un dimmer est trouvé ou déjà configuré --> necessite reboot pour rechercher de nouveau
+    */
+    // ----------------------------------------------------------------
+    // TASK: recherche de dimmer
+    // ----------------------------------------------------------------
+    xTaskCreatePinnedToCore (
+        mdns_discovery,
+        "mdns_discovery",  // Task name
+        3000,            // Stack size (bytes)
+        NULL,             // Parameter
+        1,                // Task priority
+        &myTaskmdnsdiscovery,          // Task handle
+        ARDUINO_RUNNING_CORE
+    );  // le service est arreté si un dimmer est trouvé ou déjà configuré --> necessite reboot pour rechercher de nouveau
+    // ----------------------------------------------------------------
+    // TASK: remettre le wifi en route en cas de passage en mode AP
+    // ----------------------------------------------------------------
 
-
-     //// task pour remettre le wifi en route en cas de passage en mode AP
     xTaskCreate(
       keepWiFiAlive2,
       "keepWiFiAlive",  // Task name
       3000,            // Stack size (bytes)
       NULL,             // Parameter
       2,                // Task priority
-      &myTaskkeepwifialive2          // Task handle
-      
-    );
 
-    
-  #endif
-
+      &myTaskkeepwifialive2          // Task handle      
+    );  
+  #endif // WIFI_ACTIVE
   // ----------------------------------------------------------------
   // TASK: envoie d'information série
   // ----------------------------------------------------------------
-   //// la task a un timeout et le mode série ne répond plus après 2 minutes ce qui laisse le temps de faire les reglages wifi sur l'OTA
-   xTaskCreate(
-      serial_read_task,
-      "Serial Read",      // Task name
-      3000,            // Stack size (bytes)
-      NULL,             // Parameter
-      2,                // Task priority
-      &myTaskserialreadtask             // Task handle
-    );  /// le service est arreté après 2 minutes
-
+  //// la task a un timeout et le mode série ne répond plus après 2 minutes ce qui laisse le temps de faire les reglages wifi sur l'OTA
+  xTaskCreate(
+    serial_read_task,
+    "Serial Read",      // Task name
+    3000,            // Stack size (bytes)
+    NULL,             // Parameter
+    2,                // Task priority
+    &myTaskserialreadtask              // Task handle
+  );  /// le service est arreté après 2 minutes
 
   // ----------------------------------------------------------------
   // TASK: Update the display every second
+  // ----------------------------------------------------------------
   //       This is pinned to the same core as Arduino
   //       because it would otherwise corrupt the OLED
   // ----------------------------------------------------------------
   #if OLED_ON == true
-      #ifdef  ESP32D1MINI_FIRMWARE
+    #ifdef ESP32D1MINI_FIRMWARE
       Serial.println("init oled 0.7'' ");
       init_ui();
-      #endif
-  #endif
 
-#if OLED_ON == true 
-xTaskCreate(
-    updateDisplay,
-    "UpdateDisplay",  // Task name
-    3500,            // Stack size (bytes)
-    NULL,             // Parameter
-    2,                // Task priority
-    &myTaskupdatedisplay           // Task handle
+    #endif // ESP32D1MINI_FIRMWARE
+    xTaskCreate(
+      updateDisplay,
+      "UpdateDisplay",  // Task name
+      3500,            // Stack size (bytes)
+      NULL,             // Parameter
+      2,                // Task priority
+      &myTaskupdatedisplay             // Task handle      
+    );  
+  #endif // OLED_ON
 
-  );  
-#endif
 
+  // ----------------------------------------------------------------
+  // Task: Read Dallas Temp
+  // ----------------------------------------------------------------
   if (dallas.detect) {
-    // ----------------------------------------------------------------
-    // Task: Read Dallas Temp
-    // ----------------------------------------------------------------
     xTaskCreate(
       dallasread,
       "Dallas local temp",  // Task name
@@ -532,32 +609,28 @@ xTaskCreate(
     ); 
   }
 
-
-#ifdef  TTGO
   // ----------------------------------------------------------------
   // Task: Update Dimmer power
   // ----------------------------------------------------------------
-  #ifndef ESP32D1MINI_FIRMWARE
-    attachInterrupt(SWITCH, function_off_screen, FALLING);
-    attachInterrupt(BUTTON_LEFT, function_next_screen, FALLING);
-
-  xTaskCreate( 
-    switchDisplay,
-    "Swith Oled",  // Task name
-    3000,                  // Stack size (bytes)
-    NULL,                   // Parameter
-    2,                      // Task priority
-    &myTaskswitcholed                    // Task handle
-  ); 
-  #endif
-#endif
-
-
+  #ifdef TTGO
+    #ifndef ESP32D1MINI_FIRMWARE
+      attachInterrupt(SWITCH, function_off_screen, FALLING);
+      attachInterrupt(BUTTON_LEFT, function_next_screen, FALLING);
+      xTaskCreate( 
+        switchDisplay,
+        "Swith Oled",  // Task name
+        3000,                  // Stack size (bytes)
+        NULL,                   // Parameter
+        2,                      // Task priority
+        &myTaskswitcholed                    // Task handle
+      ); 
+    #endif // ESP32D1MINI_FIRMWARE
+  #endif // TTGO
 
   // ----------------------------------------------------------------
   // Task: measure electricity consumption ;)
   // ----------------------------------------------------------------
-   xTaskCreate(
+  xTaskCreate(
     measureElectricity,
     "Measure electricity",  // Task name
     5000,                  // Stack size (bytes)
@@ -566,179 +639,189 @@ xTaskCreate(
     &myTaskmeasureelectricity                    // Task handle
   );  
 
-#if WIFI_ACTIVE == true
-  #if DIMMER == true
   // ----------------------------------------------------------------
   // Task: Update Dimmer power
   // ----------------------------------------------------------------
-   
-  xTaskCreatePinnedToCore(
-    updateDimmer,
-    "Update Dimmer",  // Task name
-    4000,                  // Stack size (bytes)
-    NULL,                   // Parameter
-    4,                      // Task priority
-    &myTaskupdatedimmer  ,                  // Task handle
-    ARDUINO_RUNNING_CORE
-  );
-  
-  // ----------------------------------------------------------------
-  // Task: Get Dimmer temp
-  // ----------------------------------------------------------------
-  if (!dallas.detect) {
-    xTaskCreatePinnedToCore(
-        GetDImmerTemp,
-        "Update temp",  // Task name
+
+  #if WIFI_ACTIVE == true
+    #if DIMMER == true
+      xTaskCreatePinnedToCore(
+        updateDimmer,
+        "Update Dimmer",  // Task name
         4000,                  // Stack size (bytes)
         NULL,                   // Parameter
-        2,                      // Task priority
-        NULL,                  // Task handle
+        4,                      // Task priority
+        &myTaskupdatedimmer,                    // Task handle
         ARDUINO_RUNNING_CORE
       );  
-  }
-
-    // ----------------------------------------------------------------
-    // Task: MQTT send
-    // ----------------------------------------------------------------
-    #ifndef LIGHT_FIRMWARE
-    xTaskCreatePinnedToCore(
-      send_to_mqtt,
-      "Update MQTT",  // Task name
-      4500,                  // Stack size (bytes)
-      NULL,                   // Parameter
-      2,                      // Task priority
-      &myTasksendtomqtt,                  // Task handle
-      ARDUINO_RUNNING_CORE
-    );  
-    #endif
-  #endif
-
-#endif
-
-
-#if WIFI_ACTIVE == true
-
-
-      #if WEBSSERVER == true
-        ElegantOTA.begin(&server);
-        server.begin(); 
+      // ----------------------------------------------------------------
+      // Task: Get Dimmer temp
+      // ----------------------------------------------------------------
+      if (!dallas.detect) {
+        xTaskCreatePinnedToCore(
+          GetDImmerTemp,
+          "Update temp",  // Task name
+          4000,                  // Stack size (bytes)
+          NULL,                   // Parameter
+          2,                      // Task priority
+          NULL,                    // Task handle
+          ARDUINO_RUNNING_CORE
+        );  
+      }
+      // ----------------------------------------------------------------
+      // Task: MQTT send
+      // ----------------------------------------------------------------
+      #ifndef LIGHT_FIRMWARE
+        xTaskCreatePinnedToCore(
+          send_to_mqtt,
+          "Update MQTT",  // Task name
+          4500,                  // Stack size (bytes)
+          NULL,                   // Parameter
+          2,                      // Task priority
+          &myTasksendtomqtt,                    // Task handle
+          ARDUINO_RUNNING_CORE
+        );  
       #endif
-  #ifndef LIGHT_FIRMWARE
+    #endif // DIMMER = true
+  #endif // WIFI_ACTIVE=true
+
+
+  //***********************************
+  //************* Setup - init ElegantOTA
+  //***********************************   
+  #if WIFI_ACTIVE == true
+    #if WEBSSERVER == true
+      ElegantOTA.begin(&server);
+      server.begin(); 
+    #endif
+
+    //***********************************
+    //************* Setup - MQTT init
+    //***********************************   
+    #ifndef LIGHT_FIRMWARE
       if (!AP) {
           if (config.mqtt) {
-            Mqtt_init();
-
-          // HA autoconf
-          if (!client.connected() && (WiFi.status() == WL_CONNECTED )) { reconnect(); delay (1000);}
-          if (configmqtt.HA) init_HA_sensor();
-            
+            Mqtt_init();            
+            if (!client.connected() && (WiFi.status() == WL_CONNECTED )) { 
+              reconnect(); 
+              delay (1000);
+            }
+            // HA autoconf
+            if (configmqtt.HA) 
+              init_HA_sensor();            
           }
       }
-  #endif
+    #endif // not LIGHT_FIRMWARE
 
     gDisplayValues.dimmer = 0; 
-    dimmer_change( config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,0 ) ; 
+    dimmer_change(config.dimmer, config.IDXdimmer, gDisplayValues.dimmer,0); 
+  #endif // WIFI_ACTIVE == true
 
+  //***********************************
+  //************* Setup - handler before reboot
+  //***********************************  
+  esp_register_shutdown_handler( handler_before_reset );
+  logging.power=true; 
+  logging.sct=true; 
+  logging.sinus=true; 
 
-#endif
+  /// affichage de l'heure  GMT +1 dans la log
+  logging.Set_log_init(End_Start,true);
+  savelogs(" -- fin du précédent reboot -- ");
 
-esp_register_shutdown_handler( handler_before_reset );
+  /// envoie de l'info de reboot
+  constexpr const int bufferSize = 150; // Taille du tampon pour stocker le message
+  char raison[bufferSize];     
+  snprintf(raison, bufferSize, "restart : %s", logging.loguptime()); 
+  #ifndef LIGHT_FIRMWARE 
+    client.publish("memory/Routeur", raison, true);
+  #endif
 
-logging.power=true; logging.sct=true; logging.sinus=true; 
+  //***********************************
+  //************* Setup - initialisaiton du socket web
+  //***********************************    
+  #ifdef WEBSOCKET_CLIENT
+    setupWebSocket(); // initialisation du socket web
+  #endif
 
-/// affichage de l'heure  GMT +1 dans la log
-logging.Set_log_init(End_Start,true);
-
-savelogs(" -- fin du précédent reboot -- ");
-
-/// envoie de l'info de reboot
-constexpr const int bufferSize = 150; // Taille du tampon pour stocker le message
-char raison[bufferSize];     
-snprintf(raison, bufferSize, "restart : %s", logging.loguptime()); 
-#ifndef LIGHT_FIRMWARE 
-  client.publish("memory/Routeur", raison, true);
-#endif
-#ifdef WEBSOCKET_CLIENT
-setupWebSocket(); // initialisation du socket web
-#endif
-
-programme_marche_forcee.temperature = config.tmax;
+  programme_marche_forcee.temperature = config.tmax;
 }
 
-// @multinet33 : c'est un peu crade ;) 
-void myTask(void *pvParameters) {
-    while (1) {
-        Serial.print("Stack disponible : ");
-        Serial.println(uxTaskGetStackHighWaterMark(NULL)); // Vérifie la pile de cette tâche
-        vTaskDelay(1000 / portTICK_PERIOD_MS); // Pause 1 seconde
-    }
-}
-
-//#define DEBUGLEVEL1
-/// @brief / Loop function
-void loop()
-{
-
-#ifdef DEBUGLEVEL1
-  // Function to check stack for a specific task and print the result
-  auto printTaskStack = [](TaskHandle_t taskHandle, const char* taskName) {
-    if (taskHandle != NULL) {
-      Serial.print("Stack min restante de ");
-      Serial.print(taskName);
-      Serial.print(" : ");
-      Serial.println(uxTaskGetStackHighWaterMark(taskHandle));
-    }
-  };
-  
-  // Check stack space for all tasks
-  //printTaskStack(myTaskmdnsdiscovery, "myTaskmdnsdiscovery"); // la tache s'arrete 
-  printTaskStack(myTasksendtomqtt, "myTasksendtomqtt");
-  printTaskStack(myTaskupdatedimmer, "myTaskupdatedimmer");
-  printTaskStack(myTaskmeasureelectricity, "myTaskmeasureelectricity");
-  printTaskStack(myTaskswitcholed, "myTaskswitcholed");
-  printTaskStack(myTaskdallasread, "myTaskdallasread");
-  printTaskStack(myTaskupdatedisplay, "myTaskupdatedisplay");
-  //printTaskStack(myTaskserialreadtask, "myTaskserialreadtask"); // la tache s'arrete
-  printTaskStack(myTaskkeepwifialive2, "myTaskkeepwifialive2");
-  printTaskStack(myTaskwatchdogmemory, "myTaskwatchdogmemory");
-#endif
-
-  
+//***********************************
+//************* LOOP
+//***********************************
+void loop() {
+  int retry_wifi = 0;
   
 
+  //***********************************
+  //************* Loop - affichage de la mémoire dispo / xTasks
+  //***********************************    
+  #ifdef DEBUGLEVEL1
+    // Function to check stack for a specific task and print the result
+    auto printTaskStack = [](TaskHandle_t taskHandle, const char* taskName) {
+      if (taskHandle != NULL) {
+        Serial.print("Stack min restante de ");
+        Serial.print(taskName);
+        Serial.print(" : ");
+        Serial.println(uxTaskGetStackHighWaterMark(taskHandle));
+      }
+    };  
+    // Check stack space for all tasks
+    //printTaskStack(myTaskmdnsdiscovery, "myTaskmdnsdiscovery"); // la tache s'arrete 
+    printTaskStack(myTasksendtomqtt, "myTasksendtomqtt");
+    printTaskStack(myTaskupdatedimmer, "myTaskupdatedimmer");
+    printTaskStack(myTaskmeasureelectricity, "myTaskmeasureelectricity");
+    printTaskStack(myTaskswitcholed, "myTaskswitcholed");
+    printTaskStack(myTaskdallasread, "myTaskdallasread");
+    printTaskStack(myTaskupdatedisplay, "myTaskupdatedisplay");
+    //printTaskStack(myTaskserialreadtask, "myTaskserialreadtask"); // la tache s'arrete
+    printTaskStack(myTaskkeepwifialive2, "myTaskkeepwifialive2");
+    printTaskStack(myTaskwatchdogmemory, "myTaskwatchdogmemory");
+  #endif
+
+  //***********************************
+  //************* Loop - web socket loop
+  //*********************************** 
 
   #ifdef WEBSOCKET_CLIENT
-  //handleWebSocket(); // Keep the WebSocket connection alive
-  webSocket.loop();
+    //handleWebSocket(); // Keep the WebSocket connection alive
+    webSocket.loop();
   #endif
-//// si perte du wifi après  6h, reboot
+
+  //***********************************
+  //************* Loop - mode AP - gestion perte wifi apres 6H
+  //*********************************** 
   if (AP) {
     reboot_after_lost_wifi(6);
   }
 
-/// redémarrage sur demande
+  //***********************************
+  //************* Loop - mode AP - redemmarrage sur demande
+  //*********************************** 
   if (config.restart) {
-
     Serial.print(PV_RESTART);
     savelogs("-- reboot demande par l'utilisateur -- ");
     ESP.restart();
   }
 
-
-   ///  vérification de la tailld du buffer log_init ( 600 caractères max ) il est créé à 650 caractères ( enums.h )
-   /// pour éviter les buffer overflow et fuite mémoire. 
+  //***********************************
+  //************* Loop -  vérification de la taille du buffer log_init ( 600 caractères max ) il est créé à 650 caractères ( enums.h )
+  //*********************************** 
   logging.clean_log_init();
-// affichage en mode serial de la taille de la chaine de caractère logging.log_init
 
-
-
-// vérification de la connexion wifi 
+  //***********************************
+  //************* Loop -  vérification de la connexion wifi 
+  //*********************************** 
   if ( WiFi.status() != WL_CONNECTED ) {
-      connect_to_wifi();
-      }
-    
+    connect_to_wifi();
+  }
+
+  //***********************************
+  //************* Loop -  gestion du nombre de stations connectées en AP
+  //*********************************** 
   if (AP) {
-    int number_client = WiFi.softAPgetStationNum(); // Nombre de stations connectées à ESP8266 soft-AP
+    int number_client = WiFi.softAPgetStationNum(); // Nombre de stations connectées à ESP
     if (number_client == 0 ) {
       if (retry_wifi == 10 ) {
         retry_wifi = 0;
@@ -747,125 +830,130 @@ void loop()
       if (retry_wifi < 10 ) {
         retry_wifi ++;
       }
-
     }
   }
 
-if (config.dimmerlocal) {
-  ///////////////// gestion des activité minuteur 
-  //// Dimmer 
+
+   //***********************************
+  //************* Loop -  gestion des activités minuteurs
+  //*********************************** 
+  if (config.dimmerlocal) {
+    ///////////////// gestion des activité minuteur 
+    //// Dimmer 
     Serial.println(unified_dimmer.get_power());
     if (programme.run || programme_marche_forcee.run) { 
-        //  minuteur en cours
-        if (programme.stop_progr() || programme_marche_forcee.stop_progr() ) { 
+      //  minuteur en cours
+      if (programme.stop_progr() || programme_marche_forcee.stop_progr() ) { 
+        unified_dimmer.dimmer_off("minuteur"); 
+        unified_dimmer.set_power(0); 
+        if (dallas.detect) {
+          dallas.security=true;
+        }
+        DEBUG_PRINTLN("programme.run");
+        Serial.println("stop minuteur dimmer");
+        //arret du ventilateur
+        digitalWrite(COOLER, LOW);
+        /// retrait de la securité dallas          
+        // on remet les valeurs de temps programme_marche_force à 00:00
+        strcpy(programme_marche_forcee.heure_demarrage, "00:00"); // NOSONAR
+        strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR        
+        /// remonté MQTT
+        #ifndef LIGHT_FIRMWARE
+          if (xSemaphoreTake(mutex, portMAX_DELAY)) { 
+            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
+            if (configmqtt.HA) {
+              int instant_power = unified_dimmer.get_power();
+              device_dimmer.send(String(instant_power * config.charge/100));
+            } 
+            xSemaphoreGive(mutex);
+          }
+        #endif // not LIGHT_FIRMWARE
+      } // if (programme.stop_progr() || programme_marche_forcee.stop_progr() )
+    } // if (programme.run || programme_marche_forcee.run)  
 
-            unified_dimmer.dimmer_off("minuteur"); 
-            unified_dimmer.set_power(0); 
-            if (dallas.detect) {
-            dallas.security=true;
-            }
-
-          DEBUG_PRINTLN("programme.run");
-          Serial.println("stop minuteur dimmer");
-          //arret du ventilateur
-          digitalWrite(COOLER, LOW);
-          /// retrait de la securité dallas
-          
-          // on remet les valeurs de temps programme_marche_force à 00:00
-          strcpy(programme_marche_forcee.heure_demarrage, "00:00"); // NOSONAR
-          strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR
-          
-          /// remonté MQTT
-          #ifndef LIGHT_FIRMWARE
-            if (xSemaphoreTake(mutex, portMAX_DELAY)) { 
-              Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-              if (configmqtt.HA) {
-                int instant_power = unified_dimmer.get_power();
-                device_dimmer.send(String(instant_power * config.charge/100));
-              } 
-              xSemaphoreGive(mutex);
-            }
-          #endif
-        } 
-    } 
     else { 
       // minuteur à l'arret
       if (programme.start_progr() ||  programme_marche_forcee.start_progr() ){ 
         int sysvar_puissance; 
-        if ( programme.puissance > config.localfuse ) {     sysvar_puissance=config.localfuse; }
-        else { sysvar_puissance = programme.puissance; } 
-
+        if ( programme.puissance > config.localfuse ) {     
+          sysvar_puissance=config.localfuse; 
+        }
+        else { 
+          sysvar_puissance = programme.puissance; 
+        } 
         unified_dimmer.set_power(sysvar_puissance);
         delay (50);
         Serial.println("start minuteur ");
         //demarrage du ventilateur 
-        digitalWrite(COOLER, HIGH);
-        
+        digitalWrite(COOLER, HIGH);      
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
-        if (xSemaphoreTake(mutex, portMAX_DELAY)) {
-          Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-            if (configmqtt.HA) {
-              int instant_power = unified_dimmer.get_power();
-              device_dimmer.send(String(instant_power * config.charge/100));
-              if ( programme_marche_forcee.run) {
-                device_dimmer_boost.send("1");
-              }
-            } 
-            xSemaphoreGive(mutex);
-          }
-        #endif
-      }
+
+          if (xSemaphoreTake(mutex, portMAX_DELAY)) {
+            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
+              if (configmqtt.HA) {
+                int instant_power = unified_dimmer.get_power();
+                device_dimmer.send(String(instant_power * config.charge/100));
+                if ( programme_marche_forcee.run) {
+                  device_dimmer_boost.send("1");
+                }
+              } 
+              xSemaphoreGive(mutex);
+            }
+        #endif // not LIGHT_FIRMWARE
+      } // if (programme.start_progr() ||  programme_marche_forcee.start_progr() )
+    } // else
+  } // if (config.dimmerlocal)
+
+
+  //***********************************
+  //************* Loop -  gestion des programmes
+  //***********************************   
+  if (programme_relay1.run) { 
+    if (programme_relay1.stop_progr()) { 
+      logging.Set_log_init(Stop_minuteur_relay1,true);
+      digitalWrite(RELAY1 , HIGH); //correction bug de démarrage en GPIO 0
     }
-}
-
-if (programme_relay1.run) { 
-      if (programme_relay1.stop_progr()) { 
-        logging.Set_log_init(Stop_minuteur_relay1,true);
-        digitalWrite(RELAY1 , HIGH); //correction bug de démarrage en GPIO 0
-      }
- }
- else {
-      if (programme_relay1.start_progr()){ 
-        logging.Set_log_init(Start_minuteur_relay1,true);
-        digitalWrite(RELAY1 , LOW); //correction bug de démarrage en GPIO 0
-      }
- }
-
- if (programme_relay2.run) { 
-      if (programme_relay2.stop_progr()) { 
-        logging.Set_log_init(Stop_minuteur_relay2,true);
-        digitalWrite(RELAY2 , LOW);
-      }
- }
- else {
-      if (programme_relay2.start_progr()){ 
-        logging.Set_log_init(Start_minuteur_relay2,true);
-        digitalWrite(RELAY2 , HIGH);
-      }
- }
-
-/// fonction de reboot hebdomadaire ( lundi 00:00 )
-
-if (!AP) {
-    time_reboot();
-}
-
+  }
+  else {
+    if (programme_relay1.start_progr()){ 
+      logging.Set_log_init(Start_minuteur_relay1,true);
+      digitalWrite(RELAY1 , LOW); //correction bug de démarrage en GPIO 0
+    }
+  }
+  if (programme_relay2.run) { 
+    if (programme_relay2.stop_progr()) { 
+      logging.Set_log_init(Stop_minuteur_relay2,true);
+      digitalWrite(RELAY2 , LOW);
+    }
+  }
+  else {
+    if (programme_relay2.start_progr()){ 
+      logging.Set_log_init(Start_minuteur_relay2,true);
+      digitalWrite(RELAY2 , HIGH);
+    }
+  }
   //// protection contre l'absence de commande  
   if ( !programme.run && !programme_marche_forcee.run ) { 
     unified_dimmer.auto_off(AUTO_OFF);
+  }
+
+  //***********************************
+  //************* Loop -  fonction de reboot hebdomadaire ( lundi 00:00 )
+  //***********************************   
+  if (!AP) {
+    time_reboot();
   }
   
   task_mem.task_loop = uxTaskGetStackHighWaterMark(nullptr);
   vTaskDelay(pdMS_TO_TICKS(10000));
 }
 
-/// @brief / end Loop function
-
-
+//***********************************
+//************* connect_to_wifi
+//***********************************
 void connect_to_wifi() {
   ///// AP WIFI INIT 
-   
   if (AP || strcmp(configwifi.SID,"AP") == 0 ) {
       APConnect(); 
       gDisplayValues.currentState = DEVICE_STATE::UP;
@@ -874,34 +962,29 @@ void connect_to_wifi() {
       return; 
   }
   else {
-      #if WIFI_ACTIVE == true
+    #if WIFI_ACTIVE == true
       WiFi.mode(WIFI_STA);
       WiFi.setSleep(false);
       WiFi.begin(configwifi.SID, configwifi.passwd); 
       int timeoutwifi=0;
-      
       logging.Set_log_init(Start_Wifi_Network,true);
       logging.Set_log_init(configwifi.SID);
       logging.Set_log_init("\r\n");
-      
+    
       while ( WiFi.status() != WL_CONNECTED ) {
         delay(500);
         Serial.print(".");
         timeoutwifi++; 
 
-        if (timeoutwifi > 40 ) {
-              
-              logging.Set_log_init(timeout_AP_mode,true);
-              
+        if (timeoutwifi > 40 ) {              
+              logging.Set_log_init(timeout_AP_mode,true);          
               logging.Set_log_init(Wifi_State,true);
-              logging.Set_log_init("",true);
-              
+              logging.Set_log_init("",true);            
               switch (WiFi.status()) {
                   case 1:
                       logging.Set_log_init("SSID is not available");
                       break;
                   case 4:
-
                       logging.Set_log_init("The connection fails for all the attempts");
                       break;
                   case 5:
@@ -911,52 +994,52 @@ void connect_to_wifi() {
                       logging.Set_log_init("Disconnected from the network");
                       break;
                   default:
-                      break;
-          
-              logging.Set_log_init("\r\n");
+                      break;    
+                logging.Set_log_init("\r\n");
               } 
               break;
-        }
-    }
+          } // (timeoutwifi > 40 )
+      } // while ( WiFi.status() != WL_CONNECTED )
 
-        //// timeout --> AP MODE 
-        if ( timeoutwifi > 40 ) {
-              WiFi.disconnect(); 
-              serial_println(timeout_AP_mode);
-              
-              gDisplayValues.currentState = DEVICE_STATE::UP;
-              APConnect(); 
-        }
-
+      //// timeout --> AP MODE 
+      if ( timeoutwifi > 40 ) {
+        WiFi.disconnect(); 
+        serial_println(timeout_AP_mode);
+        
+        gDisplayValues.currentState = DEVICE_STATE::UP;
+        APConnect(); 
+      }
 
       serial_println(Wifi_connected);
       logging.Set_log_init(Wifi_connected,true);
       serial_println("IP address: ");
       serial_println(WiFi.localIP());
-        serial_print(signal_level);
-        serial_print(WiFi.RSSI());
-        serial_println("dBm");
+      serial_print(signal_level);
+      serial_print(WiFi.RSSI());
+      serial_println("dBm");
       gDisplayValues.currentState = DEVICE_STATE::UP;
       gDisplayValues.IP = String(WiFi.localIP().toString());
       btStop();
-      #endif
-  }
-}
+    #endif // WIFI_ACTIVE == true
+  } // else
+} // if (AP || strcmp(configwifi.SID,"AP") == 0 )
 
 
-
-
+//***********************************
+//************* handler_before_reset
+//***********************************
 void handler_before_reset() {
   #ifndef LIGHT_FIRMWARE
-  const int bufferSize = 150; // Taille du tampon pour stocker le message
-  char raison[bufferSize];
-
-  snprintf(raison, bufferSize, "reboot handler: %s ",logging.loguptime()); 
-  
-  client.publish("memory/Routeur", raison, true);
+    const int bufferSize = 150; // Taille du tampon pour stocker le message
+    char raison[bufferSize];
+    snprintf(raison, bufferSize, "reboot handler: %s ",logging.loguptime()); 
+    client.publish("memory/Routeur", raison, true);
   #endif
 }
 
+//***********************************
+//************* reboot_after_lost_wifi
+//***********************************
 void reboot_after_lost_wifi(int timeafterlost) {
   uptime::calculateUptime();
   if ( uptime::getHours() > timeafterlost ) { 
@@ -965,20 +1048,28 @@ void reboot_after_lost_wifi(int timeafterlost) {
   }
 }
 
+//***********************************
+//************* function_off_screen
+//***********************************
 void IRAM_ATTR function_off_screen() {
   gDisplayValues.screenbutton = true;
 }
 
+//***********************************
+//************* function_next_screen
+//***********************************
 void IRAM_ATTR function_next_screen(){
   gDisplayValues.nextbutton = true;
   gDisplayValues.option++; 
   if (gDisplayValues.option > 2 ) { gDisplayValues.option = 1 ;}; 
 }
 
+//***********************************
+//************* boost
+//***********************************
 bool boost(){
     time_t now = time(nullptr);
     if (programme_marche_forcee.run) {
-
       // sur bug avec mqtt, on fait differement : on change l'heure de fin pour mettre à maintenant
       strftime(programme_marche_forcee.heure_arret, 6, "%H:%M", localtime(&now));
       now += TIME_BOOST;
@@ -988,10 +1079,13 @@ bool boost(){
     
     // programation de l'heure de démarrage
     strftime(programme_marche_forcee.heure_demarrage, 6, "%H:%M", localtime(&now));
+    
     // ajout de 2h
     now += TIME_BOOST;
+
     // programmaton de l'heure d'arrêt
     strftime(programme_marche_forcee.heure_arret, 6, "%H:%M", localtime(&now));
+
     // ajout de la température de consigne
     programme_marche_forcee.temperature = config.tmax;
     programme_marche_forcee.puissance = programme.puissance;

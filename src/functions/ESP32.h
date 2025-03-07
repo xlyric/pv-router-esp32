@@ -23,6 +23,13 @@ ESP32Info getESP32Info() {
   return info;
 }
 
-
+// @multinet33 : c'est un peu crade ;) 
+void myTask(void *pvParameters) {
+  while (1) {
+      Serial.print("Stack disponible : ");
+      Serial.println(uxTaskGetStackHighWaterMark(NULL)); // Vérifie la pile de cette tâche
+      vTaskDelay(1000 / portTICK_PERIOD_MS); // Pause 1 seconde
+  }
+}
 
 #endif

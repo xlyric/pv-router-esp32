@@ -1,30 +1,38 @@
 #ifndef TASK_DALLAS
 #define TASK_DALLAS
 
-    #include <Arduino.h>
-    #include "../config/config.h"
-    #include "../config/enums.h"
-    #include "../functions/dallasFunction.h"
-    #include "mqtt-home-assistant.h"
-   
+//***********************************
+//************* LIBRAIRIES ESP
+//***********************************
+#include <Arduino.h>
 
+//***********************************
+//************* PROGRAMME PVRPOUTER
+//***********************************
+#include "../config/config.h"
+#include "../config/enums.h"
+#include "../functions/dallasFunction.h"
+#include "mqtt-home-assistant.h"
+   
+//***********************************
+//************* Variables externes
+//***********************************
 extern DisplayValues gDisplayValues;
 extern Dallas dallas ;
+extern Memory task_mem; 
+extern SemaphoreHandle_t mutex;
 #ifndef LIGHT_FIRMWARE
     extern HA temperature_HA;
 #endif
 
-/**
- * Task: Lecture de la sonde de température Dallas toute les 10s
- * 
-  */
-extern Memory task_mem; 
-extern SemaphoreHandle_t mutex;
-
+//***********************************
+//************* dallasread
+//*************    Task: Lecture de la sonde de température Dallas toute les 10s
+//***********************************
 void dallasread(void * parameter){
   for (;;){
     if (xSemaphoreTake(mutex, portMAX_DELAY)) {
-        if (dallas.detect) {
+      if (dallas.detect) {
         float Old_temperature = gDisplayValues.temperature;
         gDisplayValues.temperature = CheckTemperature("Inside : ", dallas.addr); 
 
@@ -39,10 +47,14 @@ void dallasread(void * parameter){
         xSemaphoreGive(mutex);  // Libère le mutex
       } 
     }
-   task_mem.task_dallas_read = uxTaskGetStackHighWaterMark(nullptr);
-   // Sleep for 5 seconds, avant de refaire une analyse
+
+   
+    task_mem.task_dallas_read = uxTaskGetStackHighWaterMark(nullptr);
+    
+    // Sleep for 5 seconds, avant de refaire une analyse
 
     vTaskDelay(pdMS_TO_TICKS(10000+(esp_random() % 61) - 30));
   }
 }
+
 #endif

@@ -1,13 +1,14 @@
 #ifndef OTA_FUNCTIONS
 #define OTA_FUNCTIONS
 
-// ota mise à jour sans fil
+//***********************************
+//************* LIBRAIRIES ESP
+//***********************************
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-void OTA_init(){
-
-ArduinoOTA
+void OTA_init() {
+  ArduinoOTA
     .onStart([]() {
       String type;
       if (ArduinoOTA.getCommand() == U_FLASH)
@@ -17,7 +18,7 @@ ArduinoOTA
 
       // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
       Serial.println("Start updating " + type);
-    })
+    })    
     .onEnd([]() {
       Serial.println("\nEnd");
     })
@@ -39,8 +40,6 @@ ArduinoOTA
   //Serial.println("Ready");
   //Serial.print("IP address: ");
   //Serial.println(WiFi.localIP());
-
 }
-
 
 #endif

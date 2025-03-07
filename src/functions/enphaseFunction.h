@@ -3,28 +3,46 @@
 
 // géré par multinet33
 
+//***********************************
+//************* LIBRAIRIES ESP
+//***********************************
 #include <Arduino.h>
 #include <FS.h>
+#include "SPIFFS.h"
+
+//***********************************
+//************* PROGRAMME PVROUTER
+//***********************************
 #include "../config/config.h"
 #include "../config/enums.h"
 #include "../functions/Mqtt_http_Functions.h"
-#include "SPIFFS.h"
 #include "config/enums.h"
 
-constexpr const char *enphase_conf = "/enphase.json";
+//***********************************
+//************* Variables externes
+//***********************************
 extern Configmodule configmodule;
 
-void Enphase_get_5(void);
-void Enphase_get_7(void);
-bool Enphase_get_7_JWT();
-
+//***********************************
+//************* Variables locales
+//***********************************
+constexpr const char *enphase_conf = "/enphase.json";
 bool initEnphase = true; // Permet de lancer le contrôle du token une fois au démarrage
 String SessionId;
 int nbErreurCtrlTocken = 0;
 int nbErreurGetJsonProd = 0;
 bool TockenValide=false;
-//////////////////// gestion FS
 
+//***********************************
+//************* Déclaration de fonctoons
+//***********************************
+void Enphase_get_5(void);
+void Enphase_get_7(void);
+bool Enphase_get_7_JWT();
+
+//***********************************
+//************* loadenphase
+//***********************************
 bool loadenphase(const char *filename) {
   Serial.println("******************LOAD ENPHASE*********************");
 
@@ -94,8 +112,10 @@ bool loadenphase(const char *filename) {
   return true;
 }
 
-void saveenphase(const char *filename, const Configmodule &configmodule_save) {
-  
+//***********************************
+//************* saveenphase
+//***********************************
+void saveenphase(const char *filename, const Configmodule &configmodule_save) {  
   // Open file for writing
    File configFile = SPIFFS.open(enphase_conf, "w");
   if (!configFile) {
@@ -118,19 +138,18 @@ void saveenphase(const char *filename, const Configmodule &configmodule_save) {
   doc["version"] = configmodule_save.version;
   doc["token"] = configmodule_save.token;
 
-
   // Serialize JSON to file
   if (serializeJson(doc, configFile) == 0) {
-    Serial.println(F("Failed to write to file enphase "));
-    
+    Serial.println(F("Failed to write to file enphase "));    
   }
+
   // Close the file
   configFile.close();
 }
 
-
-//////////////////////////////////// récupération des valeurs 
-
+//***********************************
+//************* Enphase_get
+//***********************************
 void Enphase_get(void) {
   if (String(configmodule.version) == "7") {
     if (String(configmodule.token)!="") {
@@ -139,15 +158,17 @@ void Enphase_get(void) {
       Enphase_get_7();
     } else {
       Serial.println("Enphase version 7 : Token vide");
-    }
-    
-    
-  } else {
+    }  
+  } 
+  else {
     Serial.println("Enphase v5");
     Enphase_get_5();
   }
 }
 
+//***********************************
+//************* Enphase_get_5
+//***********************************
 void Enphase_get_5(void) {
   HTTPClient httpenphase; 
   String url = "/404.html";
@@ -164,8 +185,6 @@ void Enphase_get_5(void) {
   }
 
   httpenphase.begin(String(configmodule.hostname), 80 , url);
-
-
   /// workaround because envoy is too slow
   int httpResponseCode;
   int retryCount = 0;
@@ -178,7 +197,6 @@ void Enphase_get_5(void) {
   }
 
   // start connection and send HTTP header
-
   Serial.print(" httpcode/ fonction mesure: ");
   Serial.println(httpResponseCode);
 
@@ -197,19 +215,20 @@ void Enphase_get_5(void) {
     if (String(configmodule.envoy) == "R") {
       gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
       gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]);
-    } else {
-
+    } 
+    else {
       if ((gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"])) < 0) {
         // During night, Envoy measure a negative production
         gDisplayValues.Fronius_prod = 0;
       }
+
       gDisplayValues.Fronius_totalconso = int(doc["consumption"][0]["wNow"]);
       gDisplayValues.Fronius_conso = gDisplayValues.Fronius_totalconso - gDisplayValues.Fronius_prod;
     }
 
     gDisplayValues.porteuse = true; // si FALSE affiche No-Sin sur l'ecran
-
-  } else {
+  } 
+  else {
     Serial.println("Enphase Get 5 timeout");
   }
 
@@ -222,12 +241,16 @@ void Enphase_get_5(void) {
 }
 
 String http_mode(String port) {
-    if (port == "443")
-      return "https://";
-    else
-      return "http://"; //NOSONAR
+
+  if (port == "443")
+    return "https://";
+  else
+    return "http://"; //NOSONAR
 }
 
+//***********************************
+//************* Enphase_get_7_Production
+//***********************************
 
 bool Enphase_get_7_Production(void){
   HTTPClient httpenphase;
@@ -241,7 +264,6 @@ bool Enphase_get_7_Production(void){
   debut = http_mode(String(configmodule.port));
 
   Serial.println("**** Enphase_get_7_Production ****");  
-
   if (String(configmodule.envoy) == "R") {
     url = String(EnvoyR);
     Serial.print("type R ");
@@ -256,7 +278,6 @@ bool Enphase_get_7_Production(void){
   String fullurl = debut+adr+":"+port+url;
   Serial.println("Enphase Get production : " + fullurl);
   Serial.println("With SessionId : " + SessionId);
-
   if (httpenphase.begin(fullurl)) {
     httpenphase.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
     httpenphase.setAuthorizationType("Bearer");
@@ -277,29 +298,30 @@ bool Enphase_get_7_Production(void){
       JsonDocument doc; ///passé de 3072 à 1600      
       DeserializationError error = deserializeJson(doc, payload);
       switch (error.code()) {
-          case DeserializationError::Ok:
-              break;
-          case DeserializationError::InvalidInput:
-              Serial.print(F("Deserialization error : Invalid input!"));
-              logging.Set_log_init("Deserialization error : Invalid input!",true);
-              return false;
-              break;
-          case DeserializationError::NoMemory:
-              Serial.print(F("Deserialization error : Not enough memory"));
-              logging.Set_log_init("Deserialization error : Not enough memory",true);
-              return false;
-              break;
-          default:
-              Serial.print(F("Deserialization error : Deserialization failed"));
-              logging.Set_log_init("Deserialization error : Deserialization failed",true);
-              return false;
-              break;
+        case DeserializationError::Ok:
+          break;
+        case DeserializationError::InvalidInput:
+          Serial.print(F("Deserialization error : Invalid input!"));
+          logging.Set_log_init("Deserialization error : Invalid input!",true);
+          return false;
+          break;
+        case DeserializationError::NoMemory:
+          Serial.print(F("Deserialization error : Not enough memory"));
+          logging.Set_log_init("Deserialization error : Not enough memory",true);
+          return false;
+          break;
+        default:
+          Serial.print(F("Deserialization error : Deserialization failed"));
+          logging.Set_log_init("Deserialization error : Deserialization failed",true);
+          return false;
+          break;
       }
       
       if (String(configmodule.envoy) == "R") {
         gDisplayValues.Fronius_prod = int(doc["wattsNow"]);
         gDisplayValues.Fronius_conso = int(doc["wattHoursToday"]);
-      } else {
+      } 
+      else {
         if ((gDisplayValues.Fronius_prod = int(doc["production"][1]["wNow"])) < 0) {
           // During night, Envoy measure a negative production
           gDisplayValues.Fronius_prod = 0;
@@ -318,7 +340,8 @@ bool Enphase_get_7_Production(void){
       retour = true;
       // debug
       Serial.println("Enphase Get production > prod: " + String(gDisplayValues.Fronius_prod) + " conso: " + String(gDisplayValues.Fronius_conso) + " total conso: " + String(gDisplayValues.Fronius_totalconso));
-    } else {
+    } 
+    else {
       Serial.println("[1.Enphase Get production] GET... failed, error: " + String(httpCode));
       nbErreurGetJsonProd++;
       httpenphase.end();
@@ -333,6 +356,9 @@ bool Enphase_get_7_Production(void){
   return retour;
 }
 
+//***********************************
+//************* Enphase_get_7_JWT
+//***********************************
 bool Enphase_get_7_JWT(void) {
   HTTPClient httpenphase;
   bool retour = false;
@@ -354,7 +380,6 @@ bool Enphase_get_7_JWT(void) {
 
   //new 2025
   Serial.println("Enphase contrôle token : " + fullurl + "<----");
-
   if (httpenphase.begin(fullurl)) { 
     Serial.println("Connexion réussie, préparation des headers (token etc)");
     httpenphase.setFollowRedirects(HTTPC_FORCE_FOLLOW_REDIRECTS);
@@ -395,7 +420,8 @@ bool Enphase_get_7_JWT(void) {
           if (SessionId.indexOf(";")) {SessionId.remove(SessionId.indexOf(";"));}
           Serial.println("Enphase contrôle token : " + SessionId);
         }
-      } else {
+      } 
+      else {
           Serial.println("Enphase contrôle token : TOKEN INVALIDE !!!");
           nbErreurCtrlTocken++;
       }
@@ -416,14 +442,17 @@ bool Enphase_get_7_JWT(void) {
   
   //new 2025
   httpenphase.end();
+
   return retour;
 }
 
-
+//***********************************
+//************* Enphase_get_7
+//***********************************
 void Enphase_get_7(void) {
   if(WiFi.isConnected() ) {    
     //create an HTTPClient instance
-     if (SessionId.isEmpty() || ( (Enphase_get_7_Production() == false) && (nbErreurGetJsonProd > 10) ) ) { // Permet de lancer le contrôle du token une fois au démarrage (Empty SessionId)
+    if (SessionId.isEmpty() || ( (Enphase_get_7_Production() == false) && (nbErreurGetJsonProd > 10) ) ) { // Permet de lancer le contrôle du token une fois au démarrage (Empty SessionId)
       //DEBUG
       if (SessionId.isEmpty() ) {
         Serial.println("SessionId.isEmpty() return TRUE ==> Clean SessionId, get next token ");     
@@ -436,7 +465,8 @@ void Enphase_get_7(void) {
       TockenValide=false;
       Enphase_get_7_JWT();
     }
-  } else {
+  } 
+  else {
     Serial.println("Enphase_get_7 : Wifi not connected");
   } 
 }
