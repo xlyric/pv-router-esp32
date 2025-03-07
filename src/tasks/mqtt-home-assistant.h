@@ -77,7 +77,7 @@
 
       if (!HA_mqtt.connected()) {
         serial_println(F("[MQTT] HA connection failed. Waiting 30s.."));
-        vTaskDelay(30000 / portTICK_PERIOD_MS);
+        vTaskDelay(30005 / portTICK_PERIOD_MS);
       }
 
       serial_println(F("[MQTT] HA Connected!"));
