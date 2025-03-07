@@ -404,7 +404,7 @@ void setup()
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
   logging.Set_log_init(mDNS_Responder_Started,true);
-  logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);
+  logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);  
 
   //***********************************
   //************* Setup - infos ESP32
@@ -515,14 +515,17 @@ void setup()
     // ----------------------------------------------------------------
     // TASK: watchdog Mémory
     // ----------------------------------------------------------------
-    xTaskCreate(
+    /*
+    xTaskCreatePinnedToCore(
       watchdog_memory,
       "watchdog_memory",  // Task name
       4000,            // Stack size (bytes)
       NULL,             // Parameter
-      5,                // Task priority
-      &myTaskwatchdogmemory          // Task handle
+      3,                // Task priority
+      &myTaskwatchdogmemory,          // Task handle
+      0
     );  
+    */
     // ----------------------------------------------------------------
     // TASK: recherche de dimmer
     // ----------------------------------------------------------------
@@ -531,10 +534,10 @@ void setup()
         "mdns_discovery",  // Task name
         3000,            // Stack size (bytes)
         NULL,             // Parameter
-        0,                // Task priority
+        1,                // Task priority
         &myTaskmdnsdiscovery,          // Task handle
         ARDUINO_RUNNING_CORE
-    );  
+    );  // le service est arreté si un dimmer est trouvé ou déjà configuré --> necessite reboot pour rechercher de nouveau
     // ----------------------------------------------------------------
     // TASK: remettre le wifi en route en cas de passage en mode AP
     // ----------------------------------------------------------------
@@ -543,7 +546,7 @@ void setup()
       "keepWiFiAlive",  // Task name
       3000,            // Stack size (bytes)
       NULL,             // Parameter
-      5,                // Task priority
+      2,                // Task priority
       &myTaskkeepwifialive2          // Task handle      
     );  
   #endif // WIFI_ACTIVE
@@ -556,9 +559,9 @@ void setup()
     "Serial Read",      // Task name
     3000,            // Stack size (bytes)
     NULL,             // Parameter
-    1,                // Task priority
+    2,                // Task priority
     &myTaskserialreadtask              // Task handle
-  );  
+  );  /// le service est arreté après 2 minutes
   // ----------------------------------------------------------------
   // TASK: Update the display every second
   // ----------------------------------------------------------------
@@ -570,14 +573,13 @@ void setup()
       Serial.println("init oled 0.7'' ");
       init_ui();
     #endif // ESP32D1MINI_FIRMWARE
-    xTaskCreatePinnedToCore(
+    xTaskCreate(
       updateDisplay,
       "UpdateDisplay",  // Task name
       3500,            // Stack size (bytes)
       NULL,             // Parameter
       2,                // Task priority
-      &myTaskupdatedisplay,             // Task handle
-      ARDUINO_RUNNING_CORE
+      &myTaskupdatedisplay             // Task handle      
     );  
   #endif // OLED_ON
 
@@ -621,7 +623,7 @@ void setup()
     "Measure electricity",  // Task name
     5000,                  // Stack size (bytes)
     NULL,                   // Parameter
-    7,                      // Task priority
+    4,                      // Task priority
     &myTaskmeasureelectricity                    // Task handle
   );  
 
@@ -630,37 +632,40 @@ void setup()
   // ----------------------------------------------------------------
   #if WIFI_ACTIVE == true
     #if DIMMER == true
-      xTaskCreate(
+      xTaskCreatePinnedToCore(
         updateDimmer,
         "Update Dimmer",  // Task name
         4000,                  // Stack size (bytes)
         NULL,                   // Parameter
         4,                      // Task priority
-        &myTaskupdatedimmer                    // Task handle
+        &myTaskupdatedimmer,                    // Task handle
+        ARDUINO_RUNNING_CORE
       );  
       // ----------------------------------------------------------------
       // Task: Get Dimmer temp
       // ----------------------------------------------------------------
       if (!dallas.detect) {
-        xTaskCreate(
+        xTaskCreatePinnedToCore(
           GetDImmerTemp,
           "Update temp",  // Task name
           4000,                  // Stack size (bytes)
           NULL,                   // Parameter
-          4,                      // Task priority
-          NULL                    // Task handle
+          2,                      // Task priority
+          NULL,                    // Task handle
+          ARDUINO_RUNNING_CORE
         );  
       }
       // ----------------------------------------------------------------
       // Task: MQTT send
       // ----------------------------------------------------------------
-      xTaskCreate(
+      xTaskCreatePinnedToCore(
         send_to_mqtt,
         "Update MQTT",  // Task name
         4500,                  // Stack size (bytes)
         NULL,                   // Parameter
-        5,                      // Task priority
-        &myTasksendtomqtt                    // Task handle
+        2,                      // Task priority
+        &myTasksendtomqtt,                    // Task handle
+        ARDUINO_RUNNING_CORE
       );  
     #endif // DIMMER = true
   #endif // WIFI_ACTIVE=true
@@ -746,14 +751,14 @@ void loop() {
       }
     };  
     // Check stack space for all tasks
-    printTaskStack(myTaskmdnsdiscovery, "myTaskmdnsdiscovery");
+    //printTaskStack(myTaskmdnsdiscovery, "myTaskmdnsdiscovery"); // la tache s'arrete 
     printTaskStack(myTasksendtomqtt, "myTasksendtomqtt");
     printTaskStack(myTaskupdatedimmer, "myTaskupdatedimmer");
     printTaskStack(myTaskmeasureelectricity, "myTaskmeasureelectricity");
     printTaskStack(myTaskswitcholed, "myTaskswitcholed");
     printTaskStack(myTaskdallasread, "myTaskdallasread");
     printTaskStack(myTaskupdatedisplay, "myTaskupdatedisplay");
-    printTaskStack(myTaskserialreadtask, "myTaskserialreadtask");
+    //printTaskStack(myTaskserialreadtask, "myTaskserialreadtask"); // la tache s'arrete
     printTaskStack(myTaskkeepwifialive2, "myTaskkeepwifialive2");
     printTaskStack(myTaskwatchdogmemory, "myTaskwatchdogmemory");
   #endif
@@ -810,32 +815,7 @@ void loop() {
     }
   }
 
-  //***********************************
-  //************* Loop -  reconnection MQTT
-  //*********************************** 
-  #ifndef LIGHT_FIRMWARE
-    if (!AP) {
-      #if WIFI_ACTIVE == true
-        if (config.mqtt) {
-          if (!client.connected() && (WiFi.status() == WL_CONNECTED )) { 
-            reconnect(); 
-            delay (1000); 
-          }
-          client.loop();      
-        }
-      #endif // WIFI_ACTIVE
-    }
-  #endif // not LIGHT_FIRMWARE
-
-  //***********************************
-  //************* Loop -  surveillance des fuites mémoire
-  //*********************************** 
-  #ifndef LIGHT_FIRMWARE
-    client.publish(("memory/"+gDisplayValues.pvname).c_str(), String(esp_get_free_heap_size()).c_str()) ;
-    client.publish(("memory/"+gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
-  #endif
-
-  //***********************************
+   //***********************************
   //************* Loop -  gestion des activités minuteurs
   //*********************************** 
   if (config.dimmerlocal) {
@@ -860,11 +840,14 @@ void loop() {
         strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR        
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
-          Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-          if (configmqtt.HA) {
-            int instant_power = unified_dimmer.get_power();
-            device_dimmer.send(String(instant_power * config.charge/100));
-          } 
+          if (xSemaphoreTake(mutex, portMAX_DELAY)) { 
+            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
+            if (configmqtt.HA) {
+              int instant_power = unified_dimmer.get_power();
+              device_dimmer.send(String(instant_power * config.charge/100));
+            } 
+            xSemaphoreGive(mutex);
+          }
         #endif // not LIGHT_FIRMWARE
       } // if (programme.stop_progr() || programme_marche_forcee.stop_progr() )
     } // if (programme.run || programme_marche_forcee.run)  
@@ -885,14 +868,17 @@ void loop() {
         digitalWrite(COOLER, HIGH);      
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
-          Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-          if (configmqtt.HA) {
-            int instant_power = unified_dimmer.get_power();
-            device_dimmer.send(String(instant_power * config.charge/100));
-            if ( programme_marche_forcee.run) {
-              device_dimmer_boost.send("1");
+          if (xSemaphoreTake(mutex, portMAX_DELAY)) {
+            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
+              if (configmqtt.HA) {
+                int instant_power = unified_dimmer.get_power();
+                device_dimmer.send(String(instant_power * config.charge/100));
+                if ( programme_marche_forcee.run) {
+                  device_dimmer_boost.send("1");
+                }
+              } 
+              xSemaphoreGive(mutex);
             }
-          } 
         #endif // not LIGHT_FIRMWARE
       } // if (programme.start_progr() ||  programme_marche_forcee.start_progr() )
     } // else
