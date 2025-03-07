@@ -58,10 +58,12 @@ void updateDisplay(void* parameter) {
       ui.update();
       // Serial.println("Update display after");
     #endif
+
     
     task_mem.task_updateDisplay = uxTaskGetStackHighWaterMark(nullptr);
     // Sleep for 5 seconds, then update display again!
     vTaskDelay(pdMS_TO_TICKS(4000+(esp_random() % 61) - 30));
+
   } // for
 } // updateDisplay
 

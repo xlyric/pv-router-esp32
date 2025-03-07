@@ -129,6 +129,7 @@ bool mdns_search(String type, uint16_t port) {
   return false;
 }
 
+
 //***********************************
 //************* mdns_discovery
 //***********************************
@@ -150,6 +151,7 @@ void mdns_discovery(void *parameter) {    // NOSONAR
       }
 
       xSemaphoreGive(mutex);  // Libère le mutex
+
     }
     //si config.dimmer défini, on arrête la tâche
     if (strcmp(config.dimmer, "") != 0 && strcmp(config.dimmer, "none") != 0) {

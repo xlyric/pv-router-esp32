@@ -52,6 +52,7 @@
      * This task should run continously. It will check if an
      * MQTT connection is active and if so, will sleep for 1
      * minute. If not, a new connection will be established.
+
     */    
     for(;;) {
       if(!WiFi.isConnected()) { 
@@ -81,6 +82,7 @@
       }
 
       serial_println(F("[MQTT] HA Connected!"));
+
     }
   }
 

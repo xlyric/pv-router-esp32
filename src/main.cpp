@@ -16,6 +16,7 @@
 #include <DallasTemperature.h>
 #include <RBDdimmer.h>   /// the corrected librairy  in RBDDimmer-master-corrected.rar , the original has a bug
 
+
 //***********************************
 //************* PROGRAMME PVROUTEUR
 //***********************************
@@ -48,6 +49,7 @@
 #include "functions/minuteur.h"
 #include "functions/unified_dimmer.h"
 #include "functions/webFunctions.h"
+
 
 //***********************************
 //************* S3 NON DECLARE
@@ -496,6 +498,7 @@ void setup()
       call_pages();
     #endif // WEBSERVER
 
+
     //***********************************
     //************* Setup -  init xTask
     //***********************************
@@ -518,12 +521,14 @@ void setup()
     // TASK: watchdog Mémory
     // ----------------------------------------------------------------
     /*
+
     xTaskCreatePinnedToCore(
       watchdog_memory,
       "watchdog_memory",  // Task name
       4000,            // Stack size (bytes)
       NULL,             // Parameter
       3,                // Task priority
+
       &myTaskwatchdogmemory,          // Task handle
       0
     );  
@@ -543,12 +548,14 @@ void setup()
     // ----------------------------------------------------------------
     // TASK: remettre le wifi en route en cas de passage en mode AP
     // ----------------------------------------------------------------
+
     xTaskCreate(
       keepWiFiAlive2,
       "keepWiFiAlive",  // Task name
       3000,            // Stack size (bytes)
       NULL,             // Parameter
       2,                // Task priority
+
       &myTaskkeepwifialive2          // Task handle      
     );  
   #endif // WIFI_ACTIVE
@@ -564,6 +571,7 @@ void setup()
     2,                // Task priority
     &myTaskserialreadtask              // Task handle
   );  /// le service est arreté après 2 minutes
+
   // ----------------------------------------------------------------
   // TASK: Update the display every second
   // ----------------------------------------------------------------
@@ -574,6 +582,7 @@ void setup()
     #ifdef ESP32D1MINI_FIRMWARE
       Serial.println("init oled 0.7'' ");
       init_ui();
+
     #endif // ESP32D1MINI_FIRMWARE
     xTaskCreate(
       updateDisplay,
@@ -584,6 +593,7 @@ void setup()
       &myTaskupdatedisplay             // Task handle      
     );  
   #endif // OLED_ON
+
 
   // ----------------------------------------------------------------
   // Task: Read Dallas Temp
@@ -632,6 +642,7 @@ void setup()
   // ----------------------------------------------------------------
   // Task: Update Dimmer power
   // ----------------------------------------------------------------
+
   #if WIFI_ACTIVE == true
     #if DIMMER == true
       xTaskCreatePinnedToCore(
@@ -673,6 +684,7 @@ void setup()
       #endif
     #endif // DIMMER = true
   #endif // WIFI_ACTIVE=true
+
 
   //***********************************
   //************* Setup - init ElegantOTA
@@ -741,6 +753,7 @@ void setup()
 void loop() {
   int retry_wifi = 0;
   
+
   //***********************************
   //************* Loop - affichage de la mémoire dispo / xTasks
   //***********************************    
@@ -770,6 +783,7 @@ void loop() {
   //***********************************
   //************* Loop - web socket loop
   //*********************************** 
+
   #ifdef WEBSOCKET_CLIENT
     //handleWebSocket(); // Keep the WebSocket connection alive
     webSocket.loop();
@@ -819,6 +833,7 @@ void loop() {
     }
   }
 
+
    //***********************************
   //************* Loop -  gestion des activités minuteurs
   //*********************************** 
@@ -855,6 +870,7 @@ void loop() {
         #endif // not LIGHT_FIRMWARE
       } // if (programme.stop_progr() || programme_marche_forcee.stop_progr() )
     } // if (programme.run || programme_marche_forcee.run)  
+
     else { 
       // minuteur à l'arret
       if (programme.start_progr() ||  programme_marche_forcee.start_progr() ){ 
@@ -872,6 +888,7 @@ void loop() {
         digitalWrite(COOLER, HIGH);      
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
+
           if (xSemaphoreTake(mutex, portMAX_DELAY)) {
             Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
               if (configmqtt.HA) {
@@ -887,6 +904,7 @@ void loop() {
       } // if (programme.start_progr() ||  programme_marche_forcee.start_progr() )
     } // else
   } // if (config.dimmerlocal)
+
 
   //***********************************
   //************* Loop -  gestion des programmes

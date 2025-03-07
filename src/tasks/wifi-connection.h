@@ -97,6 +97,7 @@ void keepWiFiAlive2(void * parameter) {
       task_mem.task_keepWiFiAlive2 = uxTaskGetStackHighWaterMark(nullptr);
       vTaskDelay(pdMS_TO_TICKS(30000+(esp_random() % 61) - 30)); 
     } // for
+
 }
 
 #endif

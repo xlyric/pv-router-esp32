@@ -58,6 +58,7 @@ int shelly_get_data(String url) {
       return shelly_watt;
     }
 
+
     String shelly_state = "0"; 
     shelly_state = shelly_http.getString();
     shelly_http.end();
@@ -98,6 +99,7 @@ int shelly_get_data(String url) {
    }
   } 
   return shelly_watt; 
+
 }
 
 //***********************************

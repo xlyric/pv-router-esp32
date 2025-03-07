@@ -31,11 +31,13 @@ void watchdog_memory(void * parameter){ // NOSONAR
       need_reboot = true; 
     }
 
+
     /* plus besoin car arret de la tache au bout d'un certain temps
     if (task_mem.task_serial_read_task < 100) {
       need_reboot = true; 
     }
     */
+
 
     if (task_mem.task_dallas_read < 100) {
       need_reboot = true; 
@@ -69,11 +71,13 @@ void watchdog_memory(void * parameter){ // NOSONAR
       need_reboot = true; 
     }
 
+
     /* plus besoin car arret de la tache au bout d'un certain temps
     if (task_mem.task_mdns_discovery < 100) {
       need_reboot = true; 
     }    
     */
+
 
     // si need  reboot alors reboot
     if (need_reboot) {
@@ -82,6 +86,7 @@ void watchdog_memory(void * parameter){ // NOSONAR
     } 
 
     // Sleep for 10 seconds, avant de refaire une analyse
+
     vTaskDelay(pdMS_TO_TICKS(20000+(esp_random() % 61) - 30));
   }
 }

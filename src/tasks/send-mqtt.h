@@ -141,7 +141,7 @@ void send_to_mqtt(void * parameter) { // NOSONAR
           }
         #endif   
       }           
-      
+
       // plus trop  utilisé, juste en cas de fuite mémoire
       //client.publish(("memory/"+gDisplayValues.pvname).c_str(), String(esp_get_free_heap_size()).c_str()) ;
       //client.publish(("memory/"+gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
@@ -152,6 +152,7 @@ void send_to_mqtt(void * parameter) { // NOSONAR
         
     // Sleep for 10 seconds
     vTaskDelay(pdMS_TO_TICKS(1000));
+
   }
 } 
 

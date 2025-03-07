@@ -241,6 +241,7 @@ void Enphase_get_5(void) {
 }
 
 String http_mode(String port) {
+
   if (port == "443")
     return "https://";
   else
@@ -250,6 +251,7 @@ String http_mode(String port) {
 //***********************************
 //************* Enphase_get_7_Production
 //***********************************
+
 bool Enphase_get_7_Production(void){
   HTTPClient httpenphase;
   int httpCode;

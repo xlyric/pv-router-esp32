@@ -112,6 +112,7 @@ void measureElectricity(void *parameter) { // NOSONAR
               client.loop();
               gDisplayValues.watt = gDisplayValues.Shelly;
               gDisplayValues.wattIsValid = true;
+
             }
             #endif
             

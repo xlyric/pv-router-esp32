@@ -34,7 +34,9 @@ void serial_read_task(void * parameter) { // NOSONAR
       // remonté comme quoi le service serial est arrêté
       logging.Set_log_init(Serial_service_stopped);
       Serial.println(Serial_service_stopped);
+
       gDisplayValues.serial_timeout++;
+
       // on arrete le service
       vTaskDelete(NULL);
     }
@@ -44,12 +46,14 @@ void serial_read_task(void * parameter) { // NOSONAR
     // Sleep for 5 seconds, avant de refaire une analyse
     task_mem.task_serial_read_task = uxTaskGetStackHighWaterMark(nullptr);
 
+
     if (AP) { 
       vTaskDelay(pdMS_TO_TICKS(3000)); 
     }
     else { 
       vTaskDelay(pdMS_TO_TICKS(5002+(esp_random() % 61) - 30));
     }    
+
   }
 }
 

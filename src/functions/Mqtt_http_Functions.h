@@ -27,6 +27,7 @@ extern Mqtt configmqtt;
 extern Logs logging;
 extern float WHtempgrid; 
 extern float WHtempinject;
+
 extern HA device_dimmer; 
 extern HA device_routeur; 
 extern HA device_routed; 
@@ -48,6 +49,7 @@ extern xSemaphoreHandle mutex;
 //************* Variables locales
 //***********************************
 WiFiClient espClient;
+
 
 #ifndef LIGHT_FIRMWARE
   PubSubClient client(espClient);
