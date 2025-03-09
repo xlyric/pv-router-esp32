@@ -153,7 +153,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute le
 #endif
 
 #define RELEASE "Version 20250309"
-constexpr const int FS_RELEASE = 20250302;
+constexpr const int FS_RELEASE = 20250205;
 
 #ifdef LIGHT_FIRMWARE
   #define VERSION "Light " RELEASE
