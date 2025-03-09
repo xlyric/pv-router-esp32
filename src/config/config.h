@@ -93,6 +93,8 @@ float PowerFactor; //
 #define outputPin 26 // PSM on board
 #define zerocross 27 // for boards with CHANGEBLE input pins // ZC on board
 #define COOLER 12    // Pin for COOLER. (switch on dimmer)
+#define outputPin2 37 // pin 37 TTGO
+#define outputPin3 38 // pin 38 TTGO
 
 #define ONE_WIRE_BUS 25
 #define TEMPERATURE_PRECISION 10
@@ -150,7 +152,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute le
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250307"
+#define RELEASE "Version 20250309"
 constexpr const int FS_RELEASE = 20250302;
 
 #ifdef LIGHT_FIRMWARE
@@ -206,7 +208,9 @@ constexpr size_t LOG_MAX_STRING_LENGTH = 1500;
   #define zerocross 19 // for boards with CHANGEBLE input pins // ZC on board
   #undef COOLER
   #define COOLER 5      // Pin for COOLER. (switch on dimmer)
+  #undef outputPin2
   #define outputPin2 22 // use JOTTA/SSR2 (SSR2) output for 2nd Robotdyn/Random SSR
+  #undef outputPin3
   #define outputPin3 21 // (SSR3) use RELAY2/SSR3 output for 3rd Robotdyn/Random SSR ( for old boards )
 
   #undef ONE_WIRE_BUS

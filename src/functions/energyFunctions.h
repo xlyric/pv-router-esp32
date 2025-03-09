@@ -27,6 +27,56 @@ int porteuse[freqmesure]; // mesure ADC Volts // NOSONAR
 int middle_debug ; 
 int positive_debug ; 
 
+// recherche de la plus grande valezur sur acd1_channel_t 4
+float max_tension() {
+  int max = 0; 
+  int porteuse2 = 0;
+  for (int i = 0; i < 144; i++) {
+    porteuse2 = adc1_get_raw((adc1_channel_t)5);
+    if (porteuse2 > max) {
+      max = porteuse2;
+    }
+    // 72 mesures par cycle 50Hz 
+    delayMicroseconds(138); // 277 us
+  }
+  return max/5.767646; 
+  //5.727272727272727
+  //# 
+}
+
+// stockage des 5 dernieres valeurs de la porteuse
+float tableauporteuse[5]; // NOSONAR
+
+float mesure_tension() {
+  // Shift values in tableauporteuse to make room for new value
+  for(int i = 4; i > 0; i--) {
+    tableauporteuse[i] = tableauporteuse[i-1];
+  }
+  
+  // Store the newest max_value() at position 0
+  tableauporteuse[0] = max_tension();
+  
+  // Calculate average of stored values
+  float moyenne = 0;
+  int validCount = 0;
+  
+  for(int i = 0; i < 5; i++) {
+    // Only count initialized values (non-zero values)
+    if(tableauporteuse[i] != 0) {
+      moyenne += tableauporteuse[i];
+      validCount++;
+    }
+  }
+  
+  // Avoid division by zero
+  if(validCount > 0) {
+    moyenne = moyenne / validCount;
+  }
+  
+return moyenne;
+}
+
+
 //***********************************
 //************* front
 //***********************************
@@ -142,7 +192,14 @@ void injection2() {
   /// A vide j'ai 20 ou -20 environ en fonction de comment est connecté la prise.
   // info int base_offset = 15; offset du à la sonde et au montage ( composante continue mal filtrée) pour offset = 0 il faut mettre un condensateur de 10µF en //parallèle sur la sonde  (testé aussi avec 3.3µF)
   int base_offset = 0; // ( testé sur 3 sondes différentes à vide )  --> la base d'offset change de sens en fonction de la phase de la prise
+  if (config.voltage != 0 ) {
   positive = ( ( positive * config.voltage  ) / ( FACTEURPUISSANCE * nombre_cycle * 230  ) );  
+  }
+  else {
+    float tension = mesure_tension();
+    positive = ( ( positive * tension  ) / ( FACTEURPUISSANCE * nombre_cycle * 230  ) );  
+    // Serial.println("tension: " + String(tension));
+  }
 
   /// correction pour l'offset en fonction de comment est branchée la pince
   logging.clean_log_init();

@@ -84,7 +84,9 @@ jobs:
           tag_name: v${{ steps.extract_version.outputs.version }}
           name: Release v${{ steps.extract_version.outputs.version }}
           body: |
-            Changelog for version ${{ steps.extract_version.outputs.version }}
+              body: |
+              Changelog for version ${{ steps.extract_version.outputs.version }}
+              ${{ github.event.head_commit.message }}
           make_latest: "true"
           files: |
             *.bin.gz

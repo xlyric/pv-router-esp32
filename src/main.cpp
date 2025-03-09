@@ -752,14 +752,26 @@ void setup()
 //***********************************
 //************* LOOP
 //***********************************
+
+
+
 void loop() {
   int retry_wifi = 0;
-  
+
+  #ifdef DEBUGLEVEL1
+//// test de synchro pour debug
+  if (dimmer1.getsync()) {
+    Serial.println("sync ok");
+  }
+  else {
+    Serial.println("sync nok");  
+  }
+    
 
   //***********************************
   //************* Loop - affichage de la mémoire dispo / xTasks
   //***********************************    
-  #ifdef DEBUGLEVEL1
+  
     // Function to check stack for a specific task and print the result
     auto printTaskStack = [](TaskHandle_t taskHandle, const char* taskName) {
       if (taskHandle != NULL) {
