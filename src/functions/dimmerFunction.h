@@ -267,7 +267,7 @@ void dimmer()
         }
         else
         {
-          if (!dallas.security && dallas.detect)
+          if (!dallas.security)
           {
             /// fonctionnement du dimmer local
 
