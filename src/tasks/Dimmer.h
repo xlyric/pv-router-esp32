@@ -68,7 +68,7 @@ void updateDimmer(void * parameter) {
       gDisplayValues.task = true;
       #if WIFI_ACTIVE == true
         // application de la consigne de puissance uniquement si le minuteur n'est pas actif et que la dallas n'est pas perdu
-        if (!programme.run && !dallas.lost ) {
+        if (!programme.run && !dallas.lost && !programme_marche_forcee.run) {
             DEBUG_PRINTLN("------- dimmer.h " + String(__LINE__) + " -----------");
             dimmer();
         }  
@@ -81,7 +81,7 @@ void updateDimmer(void * parameter) {
           // calcul de la puissance locale
           local_power =  unified_dimmer.get_power()* config.charge/100; // watts
     
-          // si dimmer distant alors calcul de puissance routée
+          // si dimmer distant alors calcul de puissance routée par contre si vide, none ou 0.0.0.0 alors pas de requête
           if ( strcmp(config.dimmer,"") != 0 && strcmp(config.dimmer,"none") != 0 ) {  
             child_power = get_dimmer_child_power();  // watts -->  REQUETE HTTP
           }

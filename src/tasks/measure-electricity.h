@@ -41,6 +41,10 @@ void measureElectricity(void *parameter) { // NOSONAR
   for (;;) {
     // recherche du mode de fonctionnement
     int mode = 0; /// 0 = porteuse  ; 1 = shelly , 2 = enphase 3 = fronius  , 4 = demo
+    
+    #ifdef DEMO
+      mode = 4;
+    #endif
 
     // vérification qu'une autre task ne va pas fausser les valeurs
     long start = millis();

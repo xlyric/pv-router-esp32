@@ -220,6 +220,8 @@ gestion_puissance unified_dimmer;
 dimmerLamp dimmer1(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 #ifdef outputPin2
   dimmerLamp dimmer2(outputPin2, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
+#endif
+#ifdef outputPin3
   dimmerLamp dimmer3(outputPin3, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 #endif
 
@@ -271,13 +273,6 @@ void setup()
   Serial.println ("File system used: " + String(file_system_used) + " bytes");
   Serial.println("Free space: " + String(free_size) + " bytes");  
   
-  // Initialisation de l'écran OLED
-  // ESP32D1MINI_FIRMWARE : option de BUILD
-  #ifdef ESP32D1MINI_FIRMWARE
-    oled.init();
-    oled.wait_for_wifi(0);
-  #endif
-
   // ACTIVATION DU COOLER
   pinMode(COOLER, OUTPUT);
   digitalWrite(COOLER, HIGH);
@@ -288,8 +283,10 @@ void setup()
 
   // Gestion JOTTA/SSR2 (outputPin2)
   // Gestion RELAY3/SSR3 (outputPin3)
-  #ifdef ESP32D1MINI_FIRMWARE
+  #ifdef outputPin2
     pinMode(outputPin2, OUTPUT);
+  #endif
+  #ifdef outputPin3
     pinMode(outputPin3, OUTPUT);
     //ledcAttachPin(outputPin2, pwmChannel); // NOSONAR 
     //ledcAttachPin(outputPin3, pwmChannel);  // NOSONAR
@@ -309,12 +306,19 @@ void setup()
   //***********************************
   // Should load default config if run for the first time
   Serial.println(F("Loading configuration..."));
-  config.loadConfiguration();
+    config.loadConfiguration();
 
   //***********************************
   //************* Setup -  récupération des LOGS
   //***********************************
   loadlogs();
+
+  // Initialisation de l'écran OLED
+  // ESP32D1MINI_FIRMWARE : option de BUILD
+  #ifdef ESP32D1MINI_FIRMWARE
+    oled.init();
+    oled.wait_for_wifi(0);
+  #endif
 
   //***********************************
   //************* Setup -  récupération de la config Wifi ou AP
@@ -445,6 +449,7 @@ void setup()
         display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextSize(1);
         display.println(BOOTING);
     #endif // TTGO
+
   #endif // OLED_ON
 
   //***********************************
@@ -584,6 +589,9 @@ void setup()
     #ifdef ESP32D1MINI_FIRMWARE
       Serial.println("init oled 0.7'' ");
       init_ui();
+      if (config.flip) {
+        display.flipScreenVertically();
+      }
 
     #endif // ESP32D1MINI_FIRMWARE
     xTaskCreate(
@@ -859,7 +867,7 @@ void loop() {
       //  minuteur en cours
       if (programme.stop_progr() || programme_marche_forcee.stop_progr() ) { 
         unified_dimmer.dimmer_off("minuteur"); 
-        unified_dimmer.set_power(0); 
+        unified_dimmer.set_power(0, "minuteur"); 
         if (dallas.detect) {
           dallas.security=true;
         }

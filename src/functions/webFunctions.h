@@ -253,6 +253,7 @@ void call_pages() {
       }
     #endif
     request->redirect("/");
+    delay(1000);
     config.restart = true;
     ESP.restart();
     });

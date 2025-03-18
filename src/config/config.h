@@ -10,7 +10,7 @@
 
 #define CLEAN false
 #define NTP false
-
+//#define DEMO 
 /**
  * WiFi credentials
  */
@@ -93,8 +93,10 @@ float PowerFactor; //
 #define outputPin 26 // PSM on board
 #define zerocross 27 // for boards with CHANGEBLE input pins // ZC on board
 #define COOLER 12    // Pin for COOLER. (switch on dimmer)
-#define outputPin2 37 // pin 37 TTGO
-#define outputPin3 38 // pin 38 TTGO
+// pour les prises SSR 2 et 3 
+#define outputPin2 13 // Faire un pont sur les cartes < 2.2.6  pour activer
+#define outputPin3 15 // Faire un pont sur les cartes < 2.2.6 
+// les pin 34 à 39 semblent sont en input only  et donc non fonctionnel sur les cartes 2.2.4 et 2.2.5 ( faire un pont vers 13 et 15 )
 
 #define ONE_WIRE_BUS 25
 #define TEMPERATURE_PRECISION 10
@@ -152,7 +154,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute le
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250310"
+#define RELEASE "Version 20250318"
 constexpr const int FS_RELEASE = 20250205;
 
 #ifdef LIGHT_FIRMWARE
@@ -193,7 +195,7 @@ constexpr size_t LOG_MAX_STRING_LENGTH = 1500;
  * Set this to false to disable Serial logging
  */
 #define DEBUG true
-// #define DEBUGLEVEL1 false
+//#define DEBUGLEVEL1 true
 #ifdef DEBUGLEVEL1
   #define DEBUG_PRINTLN(x) Serial.println(x)
 #else

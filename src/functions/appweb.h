@@ -8,6 +8,11 @@
   #include <TFT_eSPI.h>
   #include <SPI.h>
 #endif
+#ifdef ESP32D1MINI_FIRMWARE
+  #include <OLEDDisplay.h>
+  #include "OLEDDisplayUi.h"
+  #include "SSD1306Wire.h"
+#endif
 
 //***********************************
 //************* PROGRAMME PVROUTEUR
@@ -35,6 +40,10 @@ extern Programme programme;
 extern Programme programme_marche_forcee;
 #ifdef  TTGO
   extern TFT_eSPI display ;   // Invoke library
+#endif
+#ifdef ESP32D1MINI_FIRMWARE
+  extern SSD1306Wire display;
+  extern OLEDDisplayUi   ui;
 #endif
 
 //***********************************
@@ -266,6 +275,17 @@ bool getServermode(String Servermode) {
       display.setRotation(3);
     else 
       display.setRotation(1);
+    #endif
+    #ifdef  ESP32D1MINI_FIRMWARE
+    if (config.flip) 
+        {
+        display.flipScreenVertically();
+        }
+    else
+        {
+          display.init();
+          display.display();
+        }
     #endif
     return true;
   } 
