@@ -64,7 +64,6 @@ int get_dimmer_child_power (){
 //***********************************
 void updateDimmer(void * parameter) {
   for (;;) {
-    if (xSemaphoreTake(mutex, portMAX_DELAY)) {
       gDisplayValues.task = true;
       #if WIFI_ACTIVE == true
         // application de la consigne de puissance uniquement si le minuteur n'est pas actif et que la dallas n'est pas perdu
@@ -94,10 +93,8 @@ void updateDimmer(void * parameter) {
           gDisplayValues.puissance_route = config.charge * gDisplayValues.dimmer/100; // watts
         #endif    
       #endif
-
       gDisplayValues.task = false;
-      xSemaphoreGive(mutex);  // Libère le mutex
-    }   
+  
     
     task_mem.task_updateDimmer = uxTaskGetStackHighWaterMark(nullptr);
 

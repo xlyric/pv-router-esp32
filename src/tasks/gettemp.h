@@ -35,7 +35,7 @@ HTTPClient httpdimmer;
 //***********************************
 void GetDImmerTemp(void * parameter){
  for (;;) { 
-    if (xSemaphoreTake(mutex, portMAX_DELAY)) {  // Prend le mutex
+
       // create get request 
       if (WiFi.status() != WL_CONNECTED) {   /// si pas de connexion Wifi test dans 10 s 
         vTaskDelay(10*1000 / portTICK_PERIOD_MS);
@@ -88,9 +88,9 @@ void GetDImmerTemp(void * parameter){
         }
       }
 
-      xSemaphoreGive(mutex);  // Libère le mutex
+
       task_mem.task_GetDImmerTemp = uxTaskGetStackHighWaterMark(nullptr);
-    }
+    
 
     // refresh every GETTEMPREFRESH seconds 
     vTaskDelay(pdMS_TO_TICKS(15000+(esp_random() % 61) - 30));

@@ -247,15 +247,16 @@ void call_pages() {
       getLocalTime( &timeinfo );
       snprintf(raison, bufferSize, "reboot manuel: %s", asctime(&timeinfo) ); 
 
-      if (xSemaphoreTake(mutex, portMAX_DELAY)) {  // Prend le mutex
         client.publish("memory/Routeur", raison, true);
-        xSemaphoreGive(mutex);  // Libère le mutex
-      }
     #endif
     request->redirect("/");
+    yield();
     delay(1000);
+    yield();
+    delay(1000);
+    yield();
     config.restart = true;
-    ESP.restart();
+    //ESP.restart();
     });
     
     // reset de la detection dallas précédente 

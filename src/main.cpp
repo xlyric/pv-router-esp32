@@ -764,6 +764,10 @@ void setup()
 
 
 void loop() {
+
+
+
+
   int retry_wifi = 0;
 
   #ifdef DEBUGLEVEL1
@@ -881,14 +885,11 @@ void loop() {
         strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR        
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
-          if (xSemaphoreTake(mutex, portMAX_DELAY)) { 
             Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
             if (configmqtt.HA) {
               int instant_power = unified_dimmer.get_power();
               device_dimmer.send(String(instant_power * config.charge/100));
             } 
-            xSemaphoreGive(mutex);
-          }
         #endif // not LIGHT_FIRMWARE
       } // if (programme.stop_progr() || programme_marche_forcee.stop_progr() )
     } // if (programme.run || programme_marche_forcee.run)  
@@ -911,7 +912,6 @@ void loop() {
         /// remonté MQTT
         #ifndef LIGHT_FIRMWARE
 
-          if (xSemaphoreTake(mutex, portMAX_DELAY)) {
             Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
               if (configmqtt.HA) {
                 int instant_power = unified_dimmer.get_power();
@@ -920,8 +920,6 @@ void loop() {
                   device_dimmer_boost.send("1");
                 }
               } 
-              xSemaphoreGive(mutex);
-            }
         #endif // not LIGHT_FIRMWARE
       } // if (programme.start_progr() ||  programme_marche_forcee.start_progr() )
     } // else
@@ -1042,6 +1040,7 @@ void connect_to_wifi() {
       gDisplayValues.currentState = DEVICE_STATE::UP;
       gDisplayValues.IP = String(WiFi.localIP().toString());
       btStop();
+      WiFi.setAutoReconnect(true);
     #endif // WIFI_ACTIVE == true
   } // else
 } // if (AP || strcmp(configwifi.SID,"AP") == 0 )

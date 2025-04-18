@@ -105,7 +105,6 @@
     device_dimmer_boost.Set_name("Boost");
     device_dimmer_boost.Set_dev_cla("switch");
     
-    client.setBufferSize(1024);
     device_routeur.discovery();
     device_routed.discovery();
     device_dimmer.discovery();

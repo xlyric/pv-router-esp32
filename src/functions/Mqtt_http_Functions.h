@@ -80,7 +80,8 @@ WiFiClient espClient;
       if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password)) {
         // Once connected, publish online to the availability topic
         client.publish(topic.c_str(), "online", true);         
-        client.setKeepAlive(30);      
+        client.setKeepAlive(15);  
+        client.setBufferSize(1024);    
         logging.Set_log_init(MQTT_connected,true);
         Serial.println(MQTT_connected);
       } else {

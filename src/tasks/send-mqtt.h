@@ -61,11 +61,12 @@ long beforetime;
 //***********************************
 void send_to_mqtt(void * parameter) { // NOSONAR
   for (;;) {
-    if (xSemaphoreTake(mutex, portMAX_DELAY)) {   
+
       if (!WiFi.isConnected()) {   /// si pas de connexion Wifi test dans 10 s 
         vTaskDelay(10*1000 / portTICK_PERIOD_MS);
         continue;
       }
+
 
       /// vérification que l'envoie mqtt est souhaité et les connexions actives
       #ifndef LIGHT_FIRMWARE
@@ -80,6 +81,7 @@ void send_to_mqtt(void * parameter) { // NOSONAR
             long timemesure = start-beforetime;
             float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli);  
             #ifndef LIGHT_FIRMWARE
+            if (xSemaphoreTake(mutex, portMAX_DELAY)) {   
               // domoticz et jeedom
               if (config.IDX != 0 ) {
                 Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"","watt");  
@@ -136,10 +138,12 @@ void send_to_mqtt(void * parameter) { // NOSONAR
                 }
               }
               //maj 202030209
+              xSemaphoreGive(mutex);  // Libère le mutex
             #endif  // not LIGHT_FIRMWARE
             
             beforetime = start; 
             Pow_mqtt_send = 0 ;
+            
           }
         #endif   
       }           
@@ -148,12 +152,13 @@ void send_to_mqtt(void * parameter) { // NOSONAR
       //client.publish(("memory/"+gDisplayValues.pvname).c_str(), String(esp_get_free_heap_size()).c_str()) ;
       //client.publish(("memory/"+gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
       client.loop(); // on envoie ce qui est en attente      
-      xSemaphoreGive(mutex);  // Libère le mutex
+      
     }
+    
     task_mem.task_send_mqtt = uxTaskGetStackHighWaterMark(nullptr);
         
-    // Sleep for 10 seconds
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    // Sleep for 5 seconds
+    vTaskDelay(pdMS_TO_TICKS(2000+(esp_random() % 61) - 30)); // 10 secondes + aléatoire entre -30 et +30 ms
 
   }
 } 

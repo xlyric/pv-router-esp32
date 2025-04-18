@@ -87,7 +87,9 @@ int shelly_get_data(String url) {
           shelly_watt = 99999;
           return shelly_watt;
       }
-      
+      if ( config.polarity == true ) { 
+        powerValue = -powerValue; 
+      }
       // affichage dans le sérial de doc["total_power"] en tant que string ; 
       Serial.println("Shelly Watt : ");
       Serial.println(powerValue);
