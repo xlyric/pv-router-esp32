@@ -27,7 +27,7 @@
 //***********************************
 //************* Constantes
 //***********************************
-#define TABLEAU_SIZE 16 // NOSONAR
+#define TABLEAU_SIZE 7 // NOSONAR
 #define SECURITEPASS "MyPassword" // NOSONAR
 #if DEBUG == true
   #define serial_print(x)  Serial.print (x)
@@ -40,7 +40,7 @@
 //***********************************
 //************* Variable locales
 //***********************************
-int tableaudemo[TABLEAU_SIZE] = {180, 180, 0, 0, -150, -150, 4, 4 ,180, 180, 5,5, -150 ,-150, 2,2 }; // NOSONAR
+int tableaudemo[TABLEAU_SIZE] = {180, 3, -150, 4, 150, 5, -180}; // NOSONAR
 
 //***********************************
 //************* class DEVICE_STATE

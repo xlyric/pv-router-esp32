@@ -767,10 +767,10 @@ void loop() {
 
 
 
-
-  int retry_wifi = 0;
-
   #ifdef DEBUGLEVEL1
+  // test de la connexion client mqtt
+  Serial.print("client connected ? :");
+  Serial.println(client.connected());
 //// test de synchro pour debug
   if (dimmer1.getsync()) {
     Serial.println("sync ok");
@@ -805,6 +805,18 @@ void loop() {
     printTaskStack(myTaskkeepwifialive2, "myTaskkeepwifialive2");
     printTaskStack(myTaskwatchdogmemory, "myTaskwatchdogmemory");
   #endif
+
+    //**** Loop - vérification de la connexion au serveur MQTT **** 
+    #ifndef LIGHT_FIRMWARE
+    if (config.mqtt) {
+      if (!client.connected()) {
+        reconnect(); 
+      }
+      client.loop(); // Keep the MQTT connection alive
+    }
+    #endif // not LIGHT_FIRMWARE
+
+    int retry_wifi = 0;
 
   //***********************************
   //************* Loop - web socket loop
@@ -884,13 +896,13 @@ void loop() {
         strcpy(programme_marche_forcee.heure_demarrage, "00:00"); // NOSONAR
         strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR        
         /// remonté MQTT
-        #ifndef LIGHT_FIRMWARE
+      /* #ifndef LIGHT_FIRMWARE
             Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
             if (configmqtt.HA) {
               int instant_power = unified_dimmer.get_power();
               device_dimmer.send(String(instant_power * config.charge/100));
             } 
-        #endif // not LIGHT_FIRMWARE
+        #endif */ // not LIGHT_FIRMWARE
       } // if (programme.stop_progr() || programme_marche_forcee.stop_progr() )
     } // if (programme.run || programme_marche_forcee.run)  
 
@@ -910,7 +922,7 @@ void loop() {
         //demarrage du ventilateur 
         digitalWrite(COOLER, HIGH);      
         /// remonté MQTT
-        #ifndef LIGHT_FIRMWARE
+    /*    #ifndef LIGHT_FIRMWARE
 
             Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
               if (configmqtt.HA) {
@@ -921,6 +933,7 @@ void loop() {
                 }
               } 
         #endif // not LIGHT_FIRMWARE
+        */
       } // if (programme.start_progr() ||  programme_marche_forcee.start_progr() )
     } // else
   } // if (config.dimmerlocal)

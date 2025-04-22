@@ -81,7 +81,7 @@ void send_to_mqtt(void * parameter) { // NOSONAR
             long timemesure = start-beforetime;
             float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli);  
             #ifndef LIGHT_FIRMWARE
-            if (xSemaphoreTake(mutex, portMAX_DELAY)) {   
+
               // domoticz et jeedom
               if (config.IDX != 0 ) {
                 Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"","watt");  
@@ -138,13 +138,13 @@ void send_to_mqtt(void * parameter) { // NOSONAR
                 }
               }
               //maj 202030209
-              xSemaphoreGive(mutex);  // Libère le mutex
+
             #endif  // not LIGHT_FIRMWARE
             
             beforetime = start; 
             Pow_mqtt_send = 0 ;
             
-          }
+
         #endif   
       }           
 
