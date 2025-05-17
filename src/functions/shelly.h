@@ -72,17 +72,17 @@ int shelly_get_data(String url) {
           Serial.print(F("deserializeJson() failed: "));
           logging.Set_log_init("deserializeJson() failed: ",true);
           Serial.println(error.c_str());
+          shelly_get_response ++;
           return shelly_watt;
       }
 
       float powerValue = 0;
       /// récupération de la valeur de la puissance en fonction du mode triphasé ou non
-      if (doc["power"].is<JsonVariant>())  {  powerValue = doc["power"].as<float>();   }
+      if (config.Shelly_tri && doc["total_act_power"].is<JsonVariant>()) { powerValue = doc["total_act_power"].as<float>(); }
+      else if (doc["power"].is<JsonVariant>())  {  powerValue = doc["power"].as<float>();   }
       else if (doc["total_power"].is<JsonVariant>() ) { powerValue = doc["total_power"].as<float>(); }
-      else if (config.Shelly_tri && doc["total_act_power"].is<JsonVariant>()) { powerValue = doc["total_act_power"].as<float>(); }
       else if (doc["a_act_power"].is<JsonVariant>()) { powerValue = doc["a_act_power"].as<float>(); }
       else if (doc["act_power"].is<JsonVariant>()) { powerValue = doc["act_power"].as<float>(); }
-
       else {
           shelly_watt = 99999;
           return shelly_watt;
