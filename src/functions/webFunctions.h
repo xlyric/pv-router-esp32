@@ -288,7 +288,7 @@ void call_pages() {
                               
       // doc /get?cycle=x
       if (request->hasParam(PARAM_INPUT_save)) { Serial.println(F("Saving configuration..."));
-        logging.Set_log_init(config.saveConfiguration(),true); // configuration sauvegardée
+        logging.Set_log_init(config.saveConfiguration().c_str(),true); // configuration sauvegardée
       }
                               
       if (request->hasParam(PARAM_INPUT_2)) { 
@@ -372,7 +372,7 @@ void call_pages() {
       if (request->hasParam(PARAM_INPUT_mqttserver)) { request->getParam(PARAM_INPUT_mqttserver)->value().toCharArray(config.mqttserver,16);  }
       if (request->hasParam(PARAM_INPUT_publish)) { 
         request->getParam(PARAM_INPUT_publish)->value().toCharArray(config.Publish,100); 
-        logging.Set_log_init(config.saveConfiguration(),true); // configuration sauvegardée   
+        logging.Set_log_init(config.saveConfiguration().c_str(),true); // configuration sauvegardée   
       }
       if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,50);  }
       if (request->hasParam("mqttport")) { config.mqttport = request->getParam("mqttport")->value().toInt();}
@@ -382,7 +382,7 @@ void call_pages() {
         if (strcmp(password,SECURITEPASS) != 0) {  ///sécurisation du mot de passe pas en clair     
           request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
         }
-        logging.Set_log_init(configmqtt.savemqtt(),true); // configuration sauvegardée
+        logging.Set_log_init(configmqtt.savemqtt().c_str(),true); // configuration sauvegardée
       }
 
       //// Dimmer local
@@ -398,8 +398,8 @@ void call_pages() {
       //// for check boxs in web pages  
       if (request->hasParam("servermode")) { inputMessage = request->getParam( PARAM_INPUT_servermode)->value();
       if (getServermode(inputMessage)) {
-        logging.Set_log_init(config.saveConfiguration(),true); // configuration sauvegardée
-        logging.Set_log_init(configmqtt.savemqtt(),true); // configuration sauvegardée
+        logging.Set_log_init(config.saveConfiguration().c_str(),true); // configuration sauvegardée
+        logging.Set_log_init(configmqtt.savemqtt().c_str(),true); // configuration sauvegardée
       }
         request->send(200, "text/html", getconfig().c_str());
       }
@@ -480,7 +480,16 @@ void call_pages() {
 //***********************************
 String getMinuteur(const Programme& minuteur) {
   JsonDocument doc;
-  getLocalTime(&timeinfo);
+    if (millis() < 5000) {
+        Serial.println("System not ready yet");
+        return "false";
+  }
+  struct tm timeinfo;  // Déclaration locale
+      if (!getLocalTime(&timeinfo)) {
+        Serial.println("Failed to obtain time");
+        return "false";
+    }
+
   doc["heure_demarrage"] = minuteur.heure_demarrage;
   doc["heure_arret"] = minuteur.heure_arret;
   doc["temperature"] = minuteur.temperature;
@@ -498,7 +507,16 @@ String getMinuteur(const Programme& minuteur) {
 //***********************************
 String getMinuteur() {
   JsonDocument doc;
-  getLocalTime(&timeinfo);
+      if (millis() < 5000) {
+        Serial.println("System not ready yet");
+        return "false";
+  }
+  struct tm timeinfo;  // Déclaration locale
+      if (!getLocalTime(&timeinfo)) {
+        Serial.println("Failed to obtain time");
+        return "false";
+    }
+    
   doc["heure"] = timeinfo.tm_hour;
   doc["minute"] = timeinfo.tm_min;
 

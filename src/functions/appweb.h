@@ -580,7 +580,7 @@ void serial_read() {
       else 
         display.setRotation(1);
       
-        logging.Set_log_init(config.saveConfiguration(),true); ///save configuration
+        logging.Set_log_init(config.saveConfiguration().c_str(),true); ///save configuration
       return; 
     }
     #endif

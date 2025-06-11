@@ -233,7 +233,7 @@ void setup()
   #if DEBUG == true
     Serial.begin(115200);
   #endif 
-
+  char temp_buffer[128];
   // Redirection des messages de DEBUG ves le port série
   // CORE_DEBUG_LEVEL est définie dans les options de BUILD
   #if CORE_DEBUG_LEVEL > ARDUHAL_LOG_LEVEL_NONE
@@ -243,10 +243,14 @@ void setup()
   // Initialisation de la LOG
   Serial.println("\n================== " + String(VERSION) + " ==================");
   logging.Set_log_init("197}11}1");
-  logging.Set_log_init("#################  "+ String(Reason_for_reset) +"  ###############\r\n");
+  snprintf(temp_buffer, sizeof(temp_buffer), "################# %s ################# \n", Reason_for_reset);
+  logging.Set_log_init(temp_buffer);
   esp_reset_reason_t reason = esp_reset_reason();
-  logging.Set_log_init(String(reason).c_str());
-  logging.Set_log_init("\r\n#################  "+ String(Starting_System)+ "  ###############\r\n");
+  char buf_int[12];
+  itoa(reason, buf_int, 10);
+  logging.Set_log_init(buf_int);
+  snprintf(temp_buffer, sizeof(temp_buffer), "\n################# %s ############### \n", Starting_System);
+  logging.Set_log_init(temp_buffer);
   
   //démarrage file system
   Serial.println("start SPIFFS");
@@ -414,7 +418,8 @@ void setup()
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
   logging.Set_log_init(mDNS_Responder_Started,true);
-  logging.Set_log_init(gDisplayValues.pvname + ".local\r\n",true);  
+  snprintf(temp_buffer, sizeof(temp_buffer), "mDNS Responder started for %s.local\n", gDisplayValues.pvname.c_str());
+  logging.Set_log_init(temp_buffer);  
 
   //***********************************
   //************* Setup - infos ESP32

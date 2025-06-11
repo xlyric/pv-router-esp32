@@ -133,7 +133,9 @@ float CheckTemperature(String label, byte deviceAddress[12]) { // NOSONAR
 
   if (dallas_error > 3) {
     Serial.print("Error getting temperature try to reinit");
-    logging.Set_log_init(String(Dallas_lost) + String(dallas_error) + " times\r\n");
+    char temp_buffer[128];
+    snprintf(temp_buffer, sizeof(temp_buffer), " %s %s times\r\n", Dallas_lost, dallas_error);
+    logging.Set_log_init(temp_buffer);
     tempC = gDisplayValues.temperature; 
 
     /// mise en securité du dimmer local

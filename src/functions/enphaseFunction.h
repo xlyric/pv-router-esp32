@@ -107,7 +107,7 @@ bool loadenphase(const char *filename) {
   Serial.println(" CONCLUSION enphase : actif");
   
   logging.Set_log_init("Enphase used type ",true);
-  logging.Set_log_init(String(configmodule.envoy).c_str());
+  logging.Set_log_init(configmodule.envoy);
   logging.Set_log_init("\r\n");
   logging.Set_log_init("");
   

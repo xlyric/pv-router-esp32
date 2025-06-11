@@ -40,7 +40,9 @@ void dallasread(void * parameter){
           Serial.print(" Temp C: ");
           Serial.println(gDisplayValues.temperature);
           logging.Set_log_init("temp :");
-          logging.Set_log_init(String(gDisplayValues.temperature).c_str());
+          char buf_float[16];
+          dtostrf(gDisplayValues.temperature, 0, 2, buf_float);
+          logging.Set_log_init(buf_float);
           logging.Set_log_init("\r\n");
         }
     }

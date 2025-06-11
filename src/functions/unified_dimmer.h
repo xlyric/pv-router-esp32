@@ -30,6 +30,7 @@ extern dimmerLamp dimmer3;
 //***********************************
 struct gestion_puissance {
   private: unsigned long last_time = millis();
+           char temp_buffer[128]; // NOSONAR
 
   public:float power;
 
@@ -80,7 +81,8 @@ struct gestion_puissance {
      if (dimmer1_pwr == 0 && dimmer1.getState()==1) {  /// si puissance demandée = 0 et dimmer allumé alors on éteint
       dimmer1.setPower(0);
       dimmer1.setState(OFF);
-      logging.Set_log_init("Dimmer1 Off "+ reason +"\r\n");
+      snprintf(temp_buffer, sizeof(temp_buffer), "Dimmer1 Off %s\n", reason.c_str());
+      logging.Set_log_init(temp_buffer);
       delay(50);
      }
      else if (dimmer1_pwr != 0 && dimmer1.getState()==0) {  /// si puissance demandée différente de 0 et dimmer éteint alors on allume
@@ -130,12 +132,11 @@ struct gestion_puissance {
       }
     }  
     #endif   
-    
-    logging.Set_log_init("dimmer 1: " + String(dimmer1_pwr) + "%\r\n" );
-    #ifdef outputPin2
-      logging.Set_log_init("dimmer 2: " + String(dimmer2_pwr) + "%\r\n" );
-      logging.Set_log_init("dimmer 3: " + String(dimmer3_pwr) + "%\r\n" );
-    #endif
+        snprintf(temp_buffer, sizeof(temp_buffer),
+             "dimmer 1: %d%%, dimmer 2: %d%%, dimmer 3: %d%%\r\n",
+             dimmer1_pwr, dimmer2_pwr, dimmer3_pwr);
+    logging.Set_log_init(temp_buffer);
+
 }
 
   //getter
@@ -159,20 +160,20 @@ struct gestion_puissance {
       if (dimmer1.getState()) {
         dimmer1.setPower(0);
         dimmer1.setState(OFF);
-        logging.Set_log_init("Dimmer Off "+ reason +" \r\n");
+        logging.Set_log_init("Dimmer1 Off\n");
         delay(50);
       }
       #ifdef outputPin2
         if (dimmer2.getState()) {
           dimmer2.setPower(0);
           dimmer2.setState(OFF);
-          logging.Set_log_init("Dimmer2 Off\r\n");
+          logging.Set_log_init("Dimmer2 Off\n");
           delay(50);
         }
         if (dimmer3.getState()) {
           dimmer3.setPower(0);
           dimmer3.setState(OFF);
-          logging.Set_log_init("Dimmer3 Off\r\n");
+          logging.Set_log_init("Dimmer3 Off\n");
           delay(50);
         }
       #endif

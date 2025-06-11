@@ -74,7 +74,9 @@ WiFiClient espClient;
       
       logging.Set_log_init(Attempting_MQTT_connexion,true);
       //affichage du RSSI
-      logging.Set_log_init(String(WiFi.RSSI())+" dBm\r\n");
+      char buf[20];
+      snprintf(buf, sizeof(buf), "RSSI: %d dBm\n", WiFi.RSSI());
+      logging.Set_log_init(buf);
 
       // Attempt to connect
       if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password)) {

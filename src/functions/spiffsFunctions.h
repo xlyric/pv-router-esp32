@@ -58,7 +58,9 @@ void loadlogs() {
 
   // chargement de la log jusqu'a la fin du fichier EOF
   while (configFile.available()) {
-    logging.Set_log_init(configFile.readStringUntil('\n'));
+    char line[64]; // Ajustez la taille du tableau en fonction de la longueur maximale de la ligne
+    sniprintf(line, sizeof(line), "%s", configFile.readStringUntil('\n')); // Formatage de la ligne pour éviter les problèmes de buffer overflow
+    logging.Set_log_init(line);
   }
   configFile.close();
   

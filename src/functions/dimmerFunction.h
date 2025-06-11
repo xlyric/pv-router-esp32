@@ -78,7 +78,9 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
       }
       if (logging.power) {            
         logging.Set_log_init(POWER_COMMAND);
-        logging.Set_log_init(String(puissance_dispo) + "W\r\n");
+        char buf_int[30];
+        snprintf(buf_int, sizeof(buf_int), "%d W\n", puissance_dispo);
+        logging.Set_log_init(buf_int);
       }
     }
 

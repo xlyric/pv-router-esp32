@@ -89,7 +89,7 @@ void switchDisplay(void * parameter) { // NOSONAR
                 display.setRotation(1);
               gDisplayValues.option = 0 ;
               call_display(); 
-              logging.Set_log_init(config.saveConfiguration(),true);  ///save configuration
+              logging.Set_log_init(config.saveConfiguration().c_str(),true);  ///save configuration
             #endif
             break;
           case 2:

@@ -138,6 +138,7 @@ struct Programme {
   }
 
   public:bool start_progr() {
+    struct tm timeinfo;
     int heures;
     int minutes;
     sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
@@ -190,6 +191,7 @@ struct Programme {
   /// @brief  stop du programme
   /// @return 
   public:bool stop_progr() {
+    struct tm timeinfo;
     int heures ;
     int minutes;
     /// sécurité temp

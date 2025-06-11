@@ -154,7 +154,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute le
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250517"
+#define RELEASE "Version 20250611"
 constexpr const int FS_RELEASE = 20250324;
 
 #ifdef LIGHT_FIRMWARE
@@ -177,7 +177,7 @@ bool AP = true;
 #define TIME_BOOST 3600 // temps de boost
 
 /// taille max des logs stockée
-constexpr size_t LOG_MAX_STRING_LENGTH = 1500;
+constexpr size_t LOG_MAX_STRING_LENGTH = 1000;
 
 #ifdef S3
   #define ADC_INPUT 10
