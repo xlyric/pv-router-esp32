@@ -250,14 +250,8 @@
 			
 		<div class="col-xl-12 col-lg-7">
             <div class="card shadow mb-4">
-			<a href="#collapseOscillo" class="d-block card-header py-3 collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseOscillo">
+ 				
 
-                  <h6 class="m-0 font-weight-bold text-primary">Oscillo</h6>
-                </a>
-   				
-                <!-- Card Body -->
-				<div class="collapse " id="collapseOscillo">
-                <div class="card-body">
 				<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script> 
 				
 				  <script type='text/javascript'> 
@@ -285,7 +279,6 @@
 				  google.charts.setOnLoadCallback(drawChart);
 				  
 				  var chart ;
-				  var options = { title: 'Oscilloscope Mode', curveType: 'function', legend: { position: 'bottom' } };
 				  var data ;
 				  var inc;
 				  
@@ -342,29 +335,8 @@
           max: 90, 
           
         }; 			  
-				
-				  setInterval(function ( ) {
-				  
-					var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));  	 
-					var data2 = new google.visualization.DataTable(); 
-					data2.addColumn('number', 'time');
-					data2.addColumn('number', 'half wave');
-					data2.addColumn('number', 'Analog out (Ampere)');
-				
-				 	var jsondata = $.ajax ({
-						url : '/chart.json',
-						type : 'GET',
-						dataType: "json",
-						async: false
-						 }).responseText; 
-					
-					data2.addRows( JSON.parse(jsondata)  );
-					chart.draw(data2, options);
-					document.getElementById("rawdata").innerHTML = jsondata;
-					
-					}, 8000 ) ;
+		
 
-	
 		// mise à jour de la jauge  --> 	
 		var gaugePA = new google.visualization.Gauge(document.getElementById('curve_chart2'));
 	  var dataGaugePA = new google.visualization.DataTable();
@@ -512,8 +484,7 @@
   
                      <div id='curve_chart' style=' width: auto; height: 500px;'>
                   </div>
-		   </div>
-        </div>	
+		   
 	   </div>		
 	</div>	
 			

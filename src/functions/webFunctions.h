@@ -156,16 +156,6 @@ void call_pages() {
       }
     }
 
-    ///// Pages 
-    /// Appel de fonction 
-    server.on("/chart.json", HTTP_GET, [](AsyncWebServerRequest *request){
-      #ifndef ESP32D1MINI_FIRMWARE
-      request->send(200, "application/json", getchart().c_str());
-      #else
-      request->send(200, "application/json", "[]");
-      #endif
-    }); 
-
     server.on("/state", HTTP_GET, [](AsyncWebServerRequest *request){
       request->send(200, "application/json", getState().c_str());
     });

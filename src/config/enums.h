@@ -94,7 +94,7 @@ struct DisplayValues {
   int Fronius_prod; 
   int Fronius_totalconso;
   float celsius;
-  int page=1; 
+  //int page=1; 
   int Shelly=-1;
   double enp_prod_whLifetime;
   double enp_cons_whLifetime;
@@ -624,7 +624,7 @@ struct HA {
   public:void Set_dev_cla(String setter) {
     dev_cla=setter; 
     if (setter=="switch") { 
-      topic = "homeassistant/switch/"+ node_id +"/"; 
+      topic = "homeassistant/switch/"+ String(node_id) +"/"; 
     }
   }
 
@@ -654,7 +654,7 @@ struct HA {
   private:String state_topic; 
   private:String stat_t; 
   private:String avty_t;
-    
+
   private:const String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
   private:const String node_id = String("PvRouter-") + node_mac; 
   public:String topic = "homeassistant/sensor/"+ node_id +"/";
@@ -662,14 +662,13 @@ struct HA {
   private:String device_declare() { 
     String info = R"(
         "dev": {
-            "ids": ")" + node_id + R"(",
-            "name": ")" + node_id + R"(",
+            "ids": ")" + String(node_id) + R"(",
+            "name": ")" + String(node_id) + R"(",
             "sw": "PvRouter )" + String(VERSION) + R"(",
             "mdl": "ESP32 TTGO )" + IPaddress + R"(",
             "mf": "Cyril Poissonnier",
             "cu": "http://)" + IPaddress + R"("
         })";
-
         return info;
     }
 
@@ -713,12 +712,14 @@ struct HA {
     if (dev_cla =="" ) { 
       dev_cla = name; 
     }
-
+    char final_topic[100];
     if (strlen(name.c_str()) != 0 ) {
-      client.publish((topic+name+"/config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
+      snprintf(final_topic, sizeof(final_topic), "%s%s/config", topic, name.c_str());
+      client.publish(final_topic , device.c_str() , true); // déclaration autoconf dimmer
     }
     else {
-      client.publish((topic+"config").c_str() , device.c_str() , true); // déclaration autoconf dimmer
+      snprintf(final_topic, sizeof(final_topic), "%sconfig", topic);
+      client.publish(final_topic, device.c_str() , true); // déclaration autoconf dimmer
     }       
   } // discovery
 

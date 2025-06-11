@@ -414,7 +414,7 @@ void setup()
   //***********************************
   //************* Setup - mDNS
   //***********************************    
-  mdns_hello(gDisplayValues.pvname);
+  mdns_hello(gDisplayValues.pvname.c_str());
   Serial.println(mDNS_Responder_Started);
   Serial.println(gDisplayValues.pvname);
   logging.Set_log_init(mDNS_Responder_Started,true);

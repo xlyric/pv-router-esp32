@@ -23,16 +23,19 @@ extern SemaphoreHandle_t mutex;
 //***********************************
 //************* mdns_bye
 //***********************************
-void mdns_bye(String esp_name) {
+void mdns_bye(const char* esp_name) {
   MDNS.end();   
 }
 
 //***********************************
 //************* mdns_check
 //***********************************
-void mdns_check(String esp_name) {
-  Serial.println("mDNS check pour : " + esp_name);
-  IPAddress ip = MDNS.queryHost(esp_name.c_str());
+void mdns_check(const char* esp_name) {
+  Serial.print("mDNS check pour : ");
+  Serial.println(esp_name);
+
+  IPAddress ip = MDNS.queryHost(esp_name);
+
   if (ip != IPAddress(0, 0, 0, 0)) {
     Serial.print("mDNS encore actif, IP trouvée : ");
     Serial.println(ip);
@@ -46,12 +49,12 @@ void mdns_check(String esp_name) {
 //***********************************
 //************* mdns_hello
 //***********************************
-void mdns_hello(String esp_name) {
+void mdns_hello(const char* esp_name) {
   Serial.print("Démarrage mDNS pour : ");
   Serial.println(esp_name);
 
   int attempts = 0;
-  while (!MDNS.begin(esp_name.c_str())) {
+  while (!MDNS.begin(esp_name)) {
     Serial.println("Erreur MDNS, tentative...");
     attempts++;
     if (attempts > 5) {  // Si après 5 tentatives ça ne fonctionne pas
@@ -65,7 +68,7 @@ void mdns_hello(String esp_name) {
   delay(2000); // Attendre pour que mDNS soit bien en place
 
   MDNS.addService("sunstain", "tcp", 80);
-  MDNS.addServiceTxt("sunstain", "tcp", "name", esp_name.c_str());
+  MDNS.addServiceTxt("sunstain", "tcp", "name", esp_name);
   MDNS.addServiceTxt("sunstain", "tcp", "version", VERSION);
   MDNS.addServiceTxt("sunstain", "tcp", "compilation", COMPILE_NAME);
   MDNS.addServiceTxt("sunstain", "tcp", "fonction", "router");
@@ -76,8 +79,8 @@ void mdns_hello(String esp_name) {
 //***********************************
 //************* mdns_search
 //***********************************
-bool mdns_search(String type, uint16_t port) {
-  int nrOfServices = MDNS.queryService(type.c_str(), "tcp");
+bool mdns_search(const char* type, uint16_t port) {
+  int nrOfServices = MDNS.queryService(type, "tcp");
   if (nrOfServices == 0) {
     Serial.println("No services were found.");
     return false;
@@ -94,8 +97,10 @@ bool mdns_search(String type, uint16_t port) {
           for (int j = 0; j < nrOfTxt; j = j + 1) {
             // comparaison de la clé TXT  et valeuyr
             if (strcmp((MDNS.txtKey(i, j)).c_str(), "fonction") == 0 || strcmp((MDNS.txt(i, j)).c_str(), "dimmer") == 0) {
-              String name_dimmer = MDNS.hostname(i) + ".local";
-              name_dimmer.toCharArray(config.dimmer, name_dimmer.length() + 1);
+              char buffer[32];
+              snprintf(buffer, sizeof(buffer), "%s.local", MDNS.hostname(i).c_str());
+              strncpy(config.dimmer, buffer, sizeof(config.dimmer) - 1);
+              config.dimmer[sizeof(config.dimmer) - 1] = '\0'; // Assurer la terminaison de la chaîne
 
               Serial.print(Dimmer_found);
               Serial.println(config.dimmer);
@@ -110,8 +115,10 @@ bool mdns_search(String type, uint16_t port) {
           } // for
         }
         else {
-          String name_dimmer = MDNS.hostname(i) + ".local";
-          name_dimmer.toCharArray(config.dimmer, name_dimmer.length() + 1);
+          char buffer[32];
+          snprintf(buffer, sizeof(buffer), "%s.local", MDNS.hostname(i).c_str());
+          strncpy(config.dimmer, buffer, sizeof(config.dimmer) - 1);
+          config.dimmer[sizeof(config.dimmer) - 1] = '\0'; // Assurer la terminaison de la chaîne
           Serial.print(Dimmer_found);
           Serial.println(config.dimmer);
           logging.Set_log_init(Dimmer_found);

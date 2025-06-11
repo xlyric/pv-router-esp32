@@ -59,10 +59,12 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
  #if WIFI_ACTIVE == true
     /// control dimmer 
     if ( strcmp(config.dimmer,"none") != 0 && strcmp(config.dimmer,"") != 0) {
+      char baseurl[50]; 
+      
       #ifndef POURCENTAGE
-        const String  baseurl = "/?POWER=" + String(dimmervalue) +"&puissance=" + String(puissance_dispo) ; 
+        snprintf(baseurl, sizeof(baseurl), "/?POWER=%d&puissance=%d", dimmervalue, puissance_dispo);
       #else
-        const String baseurl = "/?POWER=" + String(dimmervalue) ;
+        snprintf(baseurl, sizeof(baseurl), "/?POWER=%d", dimmervalue);
       #endif
 
       // si la puissance routé est de 0 et que le dimmer est à 0 on ne fait rien
@@ -84,19 +86,6 @@ void dimmer_change(char dimmerurl[15], int dimmerIDX, int dimmervalue, int puiss
       }
     }
 
-    //// Mqtt send information
-    /*
-    #ifndef LIGHT_FIRMWARE
-      if (!AP) {
-        if (config.mqtt)  {
-          /// A vérifier que c'est necessaire ( envoie double ? )
-          /// la valeur 0 doit quand meme être envoyé 
-          Mqtt_send(String(dimmerIDX), String(dimmervalue),"","dimmer");               
-        }
-      }
-
-    #endif // not LIGHT_FIRMWARE
-    */
     delay (500); // delay de transmission réseau dimmer et application de la charge } 
     /// 24/01/2023 passage de 1500 à 500ms 
   #endif // WIFI_ACTIVE
@@ -338,6 +327,7 @@ void Dimmer_setup() {
 //***********************************
 String dimmergetState() {
   String state; 
+  state.reserve(50); 
   int pow=unified_dimmer.get_power(); 
   state = String(pow) + ";" + String(gDisplayValues.celsius) ; 
   return String(state);  

@@ -74,46 +74,6 @@ constexpr const char* PARAM_INPUT_reset = "reset"; /// paramettre reset
 constexpr const char* PARAM_INPUT_publish = "publish"; /// paramettre publication mqtt
 
 //***********************************
-//************* oscilloscope
-//************* Oscillo mode creation du tableau de mesure pour le graph
-//***********************************
-String oscilloscope() {
-
-  int timer = 0; 
-  int temp;
-  int signe; 
-  int moyenne; 
-  int oscillo_freqmesure = 40; 
-  int sigma = 0;
-  String retour; 
-  #ifndef ESP32D1MINI_FIRMWARE
-    retour += "[[";  
-    front();
-    // correction décalage
-    delayMicroseconds (config.cosphi*config.readtime); 
-    while ( timer < oscillo_freqmesure ) {
-      temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
-      moyenne = middleoscillo  + signe/50; 
-      sigma += temp;
-
-      /// mode oscillo graph 
-      retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "],[" ; 
-      timer ++ ;
-      delayMicroseconds (config.readtime);
-    } 
-    
-    temp =  adc1_get_raw((adc1_channel_t)4); signe = adc1_get_raw((adc1_channel_t)5);
-    moyenne = middleoscillo  + signe/50; 
-    
-    retour += String(timer) + "," + String(moyenne) + "," + String(temp) + "]]" ;
-    middleoscillo = sigma / oscillo_freqmesure ;
-  #endif
-  
-  return ( retour ); 
-}
-
-
-//***********************************
 //************* getState_short
 //************* retour des pages
 //***********************************
@@ -367,20 +327,6 @@ String getenvoy() {
   serializeJson(doc, retour);
 
   return String(retour) ;
-}
-
-//***********************************
-//************* getchart
-//***********************************
-String getchart() {
-  String retour ="" ;
-
-  //ne sert à rien si enphase / fronius / shelly en route
-  if (configmodule.enphase_present == false && configmodule.Fronius_present == false && ( strcmp(config.topic_Shelly,"none") == 0 || strcmp(config.topic_Shelly,"") == 0 )  ) {
-    retour = oscilloscope() ;
-  }
-  
-  return String(retour);
 }
 
 //***********************************
