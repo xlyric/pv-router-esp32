@@ -43,7 +43,7 @@ constexpr size_t GETTEMPREFRESH = 5;
  * The name of this device (as defined in the AWS IOT console).
  * Also used to set the hostname on the network
  */
-#define DEVICE_NAME "Pv router ESP32"
+constexpr const char* DEVICE_NAME = "Pv router ESP32";
 
 /**
  * ADC input pin that is used to read out the CT sensor
@@ -142,7 +142,7 @@ constexpr size_t COMPENSATION = 100; ///  % d'asservissement pour l'envoie de pu
  * Syncing time with an NTP server
  */
 #define NTP_TIME_SYNC_ENABLED true
-#define NTP_SERVER "europe.pool.ntp.org"
+constexpr const char* NTP_SERVER = "europe.pool.ntp.org";
 constexpr size_t NTP_OFFSET_SECONDS = 3600;
 constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute les heures
 
@@ -156,16 +156,17 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute le
 
 #define RELEASE "Version 20250611"
 constexpr const int FS_RELEASE = 20250324;
+constexpr const char* FS_UPDATE = "<br>!! FS pas à jour !!"; /// paramettre FS pas à jour
 
 #ifdef LIGHT_FIRMWARE
   #define VERSION "Light " RELEASE
 #else
-  #define VERSION RELEASE
+  constexpr const char* VERSION = RELEASE ;
 #endif
 
-#define EnvoyJ "/auth/check_jwt"
-#define EnvoyR "/api/v1/production"
-#define EnvoyS "/production.json"
+constexpr const char* EnvoyJ = "/auth/check_jwt";
+constexpr const char* EnvoyR = "/api/v1/production";
+constexpr const char* EnvoyS = "/production.json";
 
 bool AP = true;
 

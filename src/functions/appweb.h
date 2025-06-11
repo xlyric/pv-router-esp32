@@ -99,7 +99,6 @@ String getState() {
     state = INJECTION; 
   }
  
-  const String fs_update = String("<br>!! FS pas à jour !!") ;
   const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
   JsonDocument doc;
   doc["state"] = state;
@@ -110,7 +109,7 @@ String getState() {
     doc["version"] = VERSION ; 
   } 
   else { 
-    doc["version"] = VERSION + fs_update; 
+    doc["version"] = String(VERSION) + String(FS_UPDATE); 
   }
   doc["RSSI"] = WiFi.RSSI();
   doc["name"] =  String(pvname); 
@@ -143,7 +142,7 @@ String getStateFull() {
     state = INJECTION; 
   }
  
-  const String fs_update = String("<br>!! FS pas à jour !!") ;
+
   const String pvname = String("PV ROUTER ") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
 
   JsonDocument doc;
@@ -158,7 +157,7 @@ String getStateFull() {
     doc["version"] = VERSION ; 
   } 
   else { 
-    doc["version"] = VERSION + fs_update; 
+    doc["version"] = String(VERSION) + String(FS_UPDATE);
   }
   doc["RSSI"] = WiFi.RSSI();
   doc["name"] =  String(pvname); 
