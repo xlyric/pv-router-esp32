@@ -62,7 +62,7 @@ void drawIP(){
   #ifdef  ESP32D1MINI_FIRMWARE
     display.setTextAlignment(TEXT_ALIGN_LEFT);
     display.setFont(ArialMT_Plain_10);
-    display.drawString(64, 0,gDisplayValues.IP);
+    display.drawString(64, 0,String(gDisplayValues.IP) );
   #endif
   #ifdef  TTGO
     display.setCursor(120, 0, 2);

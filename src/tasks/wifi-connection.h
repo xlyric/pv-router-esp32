@@ -78,7 +78,7 @@ void keepWiFiAlive(void * parameter) { // NOSONAR
     serial_print(WiFi.RSSI());
     serial_println("dBm");
     gDisplayValues.currentState = DEVICE_STATE::UP;
-    gDisplayValues.IP = String(WiFi.localIP().toString());
+    gDisplayValues.IP = WiFi.localIP();
     btStop();
   } // for
 }

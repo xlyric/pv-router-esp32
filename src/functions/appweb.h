@@ -175,14 +175,10 @@ String getStateFull() {
 //***********************************
 //************* stringbool
 //***********************************
-String stringbool(bool mybool) {
-  String truefalse = "true";
-  if (mybool == false ) {
-    truefalse = "";
-  }
-
-  return String(truefalse);
+inline const char* stringBool(bool myBool) {
+    return myBool ? "true" : "false";
 }
+
 
 //***********************************
 //************* getServermode

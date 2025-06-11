@@ -60,8 +60,8 @@ enum class DEVICE_STATE {
 struct ESP32Info {
   String chipModel;
   String chipModelShort;
-  int chipRevision;
-  int chipCores;
+  uint8_t chipRevision;
+  uint8_t chipCores;
   String boardName;
   uint64_t chipID;
 };
@@ -77,8 +77,8 @@ struct DisplayValues {
   double amps;
   int8_t wifi_strength;
   DEVICE_STATE currentState;
-  String IP;
-  String time;
+  IPAddress IP;
+  //String time;
   bool injection; 
   int dimmer;
   int security; 
@@ -411,6 +411,7 @@ struct Mqtt {
 
   String loadmqtt() {
     String message = "";
+    message.reserve(100); 
     // Open file for reading
     File configFile = SPIFFS.open(mqtt_conf, "r");
 
@@ -444,6 +445,7 @@ struct Mqtt {
 
   String savemqtt() {
     String message = "";
+    message.reserve(100);
     // Open file for writing
     File configFile = SPIFFS.open(mqtt_conf, "w");
     if (!configFile) {
@@ -650,7 +652,7 @@ struct HA {
 
   bool cmd_t; 
 
-  private:String IPaddress;
+  private:IPAddress IPaddress;
   private:String state_topic; 
   private:String stat_t; 
   private:String avty_t;
@@ -693,7 +695,7 @@ struct HA {
       )"; 
     }
 
-    IPaddress =   WiFi.localIP().toString() ;
+    IPaddress =   WiFi.localIP() ;
     String device= "{ \"dev_cla\": \""+dev_cla+"\","
       "\"name\": \""+ name +"-"+ node_mac + "\"," 
       // "\"state_topic\": \""+ topic +"state\","
@@ -723,18 +725,27 @@ struct HA {
     }       
   } // discovery
 
-  public:void send(String value) {
+  public:void send(const char* value) {
     // vérification que value est un nombre
-    String message ="";
-    if (value.toFloat() == 0 && value != "0") { 
-      message = "  { \""+name+"\" : \"" + value.c_str() + "\"  } "; 
-    }
-    else {
-      message = "  { \""+name+"\" : "+ value.c_str() + "}"; 
-    }
+    char message[150];
+      snprintf(message, sizeof(message), "  { \"%s\" : \"%s\" } ", name.c_str(), value); // NOSONAR  
 
-    client.publish((topic+"state"+name).c_str() , message.c_str(), false); // false for exp_aft in discovery
+    client.publish((topic+"state"+name).c_str() , message, false); // false for exp_aft in discovery
   }  // send()
+
+    void sendInt(int value) {
+      char buf[12];
+      itoa(value, buf, 10);
+      send(buf);
+  }
+
+  void sendFloat(float value, int decimals = 2) {
+      char buf[16];
+      dtostrf(value, 0, decimals, buf);
+      send(buf);
+  }
+
+
 };
 #endif
 

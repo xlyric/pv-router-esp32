@@ -900,14 +900,7 @@ void loop() {
         // on remet les valeurs de temps programme_marche_force à 00:00
         strcpy(programme_marche_forcee.heure_demarrage, "00:00"); // NOSONAR
         strcpy(programme_marche_forcee.heure_arret, "00:00");  // NOSONAR        
-        /// remonté MQTT
-      /* #ifndef LIGHT_FIRMWARE
-            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-            if (configmqtt.HA) {
-              int instant_power = unified_dimmer.get_power();
-              device_dimmer.send(String(instant_power * config.charge/100));
-            } 
-        #endif */ // not LIGHT_FIRMWARE
+
       } // if (programme.stop_progr() || programme_marche_forcee.stop_progr() )
     } // if (programme.run || programme_marche_forcee.run)  
 
@@ -926,19 +919,7 @@ void loop() {
         Serial.println("start minuteur ");
         //demarrage du ventilateur 
         digitalWrite(COOLER, HIGH);      
-        /// remonté MQTT
-    /*    #ifndef LIGHT_FIRMWARE
 
-            Mqtt_send(String(config.IDX), String(unified_dimmer.get_power()),"pourcent"); // remonté MQTT de la commande réelle
-              if (configmqtt.HA) {
-                int instant_power = unified_dimmer.get_power();
-                device_dimmer.send(String(instant_power * config.charge/100));
-                if ( programme_marche_forcee.run) {
-                  device_dimmer_boost.send("1");
-                }
-              } 
-        #endif // not LIGHT_FIRMWARE
-        */
       } // if (programme.start_progr() ||  programme_marche_forcee.start_progr() )
     } // else
   } // if (config.dimmerlocal)
@@ -995,7 +976,7 @@ void connect_to_wifi() {
   if (AP || strcmp(configwifi.SID,"AP") == 0 ) {
       APConnect(); 
       gDisplayValues.currentState = DEVICE_STATE::UP;
-      gDisplayValues.IP = String(WiFi.softAPIP().toString());
+      gDisplayValues.IP = WiFi.softAPIP();
       btStop();
       return; 
   }
@@ -1056,7 +1037,7 @@ void connect_to_wifi() {
       serial_print(WiFi.RSSI());
       serial_println("dBm");
       gDisplayValues.currentState = DEVICE_STATE::UP;
-      gDisplayValues.IP = String(WiFi.localIP().toString());
+      gDisplayValues.IP = WiFi.localIP();
       btStop();
       WiFi.setAutoReconnect(true);
     #endif // WIFI_ACTIVE == true

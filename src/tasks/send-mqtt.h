@@ -93,16 +93,16 @@ void send_to_mqtt(void * parameter) { // NOSONAR
                
               // HA
               if (configmqtt.HA) {
-                device_routeur.send(String(int(gDisplayValues.watt)));
-                device_routed.send(String(gDisplayValues.puissance_route));
-                device_dimmer_power.send(String(int((unified_dimmer.get_power()) * config.charge/100)));
-                power_apparent.send(String(int(PVA)));                        
-                power_factor.send(String(PowerFactor));
-                temperature_HA.send(String(gDisplayValues.temperature));
-                device_dimmer.send(String(int(unified_dimmer.get_power()))); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
-                switch_relay1.send(String(digitalRead(RELAY1)));
-                switch_relay2.send(String(digitalRead(RELAY2)));
-                device_dimmer_boost.send(stringbool(programme_marche_forcee.run));                                            
+                device_routeur.sendInt(gDisplayValues.watt);
+                device_routed.sendInt(gDisplayValues.puissance_route);
+                device_dimmer_power.sendInt((unified_dimmer.get_power()) * config.charge/100);
+                power_apparent.sendFloat(PVA);                        
+                power_factor.sendFloat(PowerFactor);
+                temperature_HA.sendFloat(gDisplayValues.temperature);
+                device_dimmer.sendInt(unified_dimmer.get_power()); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
+                switch_relay1.sendInt(digitalRead(RELAY1));
+                switch_relay2.sendInt(digitalRead(RELAY2));
+                device_dimmer_boost.send(stringBool(programme_marche_forcee.run));                                            
               }
 
               // remonté énergie domoticz et jeedom
@@ -113,14 +113,14 @@ void send_to_mqtt(void * parameter) { // NOSONAR
                   Mqtt_send(String(config.IDX), String("0") ,"grid","Reseau");
                 }
                 if (configmqtt.HA) {
-                  device_inject.send(String(int(-gDisplayValues.watt)));
-                  device_grid.send(String("0"));
+                  device_inject.sendInt((-gDisplayValues.watt));
+                  device_grid.send("0");
                   WHtempgrid += wattheure; 
-                  compteur_inject.send(String(WHtempgrid));
+                  compteur_inject.sendFloat(WHtempgrid);
                 
                   //envoie vers mqtt des état injection et consommation 
                   client.publish(("memory/"+compteur_grid.topic+compteur_grid.Get_name()).c_str(), String(WHtempgrid).c_str(),true); 
-                  compteur_grid.send(String("0"));
+                  compteur_grid.send("0");
                 }
               }
               else {
@@ -129,11 +129,11 @@ void send_to_mqtt(void * parameter) { // NOSONAR
                   Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"grid","Reseau");
                 }
                 if (configmqtt.HA) {
-                  device_grid.send(String(int(gDisplayValues.watt)));
-                  device_inject.send(String("0"));
-                  compteur_inject.send(String("0"));
+                  device_grid.sendInt((gDisplayValues.watt));
+                  device_inject.send("0");
+                  compteur_inject.send("0");
                   WHtempinject += wattheure;
-                  compteur_grid.send(String(WHtempinject));
+                  compteur_grid.sendFloat(WHtempinject);
                   client.publish(("memory/"+compteur_inject.topic+compteur_inject.Get_name()).c_str(), String(WHtempinject).c_str(),true);
                 }
               }
