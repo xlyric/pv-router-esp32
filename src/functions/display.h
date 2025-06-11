@@ -106,11 +106,11 @@ void call_display(){
 void affichage_normal(){
   //************* Affichage de l'état de la régulation
   #ifdef ESP32D1MINI_FIRMWARE
-    drawtext10(64, 16, injection_type());
+    drawtext10(64, 16, injection_type().c_str());
   #endif
 
   #ifdef TTGO
-    drawtext10(30, 16, injection_type());
+    drawtext10(30, 16, injection_type().c_str());
     display.setTextSize(1);
     display.setTextColor(TFT_WHITE, TFT_BLACK);
     display.setTextFont(4);
@@ -128,15 +128,16 @@ void affichage_normal(){
   #ifdef TTGO
     if (int(gDisplayValues.temperature) != 0) {
       ////// retrait à 1 décimale après la virgule
-      
+      char buf_float[16];
+      dtostrf(gDisplayValues.temperature, 4, 1, buf_float);
       if (int(gDisplayValues.temperature) > 40) {
-        drawtext10TTGO(150, 16, String(gDisplayValues.temperature,1), TFT_GREEN);
+        drawtext10TTGO(150, 16, buf_float, TFT_GREEN);
       } 
       else if (int(gDisplayValues.temperature) < 25) {
-        drawtext10TTGO(150, 16, String(gDisplayValues.temperature,1), TFT_BLUE);
+        drawtext10TTGO(150, 16, buf_float, TFT_BLUE);
       } 
       else {
-        drawtext10TTGO(150, 16, String(gDisplayValues.temperature,1), TFT_WHITE);
+        drawtext10TTGO(150, 16, buf_float, TFT_WHITE);
       }
     }
   #endif
@@ -144,35 +145,38 @@ void affichage_normal(){
   // Affichage des infos de puissance ( sans les virgules )
   if (gDisplayValues.porteuse == false) {
     #ifdef ESP32D1MINI_FIRMWARE
-      drawtext16(64, 30, String(OLEDNOSIN));
+      drawtext16(64, 30, OLEDNOSIN);
     #endif
 
     #ifdef TTGO
-      drawtext16(120, 70, String(OLEDNOSIN));
+      drawtext16(120, 70, OLEDNOSIN);
     #endif
     gDisplayValues.dimmer = 0;  /// mise à zero du dimmer par sécurité
   } 
   else {
     #ifdef ESP32D1MINI_FIRMWARE
-      drawtext16(64, 30, String(gDisplayValues.watt, 0) + " W");
+    char buf_int[12];
+    snprintf(buf_int, sizeof(buf_int), "%d W", gDisplayValues.watt);
+      drawtext16(64, 30, buf_int);
     #endif
     
     #ifdef TTGO
-      String affiche = String(gDisplayValues.watt, 0);
+      char buf_int[12];
+      itoa(gDisplayValues.watt, buf_int, 10);
       if (gDisplayValues.watt > config.delta) {
-        drawtext16TTGO(120, 70, affiche, TFT_RED);
+        drawtext16TTGO(120, 70, buf_int, TFT_RED);
       } 
       else if (gDisplayValues.watt < config.deltaneg) {
         /// correction dépassement de ligne pour les injections < -1000
         if (gDisplayValues.watt < -999) {
-          drawtext16TTGO(100, 70, affiche, TFT_BLUE);
+          drawtext16TTGO(100, 70, buf_int, TFT_BLUE);
         } 
         else {
-          drawtext16TTGO(120, 70, affiche, TFT_BLUE);
+          drawtext16TTGO(120, 70, buf_int, TFT_BLUE);
         }
       } 
       else {
-        drawtext16TTGO(120, 70, affiche, TFT_GREEN);
+        drawtext16TTGO(120, 70, buf_int, TFT_GREEN);
       }       
     #endif
   }
@@ -180,13 +184,17 @@ void affichage_normal(){
   // Affichage des infos du dimmer
   #ifdef ESP32D1MINI_FIRMWARE
     // Affichage des infos du dimmer
-    drawtext16(64, 48, String(gDisplayValues.puissance_route) + " %");
+    char buf_int[12];
+      itoa(gDisplayValues.dimmer, buf_int, 10);
+    drawtext16(64, 48, buf_int);
     display.display();
   #endif
 
   #ifdef TTGO
     if (gDisplayValues.puissance_route < 10000 ) {
-      drawtext16TTGO(0, 70, String(gDisplayValues.puissance_route), TFT_GREEN);
+      char buf_int[12];
+      itoa(gDisplayValues.puissance_route, buf_int, 10);
+      drawtext16TTGO(0, 70, buf_int, TFT_GREEN);
     }
     else {
       drawtext16TTGO(0, 70, "9999", TFT_GREEN);

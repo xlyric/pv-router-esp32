@@ -122,7 +122,7 @@ void drawBootscreen(){
 //***********************************
 //************* drawtext16
 //***********************************
-void drawtext16(int width,int height, String text ){
+void drawtext16(int width,int height, const char* text ){
   /*
    * Affichage de texte de format 16 
   */ 
@@ -131,7 +131,7 @@ void drawtext16(int width,int height, String text ){
     // Calculate how wide (pixels) the text will be once rendered.
     // Each character = 6 pixels, with font size 2, that is 12 pixels.
     // -1 because of the spacing between letters (last one doesn't)
-    int widthtext = text.length() * 12 - 1;
+    int widthtext = strlen(text) * 12 - 1;
     
     /// clean rect
     display.setColor(BLACK);
@@ -141,27 +141,27 @@ void drawtext16(int width,int height, String text ){
     display.setColor(WHITE);
     display.setTextAlignment(TEXT_ALIGN_LEFT);
     display.setFont(ArialMT_Plain_16);
-    display.drawString(width,height, String(text) ); 
+    display.drawString(width,height, text ); 
   #endif
   
   #ifdef  TTGO
     display.setCursor(width, height, 2); display.setTextSize(2);
     display.setTextColor(TFT_WHITE,TFT_BLACK);  display.setTextFont(2);
-    display.print(String(text));
+    display.print(text);
   #endif
 }
 
 //***********************************
 //************* drawtext10
 //***********************************
-void drawtext10(int width,int height, String text  ) {
+void drawtext10(int width,int height, const char* text  ) {
   #ifdef  ESP32D1MINI_FIRMWARE
     constexpr const int startY = 12;   
     
     // Calculate how wide (pixels) the text will be once rendered.
     // Each character = 6 pixels, with font size 2, that is 12 pixels.
     // -1 because of the spacing between letters (last one doesn't)
-    int widthtext = text.length() * 6 - 1;
+    int widthtext = strlen(text) * 6 - 1;
     
     /// clean rect
     display.setColor(BLACK);
@@ -171,7 +171,7 @@ void drawtext10(int width,int height, String text  ) {
     display.setColor(WHITE);
     display.setTextAlignment(TEXT_ALIGN_LEFT);
     display.setFont(ArialMT_Plain_10);
-    display.drawString(width,height, String(text) ); 
+    display.drawString(width,height, text); 
   #endif
 
   #ifdef  TTGO
@@ -179,32 +179,32 @@ void drawtext10(int width,int height, String text  ) {
     display.setCursor(width, height, 2);
     display.setTextColor(TFT_WHITE,TFT_BLACK);  
     display.setTextSize(2);
-    display.print(String(text));
+    display.print(text);
   #endif
 }
 
 //***********************************
 //************* drawtext16TTGO
 //***********************************
-void drawtext16TTGO(int width,int height, String text, int color ) {
+void drawtext16TTGO(int width,int height, const char* text, int color ) {
   #ifdef  TTGO  
     display.setCursor(width, height, 2); 
     display.setTextSize(2);
     display.setTextColor(color,TFT_BLACK);  
     display.setTextFont(4);
-    display.print(String(text));
+    display.print(text);
   #endif
 }
 
 //***********************************
 //************* drawtext10TTGO
 //***********************************
-void drawtext10TTGO(int width,int height, String text, int color ){
+void drawtext10TTGO(int width,int height, const char* text, int color ){
   #ifdef  TTGO  
     display.setCursor(width, height, 2); 
     display.setTextColor(color,TFT_BLACK);    
     display.setTextSize(2);
-    display.print(String(text));
+    display.print(text);
   #endif
 }
 
