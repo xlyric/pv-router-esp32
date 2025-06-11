@@ -264,7 +264,7 @@ void call_pages() {
     server.on("/get", HTTP_ANY, [] (AsyncWebServerRequest *request) {
       ///  doc  /get?disengage_dimmer=on
       if (request->hasParam(PARAM_INPUT_1)) {
-        String engagedimmer;
+        const char* engagedimmer;
         if(request->getParam(PARAM_INPUT_1)->value() == "on") {
           engagedimmer = "dimmer disengaged";
           gDisplayValues.dimmer_disengaged = true;
@@ -273,7 +273,7 @@ void call_pages() {
           engagedimmer = "dimmer engaged";
           gDisplayValues.dimmer_disengaged = false;
         }
-        request->send(200, "text/html", engagedimmer.c_str());
+        request->send(200, "text/html", engagedimmer);
       }
                               
       // doc /get?cycle=x
@@ -434,7 +434,7 @@ void call_pages() {
     }); // /get
 
     server.on("/setminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
-      String name; 
+//      String name; 
       if (request->hasParam("dimmer")) { 
               if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme.heure_demarrage,6);  }
               if (request->hasParam("heure_arret")) { request->getParam("heure_arret")->value().toCharArray(programme.heure_arret,6);  }

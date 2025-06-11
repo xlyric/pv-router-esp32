@@ -231,7 +231,7 @@ bool dimmeradress(IPAddress dimmertemp ) {
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
     httpdimmer.end();
-    ipaddress.toCharArray(config.dimmer, 16); 
+    //ipaddress.toCharArray(config.dimmer, 16); 
     return true; 
   }
 

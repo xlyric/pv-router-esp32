@@ -35,7 +35,7 @@ struct gestion_puissance {
   public:float power;
 
   // setter
-  void set_power(float unified_power,String reason="") {   /// le string reason est principalement utilisé pour le debug
+  void set_power(float unified_power,const char* reason="") {   /// le char reason est principalement utilisé pour le debug
     last_time = millis();
     if ( gDisplayValues.temperature > config.tmax ) { unified_power = 0; } /// si la température est supérieur à la température max on coupe tout
     else if ( unified_power > config.localfuse )  { unified_power = config.localfuse; } /// si puissance demandée supérieur à ma puissance max reglé alors puissance max
@@ -81,7 +81,7 @@ struct gestion_puissance {
      if (dimmer1_pwr == 0 && dimmer1.getState()==1) {  /// si puissance demandée = 0 et dimmer allumé alors on éteint
       dimmer1.setPower(0);
       dimmer1.setState(OFF);
-      snprintf(temp_buffer, sizeof(temp_buffer), "Dimmer1 Off %s\n", reason.c_str());
+      snprintf(temp_buffer, sizeof(temp_buffer), "Dimmer1 Off %s\n", reason);
       logging.Set_log_init(temp_buffer);
       delay(50);
      }
@@ -156,7 +156,7 @@ struct gestion_puissance {
     return this->power;
   }
 
-  void dimmer_off(String reason="") {
+  void dimmer_off(const char* reason="") {
       if (dimmer1.getState()) {
         dimmer1.setPower(0);
         dimmer1.setState(OFF);
