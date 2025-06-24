@@ -146,6 +146,7 @@ Programme programme;
 Programme programme_relay1;
 Programme programme_relay2;
 Programme programme_marche_forcee;
+Programme programme_batterie;
 
 //***********************************
 //************* VARIABLES GLOBALES
@@ -493,6 +494,9 @@ void setup()
   programme_relay1.loadProgramme();
   programme_relay2.set_name("/relay2");
   programme_relay2.loadProgramme();
+  programme_batterie.set_name("/batterie");
+  programme_batterie.loadProgramme();
+  
   // Initialize Dimmer State 
   gDisplayValues.dimmer = 0;
 
@@ -770,7 +774,9 @@ void setup()
 
 void loop() {
 
-
+static int delta_backup = 0;
+static int deltaneg_backup = 0;
+static bool batterie_active = false;
 
   #ifdef DEBUGLEVEL1
   // test de la connexion client mqtt
@@ -924,6 +930,32 @@ void loop() {
     } // else
   } // if (config.dimmerlocal)
 
+
+  /// gestion de l'offset batterie
+   
+    //if (programme_batterie.start_progr() && !batterie_active && gDisplayValues.temperature > programme_batterie.temperature ) {
+    if ( gDisplayValues.temperature > programme_batterie.temperature && !batterie_active ) {
+      // Sauvegarde des valeurs d'origine
+      delta_backup = config.delta;
+      deltaneg_backup = config.deltaneg;
+      // Application de l'offset puissance_batterie (utilise temperature comme offset selon ta consigne)
+      config.delta = delta_backup - programme_batterie.puissance;
+      config.deltaneg = deltaneg_backup - programme_batterie.puissance;
+      batterie_active = true;
+      logging.Set_log_init("Batterie active, offset appliqué \n", true);
+    }
+   
+    //else if (batterie_active ) {
+      //  if ( ( programme_batterie.run && programme_batterie.stop_progr()) || gDisplayValues.temperature < programme_batterie.temperature)  {
+    else if ( gDisplayValues.temperature < programme_batterie.temperature && batterie_active )  {
+        config.delta = delta_backup;
+        config.deltaneg = deltaneg_backup;
+        batterie_active = false;
+        logging.Set_log_init("Batterie désactivée, offset réinitialisé \n", true);
+      }
+    //}
+
+  /// fin gestion de l'offset batterie
 
   //***********************************
   //************* Loop -  gestion des programmes
@@ -1110,4 +1142,5 @@ bool boost(){
     programme_marche_forcee.temperature = config.tmax;
     programme_marche_forcee.puissance = programme.puissance;
     return true;
-} 
+}
+

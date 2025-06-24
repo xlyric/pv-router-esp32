@@ -31,6 +31,7 @@ extern Programme programme;
 extern Programme programme_relay1; 
 extern Programme programme_relay2; 
 extern Programme programme_marche_forcee;
+extern Programme programme_batterie;
 extern Memory task_mem; 
 extern SemaphoreHandle_t mutex; 
 
@@ -246,7 +247,7 @@ void call_pages() {
     delay(1000);
     yield();
     config.restart = true;
-    //ESP.restart();
+    ESP.restart();
     });
     
     // reset de la detection dallas précédente 
@@ -254,6 +255,7 @@ void call_pages() {
       config.dallas_present = false; 
       config.saveConfiguration();
       request->redirect("/");
+ 
     });
 
     server.onNotFound(notFound);
@@ -430,6 +432,7 @@ void call_pages() {
         if (request->hasParam("dimmer")) { request->send(200, "application/json",  getMinuteur(programme));  }
         else if (request->hasParam("relay1")) { request->send(200, "application/json",  getMinuteur(programme_relay1)); }
         else if (request->hasParam("relay2")) { request->send(200, "application/json",  getMinuteur(programme_relay2)); }
+        else if (request->hasParam("batterie")) { request->send(200, "application/json",  getMinuteur(programme_batterie)); }
         else { request->send(200, "application/json",  getMinuteur());  }
     }); // /get
 
@@ -442,6 +445,14 @@ void call_pages() {
               if (request->hasParam("puissance")) { programme.puissance = request->getParam("puissance")->value().toInt(); }
               programme.saveProgramme();
         request->send(200, "application/json",  getMinuteur(programme));  
+      }
+      if (request->hasParam("batterie")) { 
+              if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme_batterie.heure_demarrage,6);  }
+              if (request->hasParam("heure_arret")) { request->getParam("heure_arret")->value().toCharArray(programme_batterie.heure_arret,6);  }
+              if (request->hasParam("temperature")) { programme_batterie.temperature = request->getParam("temperature")->value().toInt();   }
+              if (request->hasParam("puissance")) { programme_batterie.puissance = request->getParam("puissance")->value().toInt(); }
+              programme_batterie.saveProgramme();
+        request->send(200, "application/json",  getMinuteur(programme_batterie));  
       }
       if (request->hasParam("relay1")) { 
             if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme_relay1.heure_demarrage,6);  }

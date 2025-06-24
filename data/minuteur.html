@@ -111,6 +111,7 @@
                             <div id="tabs">
                                 <ul class="nav nav-tabs">
                                   <li class="nav-item"><a class="nav-link" href="#dimmer">Configuration dimmer</a></li>
+                                  <li class="nav-item"><a class="nav-link" href="#batterie">Configuration batterie</a></li>
                                   <li class="nav-item"><a class="nav-link" href="#relay1">Configuration relais 1</a></li>
                                   <li class="nav-item"><a class="nav-link" href="#relay2">Configuration relais 2</a></li>
                                 </ul>
@@ -135,6 +136,39 @@
                                       </div>
                                       <input type="submit" value="Application des paramètres dimmer" class="btn btn-primary btn-user btn-block">
                                     </form>
+                                  </div>
+
+                                  <div id="batterie">
+                                    <form class="user" id="batterie-form" method="post" action="">
+                                      <div class="form-group">
+                                        Heure de démarrage: (format hh:mm)
+                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_batterie" placeholder="%heure_demarrage%">
+                                      </div>
+                                      <div class="form-group">
+                                        Heure d'arrêt:
+                                        <input type="text" class="form-control form-control-user" id="heure_arret_batterie" placeholder="%heure_arret%">
+                                      </div>
+                                      <div class="form-group">
+                                        Température d'activation (°C):
+                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_batterie" placeholder="%temperature%">
+                                      </div>
+                                      <div class="form-group">
+                                        Offset de delta batterie (décalage de -x W):
+                                        <input type="number" step="1" class="form-control form-control-user" id="puissance_batterie" placeholder="%puissance%">
+                                      </div>
+                                      <input type="submit" value="Application des paramètres batterie" class="btn btn-primary btn-user btn-block">
+                                    </form>
+                                    <h2>Minuteur spécifique pour la batterie :</h2>
+                                    <p>Ce minuteur permet de modifier le déclenchement de la régulation et de donner la priorité à la charge de la batterie lorsque la température dépasse la consigne.</p>
+
+                                    <h3>Fonctionnement :</h3>
+                                    <ul>
+                                      <li>Une valeur positive de puissance déplace les seuils Delta et Delta négatif de -x Watts, favorisant ainsi la charge de la batterie.</li>
+                                      <li>Une fois la batterie chargée, le routage vers l'ECS (Eau Chaude Sanitaire) reprendra jusqu'à atteindre la température maximale autorisée.</li>
+                                    </ul>
+
+                                    <h3>Recommandations :</h3>
+                                    <p>La valeur recommandée est de 100W. Une valeur inférieure peut entraîner un comportement imprévisible.</p>
                                   </div>
 
                                   <div id="relay1">
@@ -205,6 +239,13 @@
       $("#heure").html( heure + ":" + minute );
     });
 
+    $.get("/getminiteur?batterie", function(data) {
+      $("#heure_demarrage_batterie").val(data.heure_demarrage);
+      $("#heure_arret_batterie").val(data.heure_arret);
+      $("#temperature_batterie").val(data.temperature);
+      $("#puissance_batterie").val(data.puissance);
+    });
+
     // Envoi des données de formulaire au serveur lors de la soumission du formulaire
     $("#dimmer-form").submit(function(event) {
       event.preventDefault();
@@ -213,6 +254,15 @@
       var temperature = $("#temperature_dimmer").val();
       var puissance = $("#puissance_dimmer").val();
       $.get("/setminiteur?dimmer", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature, "puissance": puissance});
+    });
+
+    $("#batterie-form").submit(function(event) {
+      event.preventDefault();
+      var heure_demarrage = $("#heure_demarrage_batterie").val();
+      var heure_arret = $("#heure_arret_batterie").val();
+      var temperature = $("#temperature_batterie").val();
+      var puissance = $("#puissance_batterie").val();
+      $.get("/setminiteur?batterie", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature, "puissance": puissance});
     });
 
     $("#relay1-form").submit(function(event) {
