@@ -681,7 +681,9 @@ struct HA {
   public:void discovery() {
     String dev_switch= "";
 
-    if (dev_cla =="switch" ) { 
+    if (stat_cla == nullptr) {  //rien faire
+    }
+    else if (dev_cla =="switch" ) { 
       dev_switch = R"(
           "pl_on": "{ \")" + name + R"(\" : \"1\" }",
           "pl_off": "{ \")" + name + R"(\" : \"0\" }",
@@ -694,6 +696,7 @@ struct HA {
         "unit_of_meas": ")" + unit_of_meas + R"(",
         "stat_cla": ")" + stat_cla + R"(",
       )"; 
+
     }
 
     IPaddress =   WiFi.localIP() ;

@@ -99,8 +99,9 @@
 
       // création des binary_sensor
     device_dimmer_alarm_temp.Set_name("Surchauffe");
-    device_dimmer_alarm_temp.Set_dev_cla("problem");
-
+    device_dimmer_alarm_temp.Set_dev_cla("enum");
+    device_dimmer_alarm_temp.Set_icon("mdi:alert");
+    
     switch_relay1.Set_name("Relay1");
     switch_relay1.Set_dev_cla("switch");
 
