@@ -6,6 +6,7 @@
 //***********************************
 #ifdef ESP32
   #include <AsyncTCP.h>
+  #include <esp_task_wdt.h>
 #elif defined(ESP8266)
   #include <ESPAsyncTCP.h>
 #endif
@@ -64,7 +65,7 @@ void compress_html(AsyncWebServerRequest *request,String filefs , String format 
   AsyncWebServerResponse *response = request->beginResponse(SPIFFS, filefs, format);
   response->addHeader("Content-Encoding", "gzip");
   response->addHeader("Cache-Control", "max-age=604800");
-
+  yield();
   request->send(response);
 }
 
@@ -72,6 +73,7 @@ void compress_html(AsyncWebServerRequest *request,String filefs , String format 
 //************* serveur_response()
 //***********************************
 void serveur_response(AsyncWebServerRequest *request, String response) {
+  yield();
   request->send(200, "text/plain", response.c_str());
 }
 
@@ -429,6 +431,7 @@ void call_pages() {
       }); 
 
       server.on("/getminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+        esp_task_wdt_reset();
         if (request->hasParam("dimmer")) { request->send(200, "application/json",  getMinuteur(programme));  }
         else if (request->hasParam("relay1")) { request->send(200, "application/json",  getMinuteur(programme_relay1)); }
         else if (request->hasParam("relay2")) { request->send(200, "application/json",  getMinuteur(programme_relay2)); }
@@ -483,14 +486,19 @@ String getMinuteur(const Programme& minuteur) {
   JsonDocument doc;
     if (millis() < 5000) {
         Serial.println("System not ready yet");
+        esp_task_wdt_reset();
         return "false";
   }
+  yield();
   struct tm timeinfo;  // Déclaration locale
-      if (!getLocalTime(&timeinfo)) {
-        Serial.println("Failed to obtain time");
-        return "false";
-    }
-
+  if (!gDisplayValues.Shelly_local) {
+        if (!getLocalTime(&timeinfo)) {
+          Serial.println("Failed to obtain time");
+          esp_task_wdt_reset();
+          return "false";
+      }
+  }
+  yield();
   doc["heure_demarrage"] = minuteur.heure_demarrage;
   doc["heure_arret"] = minuteur.heure_arret;
   doc["temperature"] = minuteur.temperature;
@@ -507,17 +515,22 @@ String getMinuteur(const Programme& minuteur) {
 //************* getMinuteur()
 //***********************************
 String getMinuteur() {
+  //if (gDisplayValues.Shelly_local) { return "{}"; } // si Shelly local, pas de minuteur
   JsonDocument doc;
       if (millis() < 5000) {
         Serial.println("System not ready yet");
+        esp_task_wdt_reset();
         return "false";
   }
+  yield();
+  
   struct tm timeinfo;  // Déclaration locale
       if (!getLocalTime(&timeinfo)) {
         Serial.println("Failed to obtain time");
+        esp_task_wdt_reset();
         return "false";
     }
-    
+  yield();
   doc["heure"] = timeinfo.tm_hour;
   doc["minute"] = timeinfo.tm_min;
 

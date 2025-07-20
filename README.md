@@ -217,4 +217,75 @@ This is why I recommend taking the largest Robotdyn dimmer (20A) or SSR Random 4
 The router is compatible with MQTT, HA, Jeedom and domoticz.  
 It can also interface with an external power calculation source such as Shelly EM
 
+## Web API Commands
+
+The router provides several HTTP endpoints for monitoring and control:
+
+### Status and Monitoring
+- `GET /state` - Get current device state (JSON)
+- `GET /stateshort` - Get abbreviated device state (JSON)
+- `GET /statefull` - Get complete device state (JSON)
+- `GET /config` - Get device configuration (JSON)
+- `GET /ping` - Simple connectivity test (returns "pong")
+
+### System Control
+- `ANY /reboot` - Restart the device
+- `ANY /resetdallas` - Reset Dallas temperature sensor detection
+- `ANY /boost` - Activate 2-hour boost mode for heating
+
+### Configuration Management
+- `ANY /get` - Main configuration endpoint with multiple parameters:
+  - `?cycle=X` - Set measurement cycle time
+  - `?readtime=X` - Set reading interval
+  - `?cosphi=X` - Set power factor
+  - `?delta=X` - Set positive power threshold
+  - `?deltaneg=X` - Set negative power threshold
+  - `?dimmer_power=X` - Set dimmer power level
+  - `?tmax=X` - Set maximum temperature
+  - `?resistance=X` - Set load resistance value
+  - `?voltage=X` - Set grid voltage
+  - `?offset=X` - Set measurement offset
+  - `?ssid=XXXX` - Set WiFi SSID
+  - `?password=XXXX` - Set WiFi password
+  - `?save=1` - Save configuration to flash
+
+### Timer/Scheduler Control
+- `GET /getminiteur` - Get timer configuration:
+  - `?dimmer` - Get dimmer timer
+  - `?relay1` - Get relay1 timer  
+  - `?relay2` - Get relay2 timer
+  - `?batterie` - Get battery timer
+- `ANY /setminiteur` - Set timer configuration with parameters:
+  - `heure_demarrage=HH:MM` - Set start time
+  - `heure_arret=HH:MM` - Set stop time
+  - `temperature=X` - Set temperature threshold
+  - `puissance=X` - Set power level
+
+### Relay Control
+- `?relay1=0` - Turn relay1 OFF
+- `?relay1=1` - Turn relay1 ON  
+- `?relay1=2` - Toggle relay1 state
+- `?relay2=0` - Turn relay2 OFF
+- `?relay2=1` - Turn relay2 ON
+- `?relay2=2` - Toggle relay2 state
+
+### Network and Integration
+- `ANY /getwifi` - Get WiFi configuration
+- `ANY /getenvoy` - Get Enphase Envoy data
+- `ANY /getmqtt` - Get MQTT configuration (JSON)
+- `GET /cosphi` - Get power factor measurement
+
+### Logging and Diagnostics
+- `ANY /log.txt` - Download system log file
+- `ANY /cs` - Get console log output
+- `ANY /getmemory` - Get task memory usage (JSON)
+
+### Static Files
+The router serves compressed web assets:
+- CSS, JavaScript, fonts, and HTML files
+- Configuration files (`.json`)
+- Web interface pages
+
+All configuration changes via `/get` endpoint are applied immediately and can be saved with `?save=1` parameter.
+
 [Back to Top](#table-of-contents)

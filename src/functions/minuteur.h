@@ -35,6 +35,7 @@ extern gestion_puissance unified_dimmer;
 struct tm timeinfo;
 epoc actual_time;
 
+bool parseTimeFromShelly(String jsonString);
 
 //***********************************
 //************* structure pour les programmateurs
@@ -285,4 +286,133 @@ void ntpinit() {
   Serial.println(asctime(&timeinfo));  
 }
 
-#endif
+
+// Fonction adaptée pour récupérer l'heure du Shelly
+bool ntpinit_Shelly() {
+  // Récupération de l'heure sur le Shelly à l'adresse 192.168.33.1 dans le Json 
+  WiFiClient client;
+  
+  Serial.println("Connexion au Shelly...");
+  
+  if (client.connect("192.168.33.1", 80)) {
+    Serial.println("Connecté au Shelly");
+    
+    // Envoi de la requête HTTP
+    client.print("GET /status HTTP/1.1\r\n");
+    client.print("Host: 192.168.33.1\r\n");
+    client.print("Connection: close\r\n\r\n");
+    
+    // sur les version pro, c'est ici : /rpc/Shelly.GetStatus --> prendre unixtime 
+    // Attendre la réponse
+    unsigned long timeout = millis();
+    while (client.available() == 0) {
+      if (millis() - timeout > 5000) {
+        Serial.println("Timeout de connexion");
+        client.stop();
+        return false;
+      }
+    }
+    
+    // Lire la réponse HTTP
+    String response = "";
+    bool jsonStarted = false;
+    
+    while (client.available()) {
+      String line = client.readStringUntil('\n');
+      
+      // Chercher le début du JSON (après les headers HTTP)
+      if (line.startsWith("{")) {
+        jsonStarted = true;
+      }
+      
+      if (jsonStarted) {
+        response += line;
+      }
+    }
+    
+    client.stop();
+    
+    // Parser le JSON pour extraire l'heure
+    if (response.length() > 0) {
+      return parseTimeFromShelly(response);
+    } else {
+      Serial.println("Aucune réponse JSON reçue");
+      return false;
+    }
+    
+  } else {
+    Serial.println("Échec de connexion au Shelly");
+    return false;
+  }
+}
+
+bool parseTimeFromShelly(String jsonString) {
+  // Créer un document JSON
+  JsonDocument doc;
+  
+  // Parser le JSON
+  DeserializationError error = deserializeJson(doc, jsonString);
+  
+  if (error) {
+    Serial.print("Erreur de parsing JSON: ");
+    Serial.println(error.c_str());
+    return false;
+  }
+  
+  // Extraire le timestamp Unix
+  if (!doc["unixtime"].isNull()) {
+    unsigned long unixTime = doc["unixtime"].as<unsigned long>();
+    
+    // Convertir le timestamp Unix en structure tm
+    time_t rawTime = (time_t)unixTime;
+    
+    // Appliquer le fuseau horaire CET/CEST manuellement
+    // Le Shelly donne probablement l'heure locale, mais on s'assure de la cohérence
+    struct tm* tempTimeinfo = gmtime(&rawTime);
+    
+    // Copier dans notre structure globale
+    timeinfo = *tempTimeinfo;
+    
+    // *** ÉTAPE CRUCIALE : Mettre à jour l'horloge système ESP32 ***
+    struct timeval tv;
+    tv.tv_sec = rawTime;
+    tv.tv_usec = 0;
+    
+    if (settimeofday(&tv, NULL) == 0) {
+      Serial.println("Horloge système ESP32 mise à jour avec succès");
+      
+      // Configurer le fuseau horaire pour que localtime() fonctionne correctement
+      //setenv("TZ", "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00", 1);
+      //tzset();
+      
+      // Maintenant mettre à jour timeinfo avec l'heure locale
+      struct tm* tempTimeinfo = localtime(&rawTime);
+      timeinfo = *tempTimeinfo;
+      
+      Serial.print("Heure récupérée du Shelly: ");
+      Serial.println(asctime(&timeinfo));
+      
+      // Vérification : obtenir l'heure système
+      time_t verification;
+      time(&verification);
+      Serial.print("Vérification horloge système: ");
+      Serial.println(ctime(&verification));
+      
+    } else {
+      Serial.println("ERREUR: Impossible de mettre à jour l'horloge système");
+      return false;
+    }
+      // Afficher aussi l'heure au format HH:MM du JSON pour vérification
+    if (!doc["time"].isNull()) {
+      String shellyTime = doc["time"].as<String>();
+      Serial.print("Heure Shelly (format HH:MM): ");
+      Serial.println(shellyTime);
+    }
+    
+    return true;
+  }
+  Serial.println("Pas de timestamp Unix trouvé dans le JSON");
+  return false;
+}
+
+#endif // MINUTEUR_FUNCTIONS

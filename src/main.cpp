@@ -461,7 +461,17 @@ void setup()
   //***********************************
   //************* Setup - NPT
   //***********************************
-  ntpinit(); 
+  // utilisation si il pas en 192.168.33.0/24
+  bool Shelly_local = false;
+  IPAddress localIP = WiFi.localIP();
+  if (localIP[0] == 192 && localIP[1] == 168 && localIP[2] == 33) {
+    Serial.println("L'adresse IP est dans le sous-réseau 192.168.33.x");
+    ntpinit_Shelly();
+    gDisplayValues.Shelly_local = true; // pour le mode AP
+  } else {
+    Serial.println("L'adresse IP n'est PAS dans le sous-réseau 192.168.33.x");
+    ntpinit();
+  }
 
   //***********************************
   //************* Setup - Dimmer
@@ -703,6 +713,21 @@ void setup()
       #endif
     #endif // DIMMER = true
   #endif // WIFI_ACTIVE=true
+
+        if (gDisplayValues.Shelly_local) {
+          // on arrete les services non necessaires
+          // pour le mode AP Shelly
+          // arret de la task mdns_discovery
+          if (myTaskmdnsdiscovery != NULL) {
+            vTaskDelete(myTaskmdnsdiscovery);
+            myTaskmdnsdiscovery = NULL;
+          }
+          // arret de la task send_to_mqtt
+          if (myTasksendtomqtt != NULL) {
+            vTaskDelete(myTasksendtomqtt);
+            myTasksendtomqtt = NULL;
+          }
+        }
 
 
   //***********************************

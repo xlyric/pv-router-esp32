@@ -104,6 +104,7 @@ struct DisplayValues {
   bool dimmer_disengaged=false;
   const String pvname = "PV-ROUTER-" + WiFi.macAddress().substring(12,14) + WiFi.macAddress().substring(15,17);
   int serial_timeout = 0 ; ///arret du service serial après x loop d'inactivité
+  bool Shelly_local = false; // si le Shelly est en local ou pas
 };
 
 //***********************************

@@ -133,9 +133,9 @@ struct gestion_puissance {
     }  
     #endif   
         snprintf(temp_buffer, sizeof(temp_buffer),
-             "dimmer 1: %d%%, dimmer 2: %d%%, dimmer 3: %d%%\r\n",
+             "dim 1: %d%%, dim 2: %d%%, dim 3: %d%%\r\n",
              dimmer1_pwr, dimmer2_pwr, dimmer3_pwr);
-    logging.Set_log_init(temp_buffer);
+    logging.Set_log_init(temp_buffer, true); // log de la puissance envoyée aux dimmers
 
 }
 
