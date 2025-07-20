@@ -668,9 +668,9 @@ struct HA {
             "ids": ")" + String(node_id) + R"(",
             "name": ")" + String(node_id) + R"(",
             "sw": "PvRouter )" + String(VERSION) + R"(",
-            "mdl": "ESP32 TTGO )" + IPaddress + R"(",
+            "mdl": "ESP32 TTGO )" + IPaddress.toString() + R"(",
             "mf": "Cyril Poissonnier",
-            "cu": "http://)" + IPaddress + R"("
+            "cu": "http://)" + IPaddress.toString() + R"("
         })";
         return info;
     }
@@ -715,14 +715,14 @@ struct HA {
     if (dev_cla =="" ) { 
       dev_cla = name; 
     }
-    char final_topic[100];
+    char final_topic[150];
     if (strlen(name.c_str()) != 0 ) {
-      snprintf(final_topic, sizeof(final_topic), "%s%s/config", topic, name.c_str());
-      client.publish(final_topic , device.c_str() , true); // déclaration autoconf dimmer
+      snprintf(final_topic, sizeof(final_topic), "%s%s/config", topic.c_str(), name.c_str());
+      client.publish(final_topic , device.c_str() , true); // déclaration autoconf routeur
     }
     else {
-      snprintf(final_topic, sizeof(final_topic), "%sconfig", topic);
-      client.publish(final_topic, device.c_str() , true); // déclaration autoconf dimmer
+      snprintf(final_topic, sizeof(final_topic), "%sconfig", topic.c_str());
+      client.publish(final_topic, device.c_str() , true); // déclaration autoconf routeur
     }       
   } // discovery
 

@@ -28,6 +28,7 @@
   extern HA switch_relay2;
   extern HA device_dimmer_boost;
   extern HA power_apparent;
+  extern HA device_dimmer_alarm_temp; 
 #endif
 
 #ifndef LIGHT_FIRMWARE
@@ -96,6 +97,10 @@
     power_apparent.Set_stat_cla("measurement");
     power_apparent.Set_dev_cla("apparent_power");
 
+      // création des binary_sensor
+    device_dimmer_alarm_temp.Set_name("Surchauffe");
+    device_dimmer_alarm_temp.Set_dev_cla("problem");
+
     switch_relay1.Set_name("Relay1");
     switch_relay1.Set_dev_cla("switch");
 
@@ -117,6 +122,9 @@
     switch_relay1.discovery();
     switch_relay2.discovery();
     device_dimmer_boost.discovery();
+    device_dimmer_alarm_temp.discovery();
+    device_dimmer_alarm_temp.send("RAS"); // Initialisation de l'état de l'alarme à RAS
+    
   }
 #endif // not LIGHT_FIRMWARE
 

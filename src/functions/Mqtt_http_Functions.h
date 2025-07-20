@@ -43,6 +43,7 @@ extern HA power_apparent;
 extern HA switch_relay1;
 extern HA switch_relay2;
 extern HA device_dimmer_boost;
+extern HA device_dimmer_alarm_temp;
 extern xSemaphoreHandle mutex;
 
 //***********************************
