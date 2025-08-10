@@ -961,7 +961,7 @@ static int deltaneg_backup = 0;
   /// gestion de l'offset batterie
    
     //if (programme_batterie.start_progr() && !batterie_active && gDisplayValues.temperature > programme_batterie.temperature ) {
-    if ( gDisplayValues.temperature > programme_batterie.temperature && !config.batterie_active ) {
+    if ( gDisplayValues.temperature > programme_batterie.temperature && !config.batterie_active && strcmp(programme_batterie.heure_demarrage, programme_batterie.heure_arret) != 0) {
       // Sauvegarde des valeurs d'origine
       delta_backup = config.delta;
       deltaneg_backup = config.deltaneg;
