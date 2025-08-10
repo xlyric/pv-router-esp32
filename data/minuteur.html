@@ -7,20 +7,9 @@
         <meta name="description" content="">
         <meta name="author" content="">
         <title>Pv Routeur  - minuteur Configuration</title>
-        <!-- Custom fonts for this template-->
-        <link href="all.min.css" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
         <!-- Custom styles for this template-->
-        <link href="https://ota.apper-solaire.org/css/sb-admin-2.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-
-        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-        <script>
-        $( function() {
-          $( "#tabs" ).tabs();
-        } );
-        </script>
+        <link href="css/all.min.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="js/all.min.js" ></script>
     </head>
     <body id="page-top">
         <!-- Page Wrapper -->
@@ -104,113 +93,262 @@
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
-                    <div class="container-fluid">
-                        <!-- Page Heading -->
-                        <h1 class="h3 mb-2 text-gray-800">Configuration minuteur d'appoint</h1>
-                        <div class="col-lg-6">
-                            <div id="tabs">
-                                <ul class="nav nav-tabs">
-                                  <li class="nav-item"><a class="nav-link" href="#dimmer">Configuration dimmer</a></li>
-                                  <li class="nav-item"><a class="nav-link" href="#batterie">Configuration batterie</a></li>
-                                  <li class="nav-item"><a class="nav-link" href="#relay1">Configuration relais 1</a></li>
-                                  <li class="nav-item"><a class="nav-link" href="#relay2">Configuration relais 2</a></li>
-                                </ul>
 
-                                <div id="dimmer">
-                                    <form class="user" id="dimmer-form" method="post" action="">
-                                      <div class="form-group">
-                                        Heure de démarrage: (format hh:mm)
-                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_dimmer" placeholder="%heure_demarrage%">
-                                      </div>
-                                      <div class="form-group">
-                                        Heure d'arrêt:
-                                        <input type="text" class="form-control form-control-user" id="heure_arret_dimmer" placeholder="%heure_arret%">
-                                      </div>
-                                      <div class="form-group">
-                                        Température de consigne (°C):
-                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_dimmer" placeholder="%temperature%">
-                                      </div>
-                                      <div class="form-group">
-                                        Puissance de sortie (0-100%):
-                                        <input type="number" step="1" class="form-control form-control-user" id="puissance_dimmer" placeholder="%puissance%">
-                                      </div>
-                                      <input type="submit" value="Application des paramètres dimmer" class="btn btn-primary btn-user btn-block">
-                                    </form>
-                                  </div>
-
-                                  <div id="batterie">
-                                    <form class="user" id="batterie-form" method="post" action="">
-                                      <div class="form-group">
-                                        Heure de démarrage: (format hh:mm)
-                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_batterie" placeholder="%heure_demarrage%">
-                                      </div>
-                                      <div class="form-group">
-                                        Heure d'arrêt:
-                                        <input type="text" class="form-control form-control-user" id="heure_arret_batterie" placeholder="%heure_arret%">
-                                      </div>
-                                      <div class="form-group">
-                                        Température d'activation (°C):
-                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_batterie" placeholder="%temperature%">
-                                      </div>
-                                      <div class="form-group">
-                                        Offset de delta batterie (décalage de -x W):
-                                        <input type="number" step="1" class="form-control form-control-user" id="puissance_batterie" placeholder="%puissance%">
-                                      </div>
-                                      <input type="submit" value="Application des paramètres batterie" class="btn btn-primary btn-user btn-block">
-                                    </form>
-                                    <h2>Minuteur spécifique pour la batterie :</h2>
-                                    <p>Ce minuteur permet de modifier le déclenchement de la régulation et de donner la priorité à la charge de la batterie lorsque la température dépasse la consigne.</p>
-
-                                    <h3>Fonctionnement :</h3>
-                                    <ul>
-                                      <li>Une valeur positive de puissance déplace les seuils Delta et Delta négatif de -x Watts, favorisant ainsi la charge de la batterie.</li>
-                                      <li>Une fois la batterie chargée, le routage vers l'ECS (Eau Chaude Sanitaire) reprendra jusqu'à atteindre la température maximale autorisée.</li>
-                                    </ul>
-
-                                    <h3>Recommandations :</h3>
-                                    <p>La valeur recommandée est de 100W. Une valeur inférieure peut entraîner un comportement imprévisible.</p>
-                                  </div>
-
-                                  <div id="relay1">
-                                    <form class="user" id="relay1-form" method="post" action="">
-                                      <div class="form-group">
-                                        Heure de démarrage: (format hh:mm)
-                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_relay1" placeholder="%heure_demarrage%">
-                                      </div>
-                                      <div class="form-group">
-                                        Heure d'arrêt:
-                                        <input type="text" class="form-control form-control-user" id="heure_arret_relay1" placeholder="%heure_arret%">
-                                      </div>
-                                      <div class="form-group">
-                                        Température de consigne (°C):
-                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_relay1" placeholder="%temperature%">
-                                      </div>
-                                      <input type="submit" value="Application des paramètres relais 1" class="btn btn-primary btn-user btn-block">
-                                    </form>
-                                  </div>
-
-                                  <div id="relay2">
-                                    <form class="user" id="relay2-form" method="post" action="">
-                                      <div class="form-group">
-                                        Heure de démarrage: (format hh:mm)
-                                        <input type="text" class="form-control form-control-user" id="heure_demarrage_relay2" placeholder="%heure_demarrage%">
-                                      </div>
-                                      <div class="form-group">
-                                        Heure d'arrêt:
-                                        <input type="text" class="form-control form-control-user" id="heure_arret_relay2" placeholder="%heure_arret%">
-                                      </div>
-                                      <div class="form-group">
-                                        Température de consigne (°C):
-                                        <input type="number" step="1" class="form-control form-control-user" id="temperature_relay2" placeholder="%temperature%">
-                                      </div>
-                                       <input type="submit" value="Application des paramètres relais 2" class="btn btn-primary btn-user btn-block">
-                                    </form>
-                                  </div>
+          <div class="container-fluid">
+            <!-- Page Heading -->
+            <h1 class="h3 mb-2 text-gray-800">Configuration minuteur d'appoint</h1>
+            <div class="col-lg-6">
+              <div class="card">
+                <div class="card-header">
+                  <nav id="tabs">
+                    <div class="nav nav-pills" id="nav-tab" role="tablist">
+                      <button
+                        class="nav-link active"
+                        data-toggle="tab"
+                        type="button"
+                        role="tab"
+                        data-target="#dimmer"
+                        aria-controls="dimmer"
+                        aria-selected="true"
+                      >
+                        Configuration dimmer
+                      </button>
+                      <button
+                        class="nav-link"
+                        data-toggle="tab"
+                        type="button"
+                        role="tab"
+                        data-target="#batterie"
+                        aria-controls="batterie"
+                        aria-selected="true"
+                      >
+                        Configuration batterie
+                      </button>
+                      <button
+                        class="nav-link"
+                        data-toggle="tab"
+                        type="button"
+                        role="tab"
+                        data-target="#relay1"
+                        aria-controls="relay1"
+                        aria-selected="false"
+                      >
+                        Configuration relais 1
+                      </button>
+                      <button
+                        class="nav-link"
+                        data-toggle="tab"
+                        type="button"
+                        role="tab"
+                        data-target="#relay2"
+                        aria-controls="relay2"
+                        aria-selected="false"
+                      >
+                        Configuration relais 2
+                      </button>
                     </div>
+                  </nav>
                 </div>
+                <div class="tab-content">
+                  <div role="tabpanel" class="card-body tab-pane fade show active" id="dimmer">
+                    <form class="user" id="dimmer-form" method="post" action="">
+                      <div class="form-group">
+                        Heure de démarrage: (format hh:mm)
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_demarrage_dimmer"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Heure d'arrêt:
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_arret_dimmer"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Température de consigne (°C):
+                        <input
+                          type="number"
+                          step="1"
+                          class="form-control form-control-user"
+                          id="temperature_dimmer"
+                          placeholder="X (en °C)"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Puissance de sortie (0-100&percnt;):
+                        <input
+                          type="number"
+                          step="1"
+                          class="form-control form-control-user"
+                          id="puissance_dimmer"
+                          placeholder="X (en &percnt;)"
+                        />
+                      </div>
+                      <input
+                        type="submit"
+                        value="Application des paramètres dimmer"
+                        class="btn btn-primary btn-user btn-block"
+                      />
+                    </form>
+                  </div>
+                  <div role="tabpanel" class="card-body tab-pane fade" id="batterie">
+                    <form class="user" id="batterie-form" method="post" action="">
+                      <div class="form-group">
+                        Heure de démarrage: (format hh:mm)
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_demarrage_batterie"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Heure d'arrêt:
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_arret_batterie"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Température d'activation (°C):
+                        <input
+                          type="number"
+                          step="1"
+                          class="form-control form-control-user"
+                          id="temperature_batterie"
+                          placeholder="X (en °C)"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Offset de delta batterie (décalage de -x W):
+                        <input
+                          type="number"
+                          step="1"
+                          class="form-control form-control-user"
+                          id="puissance_batterie"
+                          placeholder="X (en W)"
+                        />
+                      </div>
+                      <input
+                        type="submit"
+                        value="Application des paramètres batterie"
+                        class="btn btn-primary btn-user btn-block"
+                      />
+                    </form>
+                    <h2>Minuteur spécifique pour la batterie :</h2>
+                    <p>Ce minuteur permet de modifier le déclenchement de la régulation et de donner la priorité à la charge de la batterie lorsque la température dépasse la consigne.</p>
+
+                    <h3>Fonctionnement :</h3>
+                    <ul>
+                      <li>Une valeur positive de puissance déplace les seuils Delta et Delta négatif de x Watts, favorisant ainsi la charge de la batterie, elle sera toujours soustraite </li>
+                      <li>Une fois la batterie chargée, le routage vers l'ECS (Eau Chaude Sanitaire) reprendra jusqu'à atteindre la température maximale autorisée.</li>
+                    </ul>
+
+                    <h3>Recommandations :</h3>
+                    <p>La valeur recommandée est de 100W. Une valeur inférieure peut entraîner un comportement imprévisible.</p>
+                  </div>
+                  <div role="tabpanel" class="card-body tab-pane fade" id="relay1">
+                    <form class="user" id="relay1-form" method="post" action="">
+                      <div class="form-group">
+                        Heure de démarrage: (format hh:mm)
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_demarrage_relay1"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Heure d'arrêt:
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_arret_relay1"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Température de consigne (°C):
+                        <input
+                          type="number"
+                          step="1"
+                          class="form-control form-control-user"
+                          id="temperature_relay1"
+                          placeholder="X (en °C)"
+                        />
+                      </div>
+                      <input
+                        type="submit"
+                        value="Application des paramètres relais 1"
+                        class="btn btn-primary btn-user btn-block"
+                      />
+                    </form>
+                  </div>
+                  <div role="tabpanel" class="card-body tab-pane fade" id="relay2">
+                    <form class="user" id="relay2-form" method="post" action="">
+                      <div class="form-group">
+                        Heure de démarrage: (format hh:mm)
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_demarrage_relay2"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Heure d'arrêt:
+                        <input
+                          type="text"
+                          class="form-control form-control-user"
+                          id="heure_arret_relay2"
+                          placeholder="HH:MM"
+                        />
+                      </div>
+                      <div class="form-group">
+                        Température de consigne (°C):
+                        <input
+                          type="number"
+                          step="1"
+                          class="form-control form-control-user"
+                          id="temperature_relay2"
+                          placeholder="X (en °C)"
+                        />
+                      </div>
+                      <input
+                        type="submit"
+                        value="Application des paramètres relais 2"
+                        class="btn btn-primary btn-user btn-block"
+                      />
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- Content Row -->
-<script>
+          </div>
+          <!-- End of Page Content -->
+        </div>
+        <!-- End of Main Content -->
+      </div>
+      <!-- End of Content wrapper -->
+    </div>
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>https://github.com/xlyric/ - 2025</span>
+        </div>
+      </div>
+    </footer>
+    <!-- End of Footer -->
+    <script>
   $(document).ready(function() {
     // Récupération des heures de démarrage et d'arrêt depuis le serveur
     $.get("/getminiteur?relay2", function(data) {
@@ -294,33 +432,6 @@
 	}, 15000);
 </script>
 
-        </div>
-    </div>
-</div>
-</div>
-</div>
-<!-- /.container-fluid -->
-</div>
-<!-- End of Main Content -->
-<!-- Footer -->
-<footer class="sticky-footer bg-white">
-    <div class="container my-auto">
-        <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2024</span>
-        </div>
-    </div>
-</footer>
-<!-- End of Footer -->
-</div>
-<!-- End of Content Wrapper -->
-</div>
-<!-- End of Page Wrapper -->
-<!-- Bootstrap core JavaScript-->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
-<!-- Core plugin JavaScript-->
-<script src="https://ota.apper-solaire.org/css/jquery.easing.min.js"></script>
-<!-- Custom scripts for all pages-->
-<script src="https://ota.apper-solaire.org/css/sb-admin-2.js"></script>
-<script></script>
+
 </body>
 </html>

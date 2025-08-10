@@ -281,8 +281,8 @@ String getconfig() {
   JsonDocument doc;
 
   doc["version"] = String(VERSION);
-  doc["delta"] = config.delta;
-  doc["deltaneg"] = config.deltaneg;
+  doc["delta"] = config.delta_init;
+  doc["deltaneg"] = config.deltaneg_init;
   doc["dimmer"] = config.dimmer;
   doc["cosphi"] = config.cosphi;
   doc["dimmerlocal"] = config.dimmerlocal;  

@@ -27,7 +27,7 @@
 //***********************************
 //************* Constantes
 //***********************************
-#define TABLEAU_SIZE 7 // NOSONAR
+#define TABLEAU_SIZE 16 // NOSONAR
 #define SECURITEPASS "MyPassword" // NOSONAR
 #if DEBUG == true
   #define serial_print(x)  Serial.print (x)
@@ -40,7 +40,7 @@
 //***********************************
 //************* Variable locales
 //***********************************
-int tableaudemo[TABLEAU_SIZE] = {180, 3, -150, 4, 150, 5, -180}; // NOSONAR
+int tableaudemo[TABLEAU_SIZE] = {-50, -50, -50, -50, -50, -50, -50, -50, -50, -50, -50, 0, 1500 ,1500 ,0,0 }; // NOSONAR
 
 //***********************************
 //************* class DEVICE_STATE
@@ -122,6 +122,8 @@ struct Config {
     char otapassword[64]; // NOSONAR
     int delta; 
     int deltaneg;
+    int delta_init; 
+    int deltaneg_init; // pour la sauvegarde de la valeur initiale de delta et deltaneg
     int cosphi; // plus utilisé
     int readtime;  // temps de lecture des capteurs
     int cycle;  // cycle de lecture des capteurs
@@ -158,7 +160,7 @@ struct Config {
     int charge3;
     // @brief  // Somme des 3 charges déclarées dans la page web
     int charge;
-
+    bool batterie_active = false;
     Preferences preferences;
     const char *filename_conf = "/config.json";
 
@@ -232,8 +234,10 @@ struct Config {
               sizeof(otapassword));         // <- destination's capacity
       facteur = doc["facteur"] | 0.86; 
       delta = doc["delta"] | 50; 
+      delta_init = delta; // sauvegarde de la valeur initiale de delta
       num_fuse = 500;
       deltaneg = doc["deltaneg"] | 0; 
+      deltaneg_init = deltaneg; // sauvegarde de la valeur initiale de deltaneg
       cosphi = doc["cosphi"] | 5; 
       readtime = doc["readtime"] | 555;
       cycle = doc["cycle"] | 72;
@@ -319,8 +323,8 @@ struct Config {
       doc["IDXdimmer"] = IDXdimmer;
       doc["IDXdallas"] = IDXdallas;
       doc["otapassword"] = otapassword;
-      doc["delta"] = delta;
-      doc["deltaneg"] = deltaneg;
+      doc["delta"] = delta_init;
+      doc["deltaneg"] = deltaneg_init;
       doc["cosphi"] = cosphi;
       doc["readtime"] = readtime;
       doc["cycle"] = cycle;

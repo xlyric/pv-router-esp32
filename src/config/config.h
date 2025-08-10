@@ -10,7 +10,7 @@
 
 #define CLEAN false
 #define NTP false
-//#define DEMO 
+#define DEMO 
 /**
  * WiFi credentials
  */
@@ -154,8 +154,8 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute le
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250720"
-constexpr const int FS_RELEASE = 20250624;
+#define RELEASE "Version 20250810"
+constexpr const int FS_RELEASE = 20250810;
 constexpr const char* FS_UPDATE = "<br>!! FS pas à jour !!"; /// paramettre FS pas à jour
 
 #ifdef LIGHT_FIRMWARE

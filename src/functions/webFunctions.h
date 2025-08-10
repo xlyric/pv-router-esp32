@@ -147,7 +147,9 @@ void call_pages() {
       {"/mqtt.json", "/mqtt.json"},
       {"/wifi.json", "/wifi.json"},
       {"/config.json", "/config.json"},
-      {"/enphase.json", "/enphase.json"}
+      {"/enphase.json", "/enphase.json"},
+      {"/js/all.min.js", "/js/all.min.js"},
+      {"/css/all.min.css", "/css/all.min.css"},
     };
   
     for (const auto& file : staticFiles) {
@@ -302,8 +304,8 @@ void call_pages() {
       }
 
       if (request->hasParam(PARAM_INPUT_server)) { request->getParam(PARAM_INPUT_server)->value().toCharArray(config.hostname,16);  }
-      if (request->hasParam(PARAM_INPUT_delta)) { config.delta = request->getParam(PARAM_INPUT_delta)->value().toInt(); }
-      if (request->hasParam(PARAM_INPUT_deltaneg)) { config.deltaneg = request->getParam(PARAM_INPUT_deltaneg)->value().toInt(); }
+      if (request->hasParam(PARAM_INPUT_delta)) { config.delta_init = request->getParam(PARAM_INPUT_delta)->value().toInt(); config.batterie_active = false ; config.delta = config.delta_init; } // sauvegarde de la valeur initiale de delta
+      if (request->hasParam(PARAM_INPUT_deltaneg)) { config.deltaneg_init = request->getParam(PARAM_INPUT_deltaneg)->value().toInt(); config.batterie_active = false; config.deltaneg = config.deltaneg_init; } // sauvegarde de la valeur initiale de deltaneg
       if (request->hasParam(PARAM_INPUT_port)) { config.port = request->getParam(PARAM_INPUT_port)->value().toInt(); }
       if (request->hasParam(PARAM_INPUT_IDX)) { config.IDX = request->getParam(PARAM_INPUT_IDX)->value().toInt();}
       if (request->hasParam(PARAM_INPUT_IDXdimmer)) { config.IDXdimmer = request->getParam(PARAM_INPUT_IDXdimmer)->value().toInt();}

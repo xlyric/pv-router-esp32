@@ -803,7 +803,7 @@ void loop() {
 
 static int delta_backup = 0;
 static int deltaneg_backup = 0;
-static bool batterie_active = false;
+
 
   #ifdef DEBUGLEVEL1
   // test de la connexion client mqtt
@@ -961,23 +961,27 @@ static bool batterie_active = false;
   /// gestion de l'offset batterie
    
     //if (programme_batterie.start_progr() && !batterie_active && gDisplayValues.temperature > programme_batterie.temperature ) {
-    if ( gDisplayValues.temperature > programme_batterie.temperature && !batterie_active ) {
+    if ( gDisplayValues.temperature > programme_batterie.temperature && !config.batterie_active ) {
       // Sauvegarde des valeurs d'origine
       delta_backup = config.delta;
       deltaneg_backup = config.deltaneg;
       // Application de l'offset puissance_batterie (utilise temperature comme offset selon ta consigne)
+      // programme_batterie.puissance doit toujours être positif 
+      if (programme_batterie.puissance < 0) {
+        programme_batterie.puissance = -programme_batterie.puissance; // on ne peut pas avoir d'offset négatif
+      }
       config.delta = delta_backup - programme_batterie.puissance;
       config.deltaneg = deltaneg_backup - programme_batterie.puissance;
-      batterie_active = true;
+      config.batterie_active = true;
       logging.Set_log_init("Batterie active, offset appliqué \n", true);
     }
    
     //else if (batterie_active ) {
       //  if ( ( programme_batterie.run && programme_batterie.stop_progr()) || gDisplayValues.temperature < programme_batterie.temperature)  {
-    else if ( gDisplayValues.temperature < programme_batterie.temperature && batterie_active )  {
+    else if ( gDisplayValues.temperature < programme_batterie.temperature && config.batterie_active )  {
         config.delta = delta_backup;
         config.deltaneg = deltaneg_backup;
-        batterie_active = false;
+        config.batterie_active = false;
         logging.Set_log_init("Batterie désactivée, offset réinitialisé \n", true);
       }
     //}
