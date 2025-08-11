@@ -10,7 +10,7 @@
 
 #define CLEAN false
 #define NTP false
-#define DEMO 
+// #define DEMO 
 /**
  * WiFi credentials
  */
