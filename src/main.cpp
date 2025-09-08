@@ -261,7 +261,8 @@ void setup()
     Serial.println("SPIFFS Initialization failed!");
     return;
   }
-
+  // début comptage reboot pour retrait du blocage AP
+  if (switch_ap_mode()) { reset_wifi(); }
   // Vérification de la version du File System
   test_fs_version();
 
@@ -406,6 +407,7 @@ void setup()
   #ifdef  ESP32D1MINI_FIRMWARE
     oled.wait_for_wifi(1);
   #endif
+  // reset du timer de reboot pour connexion Wifi 
   // Connexion WiFi
   connect_to_wifi();
   // Affichage OLED 1
@@ -791,6 +793,13 @@ void setup()
   #endif
 
   programme_marche_forcee.temperature = config.tmax;
+
+  #ifdef DEMO
+  Serial.println(F("Demo mode enabled"));
+  logging.Set_log_init("Demo mode enabled",true);
+  #endif
+  // reset timer reboot reset wifi
+  createTempFile("/ap_mode.txt", "0");
 }
 
 //***********************************
@@ -1090,6 +1099,7 @@ void connect_to_wifi() {
         
         gDisplayValues.currentState = DEVICE_STATE::UP;
         APConnect(); 
+        
       }
 
       serial_println(Wifi_connected);

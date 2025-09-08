@@ -250,12 +250,12 @@ The router provides several HTTP endpoints for monitoring and control:
   - `?save=1` - Save configuration to flash
 
 ### Timer/Scheduler Control
-- `GET /getminiteur` - Get timer configuration:
+- `GET /getminuteur` - Get timer configuration:
   - `?dimmer` - Get dimmer timer
   - `?relay1` - Get relay1 timer  
   - `?relay2` - Get relay2 timer
   - `?batterie` - Get battery timer
-- `ANY /setminiteur` - Set timer configuration with parameters:
+- `ANY /setminuteur` - Set timer configuration with parameters:
   - `heure_demarrage=HH:MM` - Set start time
   - `heure_arret=HH:MM` - Set stop time
   - `temperature=X` - Set temperature threshold

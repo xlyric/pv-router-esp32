@@ -163,6 +163,7 @@ struct Config {
     bool batterie_active = false;
     Preferences preferences;
     const char *filename_conf = "/config.json";
+    bool NO_AP = false; // pour refuser le mode AP
 
   public:
     bool sauve_polarity() {
@@ -261,6 +262,7 @@ struct Config {
       offset = doc["offset"] | -10;
       SCT_13 = doc["SCT_13"] | 30;
       trigger = doc["trigger"] | 10;
+      NO_AP = doc["no_ap"] | false;
 
       // passe à true si au moins une fois elle a été présente
       dallas_present = doc["dallas_present"] | false;
@@ -356,6 +358,7 @@ struct Config {
       doc["Shelly_tri"] = Shelly_tri;
       doc["SCT_13"] = SCT_13;
       doc["dallas_present"] = dallas_present;
+      doc["no_ap"] = NO_AP;
       message = "config file saved\r\n";
 
       // Serialize JSON to file
@@ -378,6 +381,7 @@ struct Configwifi {
 
   char SID[32]; // NOSONAR
   char passwd[64]; // NOSONAR
+
 
   public:bool sauve_wifi() {
     preferences.begin("credentials", false);

@@ -393,9 +393,13 @@ footer.sticky-footer .copyright{line-height:1;font-size:.8rem;}
             <div class="form-group">
               Password :<input type="password" class="form-control form-control-user" id="password" placeholder="%PASSWORD%">
             </div>
-
-				  
-		    </div>
+            <div class="custom-control custom-checkbox small">
+                            <input type="checkbox" class="custom-control-input" id="no_ap" >
+                            <label class="custom-control-label" for="no_ap">Dimmer local</label>
+            </div>
+            Attention : Le mode AP sera désactivé après le redémarrage et ne pourra pas être réactivé si vous changez de réseau Wi-Fi. 
+            la seul option sera de réinitialiser le filesystem.
+				  </div>
 				
       </div> 
 				
@@ -461,7 +465,7 @@ $( "#save" ).click(function() {
 
 $( "#formulaire" ).submit(function() {
 
-	 var data = {'ssid':$('#ssid').val(), 'password':$('#password').val()} 
+	 var data = {'ssid':$('#ssid').val(), 'password':$('#password').val(), 'no_ap':$('#no_ap').is(':checked')}; 
 
         $.ajax({
             type: "GET",
@@ -481,16 +485,20 @@ var recupconfig =  $.getJSON('/getwifi', function(data) {
         for (var key in data) {
             if (data.hasOwnProperty(key)) {
             var element = document.getElementById(key);
-                element.value = data[key];
+                if (element) {
+                    element.value = data[key];
+                    if (element.type === 'checkbox') {
+                      element.checked = data[key];
+                    }
+                  }
             }
         }
-
             // Une fois la requête terminée
             recupconfig.done(function() {
         });
     });
-    
-    
+   
+   
 </script>
 				  
                 </div>
@@ -506,7 +514,7 @@ var recupconfig =  $.getJSON('/getwifi', function(data) {
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>https://github.com/xlyric/  - 2023</span>
+            <span>https://github.com/xlyric/  - 2025</span>
           </div>
         </div>
       </footer>

@@ -321,6 +321,7 @@ void call_pages() {
       if (request->hasParam("voltage")) { config.voltage = request->getParam("voltage")->value().toInt();}
       if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toInt();}
       if (request->hasParam("trigger")) { config.trigger = request->getParam("trigger")->value().toInt();}
+
       
       /// @brief  wifi
       bool wifimodif=false ; 
@@ -335,6 +336,13 @@ void call_pages() {
         }      
 
         wifimodif=true; 
+      }
+      if (request->hasParam("no_ap")) { 
+        config.NO_AP = false;
+        String no_ap_value = request->getParam("no_ap")->value();
+        config.NO_AP = (no_ap_value == "true" || no_ap_value == "1");
+        Serial.println("No AP mode : " + no_ap_value);
+        config.saveConfiguration();
       }
       
       if (wifimodif) { 
@@ -432,7 +440,7 @@ void call_pages() {
       serveur_response(request,  getconfig());
       }); 
 
-      server.on("/getminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+      server.on("/getminuteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
         esp_task_wdt_reset();
         if (request->hasParam("dimmer")) { request->send(200, "application/json",  getMinuteur(programme));  }
         else if (request->hasParam("relay1")) { request->send(200, "application/json",  getMinuteur(programme_relay1)); }
@@ -441,7 +449,7 @@ void call_pages() {
         else { request->send(200, "application/json",  getMinuteur());  }
     }); // /get
 
-    server.on("/setminiteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
+    server.on("/setminuteur", HTTP_ANY, [] (AsyncWebServerRequest *request) {
 //      String name; 
       if (request->hasParam("dimmer")) { 
               if (request->hasParam("heure_demarrage")) { request->getParam("heure_demarrage")->value().toCharArray(programme.heure_demarrage,6);  }

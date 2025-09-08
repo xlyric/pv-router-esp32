@@ -333,6 +333,7 @@ String getwifi() {
 
   doc["ssid"] = configwifi.SID;
   doc["password"] = SECURITEPASS;
+  doc["no_ap"] = config.NO_AP; // pour refuser le mode AP
   
   serializeJson(doc, retour);
   

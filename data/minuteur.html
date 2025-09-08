@@ -351,7 +351,7 @@
     <script>
   $(document).ready(function() {
     // Récupération des heures de démarrage et d'arrêt depuis le serveur
-    $.get("/getminiteur?relay2", function(data) {
+    $.get("/getminuteur?relay2", function(data) {
       $("#heure_demarrage_relay2").val(data.heure_demarrage);
       $("#heure_arret_relay2").val(data.heure_arret);
       $("#temperature_relay2").val(data.temperature);
@@ -361,13 +361,13 @@
       $("#heure").html( heure + ":" + minute );
     });
 
-    $.get("/getminiteur?relay1", function(data) {
+    $.get("/getminuteur?relay1", function(data) {
       $("#heure_demarrage_relay1").val(data.heure_demarrage);
       $("#heure_arret_relay1").val(data.heure_arret);
       $("#temperature_relay1").val(data.temperature);
     });
 
-    $.get("/getminiteur?dimmer", function(data) {
+    $.get("/getminuteur?dimmer", function(data) {
       $("#heure_demarrage_dimmer").val(data.heure_demarrage);
       $("#heure_arret_dimmer").val(data.heure_arret);
       $("#temperature_dimmer").val(data.temperature);
@@ -377,7 +377,7 @@
       $("#heure").html( heure + ":" + minute );
     });
 
-    $.get("/getminiteur?batterie", function(data) {
+    $.get("/getminuteur?batterie", function(data) {
       $("#heure_demarrage_batterie").val(data.heure_demarrage);
       $("#heure_arret_batterie").val(data.heure_arret);
       $("#temperature_batterie").val(data.temperature);
@@ -391,7 +391,7 @@
       var heure_arret = $("#heure_arret_dimmer").val();
       var temperature = $("#temperature_dimmer").val();
       var puissance = $("#puissance_dimmer").val();
-      $.get("/setminiteur?dimmer", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature, "puissance": puissance});
+      $.get("/setminuteur?dimmer", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature, "puissance": puissance});
     });
 
     $("#batterie-form").submit(function(event) {
@@ -400,7 +400,7 @@
       var heure_arret = $("#heure_arret_batterie").val();
       var temperature = $("#temperature_batterie").val();
       var puissance = $("#puissance_batterie").val();
-      $.get("/setminiteur?batterie", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature, "puissance": puissance});
+      $.get("/setminuteur?batterie", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature, "puissance": puissance});
     });
 
     $("#relay1-form").submit(function(event) {
@@ -408,7 +408,7 @@
       var heure_demarrage = $("#heure_demarrage_relay1").val();
       var heure_arret = $("#heure_arret_relay1").val();
       var temperature = $("#temperature_relay1").val();
-      $.get("/setminiteur?relay1", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
+      $.get("/setminuteur?relay1", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
     });
 
     $("#relay2-form").submit(function(event) {
@@ -416,14 +416,14 @@
       var heure_demarrage = $("#heure_demarrage_relay2").val();
       var heure_arret = $("#heure_arret_relay2").val();
       var temperature = $("#temperature_relay2").val();
-      $.get("/setminiteur?relay2", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
+      $.get("/setminuteur?relay2", {"heure_demarrage": heure_demarrage, "heure_arret": heure_arret, "temperature": temperature});
     });
   
   });
 
   // Récupération de l'heure depuis le serveur toutes les 15 secondes
   setInterval(function ( ) {
-    $.getJSON('/getminiteur', function(data) {
+    $.getJSON('/getminuteur', function(data) {
         // Affichage de l'heure au format 2 digits
         var heure = data.heure < 10 ? "0" + data.heure : data.heure;
         var minute = data.minute < 10 ? "0" + data.minute : data.minute;

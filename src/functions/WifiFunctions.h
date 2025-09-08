@@ -20,6 +20,7 @@
 extern Config config; 
 extern Logs logging; 
 extern HTTPClient httpdimmer;
+extern Configwifi configwifi;
 
 //***********************************
 //************* Variables locales
@@ -39,6 +40,9 @@ String ipToString(IPAddress ip);
 bool dimmeradress(IPAddress dimmertemp );
 void WiFiGotIP(WiFiEvent_t event, WiFiEventInfo_t info);
 void search_wifi_ssid();
+bool createTempFile(const String& filename, const String& content);
+int readTempFile(const String& filename);
+bool switch_ap_mode();
 
 //***********************************
 //************* WIFIDimmerIP
@@ -53,6 +57,13 @@ void WIFIDimmerIP(WiFiEvent_t event, WiFiEventInfo_t info) {
 //************* APConnect
 //***********************************
 void APConnect() {
+  if (config.NO_AP) {
+    Serial.println("Mode AP refusé");
+    // restart ESP
+    ESP.restart();
+    return;
+  }
+
   if (!AP) {
     WiFi.onEvent(WiFiEvent);
     WiFi.onEvent(WiFiGotIP, WiFiEvent_t::ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED);
@@ -130,6 +141,7 @@ void WiFiEvent(WiFiEvent_t event) {
       break;
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
       Serial.println("Disconnected from WiFi access point");
+      ESP.restart();
       if (AP) {
         savelogs( "-- sortie du mode AP reboot dans 30s -- ");
         delay (30000);
@@ -302,6 +314,62 @@ void search_wifi_ssid() {
       }
     }
   }
+}
+
+//création d'une fonction pour créer un fichier temporaire en FS
+bool createTempFile(const String& filename, const String& content) {
+  File file = SPIFFS.open(filename, "w");
+  if (!file) {
+    Serial.println("Erreur lors de la création du fichier temporaire");
+    return false;}
+  file.print(content);
+  file.close();
+  return true;
+}
+
+// récupération d'un fichier temporaire en FS
+int readTempFile(const String& filename) {
+  String content;
+  int contentInt = 0;
+  File file = SPIFFS.open(filename, "r");
+  if (!file) {
+    Serial.println("Erreur lors de l'ouverture du fichier temporaire");
+    return 0;
+  }
+  content = file.readString();
+  file.close();
+  if (content.length() > 0) {
+    contentInt = content.toInt();
+  } // Convertir le contenu en entier si nécessaire
+  contentInt++;
+  return contentInt;
+}
+
+// Passage en mode AP si 3 reboot rapide
+bool switch_ap_mode() {
+  int apMode = 0 ;
+  apMode = readTempFile("/ap_mode.txt");
+  Serial.print("AP mode count: ");
+  Serial.println(apMode);
+
+  if (apMode >= 4) {
+    Serial.println("Switching to AP mode");
+    config.NO_AP = false;    
+    return true;
+  }
+  createTempFile("/ap_mode.txt", String(apMode));
+  return false;
+}
+
+bool reset_wifi() {
+  config.NO_AP = false;
+  config.saveConfiguration();
+  strcpy(configwifi.SID, "AP");
+  strcpy(configwifi.passwd, "PV-ROUTER");
+  configwifi.sauve_wifi();
+  createTempFile("/ap_mode.txt", "0");
+  Serial.println("Reset WiFi configuration to default");
+  return true;
 }
 
 #endif
