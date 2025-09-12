@@ -110,6 +110,11 @@
 
     device_dimmer_boost.Set_name("Boost");
     device_dimmer_boost.Set_dev_cla("switch");
+    // subscription au topic commande des switchs
+    bool sub_result = client.subscribe((device_dimmer_boost.topic+"command").c_str());
+    Serial.println("Souscription switch: " + String(sub_result ? "OK" : "FAILED"));
+    client.loop();
+    delay(10);
     
     device_routeur.discovery();
     device_routed.discovery();

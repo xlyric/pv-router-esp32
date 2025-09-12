@@ -46,6 +46,7 @@ extern HA device_dimmer_boost;
 extern HA device_dimmer_alarm_temp;
 extern xSemaphoreHandle mutex;
 
+extern bool boost();
 //***********************************
 //************* Variables locales
 //***********************************
@@ -66,7 +67,7 @@ WiFiClient espClient;
     }
 
     const String pvname = String("PvRouter-") + WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17); 
-    const String topic = "homeassistant/sensor/"+ pvname +"/status";
+    String topic = "homeassistant/sensor/"+ pvname +"/status";
     // Loop until we're reconnected
     while (!client.connected()) {
       logging.clean_log_init();
@@ -83,6 +84,8 @@ WiFiClient espClient;
       if (client.connect(pvname.c_str(), configmqtt.username, configmqtt.password)) {
         // Once connected, publish online to the availability topic
         client.publish(topic.c_str(), "online", true);         
+        topic = "homeassistant/switch/"+ pvname +"/status";
+        client.publish(topic.c_str(), "online", true); 
         client.setKeepAlive(15);  
         client.setBufferSize(1024);    
         logging.Set_log_init(MQTT_connected,true);
@@ -140,12 +143,15 @@ WiFiClient espClient;
   // Ajout d'un espace pour le caractère nul // NOSONAR
   char arrivage[length+1]; 
   int recup = 0;
+  //Serial.println("MQTT callback : topic = "+String(topic));
+  //Serial.println(strstr(topic, "command") != NULL ? "MATCH" : "NO MATCH");
 
   for (int i=0;i<length;i++) {
     arrivage[i] = (char)payload[i];
   }
   arrivage[length] = '\0'; // Ajouter le caractère nul à la fin
     
+  /// gestion du topic Shelly
   if (strcmp( topic, config.topic_Shelly ) == 0 ) {
     if (strcmp( arrivage , "unavailable" ) == 0 ) { 
       gDisplayValues.Shelly = -2; 
@@ -162,9 +168,42 @@ WiFiClient espClient;
       } else {
         DEBUG_PRINTLN("Erreur : Conversion de la chaîne en virgule flottante a échoué");
       } 
-    } // if (strcmp( arrivage , "unavailable" ) == 0 ) 
-  } // if (strcmp( topic, config.topic_Shelly ) == 0 )
+    } 
+  } 
 
+  /// gestion des switchs
+  if (strstr(topic, "command") != NULL ) {
+    Serial.println("MQTT callback : dimmer = "+String(arrivage));
+    String returnkey; 
+
+    JsonDocument doc;
+    deserializeJson(doc, arrivage);
+
+      // Traitement simple et propre
+        if (!doc["Boost"].isNull()) {
+          Serial.println("MQTT callback : Boost = "+String(doc["Boost"].as<bool>()));
+          boost();
+          returnkey = "Boost";
+          
+        }
+
+        if (!doc["Relay1"].isNull()) {
+          Serial.println("MQTT callback : Relay1 = "+String(doc["Relay1"].as<bool>()));
+          digitalWrite(RELAY1, doc["Relay1"].as<bool>());
+          returnkey = "Relay1";
+        }
+
+        if (!doc["Relay2"].isNull()) {
+          Serial.println("MQTT callback : Relay2 = "+String(doc["Relay2"].as<bool>()));
+          digitalWrite(RELAY2, doc["Relay2"].as<bool>());
+          returnkey = "Relay2";
+        }
+
+        //envoie de la commande de confirmation au broker
+        client.publish((device_dimmer_boost.topic+"state"+returnkey).c_str(), String(arrivage).c_str(), true);
+    }
+
+  /// récupération des anciennes valeurs de consommation
   if (strcmp( topic, ("memory/"+compteur_grid.topic+compteur_grid.Get_name()).c_str() ) == 0 ) {        
     Serial.println("MQTT callback : compteur_grid = "+String(arrivage));
     // Utiliser strtol pour une conversion plus robuste
@@ -180,8 +219,9 @@ WiFiClient espClient;
     } else {
       DEBUG_PRINTLN("Erreur : Conversion de la chaîne en virgule flottante a échoué");
     }
-  } // if (strcmp( topic, ("memory/"+compteur_grid.topic+compteur_grid.Get_name()).c_str() ) == 0 )
+  } 
 
+  /// récupération des anciennes valeurs d'injection
   if (strcmp( topic, ("memory/"+compteur_inject.topic+compteur_inject.Get_name()).c_str() ) == 0 ) {
     Serial.println("MQTT callback : compteur_inject = "+String(arrivage));
     // Utiliser strtol pour une conversion plus robuste
@@ -198,12 +238,11 @@ WiFiClient espClient;
     else {
       DEBUG_PRINTLN("Erreur : Conversion de la chaîne en virgule flottante a échoué");
     }        
-  } // if (strcmp( topic, ("memory/"+compteur_inject.topic+compteur_inject.Get_name()).c_str() ) == 0 )
-  if (WHtempgrid != 0 && WHtempinject !=0 ) { 
-    client.unsubscribe(("memory/"+compteur_grid.topic+"#").c_str()); 
-  }
+  } 
 
-  // TODO, faire la récupération pour le mode boost
+    if (WHtempgrid != 0 && WHtempinject !=0 ) { 
+    client.unsubscribe(("memory/"+compteur_grid.topic+"#").c_str()); 
+    }
   }
 
 
@@ -232,6 +271,7 @@ WiFiClient espClient;
     Serial.println("memory/"+compteur_grid.topic+compteur_grid.Get_name()) ;
 
     client.subscribe(("memory/"+compteur_grid.topic+"#").c_str());
+        
     client.loop();
  
       if (config.IDXdimmer != 0 ) {  

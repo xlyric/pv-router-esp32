@@ -154,7 +154,7 @@ constexpr size_t NTP_UPDATE_INTERVAL_MS = 3600000; /// synch de l'heure toute le
   //  #define ARDUINO_RUNNING_CORE 1
 #endif
 
-#define RELEASE "Version 20250908"
+#define RELEASE "Version 20250912"
 constexpr const int FS_RELEASE = 20250908;
 constexpr const char* FS_UPDATE = "<br>!! FS pas à jour !!"; /// paramettre FS pas à jour
 

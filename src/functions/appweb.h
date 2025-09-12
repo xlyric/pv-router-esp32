@@ -178,6 +178,9 @@ inline const char* stringBool(bool myBool) {
     return myBool ? "true" : "false";
 }
 
+inline const char* stringInt(bool myBool) {
+    return myBool ? "1" : "0";
+}
 
 //***********************************
 //************* getServermode

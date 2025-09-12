@@ -102,7 +102,7 @@ void send_to_mqtt(void * parameter) { // NOSONAR
                 device_dimmer.sendInt(unified_dimmer.get_power()); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
                 switch_relay1.sendInt(digitalRead(RELAY1));
                 switch_relay2.sendInt(digitalRead(RELAY2));
-                device_dimmer_boost.send(stringBool(programme_marche_forcee.run));       
+                device_dimmer_boost.send(stringInt(programme_marche_forcee.run));       
                 // si dallas.security actif alors on envoie l'alarme
                 if (dallas.security) {
                   device_dimmer_alarm_temp.send("Ballon Chaud");

@@ -628,14 +628,22 @@ struct Dallas {
 struct HA {
   /* HA */
   private:String name; 
-  public:void Set_name(String setter) {name=setter; }
+  private:const String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
+  private:const String node_id = String("PvRouter-") + node_mac; 
+  public:String topic = "homeassistant/sensor/"+ node_id +"/";
+   
+  public:void Set_name(String setter) {
+    name=setter; 
+  }
+
   public:String Get_name() {return name;}
 
   private:String dev_cla; 
+
   public:void Set_dev_cla(String setter) {
     dev_cla=setter; 
     if (setter=="switch") { 
-      topic = "homeassistant/switch/"+ String(node_id) +"/"; 
+      topic = "homeassistant/switch/"+ node_id +"/"; 
     }
   }
 
@@ -659,18 +667,17 @@ struct HA {
     icon = R"("ic": ")" + setter + R"(", )"; 
   }
 
-  bool cmd_t; 
+  //  private:IPAddress IPaddress;
+  // private:String state_topic; 
+  // private:String stat_t; 
+  // private:String cmd_t; 
+  //private:String avty_t;
 
-  private:IPAddress IPaddress;
-  private:String state_topic; 
-  private:String stat_t; 
-  private:String avty_t;
-
-  private:const String node_mac = WiFi.macAddress().substring(12,14)+ WiFi.macAddress().substring(15,17);
-  private:const String node_id = String("PvRouter-") + node_mac; 
-  public:String topic = "homeassistant/sensor/"+ node_id +"/";
+  //public:String Get_cmd_t() {return cmd_t;}
+  //public:String Get_stat_t() {return stat_t;}
       
   private:String device_declare() { 
+    IPAddress IPaddress =   WiFi.localIP() ;
     String info = R"(
         "dev": {
             "ids": ")" + String(node_id) + R"(",
@@ -688,15 +695,20 @@ struct HA {
 
   public:void discovery() {
     String dev_switch= "";
+    String stat_t = topic +"state"+name;
+    String cmd_t = topic +"command";
 
-    if (stat_cla == nullptr) {  //rien faire
-    }
-    else if (dev_cla =="switch" ) { 
+
+   // if (stat_cla.isEmpty()) {  //rien faire
+    //}
+    if (dev_cla =="switch" ) { 
       dev_switch = R"(
-          "pl_on": "{ \")" + name + R"(\" : \"1\" }",
-          "pl_off": "{ \")" + name + R"(\" : \"0\" }",
+          "pl_on": 1,
+          "pl_off": 0,
           "stat_on": 1,
           "stat_off": 0,
+          "cmd_t": ")" + cmd_t + R"(", 
+          "cmd_tpl": "{ \")" + name + R"(\": {{ value }} }",
           )";
     }
     else {
@@ -706,20 +718,19 @@ struct HA {
       )"; 
 
     }
+   if (stat_cla.isEmpty() && dev_cla !="switch") {  //rien faire
+    dev_switch= "";
+    }
 
-    IPaddress =   WiFi.localIP() ;
+    
     String device= "{ \"dev_cla\": \""+dev_cla+"\","
       "\"name\": \""+ name +"-"+ node_mac + "\"," 
-      // "\"state_topic\": \""+ topic +"state\","
-      "\"stat_t\": \""+ topic +"state"+name+"\","
       "\"avty_t\": \""+ topic +"status\","
       "\"uniq_id\": \""+ node_mac + "-" + name +"\", "
       "\"val_tpl\": \"{{ value_json."+name +" }}\", "
-      + dev_switch + 
-      "\"cmd_t\": \""+ topic +"command\","
-      "\"cmd_tpl\": \"{{ value_json."+name +" }}\", "
-      "\"exp_aft\": \""+ MQTT_INTERVAL +"\", "
-      + icon
+      + dev_switch  
+      + R"("stat_t": ")" + stat_t + R"(", )"
+      + "\"exp_aft\": \""+ MQTT_INTERVAL +"\", "
       + device_declare() + 
     "}";
 
@@ -734,15 +745,23 @@ struct HA {
     else {
       snprintf(final_topic, sizeof(final_topic), "%sconfig", topic.c_str());
       client.publish(final_topic, device.c_str() , true); // déclaration autoconf routeur
-    }       
+    }     
+    client.loop();
+    delay(10);
   } // discovery
 
   public:void send(const char* value) {
     // vérification que value est un nombre
+   // client.loop();
+    //delay(50);
     char message[150];
-      snprintf(message, sizeof(message), "  { \"%s\" : \"%s\" } ", name.c_str(), value); // NOSONAR  
+       snprintf(message, sizeof(message), "{ \"%s\": \"%s\" }", name.c_str(), value); // NOSONAR  
+      
+    bool result = client.publish((topic +"state"+name).c_str() , message, false); // false for exp_aft in discovery
+//    Serial.println(stat_t.c_str());
+  //  Serial.println(message);
+   // Serial.println(result ? "SUCCESS" : "FAILED");
 
-    client.publish((topic+"state"+name).c_str() , message, false); // false for exp_aft in discovery
   }  // send()
 
     void sendInt(int value) {
