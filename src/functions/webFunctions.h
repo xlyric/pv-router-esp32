@@ -326,13 +326,13 @@ void call_pages() {
       /// @brief  wifi
       bool wifimodif=false ; 
       if (request->hasParam("ssid")) { 
-        request->getParam("ssid")->value().toCharArray(configwifi.SID,50); wifimodif=true; 
+        request->getParam("ssid")->value().toCharArray(configwifi.SID,64); wifimodif=true; 
       }
       if (request->hasParam("password")) { 
-        char password[50];  
-        request->getParam("password")->value().toCharArray(password,50);
+        char password[64];  
+        request->getParam("password")->value().toCharArray(password,64);
         if (strcmp(password,SECURITEPASS) != 0) {  ///sécurisation du mot de passe pas en clair     
-          request->getParam("password")->value().toCharArray(configwifi.passwd,50); 
+          request->getParam("password")->value().toCharArray(configwifi.passwd,64); 
         }      
 
         wifimodif=true; 
@@ -381,10 +381,10 @@ void call_pages() {
       if (request->hasParam("mqttuser")) { request->getParam("mqttuser")->value().toCharArray(configmqtt.username,50);  }
       if (request->hasParam("mqttport")) { config.mqttport = request->getParam("mqttport")->value().toInt();}
       if (request->hasParam("mqttpassword")) {
-        char password[50];  
-        request->getParam("mqttpassword")->value().toCharArray(password,50);
+        char password[65];  
+        request->getParam("mqttpassword")->value().toCharArray(password,65);
         if (strcmp(password,SECURITEPASS) != 0) {  ///sécurisation du mot de passe pas en clair     
-          request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,50); 
+          request->getParam("mqttpassword")->value().toCharArray(configmqtt.password,65); 
         }
         logging.Set_log_init(configmqtt.savemqtt().c_str(),true); // configuration sauvegardée
       }

@@ -414,7 +414,7 @@ struct Configwifi {
 struct Mqtt {
   public: 
     char username[64]; // NOSONAR
-    char password[64]; // NOSONAR
+    char password[65]; // NOSONAR
     bool HA;
     const char *mqtt_conf = "/mqtt.json";
 
