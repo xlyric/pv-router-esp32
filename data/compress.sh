@@ -25,4 +25,6 @@ gzip -9 ../data2/fa-solid-900.woff2 -c > fa-solid-900.woff2.gz
 
 gzip -9 log.html  -c > log.html.gz
 
-
+SRC_DIR="$(dirname "$(realpath "$0")")"
+DST_DIR=$(realpath "$SRC_DIR/../data")
+grep "constexpr const int FS_RELEASE" "$SRC_DIR/../src/config/config.h" | tr -d ';' | cut -d' ' -f 6 > "$DST_DIR/version"

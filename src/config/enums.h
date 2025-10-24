@@ -141,6 +141,7 @@ struct Config {
     int mqttport; 
     int IDXdimmer;
     bool dallas_present;
+    bool preheat = false;
     
     bool polarity; 
     char Publish[100]; // NOSONAR
@@ -164,6 +165,7 @@ struct Config {
     Preferences preferences;
     const char *filename_conf = "/config.json";
     bool NO_AP = false; // pour refuser le mode AP
+    int tmin=0;
 
   public:
     bool sauve_polarity() {
@@ -263,6 +265,7 @@ struct Config {
       SCT_13 = doc["SCT_13"] | 30;
       trigger = doc["trigger"] | 10;
       NO_AP = doc["no_ap"] | false;
+      tmin = doc["tmin"] | 0;
 
       // passe à true si au moins une fois elle a été présente
       dallas_present = doc["dallas_present"] | false;
@@ -359,6 +362,7 @@ struct Config {
       doc["SCT_13"] = SCT_13;
       doc["dallas_present"] = dallas_present;
       doc["no_ap"] = NO_AP;
+      doc["tmin"] = tmin;
       message = "config file saved\r\n";
 
       // Serialize JSON to file
