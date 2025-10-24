@@ -915,9 +915,24 @@ static int deltaneg_backup = 0;
       if (retry_wifi < 10 ) {
         retry_wifi ++;
       }
-    }
+    } 
   }
 
+  // gestion de la température minimum.
+  
+  if (config.dimmerlocal && dallas.detect && unified_dimmer.get_power() == 0 && dallas.lost == false) {
+    if (gDisplayValues.temperature < config.tmin && !config.preheat ) {
+      // Si la température est inférieure à la température minimale, mise en route du dimmer au limiteur localfuse
+      unified_dimmer.set_power(config.localfuse, "Préchauffage");
+      Serial.println("Température minimale atteinte, préchauffage activé");
+      config.preheat = true;
+    } 
+  }
+  else if ( config.preheat && gDisplayValues.temperature > config.tmin)
+    { config.preheat = false;
+      unified_dimmer.set_power(0, "Fin préchauffage");
+      Serial.println("Fin préchauffage, dimmer arrêté");
+    }
 
    //***********************************
   //************* Loop -  gestion des activités minuteurs

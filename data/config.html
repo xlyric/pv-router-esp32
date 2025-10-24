@@ -296,6 +296,9 @@
                     <div class="col-sm-3">
                       Trigger (%): <input type="number" step="1"class="form-control form-control-user" id="trigger" placeholder="%TRIGGER%">
                     </div>                    
+                    <div class="col-sm-3">
+                      Min temp (°C): <input type="number" step="1"class="form-control form-control-user" id="mintemp" placeholder="%MINTEMP%">
+                    </div>
 
                 </div>
               </div>
@@ -498,7 +501,7 @@ $( "#save" ).click(function() {
 $( "#formulaire" ).submit(function() {
     
 
-	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() ,'SCT_13': $('#SCT_13').val(), 'trigger':$('#trigger').val()  }; 
+	 var data = {'server':$('#hostname').val(), 'idx':$('#IDX').val(), 'idxdimmer':$('#IDXDIMMER').val(),	 'cosphi':$('#cosphi').val(), 'fuse':$('#Fusible').val()	, 'cycle':$('#cycle').val(), 'dimmer':$('#dimmer').val(),'port':$('#port').val(), 'delta':$('#delta').val(),'deltaneg':$('#deltaneg').val(),  'apiKey':$('#apiKey').val(), 'facteur':$('#facteur').val(),'mqttserver':$('#mqttserver').val(),'publish':$('#publish').val(),'resistance':$('#resistance').val(),'screentime':$('#screentime').val(),'Fusiblelocal':$('#Fusiblelocal').val(),'maxtemp':$('#maxtemp').val(), 'voltage':$('#voltage').val(), 'offset':$('#offset').val() ,'SCT_13': $('#SCT_13').val(), 'trigger':$('#trigger').val(), 'mintemp':$('#mintemp').val() }; 
 
 		
         $.ajax({

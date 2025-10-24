@@ -298,12 +298,13 @@ String getconfig() {
   doc["screentime"] = config.ScreenTime;
   doc["Fusiblelocal"] = config.localfuse;
   doc["maxtemp"] = config.tmax;
+  doc["mintemp"] = config.tmin;
   doc["voltage"] = config.voltage;
   doc["offset"] = config.offset;
   doc["flip"] = config.flip;
   doc["SCT_13"] = config.SCT_13;
   doc["trigger"] = config.trigger;
-    
+      
   serializeJson(doc, configweb);
 
   return String(configweb);

@@ -321,6 +321,7 @@ void call_pages() {
       if (request->hasParam("voltage")) { config.voltage = request->getParam("voltage")->value().toInt();}
       if (request->hasParam("offset")) { config.offset = request->getParam("offset")->value().toInt();}
       if (request->hasParam("trigger")) { config.trigger = request->getParam("trigger")->value().toInt();}
+      if (request->hasParam("mintemp")) { config.tmin = request->getParam("mintemp")->value().toInt();}
 
       
       /// @brief  wifi

@@ -188,8 +188,8 @@ void dimmer()
     }
   }
 
-  ///// si pas de changement on ne fait rien
-  if (gDisplayValues.change)
+  ///// si pas de changement on ne fait rien et si on ne préchauffe pas
+  if (gDisplayValues.change )
   {
     /// si configuration en dimmer local
     if (config.dimmerlocal)
@@ -204,7 +204,7 @@ void dimmer()
         digitalWrite(COOLER, LOW);
       }
       float dallas_int = gDisplayValues.temperature;
-      if (dallas.security && dallas.detect)
+      if (dallas.security && dallas.detect && !config.preheat) // si sécurité active et sonde dallas présente et pas de préchauffage
       {
         float temp_trigger = float(config.tmax) - float(config.tmax * config.trigger / 100);
         if (dallas_int < temp_trigger)
