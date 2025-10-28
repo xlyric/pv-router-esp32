@@ -813,19 +813,8 @@ void loop() {
 static int delta_backup = 0;
 static int deltaneg_backup = 0;
 
-
+/*
   #ifdef DEBUGLEVEL1
-  // test de la connexion client mqtt
-  Serial.print("client connected ? :");
-  Serial.println(client.connected());
-//// test de synchro pour debug
-  if (dimmer1.getsync()) {
-    Serial.println("sync ok");
-  }
-  else {
-    Serial.println("sync nok");  
-  }
-    
 
   //***********************************
   //************* Loop - affichage de la mémoire dispo / xTasks
@@ -852,7 +841,7 @@ static int deltaneg_backup = 0;
     printTaskStack(myTaskkeepwifialive2, "myTaskkeepwifialive2");
     printTaskStack(myTaskwatchdogmemory, "myTaskwatchdogmemory");
   #endif
-
+*/
     //**** Loop - vérification de la connexion au serveur MQTT **** 
     #ifndef LIGHT_FIRMWARE
     if (config.mqtt) {
@@ -925,6 +914,7 @@ static int deltaneg_backup = 0;
       // Si la température est inférieure à la température minimale, mise en route du dimmer au limiteur localfuse
       unified_dimmer.set_power(config.localfuse, "Préchauffage");
       Serial.println("Température minimale atteinte, préchauffage activé");
+      logging.Set_log_init("Préchauffage activé \n", true);
       config.preheat = true;
     } 
   }
@@ -932,6 +922,7 @@ static int deltaneg_backup = 0;
     { config.preheat = false;
       unified_dimmer.set_power(0, "Fin préchauffage");
       Serial.println("Fin préchauffage, dimmer arrêté");
+      logging.Set_log_init("Fin préchauffage, dimmer arrêté \n", true);
     }
 
    //***********************************
@@ -946,6 +937,7 @@ static int deltaneg_backup = 0;
       if (programme.stop_progr() || programme_marche_forcee.stop_progr() ) { 
         unified_dimmer.dimmer_off("minuteur"); 
         unified_dimmer.set_power(0, "minuteur"); 
+        config.preheat = false;
         if (dallas.detect) {
           dallas.security=true;
         }

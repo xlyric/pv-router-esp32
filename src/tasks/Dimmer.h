@@ -67,7 +67,7 @@ void updateDimmer(void * parameter) {
       gDisplayValues.task = true;
       #if WIFI_ACTIVE == true
         // application de la consigne de puissance uniquement si le minuteur n'est pas actif et que la dallas n'est pas perdu
-        if (!programme.run && !dallas.lost && !programme_marche_forcee.run) {
+        if (!programme.run && !dallas.lost && !programme_marche_forcee.run && !config.preheat) {
             DEBUG_PRINTLN("------- dimmer.h " + String(__LINE__) + " -----------");
             dimmer();
         }  

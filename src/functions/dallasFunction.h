@@ -142,6 +142,7 @@ float CheckTemperature(String label, byte deviceAddress[12]) { // NOSONAR
     unified_dimmer.dimmer_off("Dallas lost");
     unified_dimmer.set_power(0);
     dallas.lost = true; // on est perdu donc on coupe le dimmer
+    config.preheat = false;
     
     // on retente une init de la dallas b
     dallas_error = 0;

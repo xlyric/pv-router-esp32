@@ -199,6 +199,7 @@ bool getServermode(String Servermode) {
     config.dimmerlocal = !config.dimmerlocal;  
     //dimmer1.setPower(0);
     unified_dimmer.set_power(0);
+    config.preheat = false;
     return true;
   }
   if ( Servermode == "MQTT" ) {   

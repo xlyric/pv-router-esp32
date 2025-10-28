@@ -225,6 +225,7 @@ void dimmer()
           unified_dimmer.set_power(0);
           unified_dimmer.dimmer_off("Security");
           programme.run = false;
+          config.preheat = false;
           ledcWrite(0, 0);
           /// Modif RV 20240219 - ajout du test pour ne pas chercher à envoyer une requête vers un fils non configuré
           if (strcmp(config.dimmer, "") != 0 && strcmp(config.dimmer, "none") != 0)
@@ -241,6 +242,7 @@ void dimmer()
           unified_dimmer.dimmer_off("Dallas");
           #ifdef ESP32D1MINI_FIRMWARE
             unified_dimmer.set_power(0);
+            config.preheat = false;
           #endif
           ledcWrite(0, 0);
           /// Modif RV - 20240219
@@ -262,7 +264,7 @@ void dimmer()
           {
             /// fonctionnement du dimmer local
 
-            if (gDisplayValues.dimmer < config.localfuse && !programme.run)
+            if (gDisplayValues.dimmer < config.localfuse && !programme.run )
             {
               unified_dimmer.set_power(gDisplayValues.dimmer);
               DEBUG_PRINTLN("------- dimmerFunction " + String(__LINE__) + " -----------");
