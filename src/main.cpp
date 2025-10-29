@@ -909,8 +909,9 @@ static int deltaneg_backup = 0;
 
   // gestion de la température minimum.
   
-  if (config.dimmerlocal && dallas.detect && unified_dimmer.get_power() == 0 && dallas.lost == false) {
-    if (gDisplayValues.temperature < config.tmin && !config.preheat ) {
+ 
+  if (gDisplayValues.temperature < config.tmin ) {
+    if (!config.preheat && config.dimmerlocal && dallas.detect && dallas.lost == false ) {
       // Si la température est inférieure à la température minimale, mise en route du dimmer au limiteur localfuse
       unified_dimmer.set_power(config.localfuse, "Préchauffage");
       Serial.println("Température minimale atteinte, préchauffage activé");
@@ -918,7 +919,7 @@ static int deltaneg_backup = 0;
       config.preheat = true;
     } 
   }
-  else if ( config.preheat && gDisplayValues.temperature > config.tmin)
+  else if ( config.preheat ) //&& gDisplayValues.temperature > config.tmin (condition inutile car gDisplayValues.temperature > tmin pour arriver ici)
     { config.preheat = false;
       unified_dimmer.set_power(0, "Fin préchauffage");
       Serial.println("Fin préchauffage, dimmer arrêté");
