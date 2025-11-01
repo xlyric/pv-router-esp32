@@ -910,21 +910,21 @@ static int deltaneg_backup = 0;
   // gestion de la température minimum.
   
  
-  if (gDisplayValues.temperature < config.tmin ) {
-    if (!config.preheat && config.dimmerlocal && dallas.detect && dallas.lost == false ) {
-      // Si la température est inférieure à la température minimale, mise en route du dimmer au limiteur localfuse
-      unified_dimmer.set_power(config.localfuse, "Préchauffage");
-      Serial.println("Température minimale atteinte, préchauffage activé");
-      logging.Set_log_init("Préchauffage activé \n", true);
-      config.preheat = true;
-    } 
-  }
-  else if ( config.preheat ) //&& gDisplayValues.temperature > config.tmin (condition inutile car gDisplayValues.temperature > tmin pour arriver ici)
-    { config.preheat = false;
-      unified_dimmer.set_power(0, "Fin préchauffage");
-      Serial.println("Fin préchauffage, dimmer arrêté");
-      logging.Set_log_init("Fin préchauffage, dimmer arrêté \n", true);
-    }
+      if (gDisplayValues.temperature < config.tmin ) {
+        if (!config.preheat && config.dimmerlocal && dallas.detect && dallas.lost == false ) {
+          // Si la température est inférieure à la température minimale, mise en route du dimmer au limiteur localfuse
+          unified_dimmer.set_power(config.localfuse, "Préchauffage");
+          Serial.println("Température minimale atteinte, préchauffage activé");
+          logging.Set_log_init("Préchauffage activé \n", true);
+          config.preheat = true;
+        } 
+      }
+      else if ( config.preheat ) //&& gDisplayValues.temperature > config.tmin (condition inutile car gDisplayValues.temperature > tmin pour arriver ici)
+        { config.preheat = false;
+          unified_dimmer.set_power(0, "Fin préchauffage");
+          Serial.println("Fin préchauffage, dimmer arrêté");
+          logging.Set_log_init("Fin préchauffage, dimmer arrêté \n", true);
+        }
 
    //***********************************
   //************* Loop -  gestion des activités minuteurs
@@ -1033,7 +1033,7 @@ static int deltaneg_backup = 0;
     }
   }
   //// protection contre l'absence de commande  
-  if ( !programme.run && !programme_marche_forcee.run ) { 
+  if ( !programme.run && !programme_marche_forcee.run && !config.preheat ) { 
     unified_dimmer.auto_off(AUTO_OFF);
   }
 
