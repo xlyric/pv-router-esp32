@@ -140,11 +140,16 @@ struct Programme {
 
   public:bool start_progr() {
     struct tm timeinfo;
-    int heures;
-    int minutes;
-    sscanf(heure_demarrage, "%d:%d", &heures, &minutes);
-    int heures_fin;
-    int minutes_fin;
+    memset(&timeinfo, 0, sizeof(timeinfo));
+
+    if (!getLocalTime(&timeinfo)) {
+        Serial.println("Échec récupération heure NTP");
+        return false;
+    }
+
+    int heures_debut, minutes_debut;
+    int heures_fin, minutes_fin;
+    sscanf(heure_demarrage, "%d:%d", &heures_debut, &minutes_debut);
     sscanf(heure_arret, "%d:%d", &heures_fin, &minutes_fin);
       
     // si heure_demarrage == heure_arret alors on retourne false
@@ -152,36 +157,37 @@ struct Programme {
       return false;
     }
       
-    // quand c'est l'heure de démarrer le programme    
-    ///vérification que le ntp est synchronisé
-    if(getLocalTime( &timeinfo )) {
-      if ( heures == timeinfo.tm_hour && minutes == timeinfo.tm_min && temperature > gDisplayValues.temperature ) {
-       // demarrage du cooler
+    // Conversion en minutes depuis minuit pour faciliter les comparaisons
+    int now_minutes = timeinfo.tm_hour * 60 + timeinfo.tm_min;
+    int debut_minutes = heures_debut * 60 + minutes_debut;
+    int fin_minutes = heures_fin * 60 + minutes_fin;
+      
+    // Démarrage exact à l'heure programmée
+    if (heures_debut == timeinfo.tm_hour && minutes_debut == timeinfo.tm_min && 
+        temperature > gDisplayValues.temperature) {
        commande_run();
        return true; 
-      }
     }
 
     // remise en route en cas de reboot et si l'heure est dépassée  
     // recherche si l'heure est passée 
-    bool heure_passee = false;
-    if (timeinfo.tm_hour > heures || (timeinfo.tm_hour == heures && timeinfo.tm_min > minutes )) {
-      heure_passee = true; 
-    }
-    
-    // recherche si l'heure d'arret est est passée
-    bool heure_arret_passee = false;
-    if (timeinfo.tm_hour > heures_fin || (timeinfo.tm_hour == heures_fin && timeinfo.tm_min >= minutes_fin )) {
-      heure_arret_passee = true; 
+    bool dans_plage = false;
+    if (fin_minutes > debut_minutes) {
+        // Plage normale (ex: 08:00 -> 18:00)
+        dans_plage = (now_minutes > debut_minutes && now_minutes < fin_minutes);
+    } else {
+        // Plage qui traverse minuit (ex: 22:00 -> 02:00)
+        // On est dans la plage si on est après le début OU avant la fin
+        dans_plage = (now_minutes > debut_minutes || now_minutes < fin_minutes);
     }
 
-    // remise en route en cas de reboot et si l'heure est dépassée
-    if (heure_passee && !heure_arret_passee && temperature > gDisplayValues.temperature ) {
+// Remise en route en cas de reboot si on est dans la plage horaire
+    if (dans_plage && temperature > gDisplayValues.temperature) {
       commande_run();
       return true; 
     }
 
-    // protection fuite mémoire 
+    // Protection fuite mémoire 
     if (temperature > 500) {
       savelogs("-- reboot problème de fuite memoire -- ");
       ESP.restart(); 
@@ -193,6 +199,13 @@ struct Programme {
   /// @return 
   public:bool stop_progr() {
     struct tm timeinfo;
+    memset(&timeinfo, 0, sizeof(timeinfo));
+    
+    if (!getLocalTime(&timeinfo)) {
+        Serial.println("Échec récupération heure NTP");
+        return false;
+    }
+
     int heures ;
     int minutes;
     /// sécurité temp
