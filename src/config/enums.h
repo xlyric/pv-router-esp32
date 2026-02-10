@@ -72,15 +72,15 @@ struct ESP32Info {
 struct DisplayValues {
   // Place to store all the variables that need to be displayed.
   // All other functions should update these!
-  double watt;
+  SafeVar<double> watt;
   bool wattIsValid; // Jeton pour measureEletricity.h permettant d'appliquer la puissance au dimmer (local ou distant)
-  double amps;
+  //double amps;
   int8_t wifi_strength;
   DEVICE_STATE currentState;
   IPAddress IP;
   //String time;
   bool injection; 
-  int dimmer;
+  SafeVar<int> dimmer;
   int security; 
   int change;
   bool task;
@@ -89,11 +89,11 @@ struct DisplayValues {
   bool screenbutton;
   bool nextbutton;
   int option=0;
-  float temperature = 0.0 ;
+  SafeVar<float> temperature = 0.0 ;
   int Fronius_conso; 
   int Fronius_prod; 
   int Fronius_totalconso;
-  float celsius;
+  SafeVar<float> celsius;
   //int page=1; 
   int Shelly=-1;
   double enp_prod_whLifetime;

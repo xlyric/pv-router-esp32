@@ -2,6 +2,7 @@
 //************* LIBRAIRIES ESP
 //***********************************
 #include <Arduino.h>
+#include "functions/SafeVar.h"  // Classe pour la gestion sécurisée des variables partagées entre les tâches
 #include "driver/ledc.h"
 #include "WiFiClientSecure.h"
 #include <ESPmDNS.h>

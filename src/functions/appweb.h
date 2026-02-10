@@ -82,7 +82,7 @@ String getState_short() {
   JsonDocument doc;
   doc["watt"] = int(gDisplayValues.watt);
   doc["dimmer"] = gDisplayValues.puissance_route;
-  doc["temperature"] = gDisplayValues.temperature;
+  doc["temperature"] = (float)gDisplayValues.temperature;
   serializeJson(doc, state_short);
   return String(state_short);
 }
@@ -104,7 +104,7 @@ String getState() {
   doc["state"] = state;
   doc["watt"] = int(gDisplayValues.watt);
   doc["dimmer"] = gDisplayValues.puissance_route;
-  doc["temperature"] = gDisplayValues.temperature;
+  doc["temperature"] = (float)gDisplayValues.temperature;
   if (test_fs_version(false)) { 
     doc["version"] = VERSION ; 
   } 
@@ -150,9 +150,9 @@ String getStateFull() {
   doc["gDisplayValues.watt"] = int(gDisplayValues.watt);
   doc["unified_dimmer.get_power"]= unified_dimmer.get_power();
   doc["dimmer"] = gDisplayValues.puissance_route;
-  doc["gDisplayValues.dimmer"]  = gDisplayValues.dimmer;
+  doc["gDisplayValues.dimmer"]  = (int)gDisplayValues.dimmer;
 
-  doc["temperature"] = gDisplayValues.temperature;
+  doc["temperature"] = (float)gDisplayValues.temperature;
   if (test_fs_version(false)) { 
     doc["version"] = VERSION ; 
   } 
