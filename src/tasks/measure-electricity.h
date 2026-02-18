@@ -113,7 +113,7 @@ void measureElectricity(void *parameter) { // NOSONAR
             }
             #ifdef NORMAL_FIRMWARE
             else {
-              client.loop();
+               // client.loop(); // Keep the MQTT connection alive pour éviter les problèmes de connexion au broker quand on utilise le topic mqtt pour le shelly
               gDisplayValues.watt = gDisplayValues.Shelly;
               gDisplayValues.wattIsValid = true;
 

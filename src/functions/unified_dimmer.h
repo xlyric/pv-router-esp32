@@ -32,7 +32,7 @@ struct gestion_puissance {
   private: unsigned long last_time = millis();
            char temp_buffer[128]; // NOSONAR
 
-  public:float power;
+  public:SafeVar<float> power;
 
   // setter
   void set_power(float unified_power,const char* reason="") {   /// le char reason est principalement utilisé pour le debug

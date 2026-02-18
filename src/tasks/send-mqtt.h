@@ -81,25 +81,29 @@ void send_to_mqtt(void * parameter) { // NOSONAR
             long timemesure = start-beforetime;
             float wattheure = (timemesure * abs(gDisplayValues.watt) / timemilli);  
             #ifndef LIGHT_FIRMWARE
-
+              // remonté puissance et température vers MQTT
+              // on utilise une variable temporaire pour la température et la puissance dimmer pour éviter les problèmes de concurrence avec la mise à jour de la température dans la task dallas ( entre autre)
+              float temp_temp = gDisplayValues.temperature;
+              float temp_power= unified_dimmer.get_power();
               // domoticz et jeedom
               if (config.IDX != 0 ) {
                 Mqtt_send(String(config.IDX), String(int(gDisplayValues.watt)),"","watt");  
               }
               
               if (config.IDXdallas != 0) {//  bug#11  remonté domoticz 
-                Mqtt_send(String(config.IDXdallas), String(gDisplayValues.temperature),"","Dallas" ); 
+
+                Mqtt_send(String(config.IDXdallas), String(temp_temp),"","Dallas" ); 
               } 
                
-              // HA
+              // envoe des données vers Home Assistant
               if (configmqtt.HA) {
                 device_routeur.sendInt(gDisplayValues.watt);
                 device_routed.sendInt(gDisplayValues.puissance_route);
-                device_dimmer_power.sendInt((unified_dimmer.get_power()) * config.charge/100);
+                device_dimmer_power.sendInt(temp_power * config.charge/100);
                 power_apparent.sendFloat(PVA);                        
                 power_factor.sendFloat(PowerFactor);
-                temperature_HA.sendFloat(gDisplayValues.temperature);
-                device_dimmer.sendInt(unified_dimmer.get_power()); // Modif RV - pour être plus en accord avec le nommage sur les dimmers
+                temperature_HA.sendFloat(temp_temp); 
+                device_dimmer.sendInt(temp_power); 
                 switch_relay1.sendInt(digitalRead(RELAY1));
                 switch_relay2.sendInt(digitalRead(RELAY2));
                 device_dimmer_boost.send(stringInt(programme_marche_forcee.run));       

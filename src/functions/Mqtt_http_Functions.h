@@ -127,7 +127,7 @@ WiFiClient espClient;
       }      
 
       if (client.connected() && (WiFi.status() == WL_CONNECTED ))  {
-        client.loop();
+       // client.loop(); /// Keep the MQTT connection alive --> pas utilisé car la fonction loop est appelée dans la task send_to_mqtt
         if (otherpub == "" ) {
          client.publish(config.Publish, String(message).c_str(), true);
         }

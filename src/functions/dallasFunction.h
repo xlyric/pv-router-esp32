@@ -107,7 +107,7 @@ float CheckTemperature(String label, byte deviceAddress[12]) { // NOSONAR
    
   delay(400); // conseillé 375 ms pour une 18b20
 
-  float tempC = sensors.getTempC(deviceAddress);
+  SafeVar<float> tempC = sensors.getTempC(deviceAddress);
 
   if ( (tempC == -127.0) || (tempC == -255.0) ) { 
     //// cas d'une sonde trop longue à préparer les valeurs 

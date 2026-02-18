@@ -29,6 +29,6 @@
 #define NOT_ENPHASE "--> Enphase not present\r\n" // NOSONAR
 #define NOT_FRONIUS "--> Fronius not present\r\n" // NOSONAR
 #define PV_RESTART "Restarting PV ROUTER" // NOSONAR
-#define POWER_COMMAND "Power command sent " // NOSONAR
+#define POWER_COMMAND "Send->" // NOSONAR
 #define DALLAS_TEXT "Chip is DS18S20" // NOSONAR
 #define NO_SYNC "Attention pas de porteuse, alimentation 9VAC ou pont redresseur débranché ? " // NOSONAR

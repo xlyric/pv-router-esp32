@@ -845,11 +845,9 @@ static int deltaneg_backup = 0;
 */
     //**** Loop - vérification de la connexion au serveur MQTT **** 
     #ifndef LIGHT_FIRMWARE
-    if (config.mqtt) {
-      if (!client.connected()) {
+    if (config.mqtt && !client.connected()) {
         reconnect(); 
-      }
-      client.loop(); // Keep the MQTT connection alive
+
     }
     #endif // not LIGHT_FIRMWARE
 

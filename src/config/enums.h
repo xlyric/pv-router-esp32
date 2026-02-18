@@ -120,8 +120,8 @@ struct Config {
     int IDX;  // IDX pour domoticz
     int IDXdallas; // IDX pour domoticz
     char otapassword[64]; // NOSONAR
-    int delta; 
-    int deltaneg;
+    SafeVar<int> delta; 
+    SafeVar<int> deltaneg;
     int delta_init; 
     int deltaneg_init; // pour la sauvegarde de la valeur initiale de delta et deltaneg
     int cosphi; // plus utilisé
@@ -161,7 +161,7 @@ struct Config {
     int charge3;
     // @brief  // Somme des 3 charges déclarées dans la page web
     int charge;
-    bool batterie_active = false;
+    SafeVar<bool> batterie_active = false;
     Preferences preferences;
     const char *filename_conf = "/config.json";
     bool NO_AP = false; // pour refuser le mode AP
@@ -598,12 +598,14 @@ public: void Set_log_init(const char* setter, bool logtime = false) {
   char *loguptime(bool day=false) {
     static char uptime_stamp[20]; // Vous devrez définir une taille suffisamment grande pour stocker votre temps // NOSONAR
     time_t maintenant;
-    time(&maintenant);
+    struct tm timeinfo_local;
+    //time(&maintenant);
+    localtime_r(&maintenant, &timeinfo_local); // Utilisation de localtime_r pour éviter les problèmes de thread safety
     if (day) {
-      strftime(uptime_stamp, sizeof(uptime_stamp), "%d/%m/%Y %H:%M:%S\t ", localtime(&maintenant));
-    } 
+      strftime(uptime_stamp, sizeof(uptime_stamp), "%d/%m/%Y %H:%M:%S\t ", &timeinfo_local); 
+    }
     else {
-      strftime(uptime_stamp, sizeof(uptime_stamp), "%H:%M:%S\t ", localtime(&maintenant));
+      strftime(uptime_stamp, sizeof(uptime_stamp), "%H:%M:%S\t ", &timeinfo_local); 
     }
     
     return uptime_stamp;
