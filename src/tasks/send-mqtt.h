@@ -163,10 +163,10 @@ void send_to_mqtt(void * parameter) { // NOSONAR
       // plus trop  utilisé, juste en cas de fuite mémoire
       //client.publish(("memory/"+gDisplayValues.pvname).c_str(), String(esp_get_free_heap_size()).c_str()) ;
       //client.publish(("memory/"+gDisplayValues.pvname + " min free").c_str(), String(esp_get_minimum_free_heap_size()).c_str()) ;
-      client.loop(); // on envoie ce qui est en attente      
+      
       
     }
-    
+    client.loop(); // on envoie ce qui est en attente      
     task_mem.task_send_mqtt = uxTaskGetStackHighWaterMark(nullptr);
         
     // Sleep for 5 seconds
