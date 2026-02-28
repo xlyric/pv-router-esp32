@@ -139,6 +139,8 @@ struct Programme {
   }
 
   public:bool start_progr() {
+    if (AP) { return false; } /// pas de programme en mode AP
+
     struct tm timeinfo;
     memset(&timeinfo, 0, sizeof(timeinfo));
 
@@ -198,6 +200,8 @@ struct Programme {
   /// @brief  stop du programme
   /// @return 
   public:bool stop_progr() {
+    if (AP) { return false; } /// pas de programme en mode AP
+
     struct tm timeinfo;
     memset(&timeinfo, 0, sizeof(timeinfo));
     
