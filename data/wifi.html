@@ -470,7 +470,7 @@ $( "#formulaire" ).submit(function() {
         $.ajax({
             type: "GET",
             data: data,
-            url: "get",
+            url: "getwifi",
 
             success: function(retour){
                 $( "#saveform" ).text( "Configuration appliquée" ).show().fadeOut( 5000 );
